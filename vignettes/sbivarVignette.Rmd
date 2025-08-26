@@ -1,0 +1,25 @@
+---
+title: "Vignette of the sbivar package"
+author: Stijn Hawinkel
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: true
+    keep_md: true
+    citation_package: biblatex
+vignette: >
+  %\VignetteIndexEntry{Vignette of the sbivar package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: ../inst/REFERENCES.bib 
+---
+
+```{r, echo=FALSE}
+# htmltools::img(src = knitr::image_uri("../inst/Smoppix.jpg"), 
+#                style = 'position:absolute; top:0; right:0; padding:10px;',
+#                alt = 'logo', width = "200px", heigth = "200px")
+```
+
+```{r setup, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(fig.heigh = 7, fig.width = 7)
+```

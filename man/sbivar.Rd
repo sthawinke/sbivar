@@ -14,7 +14,7 @@ sbivar(
   wo = "distance",
   numNN = 8,
   n_points_grid = 500,
-  families = c(X = "gaussian", Y = "gaussian")
+  families = c(X = gaussian(), Y = gaussian())
 )
 }
 \arguments{

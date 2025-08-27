@@ -22,13 +22,14 @@ testGAM = function(modelx, modely, predx, predy){
 #' @param newGrid The new grid of points in which to evaluate the GAMs
 #'
 #' @returns A named list of results
+#' @importFrom smoppix loadBalanceBplapply
 testManyGAMs = function(gamsx, gamsy, newGrid){
     gamsx = gamsx[!vapply(gamsx, FUN.VALUE = TRUE, inherits, "try-error")]
     gamsy = gamsy[!vapply(gamsy, FUN.VALUE = TRUE, inherits, "try-error")]
     loadBalanceBplapply(selfName(names(gamsx)), function(featx){
-        predx <- vcovPredGam(gamsx[[gen]], newdata = newGrid)
+        predx <- vcovPredGam(gamsx[[featx]], newdata = newGrid)
         vapply(selfName(names(gamsy)), FUN.VALUE = double(3), function(featy){
-            testGAM(predx = predx, modely = gamsy[[met]], modelx = gamsx[[featx]],
+            testGAM(predx = predx, modely = gamsy[[featy]], modelx = gamsx[[featx]],
                          predy = vcovPredGam(gamsy[[featy]], newdata = newGrid))
         })
     })

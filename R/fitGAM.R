@@ -30,7 +30,8 @@ fitManyGAMs = function(mat, coord, family = gaussian(), ...){
         libSizes = rowSums(mat)
         df = df[id <- (libSizes > 0),]
         libSizes = libSizes[id]
-        offset = switch(family$link, "inverse" = 1/libSizes, "log" = log(libSizes), NULL)
+        offset = switch(family$link, "inverse" = 1/libSizes,
+                        "log" = log(libSizes), NULL)
     }
     loadBalanceBplapply(cns, function(cn){
         fitGAM(df, outcome = cn, offset = offset, family = family, ...)

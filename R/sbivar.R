@@ -15,10 +15,10 @@
 #'
 #' @examples
 sbivar = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs"),
-                  wMat, wo = "distance", numNN = 8,
-                  n_points_grid = 5e2, families = c("X" = "gaussian", "Y" = "gaussian")){
+                  wMat, wo = "distance", numNN = 8, n_points_grid = 5e2,
+                  families = c("X" = gaussian(), "Y" = gaussian())){
     stopifnot(is.numeric(numNN), is.numeric(n_points_grid), is.character(wo),
-              is.character(method))
+              is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family")))
     n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y)
     if(n!=nrow(Cx)){
         stop("Dimensions of X and its coordinates Cx do not match!")
@@ -36,7 +36,7 @@ sbivar = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs"),
     out = if(method == "Moran's I"){
 
     } else if(method == "GAMs"){
-        wrapGams(X = X, Y = Y, Cx = Cx, Ey = Ey, families = families,
+        wrapGAMs(X = X, Y = Y, Cx = Cx, Ey = Ey, families = families,
                  n_points_grid = n_points_grid)
     } else if(method == "GPs"){
 

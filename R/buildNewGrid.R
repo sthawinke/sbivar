@@ -4,7 +4,7 @@
 #' between these two hulls is found, and in that area an evenly spaced, discrete
 #' grid is constructed.
 #'
-#' This function is mainly used to create a grid on whcih fitted GAMs can be
+#' This function is mainly used to create a grid on which fitted GAMs can be
 #' evaluated to calculate correlations.
 #'
 #' @param xMat,yMat The coordinate matrices

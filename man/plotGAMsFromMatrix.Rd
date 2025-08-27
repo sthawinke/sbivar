@@ -17,6 +17,9 @@ plotGAMsFromMatrix(X, Y, featx, featy, Cx, Ey, families, ...)
 
 \item{...}{Passed onto \link{plotGAMs}.}
 }
+\value{
+See \link{plotGAMs}
+}
 \description{
 A wrapper frunction to plot from matrices
 }

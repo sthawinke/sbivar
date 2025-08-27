@@ -2,7 +2,7 @@
 % Please edit documentation in R/fitGAM.R
 \name{fitManyGAMs}
 \alias{fitManyGAMs}
-\title{Fit GAMs to all colums of a dataframe, as a wrapper for fitGAM}
+\title{Fit GAMs to all columns of a dataframe, as a wrapper for fitGAM}
 \usage{
 fitManyGAMs(mat, coord, family = gaussian(), ...)
 }
@@ -19,5 +19,5 @@ fitManyGAMs(mat, coord, family = gaussian(), ...)
 A list of GAM models
 }
 \description{
-Fit GAMs to all colums of a dataframe, as a wrapper for fitGAM
+Fit GAMs to all columns of a dataframe, as a wrapper for fitGAM
 }

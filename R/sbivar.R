@@ -14,9 +14,16 @@
 #' @export
 #'
 #' @examples
+#' n=1e2;m=2e2;p=10;k=12
+#' X = matrix(rnorm(n*p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
+#' Y = matrix(rnorm(m*k), m, k, dimnames = list(NULL, paste0("Y", seq_len(k))))
+#' Cx = matrix(runif(n*2), n, 2)
+#' Ey = matrix(runif(m*2), m, 2)
+#' colnames(Cx) = colnames(Ey) = c("x", "y")
+#' resGAMs = sbivar(X, Y, Cx, Ey, method = "GAMs")
 sbivar = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs"),
                   wMat, wo = "distance", numNN = 8, n_points_grid = 5e2,
-                  families = c("X" = gaussian(), "Y" = gaussian())){
+                  families = list("X" = gaussian(), "Y" = gaussian())){
     stopifnot(is.numeric(numNN), is.numeric(n_points_grid), is.character(wo),
               is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family")))
     n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y)
@@ -29,9 +36,16 @@ sbivar = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs"),
     if(ncol(Cx)!=2 || ncol(Ey)!=2){
         stop("Coordinate matrices must be of dimension 2!")
     }
-    if(names(families) != c("X", "Y")){
+    if(!identical(names(families), c("X", "Y"))){
         stop("Name families 'X' and 'Y' for unambiguous matching")
     }
+    if(is.null(colnames(X))){
+        colnames(X) = paste0("X", seq_len(p))
+    }
+    if(is.null(colnames(Y))){
+        colnames(Y) = paste0("Y", seq_len(k))
+    }
+    colnames(Cx) = colnames(Ey) = c("x", "y")
     method = match.arg(method)
     out = if(method == "Moran's I"){
 

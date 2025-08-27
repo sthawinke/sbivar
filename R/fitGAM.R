@@ -14,7 +14,7 @@ fitGAM = function(df, outcome, k = -1, family = gaussian(), offset = NULL){
     gam(as.formula(paste(outcome, " ~ s(x, y, k = k)")), data = df, family = family,
         offset = offset)
 }
-#' Fit GAMs to all colums of a dataframe, as a wrapper for fitGAM
+#' Fit GAMs to all columns of a dataframe, as a wrapper for fitGAM
 #'
 #' @param mat The matrix of outcomes
 #' @param coord The coordinate matrix
@@ -23,6 +23,7 @@ fitGAM = function(df, outcome, k = -1, family = gaussian(), offset = NULL){
 #'
 #' @returns A list of GAM models
 #' @importFrom smoppix loadBalanceBplapply
+#' @importFrom BiocParallel bplapply
 fitManyGAMs = function(mat, coord, family = gaussian(), ...){
     cns = selfName(colnames(mat))
     df = data.frame(as.matrix(mat), coord)
@@ -30,9 +31,9 @@ fitManyGAMs = function(mat, coord, family = gaussian(), ...){
         libSizes = rowSums(mat)
         df = df[id <- (libSizes > 0),]
         libSizes = libSizes[id]
-        offset = switch(family$link, "inverse" = 1/libSizes,
-                        "log" = log(libSizes), NULL)
     }
+    offset = switch(family$link, "inverse" = 1/libSizes,
+                    "log" = log(libSizes), NULL)
     loadBalanceBplapply(cns, function(cn){
         fitGAM(df, outcome = cn, offset = offset, family = family, ...)
     })

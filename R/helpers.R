@@ -10,11 +10,13 @@ makePval = function(z){
     tmp[z>0] = pnorm(z[z>0], lower.tail = FALSE)
     2*unname(tmp)
 }
-#Scale to [0,1] range
+#' Scale to [0,1] range
+#' @param y The vector to be scaled
 scaleZeroOne = function(y, na.rm = TRUE){
     (y-min(y, na.rm = na.rm))/diff(range(y, na.rm = na.rm))
 }
-#Scale to [-1,1] range
+#' Scale to [-1,1] range
+#' @param y The vector to be scaled
 scaleMinusOne = function(y, na.rm = TRUE){
     (y-min(y, na.rm = na.rm))/diff(range(y, na.rm = na.rm))*2-1
 }

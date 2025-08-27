@@ -10,9 +10,9 @@ plotGAMs(
   Cx,
   Ey,
   newGrid,
-  families,
   offsets,
   scaleFun = "scaleMinusOne",
+  families = list(X = gaussian(), Y = gaussian()),
   addTitle = TRUE,
   ...
 )
@@ -22,11 +22,11 @@ plotGAMs(
 
 \item{newGrid}{The new grid of points in which to evaluate the GAMs}
 
-\item{families}{A vector of length 2 giving outcome values.}
-
 \item{offsets}{List of length two with offsets}
 
 \item{scaleFun}{The scaling function to be applied before plotting}
+
+\item{families}{A vector of length 2 giving outcome values.}
 
 \item{addTitle}{A booleam, should a title be plotted}
 
@@ -37,4 +37,8 @@ A ggplot object
 }
 \description{
 Title
+}
+\examples{
+example(sbivar, "sbivar")
+plot(X[, 1], Y[, 1], Cx, Ey)
 }

@@ -23,6 +23,7 @@ testGAM = function(modelx, modely, predx, predy){
 #'
 #' @returns A named list of results
 #' @importFrom smoppix loadBalanceBplapply
+#' @importFrom BiocParallel bplapply
 testManyGAMs = function(gamsx, gamsy, newGrid){
     gamsx = gamsx[!vapply(gamsx, FUN.VALUE = TRUE, inherits, "try-error")]
     gamsy = gamsy[!vapply(gamsy, FUN.VALUE = TRUE, inherits, "try-error")]

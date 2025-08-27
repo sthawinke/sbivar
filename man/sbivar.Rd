@@ -14,7 +14,7 @@ sbivar(
   wo = "distance",
   numNN = 8,
   n_points_grid = 500,
-  families = c(X = gaussian(), Y = gaussian())
+  families = list(X = gaussian(), Y = gaussian())
 )
 }
 \arguments{
@@ -39,4 +39,12 @@ adjusted p-values and measures of association, sorted by increasing p-value.
 }
 \description{
 Apply one or more tests for bivariate spatial association
+}
+\examples{
+n=1e2;m=2e2;p=10;k=12
+X = matrix(rnorm(n*p), n, p)
+Y = matrix(rnorm(m*k), m, k)
+Cx = matrix(runif(n*2), n, 2)
+Ey = matrix(runif(m*2), m, 2)
+resGAMs = sbivar(X, Y, Cx, Ey, method = "GAMs")
 }

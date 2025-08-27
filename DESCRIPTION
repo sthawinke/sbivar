@@ -17,7 +17,7 @@ RdMacros: Rdpack
 RoxygenNote: 7.3.2
 biocViews: Transcriptomics, Spatial, Proteomics, Metabolomics
 Depends: R (>= 4.5.0)
-Imports: lme4,lmerTest,mgcv,ggplot2,RANN,concaveman,SpatialPack,NTSS,BiocParallel,Rdpack,stats,knitr,rmarkdown,sf
+Imports: lme4,lmerTest,mgcv,ggplot2,RANN,concaveman,SpatialPack,NTSS,BiocParallel,Rdpack,stats,knitr,rmarkdown,sf,Matrix,smoppix,spatstat.geom
 Suggests:
 VignetteBuilder: knitr
 BugReports: https://github.com/sthawinke/bivar/issues

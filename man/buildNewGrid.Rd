@@ -4,12 +4,12 @@
 \alias{buildNewGrid}
 \title{Build a new grid in the intersection of two coordinate matrices}
 \usage{
-buildNewGrid(Cx, Ey, n_points)
+buildNewGrid(Cx, Ey, n_points_grid)
 }
 \arguments{
 \item{Cx, Ey}{The coordinate matrices}
 
-\item{n_points}{an integer, the number of new points}
+\item{n_points_grid}{an integer, the number of new points}
 }
 \value{
 A data frame of two columns with all points of the grid,
@@ -27,5 +27,5 @@ evaluated to calculate correlations.
 \examples{
 Cx = matrix(runif(40, 0, 1), 20, 2)
 Ey = matrix(runif(30, 0, 1), 15, 2)
-buildNewGrid(Cx, Ey, n_points = 50)
+buildNewGrid(Cx, Ey, n_points_grid = 50)
 }

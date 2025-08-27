@@ -8,7 +8,7 @@
 #' evaluated to calculate correlations.
 #'
 #' @param Cx,Ey The coordinate matrices
-#' @param n_points an integer, the number of new points
+#' @param n_points_grid an integer, the number of new points
 #'
 #' @returns A data frame of two columns with all points of the grid,
 #' with columnnames x and y.
@@ -19,9 +19,9 @@
 #' @examples
 #' Cx = matrix(runif(40, 0, 1), 20, 2)
 #' Ey = matrix(runif(30, 0, 1), 15, 2)
-#' buildNewGrid(Cx, Ey, n_points = 50)
-buildNewGrid = function(Cx, Ey, n_points){
-    stopifnot(ncol(Cx) == 2L, ncol(Ey)==2, is.numeric(n_points))
+#' buildNewGrid(Cx, Ey, n_points_grid = 50)
+buildNewGrid = function(Cx, Ey, n_points_grid){
+    stopifnot(ncol(Cx) == 2L, ncol(Ey)==2, is.numeric(n_points_grid))
     #Find concave hulls
     hullx <- concaveman(Cx)
     hully <- concaveman(Ey)
@@ -31,7 +31,7 @@ buildNewGrid = function(Cx, Ey, n_points){
     polygon_sf = st_intersection(polygon_sf_x, polygon_sf_y)
     # Estimate grid spacing based on area and target point count
     area <- st_area(polygon_sf)
-    grid_spacing <- sqrt(as.numeric(area) / n_points)
+    grid_spacing <- sqrt(as.numeric(area) / n_points_grid)
     # Create a regular grid within the bounding box
     grid <- st_make_grid(polygon_sf, what = "centers", cellsize = grid_spacing)
     # Keep only points that fall inside the polygon

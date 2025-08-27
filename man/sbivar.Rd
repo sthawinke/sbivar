@@ -13,7 +13,8 @@ sbivar(
   wMat,
   wo = "distance",
   numNN = 8,
-  n_points_grid = 500
+  n_points_grid = 500,
+  families = c(X = "gaussian", Y = "gaussian")
 )
 }
 \arguments{
@@ -27,7 +28,10 @@ sbivar(
 
 \item{wo, numNN}{Passed on to \link{buildWeightMat}.}
 
-\item{n_points_grid}{}
+\item{n_points_grid}{The number of points in the new grid for the GAMs to be
+evaluated on.}
+
+\item{families}{A vector of length 2 giving outcome values.}
 }
 \value{
 A list containing at least an entry "result", which contains p-values,

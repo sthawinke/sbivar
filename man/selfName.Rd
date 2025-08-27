@@ -6,6 +6,9 @@
 \usage{
 selfName(x)
 }
+\arguments{
+\item{x}{The vector to be names}
+}
 \description{
 Name a character vector after itself
 }

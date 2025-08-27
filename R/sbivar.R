@@ -5,18 +5,21 @@
 #' @param method A character string, indicating which method to apply
 #' @param wMat Optional, a weight matrix for calculating Moran's I
 #' @param wo,numNN Passed on to \link{buildWeightMat}.
-#' @param n_points_grid
+#' @param families A vector of length 2 giving outcome values.
+#' @param n_points_grid The number of points in the new grid for the GAMs to be
+#' evaluated on.
 #'
 #' @returns A list containing at least an entry "result", which contains p-values,
 #' adjusted p-values and measures of association, sorted by increasing p-value.
 #' @export
 #'
 #' @examples
-sbivar = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs"), wMat, wo = "distance", numNN = 8,
-                  n_points_grid = 5e2){
+sbivar = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs"),
+                  wMat, wo = "distance", numNN = 8,
+                  n_points_grid = 5e2, families = c("X" = "gaussian", "Y" = "gaussian")){
     stopifnot(is.numeric(numNN), is.numeric(n_points_grid), is.character(wo),
-              is.character(methods))
-    n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(y)
+              is.character(method))
+    n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y)
     if(n!=nrow(Cx)){
         stop("Dimensions of X and its coordinates Cx do not match!")
     }
@@ -26,11 +29,15 @@ sbivar = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs"), wM
     if(ncol(Cx)!=2 || ncol(Ey)!=2){
         stop("Coordinate matrices must be of dimension 2!")
     }
-    method = match.arg(methods)
+    if(names(families) != c("X", "Y")){
+        stop("Name families 'X' and 'Y' for unambiguous matching")
+    }
+    method = match.arg(method)
     out = if(method == "Moran's I"){
 
     } else if(method == "GAMs"){
-
+        wrapGams(X = X, Y = Y, Cx = Cx, Ey = Ey, families = families,
+                 n_points_grid = n_points_grid)
     } else if(method == "GPs"){
 
     } else if(method == "Modified t-test"){

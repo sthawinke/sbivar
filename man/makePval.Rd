@@ -6,6 +6,9 @@
 \usage{
 makePval(z)
 }
+\arguments{
+\item{z}{The z-value to be converted}
+}
 \description{
 Convert z-value to p-value
 }

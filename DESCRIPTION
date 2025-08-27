@@ -5,7 +5,7 @@ Version: 0.1.0
 Authors@R: c(person(given = "Stijn", family = "Hawinkel", 
     email = "stijn.hawinkel@psb.ugent.be", 
     role=c("cre", "aut"), comment = c(ORCID = "0000-0002-4501-5180")))
-Description: The sbivar package implements a suite of tests for bivariate spatial
+Description: The sbivar package implements a suite of tests for Spatial BIVARiate
     association across omics modalities with disjoint coordinate sets. Implemented
     tests are generalized additive models, modified t-test, bivariate Moran's I 
     and Gaussian processes. Both single images and replicated experiments can be

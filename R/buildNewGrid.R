@@ -7,7 +7,7 @@
 #' This function is mainly used to create a grid on which fitted GAMs can be
 #' evaluated to calculate correlations.
 #'
-#' @param xMat,yMat The coordinate matrices
+#' @param Cx,Ey The coordinate matrices
 #' @param n_points an integer, the number of new points
 #'
 #' @returns A data frame of two columns with all points of the grid,
@@ -17,14 +17,14 @@
 #' @importFrom sf st_area st_sf st_sfc st_polygon st_intersection st_make_grid st_within st_coordinates
 #'
 #' @examples
-#' xMat = matrix(runif(40, 0, 1), 20, 2)
-#' yMat = matrix(runif(30, 0, 1), 15, 2)
-#' buildNewGrid(xMat, yMat, n_points = 50)
-buildNewGrid = function(xMat, yMat, n_points){
-    stopifnot(ncol(xMat) == 2L, ncol(yMat)==2, is.numeric(n_points))
+#' Cx = matrix(runif(40, 0, 1), 20, 2)
+#' Ey = matrix(runif(30, 0, 1), 15, 2)
+#' buildNewGrid(Cx, Ey, n_points = 50)
+buildNewGrid = function(Cx, Ey, n_points){
+    stopifnot(ncol(Cx) == 2L, ncol(Ey)==2, is.numeric(n_points))
     #Find concave hulls
-    hullx <- concaveman(xMat)
-    hully <- concaveman(yMat)
+    hullx <- concaveman(Cx)
+    hully <- concaveman(Ey)
     # Create sf polygons
     polygon_sf_x <- st_sf(st_sfc(st_polygon(list(hullx))))
     polygon_sf_y <- st_sf(st_sfc(st_polygon(list(hully))))

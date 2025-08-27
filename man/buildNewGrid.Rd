@@ -4,10 +4,10 @@
 \alias{buildNewGrid}
 \title{Build a new grid in the intersection of two coordinate matrices}
 \usage{
-buildNewGrid(xMat, yMat, n_points)
+buildNewGrid(Cx, Ey, n_points)
 }
 \arguments{
-\item{xMat, yMat}{The coordinate matrices}
+\item{Cx, Ey}{The coordinate matrices}
 
 \item{n_points}{an integer, the number of new points}
 }
@@ -25,7 +25,7 @@ This function is mainly used to create a grid on which fitted GAMs can be
 evaluated to calculate correlations.
 }
 \examples{
-xMat = matrix(runif(40, 0, 1), 20, 2)
-yMat = matrix(runif(30, 0, 1), 15, 2)
-buildNewGrid(xMat, yMat, n_points = 50)
+Cx = matrix(runif(40, 0, 1), 20, 2)
+Ey = matrix(runif(30, 0, 1), 15, 2)
+buildNewGrid(Cx, Ey, n_points = 50)
 }

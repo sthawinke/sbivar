@@ -4,10 +4,10 @@
 \alias{buildWeightMat}
 \title{Build a weight matrix for Moran's I}
 \usage{
-buildWeightMat(xMat, yMat, wo = c("distance", "nn"), numNN = 8)
+buildWeightMat(Cx, Ey, wo = c("distance", "nn"), numNN = 8)
 }
 \arguments{
-\item{xMat, yMat}{coordinate matrices}
+\item{Cx, Ey}{Two coordinate matrices}
 
 \item{wo}{The weighting option, either "nn" or "distance}
 

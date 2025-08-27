@@ -57,5 +57,6 @@ sbivar = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs"),
     } else if(method == "Modified t-test"){
         wrapModTtest(X = X, Y = Y, Cx = Cx, Ey = Ey, mapToFinest = FALSE)
     }
+    out[order(out[, "p.value"]),]
 }
 

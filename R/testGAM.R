@@ -27,13 +27,14 @@ testGAM = function(modelx, modely, predx, predy){
 testManyGAMs = function(gamsx, gamsy, newGrid){
     gamsx = gamsx[!vapply(gamsx, FUN.VALUE = TRUE, inherits, "try-error")]
     gamsy = gamsy[!vapply(gamsy, FUN.VALUE = TRUE, inherits, "try-error")]
-    loadBalanceBplapply(selfName(names(gamsx)), function(featx){
+    out = loadBalanceBplapply(selfName(names(gamsx)), function(featx){
         predx <- vcovPredGam(gamsx[[featx]], newdata = newGrid)
         vapply(selfName(names(gamsy)), FUN.VALUE = double(3), function(featy){
             testGAM(predx = predx, modely = gamsy[[featy]], modelx = gamsx[[featx]],
                          predy = vcovPredGam(gamsy[[featy]], newdata = newGrid))
         })
     })
+
 }
 #' Wrapper function to fit GAMs and test for all possible combinations
 #'

@@ -10,10 +10,11 @@ plotGAMs(
   Cx,
   Ey,
   newGrid,
-  offsets,
+  offsets = list(),
   scaleFun = "scaleMinusOne",
   families = list(X = gaussian(), Y = gaussian()),
   addTitle = TRUE,
+  n_points_grid = 500,
   ...
 )
 }
@@ -30,6 +31,9 @@ plotGAMs(
 
 \item{addTitle}{A booleam, should a title be plotted}
 
+\item{n_points_grid}{The number of points in the new grid for the GAMs to be
+evaluated on.}
+
 \item{...}{passed onto \link{fitGAM}}
 }
 \value{
@@ -40,5 +44,5 @@ Title
 }
 \examples{
 example(sbivar, "sbivar")
-plot(X[, 1], Y[, 1], Cx, Ey)
+plotGAMs(X[, 1], Y[, 1], Cx, Ey)
 }

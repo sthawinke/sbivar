@@ -1,6 +1,6 @@
 #' Perform nearest-neighbour matching, and apply all pairwise tests
 #'
-#' @inheritParamssbivar
+#' @inheritParams sbivar
 #' @param mapToFinest A boolean, should the mapping occur to the dataset with
 #' the best resolution?
 #'
@@ -19,7 +19,7 @@ wrapModTtest = function(X, Y, Cx, Ey, mapToFinest = FALSE){
         coordMat = Ey[idnn_YX,]
     }
     featGrid = expand.grid("featX" = colnames(X), "featY" = colnames(Y))
-    out = simplify2array(bplapply(seq_len(nrow(featGrid)), function(i){
+    out = simplify2array(loadBalanceBplapply(seq_len(nrow(featGrid)), function(i){
         modified.ttest(X[, featGrid[i, "featX"]], Y[, featGrid[i, "featY"]],
                        coordMat)[c("corr", "dof", "p.value")]
     }))

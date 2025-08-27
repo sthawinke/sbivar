@@ -4,22 +4,35 @@
 \alias{plotGAMsFromMatrix}
 \title{A wrapper frunction to plot from matrices}
 \usage{
-plotGAMsFromMatrix(X, Y, featx, featy, Cx, Ey, families, ...)
+plotGAMsFromMatrix(
+  X,
+  Y,
+  featX,
+  featY,
+  Cx,
+  Ey,
+  families = list(X = gaussian(), Y = gaussian()),
+  ...
+)
 }
 \arguments{
 \item{X, Y}{Matrices of omics measurements}
-
-\item{featx, featy}{The features to plot}
 
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
 \item{families}{A vector of length 2 giving outcome values.}
 
 \item{...}{Passed onto \link{plotGAMs}.}
+
+\item{featx, featy}{The features to plot}
 }
 \value{
 See \link{plotGAMs}
 }
 \description{
 A wrapper frunction to plot from matrices
+}
+\examples{
+example(sbivar, "sbivar")
+plotGAMsFromMatrix(X, Y, featX = "X1", featY = "Y1", Cx = Cx, Ey = Ey)
 }

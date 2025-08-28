@@ -20,3 +20,8 @@ scaleZeroOne = function(y, na.rm = TRUE){
 scaleMinusOne = function(y, na.rm = TRUE){
     (y-min(y, na.rm = na.rm))/diff(range(y, na.rm = na.rm))*2-1
 }
+#' Make unique names
+#' @param featX,featY vectors of feature names
+makeNames = function(featX, featY){
+    make.names(apply(expand.grid(featX, featY), 1, paste, collapse = "_"))
+}

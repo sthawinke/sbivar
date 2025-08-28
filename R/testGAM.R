@@ -34,7 +34,10 @@ testManyGAMs = function(gamsx, gamsy, newGrid){
                          predy = vcovPredGam(gamsy[[featy]], newdata = newGrid))
         })
     })
-
+    #Reformat to long format
+    t(matrix(unlist(out), 3, length(gamsx)*length(gamsy),
+           dimnames = list(c("corxy", "se.corxy", "pVal"),
+                           makeNames(names(gamsx), names(gamsy)))))
 }
 #' Wrapper function to fit GAMs and test for all possible combinations
 #'

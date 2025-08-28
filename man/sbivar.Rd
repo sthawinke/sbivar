@@ -48,4 +48,5 @@ Cx = matrix(runif(n*2), n, 2)
 Ey = matrix(runif(m*2), m, 2)
 colnames(Cx) = colnames(Ey) = c("x", "y")
 resGAMs = sbivar(X, Y, Cx, Ey, method = "GAMs")
+resModtTest = sbivar(X, Y, Cx, Ey, method = "Modified")
 }

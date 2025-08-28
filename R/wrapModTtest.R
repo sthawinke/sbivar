@@ -20,9 +20,10 @@ wrapModTtest = function(X, Y, Cx, Ey, mapToFinest = FALSE){
     }
     featGrid = expand.grid("featX" = colnames(X), "featY" = colnames(Y))
     out = simplify2array(loadBalanceBplapply(seq_len(nrow(featGrid)), function(i){
-        modified.ttest(X[, featGrid[i, "featX"]], Y[, featGrid[i, "featY"]],
-                       coordMat)[c("corr", "dof", "p.value")]
+        unlist(modified.ttest(X[, featGrid[i, "featX"]], Y[, featGrid[i, "featY"]],
+                       coordMat)[c("corr", "dof", "p.value")])
     }))
     colnames(out) = apply(featGrid, 1, paste, collapse = "_")
-    data.frame(t(out))
+    rownames(out) = c("Correlation", "df", "pVal")
+    t(out)
 }

@@ -21,6 +21,7 @@
 #' Ey = matrix(runif(m*2), m, 2)
 #' colnames(Cx) = colnames(Ey) = c("x", "y")
 #' resGAMs = sbivar(X, Y, Cx, Ey, method = "GAMs")
+#' resModtTest = sbivar(X, Y, Cx, Ey, method = "Modified")
 sbivar = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs"),
                   wMat, wo = "distance", numNN = 8, n_points_grid = 5e2,
                   families = list("X" = gaussian(), "Y" = gaussian())){
@@ -57,6 +58,6 @@ sbivar = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs"),
     } else if(method == "Modified t-test"){
         wrapModTtest(X = X, Y = Y, Cx = Cx, Ey = Ey, mapToFinest = FALSE)
     }
-    out[order(out[, "p.value"]),]
+    out[order(out[, "pVal"]),]
 }
 

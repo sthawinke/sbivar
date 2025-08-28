@@ -34,7 +34,12 @@ A list containing at least an entry "result", which contains p-values,
 adjusted p-values and measures of association, sorted by increasing p-value.
 }
 \description{
-Apply one or more tests for bivariate spatial association
+The tests can be applied to either disjoint or joint coordinate sets.
+}
+\details{
+If only Cx is supplied and X and Y have the same number of rows, a joint analysis is performed
+If Cx and Ey are provided, and X and Y have the same number of rows, equality of Cx and Ey is checked.
+If true, a joint analysis is run, with a warning.
 }
 \examples{
 n=1e2;m=2e2;p=10;k=12

@@ -5,19 +5,23 @@
 \title{Apply one or more tests for bivariate spatial association}
 \usage{
 sbivarMulti(
-  X,
-  Y,
-  Cx,
-  Ey,
-  method = c("GAMs", "Modified t-test", "GPs"),
+  Xl,
+  Yl,
+  Cxl,
+  Eyl,
+  method = c("GAMs", "Correlation", "GPs", "Moran's I"),
   wMat,
-  wo = "distance",
+  wo = c("distance", "nn"),
   numNN = 8,
   n_points_grid = 500,
   families = list(X = gaussian(), Y = gaussian())
 )
 }
 \arguments{
+\item{Xl, Yl}{Lists of matrices of omics measurements}
+
+\item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
+
 \item{method}{A character string, indicating which method to apply}
 
 \item{wMat}{Optional, a weight matrix for calculating Moran's I}
@@ -28,10 +32,6 @@ sbivarMulti(
 evaluated on.}
 
 \item{families}{A vector of length 2 giving outcome values.}
-
-\item{Xl, Yl}{Lists of matrices of omics measurements}
-
-\item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 }
 \value{
 A list containing at least an entry "result", which contains p-values,
@@ -47,6 +47,6 @@ Y = matrix(rnorm(m*k), m, k, dimnames = list(NULL, paste0("Y", seq_len(k))))
 Cx = matrix(runif(n*2), n, 2)
 Ey = matrix(runif(m*2), m, 2)
 colnames(Cx) = colnames(Ey) = c("x", "y")
-resGAMs = sbivarSingle(X, Y, Cx, Ey, method = "GAMs")
-resModtTest = sbivarSingle(X, Y, Cx, Ey, method = "Modified")
+resGAMs = sbivarMulti(X, Y, Cx, Ey, method = "GAMs")
+resMoran = sbivarMulti(X, Y, Cx, Ey, method = "Moran")
 }

@@ -1,6 +1,6 @@
 #' Perform nearest-neighbour matching, and apply all pairwise tests
 #'
-#' @inheritParams sbivar
+#' @inheritParams sbivarSingle
 #' @param mapToFinest A boolean, should the mapping occur to the dataset with
 #' the best resolution?
 #'

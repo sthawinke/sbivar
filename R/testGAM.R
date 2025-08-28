@@ -41,7 +41,7 @@ testManyGAMs = function(gamsx, gamsy, newGrid){
 }
 #' Wrapper function to fit GAMs and test for all possible combinations
 #'
-#' @inheritParams sbivar
+#' @inheritParams sbivarSingle
 #'
 #' @returns see \link{testManyGAMs}
 wrapGAMs = function(X, Y, Cx, Ey, families, n_points_grid){

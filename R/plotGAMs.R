@@ -2,6 +2,7 @@
 #'
 #' @inheritParams wrapGAMs
 #' @inheritParams testManyGAMs
+#' @param x,y outcome vetors
 #' @param offsets List of length two with offsets
 #' @param scaleFun The scaling function to be applied before plotting
 #' @param addTitle A booleam, should a title be plotted
@@ -46,15 +47,15 @@ plotGAMs = function(x, y, Cx, Ey, newGrid, offsets = list(), scaleFun = "scaleMi
 }
 #' A wrapper frunction to plot from matrices
 #'
-#' @inheritParams sbivar
-#' @param featx,featy The features to plot
+#' @inheritParams sbivarSingle
+#' @param featX,featY The features to plot
 #' @param ... Passed onto \link{plotGAMs}.
 #'
 #' @returns See \link{plotGAMs}
 #' @export
 #'
 #' @examples
-#' example(sbivar, "sbivar")
+#' example(sbivarSingle, "sbivar")
 #' plotGAMsFromMatrix(X, Y, featX = "X1", featY = "Y1", Cx = Cx, Ey = Ey)
 plotGAMsFromMatrix = function(X, Y, featX, featY, Cx, Ey,
                               families = list("X" = gaussian(), "Y" = gaussian()), ...){

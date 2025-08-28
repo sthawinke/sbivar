@@ -8,6 +8,8 @@ scaleMinusOne(y, na.rm = TRUE)
 }
 \arguments{
 \item{y}{The vector to be scaled}
+
+\item{na.rm}{passed onto \link[stats]{min} and \link[stats]{range}}
 }
 \description{
 Scale to [-1,1] range

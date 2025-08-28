@@ -19,6 +19,8 @@ plotGAMs(
 )
 }
 \arguments{
+\item{x, y}{outcome vetors}
+
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
 \item{newGrid}{The new grid of points in which to evaluate the GAMs}

@@ -1,10 +1,15 @@
 #' Apply one or more tests for bivariate spatial association
 #'
+#' The tests can be applied to either disjoint or joint coordinate sets.
+#'
+#' @details If only Cx is supplied and X and Y have the same number of rows, a joint analysis is performed
+#' If Cx and Ey are provided, and X and Y have the same number of rows, equality of Cx and Ey is checked.
+#' If true, a joint analysis is run, with a warning.
+#'
 #' @param X,Y Matrices of omics measurements
 #' @param Cx,Ey Corresponding coordinate matrices of dimension two
 #' @param method A character string, indicating which method to apply
 #' @param wMat Optional, a weight matrix for calculating Moran's I
-#' @param wo,numNN Passed on to \link{buildWeightMat}.
 #' @param families A vector of length 2 giving outcome values.
 #' @param n_points_grid The number of points in the new grid for the GAMs to be
 #' evaluated on.
@@ -20,13 +25,16 @@
 #' Cx = matrix(runif(n*2), n, 2)
 #' Ey = matrix(runif(m*2), m, 2)
 #' colnames(Cx) = colnames(Ey) = c("x", "y")
-#' resGAMs = sbivar(X, Y, Cx, Ey, method = "GAMs")
-#' resModtTest = sbivar(X, Y, Cx, Ey, method = "Modified")
-sbivar = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs"),
-                  wMat, wo = "distance", numNN = 8, n_points_grid = 5e2,
+#' resGAMs = sbivarSingle(X, Y, Cx, Ey, method = "GAMs")
+#' resModtTest = sbivarSingle(X, Y, Cx, Ey, method = "Modified")
+sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs"),
+                  wMat, n_points_grid = 5e2,
                   families = list("X" = gaussian(), "Y" = gaussian())){
     stopifnot(is.numeric(numNN), is.numeric(n_points_grid), is.character(wo),
               is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family")))
+
+    #Check if only Cx supplied, or Cx and Ey are identical
+
     n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y)
     if(n!=nrow(Cx)){
         stop("Dimensions of X and its coordinates Cx do not match!")
@@ -48,9 +56,7 @@ sbivar = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs"),
     }
     colnames(Cx) = colnames(Ey) = c("x", "y")
     method = match.arg(method)
-    out = if(method == "Moran's I"){
-
-    } else if(method == "GAMs"){
+    out = if(method == "GAMs"){
         wrapGAMs(X = X, Y = Y, Cx = Cx, Ey = Ey, families = families,
                  n_points_grid = n_points_grid)
     } else if(method == "GPs"){

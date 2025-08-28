@@ -12,7 +12,6 @@ Description: The sbivar package implements a suite of tests for Spatial BIVARiat
     analysed.
 License: GPL-2
 Encoding: UTF-8
-LazyData: true
 RdMacros: Rdpack
 RoxygenNote: 7.3.2
 biocViews: Transcriptomics, Spatial, Proteomics, Metabolomics

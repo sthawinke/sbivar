@@ -15,10 +15,11 @@
 #' @param mapToFinest A boolean, should the one-to-one mapping for modified t-test
 #' occur to the dataset with the best resolution?
 #'
-#' @returns A list containing at least an entry "result", which contains p-values,
-#' adjusted p-values and measures of association, sorted by increasing p-value.
+#' @returns A matrix which contains at least a p-values ("pVal") and a Benjamini-Hochberg adjusted p-value ("pAdj"),
+#' sorted by increasing p-value.
 #' @export
-#'
+#' @importFrom stats p.adjust
+#' @importFrom methods is
 #' @examples
 #' n=1e2;m=2e2;p=10;k=5
 #' X = matrix(rnorm(n*p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
@@ -84,6 +85,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs
         wrapModTtest(X = X, Y = Y, Cx = Cx, Ey = Ey, mapToFinest = mapToFinest,
                      jointCoordinates = jointCoordinates)
     }
+    out = cbind(out, "pAdj" = p.adjust(out[, "pVal"], method = "BH"))
     out[order(out[, "pVal"]),]
 }
 

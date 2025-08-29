@@ -31,8 +31,8 @@ occur to the dataset with the best resolution?}
 \item{families}{A vector of length 2 giving outcome values.}
 }
 \value{
-A list containing at least an entry "result", which contains p-values,
-adjusted p-values and measures of association, sorted by increasing p-value.
+A matrix which contains at least a p-values ("pVal") and a Benjamini-Hochberg adjusted p-value ("pAdj"),
+sorted by increasing p-value.
 }
 \description{
 The tests can be applied to either disjoint or joint coordinate sets.

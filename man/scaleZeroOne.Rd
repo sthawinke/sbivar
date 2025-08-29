@@ -9,7 +9,7 @@ scaleZeroOne(y, na.rm = TRUE)
 \arguments{
 \item{y}{The vector to be scaled}
 
-\item{na.rm}{passed onto \link[stats]{min} and \link[stats]{range}}
+\item{na.rm}{passed onto \link[base]{min} and \link[base]{range}}
 }
 \description{
 Scale to [0,1] range

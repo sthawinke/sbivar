@@ -1,7 +1,7 @@
 context("Unit tests for input errors")
 test_that("SbivarSingle works for correct input", {
     expect_is(sbivarSingle(X, Y, Cx, Ey, method = "GAMs"), "matrix")
-    expect_identical(colnames(sbivarSingle(X, Y, Cx, Ey, method = "Modified")), c("Correlation", "ESS", "pVal"))
+    expect_identical(colnames(sbivarSingle(X, Y, Cx, Ey, method = "Modified")), c("Correlation", "ESS", "pVal", "pAdj"))
     expect_false(is.unsorted(sbivarSingle(X, Y[seq_len(nrow(X)),], Cx, method = "Modified")[, "pVal"]))
     expect_message(sbivarSingle(X, X, Cx, Cx, method = "Modified"))
 })

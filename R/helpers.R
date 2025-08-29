@@ -12,7 +12,7 @@ makePval = function(z){
 }
 #' Scale to [0,1] range
 #' @param y The vector to be scaled
-#' @param na.rm passed onto \link[stats]{min} and \link[stats]{range}
+#' @param na.rm passed onto \link[base]{min} and \link[base]{range}
 scaleZeroOne = function(y, na.rm = TRUE){
     (y-min(y, na.rm = na.rm))/diff(range(y, na.rm = na.rm))
 }

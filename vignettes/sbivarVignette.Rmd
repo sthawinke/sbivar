@@ -15,9 +15,9 @@ bibliography: ../inst/REFERENCES.bib
 ---
 
 ```{r, echo=FALSE}
-# htmltools::img(src = knitr::image_uri("../inst/sbivar.jpg"), 
-#                style = 'position:absolute; top:0; right:0; padding:10px;',
-#                alt = 'logo', width = "200px", heigth = "200px")
+htmltools::img(src = knitr::image_uri("../inst/Sbivar.png"),
+               style = 'position:absolute; top:0; right:0; padding:10px;',
+               alt = 'logo', width = "200px", heigth = "200px")
 ```
 
 ```{r setup, include=FALSE, echo=FALSE}
@@ -55,7 +55,7 @@ library(sbivar)
 
 # Multithreading
 
-The _sbivar_ package can be computationally intensive, especially since the number transcript pairs grows quadratically with the number of transcripts. For this reason we provide multithreading through the _BiocParallel_ package. 
+The _sbivar_ package can be computationally intensive, since the number of bivariate tests equals the product of the numbers of features in both modalities. For this reason we provide multithreading through the _BiocParallel_ package. 
 
 ```{r}
 library(BiocParallel)

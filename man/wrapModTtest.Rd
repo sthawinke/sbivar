@@ -11,8 +11,8 @@ wrapModTtest(X, Y, Cx, Ey, mapToFinest = FALSE)
 
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
-\item{mapToFinest}{A boolean, should the mapping occur to the dataset with
-the best resolution?}
+\item{mapToFinest}{A boolean, should the one-to-one mapping for modified t-test
+occur to the dataset with the best resolution?}
 }
 \value{
 A dataframe of results sorted by p-value

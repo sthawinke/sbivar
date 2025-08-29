@@ -12,6 +12,7 @@ sbivarSingle(
   method = c("GAMs", "Modified t-test", "GPs"),
   wMat,
   n_points_grid = 500,
+  mapToFinest = FALSE,
   families = list(X = gaussian(), Y = gaussian())
 )
 }
@@ -26,6 +27,9 @@ sbivarSingle(
 
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.}
+
+\item{mapToFinest}{A boolean, should the one-to-one mapping for modified t-test
+occur to the dataset with the best resolution?}
 
 \item{families}{A vector of length 2 giving outcome values.}
 }

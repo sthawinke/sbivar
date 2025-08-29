@@ -13,6 +13,8 @@
 #' @param families A vector of length 2 giving outcome values.
 #' @param n_points_grid The number of points in the new grid for the GAMs to be
 #' evaluated on.
+#' @param mapToFinest A boolean, should the one-to-one mapping for modified t-test
+#' occur to the dataset with the best resolution?
 #'
 #' @returns A list containing at least an entry "result", which contains p-values,
 #' adjusted p-values and measures of association, sorted by increasing p-value.
@@ -28,7 +30,7 @@
 #' resGAMs = sbivarSingle(X, Y, Cx, Ey, method = "GAMs")
 #' resModtTest = sbivarSingle(X, Y, Cx, Ey, method = "Modified")
 sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs"),
-                  wMat, n_points_grid = 5e2,
+                  wMat, n_points_grid = 5e2, mapToFinest = FALSE,
                   families = list("X" = gaussian(), "Y" = gaussian())){
     stopifnot(is.numeric(numNN), is.numeric(n_points_grid), is.character(wo),
               is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family")))
@@ -62,7 +64,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs
     } else if(method == "GPs"){
 
     } else if(method == "Modified t-test"){
-        wrapModTtest(X = X, Y = Y, Cx = Cx, Ey = Ey, mapToFinest = FALSE)
+        wrapModTtest(X = X, Y = Y, Cx = Cx, Ey = Ey, mapToFinest = mapToFinest)
     }
     out[order(out[, "pVal"]),]
 }

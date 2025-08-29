@@ -1,8 +1,6 @@
 #' Perform nearest-neighbour matching, and apply all pairwise tests
 #'
 #' @inheritParams sbivarSingle
-#' @param mapToFinest A boolean, should the mapping occur to the dataset with
-#' the best resolution?
 #'
 #' @returns A dataframe of results sorted by p-value
 #' @importFrom RANN nn2

@@ -9,7 +9,6 @@
 #' @param X,Y Matrices of omics measurements
 #' @param Cx,Ey Corresponding coordinate matrices of dimension two
 #' @param method A character string, indicating which method to apply
-#' @param wMat Optional, a weight matrix for calculating Moran's I
 #' @param families A vector of length 2 giving outcome values.
 #' @param n_points_grid The number of points in the new grid for the GAMs to be
 #' evaluated on.
@@ -21,7 +20,7 @@
 #' @export
 #'
 #' @examples
-#' n=1e2;m=2e2;p=10;k=12
+#' n=1e2;m=2e2;p=10;k=5
 #' X = matrix(rnorm(n*p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
 #' Y = matrix(rnorm(m*k), m, k, dimnames = list(NULL, paste0("Y", seq_len(k))))
 #' Cx = matrix(runif(n*2), n, 2)
@@ -29,15 +28,34 @@
 #' colnames(Cx) = colnames(Ey) = c("x", "y")
 #' resGAMs = sbivarSingle(X, Y, Cx, Ey, method = "GAMs")
 #' resModtTest = sbivarSingle(X, Y, Cx, Ey, method = "Modified")
+#' resModtTestJoint = sbivarSingle(X, Y[seq_len(nrow(X)),], Cx, method = "Modified")
 sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs"),
-                  wMat, n_points_grid = 5e2, mapToFinest = FALSE,
+                  n_points_grid = 5e2, mapToFinest = FALSE,
                   families = list("X" = gaussian(), "Y" = gaussian())){
-    stopifnot(is.numeric(numNN), is.numeric(n_points_grid), is.character(wo),
+    stopifnot(is.numeric(n_points_grid), ncol(Cx) == 2,
               is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family")))
-
-    #Check if only Cx supplied, or Cx and Ey are identical
-
     n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y)
+    method = match.arg(method)
+    #Check if only Cx supplied, or Cx and Ey are identical
+    if(missing(Ey)){
+        if(n!=m){
+            stop("Only one coordinate matrix Cx supplied, and dimensions of X and Y do not match.
+                 Please provide the coordinates of Y too through the Ey argument.")
+        } else {#Run a joint analysis
+            message("Only one coordinate matrix Cx supplied, and dimensions of X and Y do match.
+                 Performing a joint analysis.")
+            Ey = Cx
+            jointCoordinates = TRUE
+        }
+    } else if(identical(Cx, Ey)){
+        message("Identical coordinate matrices supplied, performing a joint analysis")
+        jointCoordinates = TRUE
+    } else {
+        if(ncol(Ey!=2)){
+            stop("Coordinate matrix Ey must have two columms!")
+        }
+        jointCoordinates = FALSE
+    }
     if(n!=nrow(Cx)){
         stop("Dimensions of X and its coordinates Cx do not match!")
     }
@@ -57,14 +75,14 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs
         colnames(Y) = paste0("Y", seq_len(k))
     }
     colnames(Cx) = colnames(Ey) = c("x", "y")
-    method = match.arg(method)
     out = if(method == "GAMs"){
         wrapGAMs(X = X, Y = Y, Cx = Cx, Ey = Ey, families = families,
                  n_points_grid = n_points_grid)
     } else if(method == "GPs"){
 
     } else if(method == "Modified t-test"){
-        wrapModTtest(X = X, Y = Y, Cx = Cx, Ey = Ey, mapToFinest = mapToFinest)
+        wrapModTtest(X = X, Y = Y, Cx = Cx, Ey = Ey, mapToFinest = mapToFinest,
+                     jointCoordinates = jointCoordinates)
     }
     out[order(out[, "pVal"]),]
 }

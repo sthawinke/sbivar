@@ -10,7 +10,6 @@ sbivarSingle(
   Cx,
   Ey,
   method = c("GAMs", "Modified t-test", "GPs"),
-  wMat,
   n_points_grid = 500,
   mapToFinest = FALSE,
   families = list(X = gaussian(), Y = gaussian())
@@ -22,8 +21,6 @@ sbivarSingle(
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
 \item{method}{A character string, indicating which method to apply}
-
-\item{wMat}{Optional, a weight matrix for calculating Moran's I}
 
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.}
@@ -46,7 +43,7 @@ If Cx and Ey are provided, and X and Y have the same number of rows, equality of
 If true, a joint analysis is run, with a warning.
 }
 \examples{
-n=1e2;m=2e2;p=10;k=12
+n=1e2;m=2e2;p=10;k=5
 X = matrix(rnorm(n*p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
 Y = matrix(rnorm(m*k), m, k, dimnames = list(NULL, paste0("Y", seq_len(k))))
 Cx = matrix(runif(n*2), n, 2)
@@ -54,4 +51,5 @@ Ey = matrix(runif(m*2), m, 2)
 colnames(Cx) = colnames(Ey) = c("x", "y")
 resGAMs = sbivarSingle(X, Y, Cx, Ey, method = "GAMs")
 resModtTest = sbivarSingle(X, Y, Cx, Ey, method = "Modified")
+resModtTestJoint = sbivarSingle(X, Y[seq_len(nrow(X)),], Cx, method = "Modified")
 }

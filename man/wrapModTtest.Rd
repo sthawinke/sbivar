@@ -2,9 +2,9 @@
 % Please edit documentation in R/wrapModTtest.R
 \name{wrapModTtest}
 \alias{wrapModTtest}
-\title{Perform nearest-neighbour matching, and apply all pairwise tests}
+\title{Perform nearest-neighbour matching if necessary, and apply all pairwise tests.}
 \usage{
-wrapModTtest(X, Y, Cx, Ey, mapToFinest = FALSE)
+wrapModTtest(X, Y, Cx, Ey, mapToFinest = FALSE, jointCoordinates = FALSE)
 }
 \arguments{
 \item{X, Y}{Matrices of omics measurements}
@@ -13,10 +13,17 @@ wrapModTtest(X, Y, Cx, Ey, mapToFinest = FALSE)
 
 \item{mapToFinest}{A boolean, should the one-to-one mapping for modified t-test
 occur to the dataset with the best resolution?}
+
+\item{jointCoordinates}{A boolean, are measurements on the same location
+.}
 }
 \value{
-A dataframe of results sorted by p-value
+A dataframe of results sorted by p-value, also containing effective sample size (ESS) and correlation estimate.
 }
 \description{
-Perform nearest-neighbour matching, and apply all pairwise tests
+If measurements are not on the same location, they are matched using nearest neighbour matching with the \link[RANN]{nn2} function.
+Then modified t-test is applied to all pairs
+}
+\seealso{
+\link[SpatialPack]{modified.ttest}
 }

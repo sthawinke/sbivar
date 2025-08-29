@@ -1,0 +1,10 @@
+library(testthat)
+library(sbivar)
+library(BiocParallel)
+n=1e2;m=2e2;p=10;k=5
+X = matrix(rnorm(n*p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
+Y = matrix(rnorm(m*k), m, k, dimnames = list(NULL, paste0("Y", seq_len(k))))
+Cx = matrix(runif(n*2), n, 2)
+Ey = matrix(runif(m*2), m, 2)
+colnames(Cx) = colnames(Ey) = c("x", "y")
+test_check("sbivar")

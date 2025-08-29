@@ -45,6 +45,6 @@ A ggplot object
 Title
 }
 \examples{
-example(sbivar, "sbivar")
+example(sbivarSingle, "sbivar")
 plotGAMs(X[, 1], Y[, 1], Cx, Ey)
 }

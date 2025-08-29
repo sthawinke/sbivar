@@ -11,5 +11,5 @@ test_that("Unit tests work", {
         (foo[1] >= -1) && (foo[2] <= 1)
     })
     expect_identical(makeNames(c("gene1", "gene2"), c("compoundA", "compoundB")),
-                     c("gene1_compoundA", "gene1_compoundB", "gene2_compundA", "gene2_compundB"))
+                     c("gene1_compoundA", "gene2_compoundA", "gene1_compoundB", "gene2_compoundB"))
 })

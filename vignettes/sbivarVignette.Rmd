@@ -15,7 +15,7 @@ bibliography: ../inst/REFERENCES.bib
 ---
 
 ```{r, echo=FALSE}
-# htmltools::img(src = knitr::image_uri("../inst/Smoppix.jpg"), 
+# htmltools::img(src = knitr::image_uri("../inst/sbivar.jpg"), 
 #                style = 'position:absolute; top:0; right:0; padding:10px;',
 #                alt = 'logo', width = "200px", heigth = "200px")
 ```
@@ -23,3 +23,91 @@ bibliography: ../inst/REFERENCES.bib
 ```{r setup, include=FALSE, echo=FALSE}
 knitr::opts_chunk$set(fig.heigh = 7, fig.width = 7)
 ```
+
+# Introduction
+
+This vignette demonstrates the use of the _sbivar_ package: Spatial BIVARiate association tests.
+
+\setcounter{tocdepth}{5}
+\tableofcontents
+
+# Installation instructions
+
+The package can be installed from Bioconductor as follows:
+
+```{r install, eval = FALSE}
+library(Biocmanager)
+install("sbivar")
+```
+
+Alternatively, the latest version can be installed from github as:
+
+```{r installAndLoadGitHub, eval = FALSE}
+library(devtools)
+install_github("sthawinke/sbivar")
+```
+
+Once installed, we can load the package:
+
+```{r load}
+library(sbivar)
+```
+
+# Multithreading
+
+The _sbivar_ package can be computationally intensive, especially since the number transcript pairs grows quadratically with the number of transcripts. For this reason we provide multithreading through the _BiocParallel_ package. 
+
+```{r}
+library(BiocParallel)
+```
+
+All the user needs to do, is choose the number of cores: 
+
+```{r}
+nCores <- 2 # The number of CPUs
+```
+
+and prepare the parallel backend. The code is different for windows or unix-based systems, but is taken care of by the following code snippet:
+
+```{r nonwindows}
+if(.Platform$OS.type == "unix"){
+    #On unix-based systems, use MulticoreParam
+    register(MulticoreParam(nCores))
+} else {
+    #On windows, use makeCluster
+    library(doParallel)
+    Clus = makeCluster(nCores)
+    registerDoParallel(Clus)
+    register(DoparParam(), default = TRUE)
+}
+```
+
+Wherever applicable, the registered backend will be used throughout the analysis.
+For serial calculations, for instance if memory is limiting, choose
+
+```{r , eval = FALSE}
+register(SerialParam())
+```
+
+# Troubleshooting
+
+An error like 
+
+> Error in reducer$value.cache[[as.character(idx)]] <- values : 
+>  wrong args for environment subassignment
+> In addition: Warning message:
+> In parallel::mccollect(wait = FALSE, timeout = 1) :
+>  1 parallel job did not deliver a result
+
+often indicates insufficient memory. Try reducing the number of cores requested with _MultiCoreParam()_,
+or switch to serial processing with _register(SerialParam())_.
+ 
+# Session info
+
+```{r sessionInfo}
+sessionInfo()
+```
+
+# Bibliography
+
+\printbibliography 

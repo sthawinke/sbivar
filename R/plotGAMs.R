@@ -12,7 +12,7 @@
 #' @export
 #'
 #' @examples
-#' example(sbivar, "sbivar")
+#' example(sbivarSingle, "sbivar")
 #' plotGAMs(X[, 1], Y[, 1], Cx, Ey)
 #' @import ggplot2
 #' @importFrom reshape2 melt

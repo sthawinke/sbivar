@@ -9,6 +9,9 @@ makeNames(featX, featY)
 \arguments{
 \item{featX, featY}{vectors of feature names}
 }
+\value{
+A vector of names
+}
 \description{
 Make unique names
 }

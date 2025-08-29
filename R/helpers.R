@@ -1,9 +1,11 @@
 #' Name a character vector after itself
 #' @param x The vector to be names
+#' @return the named vector
 selfName = function(x){names(x)=x;x}
 #' Convert z-value to p-value
 #'
 #' @param z The z-value to be converted
+#' @return The p-value
 makePval = function(z){
     z[is.na(z)] = 0
     tmp = pnorm(z, lower.tail = TRUE)
@@ -13,16 +15,19 @@ makePval = function(z){
 #' Scale to [0,1] range
 #' @param y The vector to be scaled
 #' @param na.rm passed onto \link[base]{min} and \link[base]{range}
+#' @return The scaled vector
 scaleZeroOne = function(y, na.rm = TRUE){
     (y-min(y, na.rm = na.rm))/diff(range(y, na.rm = na.rm))
 }
 #' Scale to [-1,1] range
 #' @inheritParams scaleZeroOne
+#' @return The scaled vector
 scaleMinusOne = function(y, na.rm = TRUE){
     scaleZeroOne(y, na.rm = na.rm)*2-1
 }
 #' Make unique names
 #' @param featX,featY vectors of feature names
+#' @return A vector of names
 makeNames = function(featX, featY){
     make.names(apply(expand.grid(featX, featY), 1, paste, collapse = "_"))
 }

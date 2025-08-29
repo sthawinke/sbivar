@@ -52,9 +52,6 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs
         message("Identical coordinate matrices supplied, performing a joint analysis")
         jointCoordinates = TRUE
     } else {
-        if(ncol(Ey!=2)){
-            stop("Coordinate matrix Ey must have two columms!")
-        }
         jointCoordinates = FALSE
     }
     if(n!=nrow(Cx)){

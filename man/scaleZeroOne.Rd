@@ -11,6 +11,9 @@ scaleZeroOne(y, na.rm = TRUE)
 
 \item{na.rm}{passed onto \link[base]{min} and \link[base]{range}}
 }
+\value{
+The scaled vector
+}
 \description{
 Scale to [0,1] range
 }

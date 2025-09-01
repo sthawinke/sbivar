@@ -1,4 +1,4 @@
-#' Title
+#' Plot the fitted splines, and the correlation between them
 #'
 #' @inheritParams wrapGAMs
 #' @inheritParams testManyGAMs

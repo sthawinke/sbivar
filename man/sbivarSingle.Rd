@@ -12,7 +12,8 @@ sbivarSingle(
   method = c("GAMs", "Modified t-test", "GPs"),
   n_points_grid = 500,
   mapToFinest = FALSE,
-  families = list(X = gaussian(), Y = gaussian())
+  families = list(X = gaussian(), Y = gaussian()),
+  gpParams
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ evaluated on.}
 occur to the dataset with the best resolution?}
 
 \item{families}{A vector of length 2 giving outcome values.}
+
+\item{gpParams}{Parameters of the Gaussian processes}
 }
 \value{
 A matrix which contains at least a p-values ("pVal") and a Benjamini-Hochberg adjusted p-value ("pAdj"),

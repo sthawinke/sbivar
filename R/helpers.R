@@ -31,3 +31,31 @@ scaleMinusOne = function(y, na.rm = TRUE){
 makeNames = function(featX, featY){
     make.names(apply(expand.grid(featX, featY), 1, paste, collapse = "_"))
 }
+#' A wrapper for Matrix::bdiag maintaining names
+#'
+#' @param A,B Matrix to be used in \link[Matrix]{bdiag}
+#' @return Same as \link[Matrix]{bdiag} but with dimnames
+bdiagn = function(A, B){
+    M <- bdiag(A, B)
+    # Build new dimnames from components
+    dimnames(M) <- list(c(rownames(A), rownames(B)), c(colnames(A), colnames(B)))
+    M
+}
+#' Find trace of a matrix, of traces of an array
+#'
+#' A (mxm) matric has one trace (the product of the diagonal elements), a (mxmxp) array has p traces
+#'
+#' @param x Matrix or array
+#' @param dim Dimensions defining matrices to find traces over
+#'
+#' @returns A trace or vector of traces
+#' @importFrom methods is
+tr = function(x, dim = c(1,2)) {
+    if(is.matrix(x)|| is(x, "dgeMatrix") || is(x, "dgCMatrix")){
+        sum(diag(x))
+    } else if(is.array(x)){
+        apply(x, dim, tr)
+    } else {
+        stop("Trace function not implemented for ", class(x))
+    }
+}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotGAMs.R
 \name{plotGAMs}
 \alias{plotGAMs}
-\title{Title}
+\title{Plot the fitted splines, and the correlation between them}
 \usage{
 plotGAMs(
   x,
@@ -42,7 +42,7 @@ evaluated on.}
 A ggplot object
 }
 \description{
-Title
+Plot the fitted splines, and the correlation between them
 }
 \examples{
 example(sbivarSingle, "sbivar")

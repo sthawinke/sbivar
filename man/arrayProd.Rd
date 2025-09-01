@@ -9,6 +9,9 @@ arrayProd(A, B)
 \arguments{
 \item{A, B}{mxmxp arrays}
 }
+\value{
+A pxp matrix
+}
 \description{
 Array resulting from all matrix products of slices of array A mxmxp
 with those of array B of the same dimensions,

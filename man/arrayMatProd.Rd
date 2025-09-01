@@ -6,6 +6,14 @@
 \usage{
 arrayMatProd(A, M)
 }
+\arguments{
+\item{A}{An mxmxp array}
+
+\item{M}{An mxm matrix}
+}
+\value{
+An mxmxp array
+}
 \description{
 Array resulting from all matrix products of slices of array A mxmxp, with matrix M is mxm
 }

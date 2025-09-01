@@ -1,4 +1,8 @@
 #' Multiply an array with a matrix
+#'
+#' @param A An mxmxp array
+#' @param M An mxm matrix
+#' @return An mxmxp array
 #' @description Array resulting from all matrix products of slices of array A mxmxp, with matrix M is mxm
 arrayMatProd = function(A, M){
     n = dim(A)[1];p = dim(A)[3]
@@ -13,6 +17,9 @@ arrayMatProd = function(A, M){
     return(result)
 }
 #' Multiply two arrays of same dimensions along the first two dimensions
+#'
+#' @param A,B mxmxp arrays
+#' @return A pxp matrix
 #' @description Array resulting from all matrix products of slices of array A mxmxp
 #' with those of array B of the same dimensions,
 #'

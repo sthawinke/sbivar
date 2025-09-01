@@ -4,7 +4,7 @@
 \alias{buildAltSigmas}
 \title{Title}
 \usage{
-buildAltSigmas(distMat, numLscAlts, Quants, idN, idM, ...)
+buildAltSigmas(distMat, numLscAlts, Quants, idN, idM)
 }
 \arguments{
 \item{distMat}{The distance matrix of Cx and Ey}
@@ -14,8 +14,6 @@ buildAltSigmas(distMat, numLscAlts, Quants, idN, idM, ...)
 \item{Quants}{Most extreme quantiles of the distance distribution to be used as length scales.}
 
 \item{idN, idM}{indices for x and y in the distance matrix}
-
-\item{...}{passed onto \link{buildAltSigma}}
 }
 \value{
 A list of covariance matrices

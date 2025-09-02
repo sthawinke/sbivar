@@ -13,6 +13,9 @@ sbivarSingle(
   n_points_grid = 500,
   mapToFinest = FALSE,
   families = list(X = gaussian(), Y = gaussian()),
+  GPmethod = c("REML", "ML", "gpytorch"),
+  device = c("cpu", "cuda"),
+  training_iter = 100L,
   gpParams
 )
 }

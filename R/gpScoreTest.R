@@ -15,19 +15,22 @@
 #' +1 for positive association, -1 for negative
 #' @importFrom stats pchisq
 #' @importFrom abind abind
+#' @importFrom Matrix bdiag
 gpScoreTest = function(x, y, Cx, Ey,
                        device = "cpu", altSigmas, method = "gaussian", distMat = as.matrix(stats::dist(rbind(Cx, Ey))),
                        solXonly, solYonly, sx, numLscAlts = if(missing(altSigmas)) 10 else dim(altSigmas)[3],
                        Quants = c(0.005, 0.5)){
     n = length(x);m=length(y)
+    idN = seq_len(n);idM = n+seq_len(m) #Indices for x and y
+    regMat = cbind(1, c(rep(0, n), rep(1, m))) #Regression matrix accounting for mean differences
     #Estimate separate GPs
     if(missing(solXonly))
-        solXonly = prepGLS(x, Cx, method = method, device = device)
+        solXonly = fitGPs(x, Cx, method = method, device = device)
     if(missing(solYonly))
-        solYonly = prepGLS(y, Ey, method = method, device = device)
+        solYonly = fitGPs(y, Ey, method = method, device = device)
     out = c(x, y); muVec = rep(c(solXonly["mean"], solYonly["mean"]), times = c(n,m))
     diffVec = cbind(out-muVec)
-    idN = seq_len(n);idM = n+seq_len(m) #Indices for x and y
+
     #Exploit block diagonality
     if(missing(sx))
         sx <- base::solve(buildSigmaGp(solXonly, distMat =  distMat[idN, idN], sparse = FALSE))
@@ -67,10 +70,8 @@ gpScoreTest = function(x, y, Cx, Ey,
     ItautauTilde = Itautau - rowSums((Itautheta[,idItt] %*% sitt)* Itautheta[,idItt])
     kappaEst = ItautauTilde/(2*e);nu = 2*e^2/ItautauTilde
     pVals = vapply(c(FALSE, TRUE), FUN.VALUE = double(numLscAlts), function(neg){
-        #Regular variances goes into the weights (invW), only the alternative sigma is in the test statistic
-        ## The score statistic
         vec = c(if(neg) invWDiffVecNeg else invWDiffVec)
-        Usigma = 0.5 * crossprod(colSums(vec * altSigmas), vec)
+        Usigma = 0.5 * crossprod(colSums(vec * altSigmas), vec) ## The score statistic
         pchisq(as.vector(Usigma/kappaEst), df = nu, lower.tail = FALSE)
     })
     #Cauchy combination rule

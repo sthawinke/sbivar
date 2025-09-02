@@ -15,3 +15,6 @@ the named vector
 \description{
 Name a character vector after itself
 }
+\examples{
+selfName(LETTERS[1:5])
+}

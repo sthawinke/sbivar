@@ -33,11 +33,15 @@
 #' resModtTestJoint = sbivarSingle(X, Y[seq_len(nrow(X)),], Cx, method = "Modified")
 sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs"),
                   n_points_grid = 5e2, mapToFinest = FALSE,
-                  families = list("X" = gaussian(), "Y" = gaussian()), gpParams){
-    stopifnot(is.numeric(n_points_grid), ncol(Cx) == 2,
-              is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family")))
+                  families = list("X" = gaussian(), "Y" = gaussian()),
+                  GPmethod = c("REML", "ML", "gpytorch"), device = c("cpu", "cuda"),
+                  training_iter = 100L, gpParams){
+    stopifnot(is.numeric(n_points_grid), ncol(Cx) == 2, is.character(method),
+              all(vapply(families, FUN.VALUE = TRUE, is, "family")))
     n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y)
     method = match.arg(method)
+    GPmethod = match.arg(GPmethod)
+    device = match.arg(device)
     #Check if only Cx supplied, or Cx and Ey are identical
     if(missing(Ey)){
         if(n!=m){

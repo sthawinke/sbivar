@@ -10,7 +10,6 @@ sbivarMulti(
   Cxl,
   Eyl,
   method = c("GAMs", "Correlation", "GPs", "Moran's I"),
-  wMat,
   wo = c("distance", "nn"),
   numNN = 8,
   n_points_grid = 500,
@@ -24,14 +23,14 @@ sbivarMulti(
 
 \item{method}{A character string, indicating which method to apply}
 
-\item{wMat}{Optional, a weight matrix for calculating Moran's I}
-
 \item{wo, numNN}{Passed on to \link{buildWeightMat}.}
 
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.}
 
 \item{families}{A vector of length 2 giving outcome values.}
+
+\item{wMat}{Optional, a weight matrix for calculating Moran's I}
 }
 \value{
 A list containing at least an entry "result", which contains p-values,
@@ -42,11 +41,19 @@ Apply one or more tests for bivariate spatial association
 }
 \examples{
 n=1e2;m=2e2;p=10;k=12
-X = matrix(rnorm(n*p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
-Y = matrix(rnorm(m*k), m, k, dimnames = list(NULL, paste0("Y", seq_len(k))))
-Cx = matrix(runif(n*2), n, 2)
-Ey = matrix(runif(m*2), m, 2)
-colnames(Cx) = colnames(Ey) = c("x", "y")
+ims = 8
+X = lapply(selfName(ims), function(i){n = rpois(n)
+ matrix(rnorm(n*p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
+})
+Y = lapply(selfName(ims), function(i){m = rpois(m)
+ matrix(rnorm(m*k), m, k, dimnames = list(NULL, paste0("Y", seq_len(k))))
+})
+Cx = lapply(X, function(x){n = nrow(x)
+    matrix(runif(n*2), n, 2, dimnames = list(NULL, c("x", "y")))
+})
+Ey = lapply(Y, function(y){m = nrow(y)
+    matrix(runif(m*2), m, 2, dimnames = list(NULL, c("x", "y")))
+})
 resGAMs = sbivarMulti(X, Y, Cx, Ey, method = "GAMs")
 resMoran = sbivarMulti(X, Y, Cx, Ey, method = "Moran")
 }

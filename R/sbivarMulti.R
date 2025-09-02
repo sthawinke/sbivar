@@ -15,16 +15,26 @@
 #'
 #' @examples
 #' n=1e2;m=2e2;p=10;k=12
-#' X = matrix(rnorm(n*p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
-#' Y = matrix(rnorm(m*k), m, k, dimnames = list(NULL, paste0("Y", seq_len(k))))
-#' Cx = matrix(runif(n*2), n, 2)
-#' Ey = matrix(runif(m*2), m, 2)
-#' colnames(Cx) = colnames(Ey) = c("x", "y")
+#' ims = 8
+#' X = lapply(selfName(ims), function(i){n = rpois(n)
+#'  matrix(rnorm(n*p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
+#' })
+#' Y = lapply(selfName(ims), function(i){m = rpois(m)
+#'  matrix(rnorm(m*k), m, k, dimnames = list(NULL, paste0("Y", seq_len(k))))
+#' })
+#' Cx = lapply(X, function(x){n = nrow(x)
+#'     matrix(runif(n*2), n, 2, dimnames = list(NULL, c("x", "y")))
+#' })
+#' Ey = lapply(Y, function(y){m = nrow(y)
+#'     matrix(runif(m*2), m, 2, dimnames = list(NULL, c("x", "y")))
+#' })
 #' resGAMs = sbivarMulti(X, Y, Cx, Ey, method = "GAMs")
 #' resMoran = sbivarMulti(X, Y, Cx, Ey, method = "Moran")
 sbivarMulti = function(Xl, Yl, Cxl, Eyl, method = c("GAMs", "Correlation", "GPs", "Moran's I"),
-                        wMat, wo = c("distance", "nn"), numNN = 8, n_points_grid = 5e2,
+                        wo = c("distance", "nn"), numNN = 8, n_points_grid = 5e2,
                         families = list("X" = gaussian(), "Y" = gaussian())){
+    method = match.arg(method)
+    wo = match.arg(wo)
     stopifnot(is.numeric(numNN), is.numeric(n_points_grid), is.character(wo),
               is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family")))
     if(length(Xl)!=length(Cxl)){
@@ -52,16 +62,15 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, method = c("GAMs", "Correlation", "GPs"
         colnames(Y) = paste0("Y", seq_len(k))
     }
     colnames(Cx) = colnames(Ey) = c("x", "y")
-    method = match.arg(method)
-    wo = match.arg(wo)
     out = if(method == "GAMs"){
-        wrapGAMs(X = X, Y = Y, Cx = Cx, Ey = Ey, families = families,
-                 n_points_grid = n_points_grid)
+        # wrapGAMs(X = X, Y = Y, Cx = Cx, Ey = Ey, families = families,
+        #          n_points_grid = n_points_grid)
     } else if(method == "GPs"){
 
     } else if(method == "Modified t-test"){
-        wrapModTtest(X = X, Y = Y, Cx = Cx, Ey = Ey, mapToFinest = FALSE)
+ #       wrapModTtest(X = X, Y = Y, Cx = Cx, Ey = Ey, mapToFinest = FALSE)
+    } else if (method =="Moran's I"){
     }
-    out[order(out[, "pVal"]),]
+    #out[order(out[, "pVal"]),]
 }
 

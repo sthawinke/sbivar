@@ -1,7 +1,6 @@
 #' Plot the fitted splines, and the correlation between them
 #'
 #' @inheritParams wrapGAMs
-#' @inheritParams testManyGAMs
 #' @param x,y outcome vetors
 #' @param offsets List of length two with offsets
 #' @param scaleFun The scaling function to be applied before plotting

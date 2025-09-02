@@ -35,10 +35,9 @@ fitGPs = function(x, coord, GPmethod, device, training_iter, corStruct, optContr
 }
 #' A wrapper to fit GPs on all columns of a matrix
 #'
-#' @inheritParams sbivarSingle
-#' @param ... passed onto \link{fitGPs}
 #' @param mat Matrix of observations
-#'
+#' @param coord Matrix of coordinates
+#' @param ... passed onto \link{fitGPs}
 #' @returns Matrix of fitted GP components
 fitManyGPs = function(mat, coord, ...){
     simplify2array(loadBalanceBplapply(selfName(colnames(mat)), function(cn){

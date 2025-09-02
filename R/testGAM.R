@@ -16,26 +16,4 @@ testGAM = function(modelx, modely, predx, predy){
     #Correlation
     return(c("corxy" = corxy, "se.corxy" = se/denom, "pVal" = makePval(cxy/se)))
 }
-#' Test all bivariate combinations for fitted lists of GAMs
-#'
-#' @param gamsx,gamsy Lists of GAM models for two modalities
-#' @param newGrid The new grid of points in which to evaluate the GAMs
-#'
-#' @returns A named list of results
-#' @importFrom smoppix loadBalanceBplapply
-#' @importFrom BiocParallel bplapply
-testManyGAMs = function(gamsx, gamsy, newGrid){
-    gamsx = gamsx[!vapply(gamsx, FUN.VALUE = TRUE, inherits, "try-error")]
-    gamsy = gamsy[!vapply(gamsy, FUN.VALUE = TRUE, inherits, "try-error")]
-    out = loadBalanceBplapply(selfName(names(gamsx)), function(featx){
-        predx <- vcovPredGam(gamsx[[featx]], newdata = newGrid)
-        vapply(selfName(names(gamsy)), FUN.VALUE = double(3), function(featy){
-            testGAM(predx = predx, modely = gamsy[[featy]], modelx = gamsx[[featx]],
-                         predy = vcovPredGam(gamsy[[featy]], newdata = newGrid))
-        })
-    })
-    #Reformat to long format
-    t(matrix(unlist(out), 3, length(gamsx)*length(gamsy),
-           dimnames = list(c("corxy", "se.corxy", "pVal"),
-                           makeNames(names(gamsx), names(gamsy)))))
-}
+

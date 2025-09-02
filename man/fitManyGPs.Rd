@@ -9,6 +9,8 @@ fitManyGPs(mat, coord, ...)
 \arguments{
 \item{mat}{Matrix of observations}
 
+\item{coord}{Matrix of coordinates}
+
 \item{...}{passed onto \link{fitGPs}}
 }
 \value{

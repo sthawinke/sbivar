@@ -68,29 +68,6 @@ testGP = function(x, y, Cx, Ey, altSigmas, distMat, solXonly, solYonly, sx){
     c("pVal" = min(2*ps[idMin], 1), "sign" = if(idMin==1) 1 else -1)
     #two one-sided tests, multiply p-value by 2 to get two-sided test
 }
-#' Test all bivariate combinations for fitted lists of GAMs
-#'
-#' @param gpsx,gpssy Lists of GAM models for two modalities
-#' @param newGrid The new grid of points in which to evaluate the GAMs
-#'
-#' @returns A named list of results
-#' @importFrom smoppix loadBalanceBplapply
-#' @importFrom BiocParallel bplapply
-testManyGPs = function(gpsx, gpsy, X, Y, distMat, numLscAlts, Quants){
-    n = nrow(X);m = nrow(Y)
-    idN = seq_len(n);idM = n+seq_len(m) #Indices for x and y
-    altSigmas = buildAltSigmas(distMat, numLscAlts = numLscAlts, Quants = Quants,
-                               idN = idN, idM = idM)
-    out = loadBalanceBplapply(selfName(names(gpsx)), function(featx){
-        sx = base::solve(buildSigmaGp(gpsx[, featx], distMat = distMat[idN, idN], sparse = FALSE))
-        vapply(selfName(names(gpsy)), FUN.VALUE = double(3), function(featy){
-            testGP(distMat = distMat, x = X[,featx], y = Y[,featy], altSigmas = altSigmas)
-        })
-    })
-    #Reformat to long format
-    t(matrix(unlist(out), 2, length(gpsx)*length(gpsy),
-             dimnames = list(c("pVal", "sign"), makeNames(names(gpsx), names(gpsy)))))
-}
 #' Construct the nxnxg/2 array of derivatives for a nxn matrix to the g/2 covariance matrix parameters.
 #'
 #' @param fittedGP The fitted Gaussian process (vector of 4 parameters)

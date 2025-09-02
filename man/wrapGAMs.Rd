@@ -17,7 +17,7 @@ wrapGAMs(X, Y, Cx, Ey, families, n_points_grid)
 evaluated on.}
 }
 \value{
-see \link{testManyGAMs}
+A named list of results
 }
 \description{
 Wrapper function to fit GAMs and test for all possible combinations

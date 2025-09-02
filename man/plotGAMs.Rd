@@ -23,8 +23,6 @@ plotGAMs(
 
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
-\item{newGrid}{The new grid of points in which to evaluate the GAMs}
-
 \item{offsets}{List of length two with offsets}
 
 \item{scaleFun}{The scaling function to be applied before plotting}

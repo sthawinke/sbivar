@@ -42,10 +42,10 @@ Apply one or more tests for bivariate spatial association
 \examples{
 n=1e2;m=2e2;p=10;k=12
 ims = 8
-X = lapply(selfName(ims), function(i){n = rpois(n)
+X = lapply(selfName(ims), function(i){n = rpois(1, n)
  matrix(rnorm(n*p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
 })
-Y = lapply(selfName(ims), function(i){m = rpois(m)
+Y = lapply(selfName(ims), function(i){m = rpois(1, m)
  matrix(rnorm(m*k), m, k, dimnames = list(NULL, paste0("Y", seq_len(k))))
 })
 Cx = lapply(X, function(x){n = nrow(x)

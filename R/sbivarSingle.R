@@ -14,7 +14,7 @@
 #' evaluated on.
 #' @param mapToFinest A boolean, should the one-to-one mapping for modified t-test
 #' occur to the dataset with the best resolution?
-#' @inheritParams wrapGPs
+#' @inheritParams fitGPs
 #'
 #' @returns A matrix which contains at least a p-values ("pVal") and a Benjamini-Hochberg adjusted p-value ("pAdj"),
 #' sorted by increasing p-value.
@@ -31,6 +31,7 @@
 #' resGAMs = sbivarSingle(X, Y, Cx, Ey, method = "GAMs")
 #' resModtTest = sbivarSingle(X, Y, Cx, Ey, method = "Modified")
 #' resModtTestJoint = sbivarSingle(X, Y[seq_len(nrow(X)),], Cx, method = "Modified")
+#' resModtGPs = sbivarSingle(X, Y, Cx, Ey, method = "GPs")
 sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs"),
                   n_points_grid = 5e2, mapToFinest = FALSE,
                   families = list("X" = gaussian(), "Y" = gaussian()),

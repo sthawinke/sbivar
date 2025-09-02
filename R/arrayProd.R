@@ -12,8 +12,7 @@ arrayMatProd = function(A, M){
     # Multiply in one go
     result <- M %*% A
     # Reshape back to n x n x p
-    result <- array(result, dim = c(n, n, p))
-    dimnames(result) = dn
+    result <- array(result, dim = c(n, n, p), dimnames = dn)
     return(result)
 }
 #' Multiply two arrays of same dimensions along the first two dimensions
@@ -26,8 +25,8 @@ arrayMatProd = function(A, M){
 arrayProd = function(A, B){
     n = dim(A)[1];p = dim(A)[3];k = dim(B)[3]
     # Reshape each into (n^2) x p
-    A_mat <- matrix(A, n*n, p)
-    B_mat <- matrix(B, n*n, k)
+    A_mat <- matrix(A, n^2, p)
+    B_mat <- matrix(B, n^2, k)
     # p x p result: matrix of all slice inner products
     C <- crossprod(A_mat, B_mat)
     dimnames(C) = list(dimnames(A)[[3]], dimnames(B)[[3]])

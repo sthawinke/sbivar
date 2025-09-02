@@ -2,9 +2,10 @@
 #'
 #' @inheritParams sbivarSingle
 #' @param x outcome vector
+#' @param Cx Coordinate matrix
 #' @param GPmethod The method by which to fit the Gaussian processes
 #' @param training_iter Number of training iterations in gpytorch
-#' @param device Device on which the GPs are fitted using the python package \textit{gpytorch}
+#' @param device Device on which the GPs are fitted using the python package gpytorch
 #' @param corStruct The correlation object, see \link[nlme]{corStruct}
 #' @param optControl List of control values, see \link[nlme]{glsControl}
 #' @details Providing "cuda" as device exploits the available GPU for speedup,
@@ -18,7 +19,7 @@
 #' @importFrom nlme gls
 fitGPs = function(x, Cx, GPmethod, training_iter, device, corStruct, optControl){
     if(GPmethod == "gpytorch"){
-        pyFit = fitGPsPython(xMat, x, training_iter = training_iter, device = device)
+        pyFit = fitGPsPython(x, Cx, training_iter = training_iter, device = device)
         return(unlist(pyFit$Pars))
     } else {
         xModGls <- do.call(nlme::gls, args = list("model" = formula("out ~ 1"), "data" = data.frame("out" = x, Cx),

@@ -34,7 +34,11 @@ occur to the dataset with the best resolution?}
 
 \item{families}{A vector of length 2 giving outcome values.}
 
-\item{gpParams}{Parameters of the Gaussian processes}
+\item{GPmethod}{The method by which to fit the Gaussian processes}
+
+\item{device}{Device on which the GPs are fitted using the python package gpytorch}
+
+\item{training_iter}{Number of training iterations in gpytorch}
 }
 \value{
 A matrix which contains at least a p-values ("pVal") and a Benjamini-Hochberg adjusted p-value ("pAdj"),
@@ -58,4 +62,5 @@ colnames(Cx) = colnames(Ey) = c("x", "y")
 resGAMs = sbivarSingle(X, Y, Cx, Ey, method = "GAMs")
 resModtTest = sbivarSingle(X, Y, Cx, Ey, method = "Modified")
 resModtTestJoint = sbivarSingle(X, Y[seq_len(nrow(X)),], Cx, method = "Modified")
+resModtGPs = sbivarSingle(X, Y[seq_len(nrow(X)),], Cx, method = "Modified")
 }

@@ -11,7 +11,7 @@ gpScoreTest(
   Ey,
   device = "cpu",
   altSigmas,
-  method = "gaussian",
+  GPmethod,
   distMat = as.matrix(stats::dist(rbind(Cx, Ey))),
   solXonly,
   solYonly,
@@ -30,7 +30,7 @@ can use "gpu" via the python package gpytorch if installed}
 
 \item{altSigmas}{A prepared series of bivariate association matrices}
 
-\item{method}{passed onto \link[nlme]{gls}}
+\item{GPmethod}{passed onto \link[nlme]{gls} as "method"}
 
 \item{distMat}{The distance matrix of Cx and Ey}
 

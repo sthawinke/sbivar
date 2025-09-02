@@ -13,7 +13,7 @@ fitGPs(x, Cx, GPmethod, training_iter, device, corStruct, optControl)
 
 \item{training_iter}{Number of training iterations in gpytorch}
 
-\item{device}{Device on which the GPs are fitted using the python package \textit{gpytorch}}
+\item{device}{Device on which the GPs are fitted using the python package gpytorch}
 
 \item{corStruct}{The correlation object, see \link[nlme]{corStruct}}
 

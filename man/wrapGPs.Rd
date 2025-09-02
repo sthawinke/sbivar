@@ -4,7 +4,21 @@
 \alias{wrapGPs}
 \title{Fit Gaussian processes (GPs) if needed, and perform score tests}
 \usage{
-wrapGPs(X, Y, Cx, Ey, gpParams)
+wrapGPs(
+  X,
+  Y,
+  Cx,
+  Ey,
+  gpParams,
+  families,
+  numLscAlts,
+  Quants,
+  device,
+  GPmethod,
+  training_iter,
+  corStruct,
+  optControl
+)
 }
 \arguments{
 \item{X, Y}{Matrices of omics measurements}
@@ -12,6 +26,16 @@ wrapGPs(X, Y, Cx, Ey, gpParams)
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
 \item{gpParams}{Parameters of the Gaussian processes}
+
+\item{families}{A vector of length 2 giving outcome values.}
+
+\item{device}{Device to fit the GPs on. Defaults to "cpu",
+can use "gpu" via the python package gpytorch if installed}
+
+\item{GPmethod}{The method by which to fit the Gaussian processes,
+passed onto \link[nlme]{gls} as "method" if it equals "REML" or "ML".}
+
+\item{training_iter}{Number of training iterations in gpytorch}
 }
 \description{
 Fit Gaussian processes (GPs) if needed, and perform score tests

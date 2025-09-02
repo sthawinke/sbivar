@@ -2,10 +2,7 @@
 #'
 #' @inheritParams sbivarSingle
 #' @param x,y outcome vectors
-#' @param device Device to fit the GPs on. Defaults to "cpu",
-#' can use "gpu" via the python package gpytorch if installed
 #' @param altSigmas A prepared series of bivariate association matrices
-#' @param GPmethod passed onto \link[nlme]{gls} as "method"
 #' @param distMat The distance matrix of Cx and Ey
 #' @param solXonly,solYonly Parametersof the Gaussian process
 #' @param sx Inverse of the covariance matrix of x. Will be calculated if missing.
@@ -16,18 +13,10 @@
 #' @importFrom stats pchisq dist
 #' @importFrom abind abind
 #' @importFrom Matrix bdiag
-testGP = function(x, y, Cx, Ey, device = "cpu", altSigmas, GPmethod,
-                       distMat = as.matrix(stats::dist(rbind(Cx, Ey))),
-                       solXonly, solYonly, sx, numLscAlts = if(missing(altSigmas)) 10 else dim(altSigmas)[3],
-                       Quants = c(0.005, 0.5)){
+testGP = function(x, y, Cx, Ey, altSigmas, distMat, solXonly, solYonly, sx){
     n = length(x);m=length(y)
     idN = seq_len(n);idM = n+seq_len(m) #Indices for x and y
     regMat = cbind(1, c(rep(0, n), rep(1, m))) #Regression matrix accounting for mean differences
-    #Estimate separate GPs
-    if(missing(solXonly))
-        solXonly = fitGPs(x, Cx, GPmethod = GPmethod, device = device)
-    if(missing(solYonly))
-        solYonly = fitGPs(y, Ey, GPmethod = GPmethod, device = device)
     out = c(x, y); muVec = rep(c(solXonly["mean"], solYonly["mean"]), times = c(n,m))
     diffVec = cbind(out-muVec)
 
@@ -68,7 +57,7 @@ testGP = function(x, y, Cx, Ey, device = "cpu", altSigmas, GPmethod,
                             arrayProd2tr(A = pSigma[idM, idM,], B = derivList$Y)))
     ItautauTilde = Itautau - rowSums((Itautheta[,idItt] %*% sitt)* Itautheta[,idItt])
     kappaEst = ItautauTilde/(2*e);nu = 2*e^2/ItautauTilde
-    pVals = vapply(c(FALSE, TRUE), FUN.VALUE = double(numLscAlts), function(neg){
+    pVals = vapply(c(FALSE, TRUE), FUN.VALUE = double(dim(altSigmas)[3]), function(neg){
         vec = c(if(neg) invWDiffVecNeg else invWDiffVec)
         Usigma = 0.5 * crossprod(colSums(vec * altSigmas), vec) ## The score statistic
         pchisq(as.vector(Usigma/kappaEst), df = nu, lower.tail = FALSE)
@@ -87,7 +76,7 @@ testGP = function(x, y, Cx, Ey, device = "cpu", altSigmas, GPmethod,
 #' @returns A named list of results
 #' @importFrom smoppix loadBalanceBplapply
 #' @importFrom BiocParallel bplapply
-testManyGPs = function(gpsx, gpsy, X, Y, distMat){
+testManyGPs = function(gpsx, gpsy, X, Y, distMat, numLscAlts, Quants){
     n = nrow(X);m = nrow(Y)
     idN = seq_len(n);idM = n+seq_len(m) #Indices for x and y
     altSigmas = buildAltSigmas(distMat, numLscAlts = numLscAlts, Quants = Quants,
@@ -105,7 +94,7 @@ testManyGPs = function(gpsx, gpsy, X, Y, distMat){
 #' Construct the nxnxg/2 array of derivatives for a nxn matrix to the g/2 covariance matrix parameters.
 #'
 #' @param fittedGP The fitted Gaussian process (vector of 4 parameters)
-#' @inheritParams gpScoreTest
+#' @inheritParams testGP
 #' @param what For which parameter is the derivative required?
 #' @return The matrix of derivatives
 arrayDeriv = function(fittedGP, distMat, what){

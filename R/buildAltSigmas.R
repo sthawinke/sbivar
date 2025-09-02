@@ -1,6 +1,6 @@
 #' Title
 #'
-#' @inheritParams gpScoreTest
+#' @inheritParams testGP
 #' @param numLscAlts Number of length scales (and thus number of covariance matrices to be tested)
 #' @param Quants Most extreme quantiles of the distance distribution to be used as length scales.
 #' @param idN,idM indices for x and y in the distance matrix

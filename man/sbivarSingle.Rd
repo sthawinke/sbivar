@@ -34,9 +34,11 @@ occur to the dataset with the best resolution?}
 
 \item{families}{A vector of length 2 giving outcome values.}
 
-\item{GPmethod}{The method by which to fit the Gaussian processes}
+\item{GPmethod}{The method by which to fit the Gaussian processes,
+passed onto \link[nlme]{gls} as "method" if it equals "REML" or "ML".}
 
-\item{device}{Device on which the GPs are fitted using the python package gpytorch}
+\item{device}{Device to fit the GPs on. Defaults to "cpu",
+can use "gpu" via the python package gpytorch if installed}
 
 \item{training_iter}{Number of training iterations in gpytorch}
 }
@@ -62,5 +64,5 @@ colnames(Cx) = colnames(Ey) = c("x", "y")
 resGAMs = sbivarSingle(X, Y, Cx, Ey, method = "GAMs")
 resModtTest = sbivarSingle(X, Y, Cx, Ey, method = "Modified")
 resModtTestJoint = sbivarSingle(X, Y[seq_len(nrow(X)),], Cx, method = "Modified")
-resModtGPs = sbivarSingle(X, Y[seq_len(nrow(X)),], Cx, method = "Modified")
+resModtGPs = sbivarSingle(X, Y, Cx, Ey, method = "GPs")
 }

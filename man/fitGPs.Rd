@@ -2,18 +2,22 @@
 % Please edit documentation in R/fitGPs.R
 \name{fitGPs}
 \alias{fitGPs}
-\title{Title}
+\title{Fit a gaussian process to a single outcome vector}
 \usage{
-fitGPs(x, Cx, GPmethod, training_iter, device, corStruct, optControl)
+fitGPs(x, coord, GPmethod, device, training_iter, corStruct, optControl)
 }
 \arguments{
 \item{x}{outcome vector}
 
-\item{GPmethod}{The method by which to fit the Gaussian processes}
+\item{coord}{Coordinate matrix}
+
+\item{GPmethod}{The method by which to fit the Gaussian processes,
+passed onto \link[nlme]{gls} as "method" if it equals "REML" or "ML".}
+
+\item{device}{Device to fit the GPs on. Defaults to "cpu",
+can use "gpu" via the python package gpytorch if installed}
 
 \item{training_iter}{Number of training iterations in gpytorch}
-
-\item{device}{Device on which the GPs are fitted using the python package gpytorch}
 
 \item{corStruct}{The correlation object, see \link[nlme]{corStruct}}
 
@@ -23,7 +27,7 @@ fitGPs(x, Cx, GPmethod, training_iter, device, corStruct, optControl)
 A vector of length 4 with components range, nugget, sigma and mean
 }
 \description{
-Title
+Fit a gaussian process to a single outcome vector
 }
 \details{
 Providing "cuda" as device exploits the available GPU for speedup,

@@ -4,9 +4,11 @@
 \alias{fitManyGPs}
 \title{A wrapper to fit GPs on all columns of a matrix}
 \usage{
-fitManyGPs(X, Cx, ...)
+fitManyGPs(mat, coord, ...)
 }
 \arguments{
+\item{mat}{Matrix of observations}
+
 \item{...}{passed onto \link{fitGPs}}
 }
 \value{

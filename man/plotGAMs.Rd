@@ -35,6 +35,8 @@ plotGAMs(
 evaluated on.}
 
 \item{...}{passed onto \link{fitGAM}}
+
+\item{neGrid}{The grid in which to evaluate the GAMs}
 }
 \value{
 A ggplot object

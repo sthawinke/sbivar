@@ -3,17 +3,19 @@
 #' @inheritParams sbivarSingle
 #' @inheritParams fitGPs
 #' @param gpParams Parameters of the Gaussian processes
+#' @param numLscAlts Number of length scales to be tested for bivariate association
+#' @param Quants Most extreme quantiles of the distance distribution to take as lenght scales
 #' @returns A named list of results
 #' @importFrom smoppix loadBalanceBplapply
 #' @importFrom BiocParallel bplapply
-wrapGPs = function(X, Y, Cx, Ey, gpParams, families, numLscAlts, Quants, device,
+wrapGPs = function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, device,
                    GPmethod, training_iter, corStruct, optControl){
     if(missing(gpParams)){
-        gpsx = fitManyGPs(mat = X, coord = Cx, family = families[["X"]],
+        gpsx = fitManyGPs(mat = X, coord = Cx,
                           device = device, GPmethod = GPmethod,
                           training_iter = training_iter, corStruct = corStruct,
                           optControl = optControl)
-        gpsy = fitManyGPs(mat = Y, coord = Ey, family = families[["Y"]],
+        gpsy = fitManyGPs(mat = Y, coord = Ey,
                           device = device, GPmethod = GPmethod,
                           training_iter = training_iter, corStruct = corStruct,
                           optControl = optControl)

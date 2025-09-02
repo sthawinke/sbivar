@@ -7,7 +7,8 @@
 #' @param GPmethod The method by which to fit the Gaussian processes,
 #' passed onto \link[nlme]{gls} as "method" if it equals "REML" or "ML".
 #' @param training_iter Number of training iterations in gpytorch
-#' @param corStruct The correlation object, see \link[nlme]{corStruct}
+#' @param corStruct The correlation object, see \link[nlme]{corStruct}.
+#' At this point, only \link[nlme]{corGaus} is accepted
 #' @param optControl List of control values, see \link[nlme]{glsControl}
 #' @details Providing "cuda" as device exploits the available GPU for speedup,
 #' especially for large GPs (thousands of observations). Setting GPmethod to

@@ -10,7 +10,6 @@ wrapGPs(
   Cx,
   Ey,
   gpParams,
-  families,
   numLscAlts,
   Quants,
   device,
@@ -27,7 +26,9 @@ wrapGPs(
 
 \item{gpParams}{Parameters of the Gaussian processes}
 
-\item{families}{A vector of length 2 giving outcome values.}
+\item{numLscAlts}{Number of length scales to be tested for bivariate association}
+
+\item{Quants}{Most extreme quantiles of the distance distribution to take as lenght scales}
 
 \item{device}{Device to fit the GPs on. Defaults to "cpu",
 can use "gpu" via the python package gpytorch if installed}
@@ -37,7 +38,8 @@ passed onto \link[nlme]{gls} as "method" if it equals "REML" or "ML".}
 
 \item{training_iter}{Number of training iterations in gpytorch}
 
-\item{corStruct}{The correlation object, see \link[nlme]{corStruct}}
+\item{corStruct}{The correlation object, see \link[nlme]{corStruct}.
+At this point, only \link[nlme]{corGaus} is accepted}
 
 \item{optControl}{List of control values, see \link[nlme]{glsControl}}
 }

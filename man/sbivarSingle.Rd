@@ -16,7 +16,12 @@ sbivarSingle(
   GPmethod = c("REML", "ML", "gpytorch"),
   device = c("cpu", "cuda"),
   training_iter = 100L,
-  gpParams
+  gpParams,
+  Quants = c(0.005, 0.5),
+  numLscAlts = 10,
+  optControl = lmeControl(opt = "optim", maxIter = 500, msMaxIter = 500, niterEM = 1000,
+    msMaxEval = 1000),
+  corStruct = corGaus(form = ~x + y, nugget = TRUE, value = c(1, 0.25))
 )
 }
 \arguments{
@@ -41,6 +46,17 @@ passed onto \link[nlme]{gls} as "method" if it equals "REML" or "ML".}
 can use "gpu" via the python package gpytorch if installed}
 
 \item{training_iter}{Number of training iterations in gpytorch}
+
+\item{gpParams}{Parameters of the Gaussian processes}
+
+\item{Quants}{Most extreme quantiles of the distance distribution to take as lenght scales}
+
+\item{numLscAlts}{Number of length scales to be tested for bivariate association}
+
+\item{optControl}{List of control values, see \link[nlme]{glsControl}}
+
+\item{corStruct}{The correlation object, see \link[nlme]{corStruct}.
+At this point, only \link[nlme]{corGaus} is accepted}
 }
 \value{
 A matrix which contains at least a p-values ("pVal") and a Benjamini-Hochberg adjusted p-value ("pAdj"),
@@ -53,6 +69,9 @@ The tests can be applied to either disjoint or joint coordinate sets.
 If only Cx is supplied and X and Y have the same number of rows, a joint analysis is performed
 If Cx and Ey are provided, and X and Y have the same number of rows, equality of Cx and Ey is checked.
 If true, a joint analysis is run, with a warning.
+
+Any normalization of the data should happen prior to calling this function.
+For instance, count data or metabolome data are best scaled to relative values and log-normalized prior to fitting GPs.
 }
 \examples{
 n=1e2;m=2e2;p=10;k=5

@@ -3,7 +3,6 @@
 #' @param Xl,Yl Lists of matrices of omics measurements
 #' @param Cxl,Eyl Lists of corresponding coordinate matrices of dimension two
 #' @param method A character string, indicating which method to apply
-#' @param wMat Optional, a weight matrix for calculating Moran's I
 #' @param wo,numNN Passed on to \link{buildWeightMat}.
 #' @param families A vector of length 2 giving outcome values.
 #' @param n_points_grid The number of points in the new grid for the GAMs to be

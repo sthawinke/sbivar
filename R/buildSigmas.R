@@ -23,4 +23,19 @@ buildAltSigmas = function(distMat, numLscAlts, Quants, idN, idM){
         return(as.matrix(mat))
     })
 }
-
+#' Build the SAC matrix for a Gaussian process
+#'
+#' @param pars A vector of parameters
+#' @inheritParams testGP
+#'
+#' @returns The covariance matrix
+buildSigmaGp = function(pars, distMat, sparse = FALSE){
+    pars["sigma"]^2*(diag(nrow(distMat))*pars["nugget"] +
+    expKernelNugget(distMat, pars["range"], nugget = pars["nugget"]))
+}
+expKernel = function(distMat, range, thresh = 1e-4){
+    exp(-(distMat/range)^2)
+}
+expKernelNugget = function(distMat, range, nugget){
+    (1-nugget)*expKernel(distMat, range)
+}

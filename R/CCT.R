@@ -16,13 +16,7 @@
 #' \emph{The American Journal of Human Genetics}, \emph{104}(3), 410-421.
 #' (\href{https://doi.org/10.1016/j.ajhg.2019.01.002}{pub})
 #' @importFrom stats pcauchy
-
 CCT <- function(pvals, weights=NULL){
-    #### check if there is NA
-    if(sum(is.na(pvals)) > 0){
-        stop("Cannot have NAs in the p-values!")
-    }
-
     #### check if all p-values are between 0 and 1
     if(any(pvals<0) || any(pvals>1)){
         stop("All p-values must be between 0 and 1!")
@@ -34,15 +28,12 @@ CCT <- function(pvals, weights=NULL){
     if(is.zero && is.one){
         return(1)
         #stop("Cannot have both 0 and 1 p-values!")
-    }
-    if(is.zero){
+    } else if(is.zero){
         return(0)
-    }
-    if(is.one){
+    } else if(is.one){
         warning("There are p-values that are exactly 1!")
         return(1)
     }
-
     #### check the validity of weights (default: equal weights) and standardize them.
     if(is.null(weights)){
         weights <- rep(1/length(pvals),length(pvals))
@@ -53,7 +44,6 @@ CCT <- function(pvals, weights=NULL){
     }else{
         weights <- weights/sum(weights)
     }
-
     #### check if there are very small non-zero p-values
     is.small <- (pvals < 1e-16)
     if (!any(is.small)){

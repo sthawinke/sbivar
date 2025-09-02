@@ -19,7 +19,8 @@ can use "gpu" via the python package gpytorch if installed}
 
 \item{training_iter}{Number of training iterations in gpytorch}
 
-\item{corStruct}{The correlation object, see \link[nlme]{corStruct}}
+\item{corStruct}{The correlation object, see \link[nlme]{corStruct}.
+At this point, only \link[nlme]{corGaus} is accepted}
 
 \item{optControl}{List of control values, see \link[nlme]{glsControl}}
 }

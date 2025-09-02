@@ -14,13 +14,18 @@
 #' evaluated on.
 #' @param mapToFinest A boolean, should the one-to-one mapping for modified t-test
 #' occur to the dataset with the best resolution?
+#' @inheritParams wrapGPs
 #' @inheritParams fitGPs
+#'
+#' @details Any normalization of the data should happen prior to calling this function.
+#' For instance, count data or metabolome data are best scaled to relative values and log-normalized prior to fitting GPs.
 #'
 #' @returns A matrix which contains at least a p-values ("pVal") and a Benjamini-Hochberg adjusted p-value ("pAdj"),
 #' sorted by increasing p-value.
 #' @export
 #' @importFrom stats p.adjust
 #' @importFrom methods is
+#' @importFrom nlme corGaus lmeControl
 #' @examples
 #' n=1e2;m=2e2;p=10;k=5
 #' X = matrix(rnorm(n*p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
@@ -33,12 +38,17 @@
 #' resModtTestJoint = sbivarSingle(X, Y[seq_len(nrow(X)),], Cx, method = "Modified")
 #' resModtGPs = sbivarSingle(X, Y, Cx, Ey, method = "GPs")
 sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs"),
-                  n_points_grid = 5e2, mapToFinest = FALSE,
-                  families = list("X" = gaussian(), "Y" = gaussian()),
+                  n_points_grid = 5e2, mapToFinest = FALSE, families = list("X" = gaussian(), "Y" = gaussian()),
                   GPmethod = c("REML", "ML", "gpytorch"), device = c("cpu", "cuda"),
-                  training_iter = 100L, gpParams){
+                  training_iter = 100L, gpParams, Quants = c(0.005, 0.5), numLscAlts = 10,
+                  optControl = lmeControl(opt = "optim", maxIter = 5e2,
+                                                msMaxIter = 5e2, niterEM = 1e3,
+                                                msMaxEval = 1e3),
+                  corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25))){
     stopifnot(is.numeric(n_points_grid), ncol(Cx) == 2, is.character(method),
-              all(vapply(families, FUN.VALUE = TRUE, is, "family")))
+              all(vapply(families, FUN.VALUE = TRUE, is, "family")), is.list(optControl),
+              is.numeric(training_iter), inherits(corStruct, "corStruct"),
+              inherits(corStruct, "corGaus"), length(Quants)==2, is.numeric(Quants))
     n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y)
     method = match.arg(method)
     GPmethod = match.arg(GPmethod)
@@ -83,7 +93,9 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs
         wrapGAMs(X = X, Y = Y, Cx = Cx, Ey = Ey, families = families,
                  n_points_grid = n_points_grid)
     } else if(method == "GPs"){
-        wrapGPs(X = X, Y = Y, Cx = Cx, Ey = Ey, gpParams = gpParams)
+        wrapGPs(X = X, Y = Y, Cx = Cx, Ey = Ey, gpParams = gpParams, Quants = Quants,
+                GPmethod = GPmethod, device  = device, training_iter = training_iter,
+                corStruct = corStruct, optControl = optControl, numLscAlts = numLscAlts)
     } else if(method == "Modified t-test"){
         wrapModTtest(X = X, Y = Y, Cx = Cx, Ey = Ey, mapToFinest = mapToFinest,
                      jointCoordinates = jointCoordinates)

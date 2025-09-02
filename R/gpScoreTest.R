@@ -32,8 +32,7 @@ gpScoreTest = function(x, y, Cx, Ey,
     if(missing(sx))
         sx <- base::solve(buildSigmaGp(solXonly, distMat =  distMat[idN, idN], sparse = FALSE))
     invW <- bdiag(sx, base::solve(buildSigmaGp(solYonly, distMat = distMat[idM, idM], sparse = FALSE)))
-    P = invW - outer(rowSums(invW), colSums(invW))/sum(colSums(invW))
-    #invW - (colSums(invW %*% regMat %*% solve(crossprod(regMat, invW) %*% regMat, crossprod(regMat,  invW)))
+    P = invW - (invW %*% regMat %*% solve(crossprod(regMat, invW) %*% regMat, crossprod(regMat,  invW)))
     #Need derivatives for the efficient information
     derivList = list("X" = abind("sigmaX" = arrayDeriv(solXonly, distMat[idN, idN], what = "sigmax"),
                                  "rangeX" = arrayDeriv(solXonly, distMat[idN, idN], what = "range"),

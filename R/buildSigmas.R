@@ -1,4 +1,4 @@
-#' Title
+#' Construct a series of covariance matrices with cross-modality correlations, for different length scales.
 #'
 #' @inheritParams testGP
 #' @param numLscAlts Number of length scales (and thus number of covariance matrices to be tested)
@@ -29,13 +29,26 @@ buildAltSigmas = function(distMat, numLscAlts, Quants, idN, idM){
 #' @inheritParams testGP
 #'
 #' @returns The covariance matrix
-buildSigmaGp = function(pars, distMat, sparse = FALSE){
+buildSigmaGp = function(pars, distMat){
     pars["sigma"]^2*(diag(nrow(distMat))*pars["nugget"] +
-    expKernelNugget(distMat, pars["range"], nugget = pars["nugget"]))
+    GaussKernelNugget(distMat, pars["range"], nugget = pars["nugget"]))
 }
-expKernel = function(distMat, range, thresh = 1e-4){
+#' Construct a covariance matrix using the Gaussian covariance kernel
+#'
+#' @inheritParams GaussKernelNugget
+#'
+#' @returns The covariance matrix
+GaussKernel = function(distMat, range){
     exp(-(distMat/range)^2)
 }
-expKernelNugget = function(distMat, range, nugget){
-    (1-nugget)*expKernel(distMat, range)
+#' Construct a covariance matrix using the Gaussian covariance kernel,
+#' plus the variances on the diagonal (the nugget).
+#'
+#' @inheritParams testGP
+#' @param range,nugget Range and nugget parameters of the Gaussian covariance kernel
+#'
+#' @returns The full covariance matrix
+#' @seealso \link[nlme]{corGaus}, \link[nlme]{corMatrix}
+GaussKernelNugget = function(distMat, range, nugget){
+    (1-nugget)*GaussKernel(distMat, range)
 }

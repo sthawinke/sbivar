@@ -14,6 +14,7 @@
 #' evaluated on.
 #' @param mapToFinest A boolean, should the one-to-one mapping for modified t-test
 #' occur to the dataset with the best resolution?
+#' @param gpParams Parameters of the Gaussian processes, see details
 #' @inheritParams wrapGPs
 #' @inheritParams fitGPs
 #'
@@ -26,8 +27,12 @@
 #' @importFrom stats p.adjust
 #' @importFrom methods is
 #' @importFrom nlme corGaus lmeControl
+#' @details gpParams must be a list of length 2 with names 'X' and 'Y', consisting of matrices
+#' with rownames "mean", "nugget", "range" and "sigma", and column names as in X and Y.
+#' This argument allows to pass parameters of the Gaussian processes estimated with other software
+#' to perform the score test.
 #' @examples
-#' n=1e2;m=2e2;p=10;k=5
+#' n=1e2;m=150;p=6;k=5
 #' X = matrix(rnorm(n*p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
 #' Y = matrix(rnorm(m*k), m, k, dimnames = list(NULL, paste0("Y", seq_len(k))))
 #' Cx = matrix(runif(n*2), n, 2)
@@ -53,7 +58,6 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs
     method = match.arg(method)
     GPmethod = match.arg(GPmethod)
     device = match.arg(device)
-    #Check if only Cx supplied, or Cx and Ey are identical
     if(missing(Ey)){
         if(n!=m){
             stop("Only one coordinate matrix Cx supplied, and dimensions of X and Y do not match.
@@ -87,6 +91,17 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs
     }
     if(is.null(colnames(Y))){
         colnames(Y) = paste0("Y", seq_len(k))
+    }
+    if(!missing(gpParams)){
+        if(!is.list(gpParams) || names(gpParams) != c("X", "Y") ||
+           !all(vapply(gpParams, FUN.VALUE = TRUE, function(x){
+               identical(sort(rownames(x), c("mean", "nugget", "range", "sigma")))
+               })) || !all(colnames(X) %in% colnames(gpParams$X) ||
+                           !all(colnames(Y) %in% colnames(gpParams$Y)))){
+            stop("gpParams must be a list with names 'X' and 'Y' consisting of
+            matrices with rownames 'mean', 'nugget', 'range', 'sigma',
+                 and colnames the same as matrices X and Y!")
+        }
     }
     colnames(Cx) = colnames(Ey) = c("x", "y")
     out = if(method == "GAMs"){

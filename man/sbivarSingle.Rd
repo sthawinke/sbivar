@@ -47,7 +47,7 @@ can use "gpu" via the python package gpytorch if installed}
 
 \item{training_iter}{Number of training iterations in gpytorch}
 
-\item{gpParams}{Parameters of the Gaussian processes}
+\item{gpParams}{Parameters of the Gaussian processes, see details}
 
 \item{Quants}{Most extreme quantiles of the distance distribution to take as lenght scales}
 
@@ -72,9 +72,14 @@ If true, a joint analysis is run, with a warning.
 
 Any normalization of the data should happen prior to calling this function.
 For instance, count data or metabolome data are best scaled to relative values and log-normalized prior to fitting GPs.
+
+gpParams must be a list of length 2 with names 'X' and 'Y', consisting of matrices
+with rownames "mean", "nugget", "range" and "sigma", and column names as in X and Y.
+This argument allows to pass parameters of the Gaussian processes estimated with other software
+to perform the score test.
 }
 \examples{
-n=1e2;m=2e2;p=10;k=5
+n=1e2;m=150;p=6;k=5
 X = matrix(rnorm(n*p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
 Y = matrix(rnorm(m*k), m, k, dimnames = list(NULL, paste0("Y", seq_len(k))))
 Cx = matrix(runif(n*2), n, 2)

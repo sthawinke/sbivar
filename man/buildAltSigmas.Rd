@@ -2,7 +2,7 @@
 % Please edit documentation in R/buildSigmas.R
 \name{buildAltSigmas}
 \alias{buildAltSigmas}
-\title{Title}
+\title{Construct a series of covariance matrices with cross-modality correlations, for different length scales.}
 \usage{
 buildAltSigmas(distMat, numLscAlts, Quants, idN, idM)
 }
@@ -19,5 +19,5 @@ buildAltSigmas(distMat, numLscAlts, Quants, idN, idM)
 A list of covariance matrices
 }
 \description{
-Title
+Construct a series of covariance matrices with cross-modality correlations, for different length scales.
 }

@@ -24,7 +24,7 @@ wrapGPs(
 
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
-\item{gpParams}{Parameters of the Gaussian processes}
+\item{gpParams}{Parameters of the Gaussian processes, see details}
 
 \item{numLscAlts}{Number of length scales to be tested for bivariate association}
 

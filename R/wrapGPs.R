@@ -2,7 +2,6 @@
 #'
 #' @inheritParams sbivarSingle
 #' @inheritParams fitGPs
-#' @param gpParams Parameters of the Gaussian processes
 #' @param numLscAlts Number of length scales to be tested for bivariate association
 #' @param Quants Most extreme quantiles of the distance distribution to take as lenght scales
 #' @returns A named list of results
@@ -21,19 +20,21 @@ wrapGPs = function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, device,
                           optControl = optControl)
     } else {
         #Extract fits
+        gpsx = gpParams$X;gpsy = gpParams$Y
     }
     distMat = as.matrix(stats::dist(rbind(Cx, Ey)))
     n = nrow(X);m = nrow(Y)
     idN = seq_len(n);idM = n+seq_len(m) #Indices for x and y
     altSigmas = buildAltSigmas(distMat, numLscAlts = numLscAlts, Quants = Quants,
                                idN = idN, idM = idM)
-    out = loadBalanceBplapply(selfName(names(gpsx)), function(featx){
+    out = loadBalanceBplapply(selfName(colnames(X)), function(featx){
         sx = base::solve(buildSigmaGp(gpsx[, featx], distMat = distMat[idN, idN], sparse = FALSE))
-        vapply(selfName(names(gpsy)), FUN.VALUE = double(3), function(featy){
-            testGP(distMat = distMat, x = X[,featx], y = Y[,featy], altSigmas = altSigmas)
+        vapply(selfName(colnames(Y)), FUN.VALUE = double(2), function(featy){
+            testGP(distMat = distMat, x = X[,featx], y = Y[,featy], altSigmas = altSigmas,
+                   solXonly = gpsx[, featx], solYonly = gpsy[, featy])
         })
     })
     #Reformat to long format
     t(matrix(unlist(out), 2, length(gpsx)*length(gpsy),
-             dimnames = list(c("pVal", "sign"), makeNames(names(gpsx), names(gpsy)))))
+             dimnames = list(c("pVal", "sign"), makeNames(colnames(X), colnames(Y)))))
 }

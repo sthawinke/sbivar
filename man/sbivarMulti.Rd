@@ -29,8 +29,6 @@ sbivarMulti(
 evaluated on.}
 
 \item{families}{A vector of length 2 giving outcome values.}
-
-\item{wMat}{Optional, a weight matrix for calculating Moran's I}
 }
 \value{
 A list containing at least an entry "result", which contains p-values,

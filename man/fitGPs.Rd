@@ -34,6 +34,6 @@ Fit a gaussian process to a single outcome vector
 Providing "cuda" as device exploits the available GPU for speedup,
 especially for large GPs (thousands of observations). Setting GPmethod to
  "ML" or "REML" leads to model fitting in R using the \link[nlme]{gls} function.
-Setting GPmethod to "gpytorch" uses the eponymous python package, with the option of gpu accceleration.
+Setting GPmethod to "gpytorch" uses the eponymous python package, with the option of gpu acceleration.
 The parametrization of the GPs is the one common in geostatistics, as described in \link[nlme]{gls}.
 }

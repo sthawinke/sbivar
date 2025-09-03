@@ -13,7 +13,7 @@
 #' @details Providing "cuda" as device exploits the available GPU for speedup,
 #' especially for large GPs (thousands of observations). Setting GPmethod to
 #'  "ML" or "REML" leads to model fitting in R using the \link[nlme]{gls} function.
-#' Setting GPmethod to "gpytorch" uses the eponymous python package, with the option of gpu accceleration.
+#' Setting GPmethod to "gpytorch" uses the eponymous python package, with the option of gpu acceleration.
 #' The parametrization of the GPs is the one common in geostatistics, as described in \link[nlme]{gls}.
 #'
 #' @returns A vector of length 4 with components range, nugget, sigma and mean
@@ -31,7 +31,7 @@ fitGPs = function(x, coord, GPmethod, device, training_iter, corStruct, optContr
         xPars = c(coef(xModGls$modelStruct$corStruct, unconstrained = FALSE),
                   sigma(xModGls))
         names(xPars) = c("range", "nugget", "sigma")
-        c(xPars, "mean" = coef(xModGls)[1])
+        c(xPars, "mean" = unname(coef(xModGls)[1]))
     }
 }
 #' A wrapper to fit GPs on all columns of a matrix

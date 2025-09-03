@@ -35,7 +35,7 @@ fitLinModels = function(measures, design, Formula){
 #' @importFrom lmerTest lmer
 #' @importFrom stats na.omit lm
 #' @importFrom lme4 nobars
-#' @seealso \link{fitLMMsSingle}
+#' @seealso \link{fitLinModels}
 fitLinModel <- function(Formula, dff, Control, MM, Weight = NULL) {
     environment(ff) <- environment() # Make sure formula sees the weights, see
     # https://stackoverflow.com/questions/61164404/call-to-weight-in-lm-within-function-doesnt-evaluate-properly

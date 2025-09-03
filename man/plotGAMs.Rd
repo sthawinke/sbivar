@@ -23,6 +23,8 @@ plotGAMs(
 
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
+\item{newGrid}{The grid in which to evaluate the GAMs}
+
 \item{offsets}{List of length two with offsets}
 
 \item{scaleFun}{The scaling function to be applied before plotting}
@@ -35,8 +37,6 @@ plotGAMs(
 evaluated on.}
 
 \item{...}{passed onto \link{fitGAM}}
-
-\item{neGrid}{The grid in which to evaluate the GAMs}
 }
 \value{
 A ggplot object

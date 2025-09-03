@@ -1,5 +1,5 @@
 context("Unit tests for small auxiliary function")
-test_that("Unit tests work", {
+test_that("Helper functions do their job tests work", {
     expect_identical(makePval(0), 1)
     expect_identical(names(selfName("gene1")), "gene1")
     expect_true({
@@ -12,4 +12,12 @@ test_that("Unit tests work", {
     })
     expect_identical(makeNames(c("gene1", "gene2"), c("compoundA", "compoundB")),
                      c("gene1_compoundA", "gene2_compoundA", "gene1_compoundB", "gene2_compoundB"))
+    mat = matrix(rnorm(9), 3, 3, dimnames = list(LETTERS[1:3], letters[1:3]))
+    expect_identical(tr(mat), sum(diag(mat)))
+    arr = array(rnorm(27), dim = c(3,3,3))
+    expect_identical(tr(arr), vapply(seq_len(dim(arr)[3]), FUN.VALUE = double(1),
+                                     function(i) tr(arr[,,i])))
+    mat2 = matrix(rnorm(9), 3, 3, dimnames = list(paste0("X", LETTERS[1:3]), paste0("X", letters[1:3])))
+    expect_identical(dimnames(bdiagn(mat, mat2)), list(c(rownames(mat), rownames(mat2)),
+                                                       c(colnames(mat), colnames(mat2))))
 })

@@ -46,7 +46,7 @@ bdiagn = function(A, B){
 }
 #' Find trace of a matrix, of traces of an array
 #'
-#' A (mxm) matric has one trace (the product of the diagonal elements), a (mxmxp) array has p traces
+#' A (mxm) matric has one trace (the sum of the diagonal elements), a (mxmxp) array has p traces
 #'
 #' @param x Matrix or array
 #' @param dim Dimensions defining matrices to find traces over

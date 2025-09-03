@@ -15,5 +15,5 @@ tr(x, dim = c(1, 2))
 A trace or vector of traces
 }
 \description{
-A (mxm) matric has one trace (the product of the diagonal elements), a (mxmxp) array has p traces
+A (mxm) matric has one trace (the sum of the diagonal elements), a (mxmxp) array has p traces
 }

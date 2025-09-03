@@ -2,7 +2,7 @@
 #'
 #' @inheritParams wrapGAMs
 #' @param x,y outcome vetors
-#' @param neGrid The grid in which to evaluate the GAMs
+#' @param newGrid The grid in which to evaluate the GAMs
 #' @param offsets List of length two with offsets
 #' @param scaleFun The scaling function to be applied before plotting
 #' @param addTitle A booleam, should a title be plotted

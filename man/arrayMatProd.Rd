@@ -15,5 +15,8 @@ arrayMatProd(A, M)
 An mxmxp array
 }
 \description{
-Array resulting from all matrix products of slices of array A mxmxp, with matrix M is mxm
+
+}
+\details{
+The speedup comes from a single call to %*%, very efficient in BLAS.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/arrayProd.R
 \name{arrayProd2tr}
 \alias{arrayProd2tr}
-\title{Find traces of all inner products of matrices composing arrays A and B, yielding a pxp matrix}
+\title{Find traces of all inner products of matrices composing arrays A and B yielding a pxp matrix}
 \usage{
 arrayProd2tr(A, B)
 }
@@ -13,5 +13,9 @@ arrayProd2tr(A, B)
 pxp matrix of traces
 }
 \description{
-Find traces of all inner products of matrices composing arrays A and B, yielding a pxp matrix
+A faster version of vapply(seq_len(p), FUN.VALUE = double(p), function(i){
+vapply(seq_len(p), FUN.VALUE = double(1), function(j){
+   tr(arr[,,i] %*% arr2[,,j])
+ })
+})
 }

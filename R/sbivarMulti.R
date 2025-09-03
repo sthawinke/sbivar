@@ -13,8 +13,8 @@
 #' @export
 #'
 #' @examples
-#' n=1e2;m=2e2;p=10;k=12
-#' ims = 8
+#' n=1e2;m=8e1;p=3;k=4
+#' ims = 6
 #' X = lapply(selfName(ims), function(i){n = rpois(1, n)
 #'  matrix(rnorm(n*p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
 #' })
@@ -27,11 +27,11 @@
 #' Ey = lapply(Y, function(y){m = nrow(y)
 #'     matrix(runif(m*2), m, 2, dimnames = list(NULL, c("x", "y")))
 #' })
-#' resGAMs = sbivarMulti(X, Y, Cx, Ey, method = "GAMs")
-#' resMoran = sbivarMulti(X, Y, Cx, Ey, method = "Moran")
-sbivarMulti = function(Xl, Yl, Cxl, Eyl, method = c("GAMs", "Correlation", "GPs", "Moran's I"),
-                        wo = c("distance", "nn"), numNN = 8, n_points_grid = 5e2,
-                        families = list("X" = gaussian(), "Y" = gaussian())){
+#' estGAMs = sbivarMulti(X, Y, Cx, Ey, method = "GAMs")
+#' estMoran = sbivarMulti(X, Y, Cx, Ey, method = "Moran")
+#' estCorrelations = sbivarMulti(X, Y, Cx, Ey, method = "Moran")
+sbivarMulti = function(Xl, Yl, Cxl, Eyl, method = c("GAMs", "Correlation", "Moran's I"),
+                        wo = c("distance", "nn"), numNN = 8, n_points_grid = 5e2){
     method = match.arg(method)
     wo = match.arg(wo)
     stopifnot(is.numeric(numNN), is.numeric(n_points_grid), is.character(wo),
@@ -48,28 +48,17 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, method = c("GAMs", "Correlation", "GPs"
     if(!all(vapply(Yl, nrow, FUN.VALUE = 0) == vapply(Eyl, nrow, FUN.VALUE = 0))){
         stop("Sample size of matrices Yl and their coordinates Eyl do not match!")
     }
-    if(ncol(Cx)!=2 || ncol(Ey)!=2){
-        stop("Coordinate matrices must be of dimension 2!")
+    if(!all(c(vapply(c(Cx, Ey), FUN.VALUE = double(1), ncol)==2))){
+        stop("All coordinate matrices must be of dimension 2!")
     }
-    if(!identical(names(families), c("X", "Y"))){
-        stop("Name families 'X' and 'Y' for unambiguous matching")
-    }
-    if(is.null(colnames(X))){
-        colnames(X) = paste0("X", seq_len(p))
-    }
-    if(is.null(colnames(Y))){
-        colnames(Y) = paste0("Y", seq_len(k))
-    }
-    colnames(Cx) = colnames(Ey) = c("x", "y")
     out = if(method == "GAMs"){
-        # wrapGAMs(X = X, Y = Y, Cx = Cx, Ey = Ey, families = families,
-        #          n_points_grid = n_points_grid)
-    } else if(method == "GPs"){
-
-    } else if(method == "Modified t-test"){
- #       wrapModTtest(X = X, Y = Y, Cx = Cx, Ey = Ey, mapToFinest = FALSE)
+        wrapGAMsMulti(Xl, Yl, Cxl, Eyl, families = families,
+                 n_points_grid = n_points_grid)
+    }  else if(method == "Correlation"){
+        wrapCorrelationsMulti(Xl, Yl, Cxl, Eyl, mapToFinest = FALSE)
     } else if (method =="Moran's I"){
+        wrapMoransIMulti(Xl, Yl, Cxl, Eyl)
     }
-    #out[order(out[, "pVal"]),]
+    return(out)
 }
 

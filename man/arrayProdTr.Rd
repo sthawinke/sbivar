@@ -15,11 +15,11 @@ A pxp matrix of traces
 \description{
 Returns the matrix resulting from the traces of all matrix products of slices of array A mxmxp
 with those of array B of the same dimensions. It is a faster version of
-vapply(seq_len(p), FUN.VALUE = double(p), function(i){
-     vapply(seq_len(p), FUN.VALUE = double(1), function(j){
-         tr(tcrossprod(arr[,,i], arr2[,,j]))
-     })
-})
+\code{vapply(seq_len(p), FUN.VALUE = double(p), function(i)\{
+     vapply(seq_len(p), FUN.VALUE = double(1), function(j)\{
+         tr(crossprod(arr[,,i], arr2[,,j]))
+     \})
+\})}
 }
 \details{
 The speedup comes from a single call to crossprod, very efficient in BLAS.

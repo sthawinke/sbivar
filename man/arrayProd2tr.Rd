@@ -13,9 +13,9 @@ arrayProd2tr(A, B)
 pxp matrix of traces
 }
 \description{
-A faster version of vapply(seq_len(p), FUN.VALUE = double(p), function(i){
-vapply(seq_len(p), FUN.VALUE = double(1), function(j){
-   tr(arr[,,i] %*% arr2[,,j])
- })
-})
+A faster version of \code{vapply(seq_len(p), FUN.VALUE = double(p), function(i)\{
+vapply(seq_len(p), FUN.VALUE = double(1), function(j)\{
+   tr(arr[,,i] \%*\% arr2[,,j])
+ \})
+\})}
 }

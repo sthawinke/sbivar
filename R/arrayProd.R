@@ -4,7 +4,7 @@
 #' @param M An mxm matrix
 #' @return An mxmxp array
 #' @description Array resulting from all matrix products of slices of array A mxmxp, with matrix M is mxm.
-#' This is a faster version of vapply(seq_len(p), FUN.VALUE = mat, function(i){mat %*% arr[,,i]}),
+#' This is a faster version of \code{vapply(seq_len(p), FUN.VALUE = mat, function(i)\{mat \%*\% arr[,,i]\})},
 #' although it may consume more memory
 #' @details The speedup comes from a single call to %*%, very efficient in BLAS.
 arrayMatProd = function(A, M){
@@ -24,11 +24,12 @@ arrayMatProd = function(A, M){
 #' @return A pxp matrix of traces
 #' @description Returns the matrix resulting from the traces of all matrix products of slices of array A mxmxp
 #' with those of array B of the same dimensions. It is a faster version of
-#' vapply(seq_len(p), FUN.VALUE = double(p), function(i){
-#'      vapply(seq_len(p), FUN.VALUE = double(1), function(j){
-#'          tr(tcrossprod(arr[,,i], arr2[,,j]))
-#'      })
-#' })
+#' \code{vapply(seq_len(p), FUN.VALUE = double(p), function(i)\{
+#'      vapply(seq_len(p), FUN.VALUE = double(1), function(j)\{
+#'          tr(crossprod(arr[,,i], arr2[,,j]))
+#'      \})
+#' \})}
+#'
 #'
 #' @details The speedup comes from a single call to crossprod, very efficient in BLAS.
 arrayProdTr = function(A, B){
@@ -43,12 +44,11 @@ arrayProdTr = function(A, B){
     C
 }
 #' Find traces of all inner products of matrices composing arrays A and B yielding a pxp matrix
-#' @description
-#' A faster version of vapply(seq_len(p), FUN.VALUE = double(p), function(i){
-#' vapply(seq_len(p), FUN.VALUE = double(1), function(j){
-#'    tr(arr[,,i] %*% arr2[,,j])
-#'  })
-#'})
+#' @description A faster version of \code{vapply(seq_len(p), FUN.VALUE = double(p), function(i)\{
+#' vapply(seq_len(p), FUN.VALUE = double(1), function(j)\{
+#'    tr(arr[,,i] \%*\% arr2[,,j])
+#'  \})
+#'\})}
 #'
 #' @param A,B mxmxp arrays
 #' @return pxp matrix of traces

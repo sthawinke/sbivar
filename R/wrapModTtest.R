@@ -7,20 +7,17 @@
 #' @param jointCoordinates A boolean, are measurements on the same location
 #'.
 #' @returns A dataframe of results sorted by p-value, also containing effective sample size (ESS) and correlation estimate.
-#' @importFrom RANN nn2
 #' @importFrom SpatialPack modified.ttest
 #' @seealso \link[SpatialPack]{modified.ttest}
 wrapModTtest = function(X, Y, Cx, Ey, mapToFinest = FALSE, jointCoordinates = FALSE){
     n = nrow(X);m = nrow(Y)
     if(!jointCoordinates){
-        if(xor(n > m, mapToFinest)){
-            idnn_XY <- nn2(Cx, Ey, k = 1)$nn.idx[, 1]
-            X = X[idnn_XY,]
-            coordMat = Cx[idnn_XY,]
+        matchedCoords = matchCoords(Cx, Ey, mapToFinest = mapToFinest)
+        coordMat = matchedCoords$coordMat
+        if(matchedCoords$mapToX){
+            X = X[matchedCoords$id,]
         } else {
-            idnn_YX <- nn2(Ey, Cx, k = 1)$nn.idx[, 1]
-            Y = Y[idnn_YX,];
-            coordMat = Ey[idnn_YX,]
+            Y = Y[matchedCoords$id,]
         }
     } else {
         coordMat = Cx
@@ -33,4 +30,23 @@ wrapModTtest = function(X, Y, Cx, Ey, mapToFinest = FALSE, jointCoordinates = FA
     colnames(out) = apply(featGrid, 1, paste, collapse = "_")
     rownames(out) = c("Correlation", "ESS", "pVal")
     t(out)
+}
+#' Match coordinates to the nearest neighbour
+#'
+#' @inheritParams sbivarSingle
+#'
+#' @returns A list with components
+#' \item{coordMat}{The new, single coordinate matrix}
+#' \item{matToX}{A boolean, should X coordinates be taken}
+#' \item{id}{The index of the coordinates to retain}
+#' @importFrom RANN nn2
+matchCoords = function(Cx, Ey, mapToFinest){
+    if(matToX <- xor(n > m, mapToFinest)){
+        id <- nn2(Cx, Ey, k = 1)$nn.idx[, 1]
+        coordMat = Cx[id,]
+    } else {
+        id <- nn2(Ey, Cx, k = 1)$nn.idx[, 1]
+        coordMat = Ey[id,]
+    }
+    list("coordMat" = coordMat, "mapToX" = mapToX, "id" = id)
 }

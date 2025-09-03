@@ -9,11 +9,10 @@ sbivarMulti(
   Yl,
   Cxl,
   Eyl,
-  method = c("GAMs", "Correlation", "GPs", "Moran's I"),
+  method = c("GAMs", "Correlation", "Moran's I"),
   wo = c("distance", "nn"),
   numNN = 8,
-  n_points_grid = 500,
-  families = list(X = gaussian(), Y = gaussian())
+  n_points_grid = 500
 )
 }
 \arguments{
@@ -38,8 +37,8 @@ adjusted p-values and measures of association, sorted by increasing p-value.
 Apply one or more tests for bivariate spatial association
 }
 \examples{
-n=1e2;m=2e2;p=10;k=12
-ims = 8
+n=1e2;m=8e1;p=3;k=4
+ims = 6
 X = lapply(selfName(ims), function(i){n = rpois(1, n)
  matrix(rnorm(n*p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
 })
@@ -52,6 +51,7 @@ Cx = lapply(X, function(x){n = nrow(x)
 Ey = lapply(Y, function(y){m = nrow(y)
     matrix(runif(m*2), m, 2, dimnames = list(NULL, c("x", "y")))
 })
-resGAMs = sbivarMulti(X, Y, Cx, Ey, method = "GAMs")
-resMoran = sbivarMulti(X, Y, Cx, Ey, method = "Moran")
+estGAMs = sbivarMulti(X, Y, Cx, Ey, method = "GAMs")
+estMoran = sbivarMulti(X, Y, Cx, Ey, method = "Moran")
+estCorrelations = sbivarMulti(X, Y, Cx, Ey, method = "Moran")
 }

@@ -9,13 +9,13 @@ test_that("Array functions yield the same results as using loops", {
                      vapply(seq_len(p), FUN.VALUE = mat, function(i){
                           mat %*% arr[,,i]
                      }))
-    expect_equal(arrayProdTr(arr, arr2),
+    expect_equal(unname(arrayProdTr(arr, arr2)),
                      vapply(seq_len(p), FUN.VALUE = double(p), function(i){
                          vapply(seq_len(p), FUN.VALUE = double(1), function(j){
-                            tr(tcrossprod(arr[,,i], arr2[,,j]))
+                            tr(crossprod(arr[,,i], arr2[,,j]))
                          })
                      }))
-    expect_equal(arrayProd2tr(arr, arr2),
+    expect_equal(unname(arrayProd2tr(arr, arr2)),
                  vapply(seq_len(p), FUN.VALUE = double(p), function(i){
                      vapply(seq_len(p), FUN.VALUE = double(1), function(j){
                          tr(arr[,,i] %*% arr2[,,j])

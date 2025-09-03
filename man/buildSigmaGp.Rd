@@ -17,3 +17,6 @@ The covariance matrix
 \description{
 Build the SAC matrix for a Gaussian process
 }
+\seealso{
+\link[nlme]{corGaus}, \link[nlme]{corMatrix}
+}

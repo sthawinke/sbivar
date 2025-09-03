@@ -2,16 +2,18 @@
 % Please edit documentation in R/buildSigmas.R
 \name{GaussKernel}
 \alias{GaussKernel}
-\title{Construct a covariance matrix using the Gaussian covariance kernel}
+\title{Construct the SAC part of the covariance matrix using the Gaussian covariance kernel,}
 \usage{
 GaussKernel(distMat, range)
 }
 \arguments{
 \item{distMat}{The distance matrix of Cx and Ey}
+
+\item{range}{Range (or length-scale) parameter of the Gaussian covariance kernel}
 }
 \value{
-The covariance matrix
+The SAC covariance matrix
 }
 \description{
-Construct a covariance matrix using the Gaussian covariance kernel
+Construct the SAC part of the covariance matrix using the Gaussian covariance kernel,
 }

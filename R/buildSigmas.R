@@ -18,7 +18,7 @@ buildAltSigmas = function(distMat, numLscAlts, Quants, idN, idM){
     vapply(lscAlts, FUN.VALUE = distMat, function(lscAlt) {
         #No sigma needed here, just the skeleton
         mat = sparseMatrix(i = rep(idN, times = m), j = rep(idM, each = n), dims = c(n+m, n+m),
-                           symmetric = TRUE, x = c(exp(-(distMat[idN, idM]/lscAlt)^2)))
+                           symmetric = TRUE, x = c(GaussKernel(distMat[idN, idM], lscAlt)))
         diag(mat) <- 1
         return(as.matrix(mat))
     })
@@ -29,26 +29,18 @@ buildAltSigmas = function(distMat, numLscAlts, Quants, idN, idM){
 #' @inheritParams testGP
 #'
 #' @returns The covariance matrix
+#' @seealso \link[nlme]{corGaus}, \link[nlme]{corMatrix}
 buildSigmaGp = function(pars, distMat){
     pars["sigma"]^2*(diag(nrow(distMat))*pars["nugget"] +
-    GaussKernelNugget(distMat, pars["range"], nugget = pars["nugget"]))
+    (1-pars["nugget"])*GaussKernel(distMat, pars["range"]))
 }
-#' Construct a covariance matrix using the Gaussian covariance kernel
+#' Construct the SAC part of the covariance matrix using the Gaussian covariance kernel,
 #'
-#' @inheritParams GaussKernelNugget
+#' @inheritParams testGP
+#' @param range Range (or length-scale) parameter of the Gaussian covariance kernel
 #'
-#' @returns The covariance matrix
+#' @returns The SAC covariance matrix
 GaussKernel = function(distMat, range){
     exp(-(distMat/range)^2)
 }
-#' Construct a covariance matrix using the Gaussian covariance kernel,
-#' plus the variances on the diagonal (the nugget).
-#'
-#' @inheritParams testGP
-#' @param range,nugget Range and nugget parameters of the Gaussian covariance kernel
-#'
-#' @returns The full covariance matrix
-#' @seealso \link[nlme]{corGaus}, \link[nlme]{corMatrix}
-GaussKernelNugget = function(distMat, range, nugget){
-    (1-nugget)*GaussKernel(distMat, range)
-}
+

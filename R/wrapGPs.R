@@ -28,7 +28,7 @@ wrapGPs = function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, device,
     altSigmas = buildAltSigmas(distMat, numLscAlts = numLscAlts, Quants = Quants,
                                idN = idN, idM = idM)
     out = loadBalanceBplapply(selfName(colnames(X)), function(featx){
-        sx = base::solve(buildSigmaGp(gpsx[, featx], distMat = distMat[idN, idN], sparse = FALSE))
+        sx = base::solve(buildSigmaGp(gpsx[, featx], distMat = distMat[idN, idN]))
         vapply(selfName(colnames(Y)), FUN.VALUE = double(2), function(featy){
             testGP(distMat = distMat, x = X[,featx], y = Y[,featy], altSigmas = altSigmas,
                    solXonly = gpsx[, featx], solYonly = gpsy[, featy])

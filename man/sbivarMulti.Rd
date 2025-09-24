@@ -9,7 +9,7 @@ sbivarMulti(
   Yl,
   Cxl,
   Eyl,
-  families = rep("gaussian", 2),
+  families = list(gaussian(), gaussian()),
   method = c("GAMs", "Correlation", "Moran's I"),
   mapToFinest = FALSE,
   wo = c("distance", "nn"),
@@ -58,5 +58,5 @@ Ey = lapply(Y, function(y){m = nrow(y)
 })
 estGAMs = sbivarMulti(X, Y, Cx, Ey, method = "GAMs")
 estMoran = sbivarMulti(X, Y, Cx, Ey, method = "Moran")
-estCorrelations = sbivarMulti(X, Y, Cx, Ey, method = "Moran")
+estCorrelations = sbivarMulti(X, Y, Cx, Ey, method = "Correlation")
 }

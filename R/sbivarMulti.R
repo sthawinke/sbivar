@@ -30,8 +30,8 @@
 #' })
 #' estGAMs = sbivarMulti(X, Y, Cx, Ey, method = "GAMs")
 #' estMoran = sbivarMulti(X, Y, Cx, Ey, method = "Moran")
-#' estCorrelations = sbivarMulti(X, Y, Cx, Ey, method = "Moran")
-sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = rep("gaussian", 2),
+#' estCorrelations = sbivarMulti(X, Y, Cx, Ey, method = "Correlation")
+sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list(gaussian(), gaussian()),
                        method = c("GAMs", "Correlation", "Moran's I"), mapToFinest = FALSE,
                         wo = c("distance", "nn"), numNN = 8, n_points_grid = 5e2){
     method = match.arg(method)
@@ -41,23 +41,27 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = rep("gaussian", 2),
     if(length(Xl)!=length(Cxl)){
         stop("Length of outcome matrices Xl and their coordinates Cxl do not match!")
     }
-    if(length(Yl)!=length(Eyl)){
-        stop("Length of outcome matrices Yl and their coordinates Eyl do not match!")
-    }
     if(!all(vapply(Xl, nrow, FUN.VALUE = 0) == vapply(Cxl, nrow, FUN.VALUE = 0))){
         stop("Sample size of matrices Xl and their coordinates Cxl do not match!")
     }
-    if(!all(vapply(Yl, nrow, FUN.VALUE = 0) == vapply(Eyl, nrow, FUN.VALUE = 0))){
-        stop("Sample size of matrices Yl and their coordinates Eyl do not match!")
-    }
-    if(!all(c(vapply(c(Cx, Ey), FUN.VALUE = double(1), ncol)==2))){
-        stop("All coordinate matrices must be of dimension 2!")
+    if(jointCoordinates <- missing(Eyl)){
+        if(!all(vapply(Xl, FUN.VALUE = 0L, nrow) == vapply(Yl, FUN.VALUE = 0L, nrow))){
+            stop("If Eyl is not supplied, all elements of Xl and Yl must have the number of samples!")
+        }
+    } else {
+        if(length(Yl)!=length(Eyl)){
+            stop("Length of outcome matrices Yl and their coordinates Eyl do not match!")
+        }
+        if(!all(vapply(Yl, nrow, FUN.VALUE = 0) == vapply(Eyl, nrow, FUN.VALUE = 0))){
+            stop("Sample size of matrices Yl and their coordinates Eyl do not match!")
+        }
     }
     out = if(method == "GAMs"){
         wrapGAMsMulti(Xl, Yl, Cxl, Eyl, families = families,
                  n_points_grid = n_points_grid)
     }  else if(method == "Correlation"){
-        wrapCorrelationsMulti(Xl, Yl, Cxl, Eyl, mapToFinest = FALSE)
+        wrapCorrelationsMulti(Xl, Yl, Cxl, Eyl, mapToFinest = mapToFinest,
+                              jointCoordinates = jointCoordinates)
     } else if (method =="Moran's I"){
         wrapMoransIMulti(Xl, Yl, Cxl, Eyl, wo = wo, numNN = numNN)
     }

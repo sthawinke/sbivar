@@ -1,4 +1,4 @@
-#' Fit a gaussian process to a single outcome vector
+#' Fit a Gaussian process (GP) to a single outcome vector
 #'
 #' @param x outcome vector
 #' @param coord Coordinate matrix

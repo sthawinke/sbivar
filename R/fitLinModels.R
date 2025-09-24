@@ -49,44 +49,57 @@ fitLinModels = function(measures, design, Formula){
     }
     modMat <- model.matrix(nobars(Formula), baseDf, contrasts.arg = contrasts) #Fixed effects model matrix
     Assign <- attr(modMat, "assign")
+    contrasts <- contrasts[!names(contrasts) %in% vapply(df, FUN.VALUE = TRUE, is.numeric)]
     models <- loadBalanceBplapply(Features, function(gene) {
         df <- buildDataFrame(obj, gene = gene, pi = pi, pppDf = pppDf)
-        out <- if (is.null(df) || sum(!is.na(df$pi)) < 3) {
+        out <- if (is.null(df) || sum(id <- !is.na(df$pi)) < 3) {
             NULL
         } else {
-            contrasts <- contrasts[!names(contrasts) %in% vapply(df, FUN.VALUE = TRUE, is.numeric)]
-            fitLinModel(Formula, df, contrasts,
-                       Control, MM = MM, Weight = df$weight)
+            if(MM){
+                ff$fr <- ff$fr[id,, drop = FALSE];ff$X <- ff$X[id,, drop = FALSE]
+                attr(ff$X, "assign") <- Assign
+                ff$reTrms$Zt <- ff$reTrms$Zt[, id, drop = FALSE]
+            }
+
+            fitLinModel(ff = ff, y = mat[id, "pi"], Terms = terms(Formula), modMat = modMat[id,,drop = FALSE],
+                        weights = mat[id, "weights"], Control = Control, MM = MM, Assign = Assign)
         }
         return(out)
     })
 }
 #' Fit a linear model for an individual feature pair
 #'
-#' @param dff The dataframe
-#' @param Control Control parameters
-#' @param MM A boolean, should a mixed model be tried
-#' @param Weight A weight variable
+#' @param ff The prepared frame
+#' @param y outcome vector
+#' @param weights weights vector
+#' @param Assign,Terms Added to fitted fixed effects model
+#' @param modMat Design matrix of the fixed effects model
 #' @inheritParams fitLinModels
 #' @return A fitted model
 #'
-#' @details Code is based on smoppix:::fitPiModel, but may diverge
+#' @details Code is based on smoppix:::fitSingleLmmModel, but may diverge
 #'
-#' @importFrom lmerTest lmer
-#' @importFrom stats na.omit lm
-#' @importFrom lme4 nobars
-#' @seealso \link{fitLinModels}
-fitLinModel <- function(Formula, dff, Control, MM, Weight = NULL) {
-    environment(ff) <- environment() # Make sure formula sees the weights, see
-    # https://stackoverflow.com/questions/61164404/call-to-weight-in-lm-within-function-doesnt-evaluate-properly
-    if (MM) {
-        mod <- try(lmerTest::lmer(ff, data = dff, na.action = na.omit,
-                                  weights = Weight, control = Control), silent = TRUE)
+#' @returns A fitted lmer model
+#' @importFrom lme4 mkLmerDevfun optimizeLmer mkMerMod
+#' @importFrom stats lm.wfit
+fitLinModel <-function(ff, y, Control, Terms, modMat, MM, Assign, weights = NULL) {
+    if(MM){
+        fr <- ff$fr                    # this is a data.frame (model frame)
+        ## Use model-frame column names used by stats::model.frame
+        fr$`(weights)` <- weights
+        fr[["out"]] <- y               # replace response
+        mod <- try({
+            devfun <- mkLmerDevfun(fr, ff$X, ff$reTrms, control = Control)
+            opt <- optimizeLmer(devfun, control = Control)
+            out <- mkMerMod(rho = environment(devfun), opt = opt,
+                            reTrms = ff$reTrms, fr = fr)
+            out <- lmerTest:::as_lmerModLT(out, devfun = devfun)
+        }, silent = TRUE)
     }
-    # If no random variables or fit failed, go for linear model
-    if (!MM || is(mod, "try-error")) {
-        mod <- try(lm(nobars(ff), data = dff, na.action = na.omit,
-                      weights = Weight), silent = TRUE)
+    # Switch to fixed effects model when fit failed
+    if(!MM || inherits(mod, "try-error")){
+        mod <- lm_from_wfit(lm.wfit(y = y, x = modMat, w = weights), y = y,
+                            Assign = Assign, Terms = Terms)
     }
     return(mod)
 }

@@ -35,8 +35,8 @@ testGP = function(x, y, Cx, Ey, altSigmas, distMat, solXonly, solYonly, sx){
     #Make two arrays out of this list
     derivListP = list("X" = arrayMatProd(M = P[idN, idN], A = derivList[["X"]]),
                       "Y" = arrayMatProd(M = P[idM, idM], A = derivList[["Y"]]))
-    Ithetatheta = 0.5*bdiagn(arrayProd(derivListP$X, derivListP$X),
-                             arrayProd(derivListP$Y, derivListP$Y))
+    Ithetatheta = 0.5*bdiagn(arrayProdTr(derivListP$X, derivListP$X),
+                             arrayProdTr(derivListP$Y, derivListP$Y))
     sitt = try(solve(Ithetatheta), silent = TRUE)
     idItt = colnames(sitt)
     if(inherits(sitt, "try-error")){

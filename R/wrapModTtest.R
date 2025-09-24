@@ -28,7 +28,7 @@ wrapModTtest = function(X, Y, Cx, Ey, mapToFinest = FALSE, jointCoordinates = FA
                        coordMat)[c("corr", "ESS", "p.value")])
     }))
     colnames(out) = apply(featGrid, 1, paste, collapse = "_")
-    rownames(out) = c("Correlation", "ESS", "pVal")
+    rownames(out) = c("Correlation", "Effective sample size", "pVal")
     t(out)
 }
 #' Match coordinates to the nearest neighbour
@@ -41,7 +41,7 @@ wrapModTtest = function(X, Y, Cx, Ey, mapToFinest = FALSE, jointCoordinates = FA
 #' \item{id}{The index of the coordinates to retain}
 #' @importFrom RANN nn2
 matchCoords = function(Cx, Ey, mapToFinest){
-    if(matToX <- xor(n > m, mapToFinest)){
+    if(mapToX <- xor(n > m, mapToFinest)){
         id <- nn2(Cx, Ey, k = 1)$nn.idx[, 1]
         coordMat = Cx[id,]
     } else {

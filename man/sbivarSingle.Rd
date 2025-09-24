@@ -2,7 +2,7 @@
 % Please edit documentation in R/sbivarSingle.R
 \name{sbivarSingle}
 \alias{sbivarSingle}
-\title{Apply one or more tests for bivariate spatial association}
+\title{Test for bivariate spatial association in a single image}
 \usage{
 sbivarSingle(
   X,

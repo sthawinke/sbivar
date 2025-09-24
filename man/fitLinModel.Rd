@@ -4,28 +4,27 @@
 \alias{fitLinModel}
 \title{Fit a linear model for an individual feature pair}
 \usage{
-fitLinModel(Formula, dff, Control, MM, Weight = NULL)
+fitLinModel(ff, y, Control, Terms, modMat, MM, Assign, weights = NULL)
 }
 \arguments{
-\item{Formula}{A formula for the linear model to be fitted, can contain random effects}
+\item{ff}{The prepared frame}
 
-\item{dff}{The dataframe}
+\item{y}{outcome vector}
 
-\item{Control}{Control parameters}
+\item{modMat}{Design matrix of the fixed effects model}
 
-\item{MM}{A boolean, should a mixed model be tried}
+\item{Assign, Terms}{Added to fitted fixed effects model}
 
-\item{Weight}{A weight variable}
+\item{weights}{weights vector}
 }
 \value{
 A fitted model
+
+A fitted lmer model
 }
 \description{
 Fit a linear model for an individual feature pair
 }
 \details{
-Code is based on smoppix:::fitPiModel, but may diverge
-}
-\seealso{
-\link{fitLinModels}
+Code is based on smoppix:::fitSingleLmmModel, but may diverge
 }

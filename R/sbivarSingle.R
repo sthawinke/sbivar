@@ -1,4 +1,4 @@
-#' Apply one or more tests for bivariate spatial association
+#' Test for bivariate spatial association in a single image
 #'
 #' The tests can be applied to either disjoint or joint coordinate sets.
 #'
@@ -64,7 +64,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs
                  Please provide the coordinates of Y too through the Ey argument.")
         } else {#Run a joint analysis
             message("Only one coordinate matrix Cx supplied, and dimensions of X and Y do match.
-                 Performing a joint analysis.")
+                 Performing an analysis with joint coordinate sets.")
             Ey = Cx
             jointCoordinates = TRUE
         }

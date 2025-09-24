@@ -2,7 +2,7 @@
 % Please edit documentation in R/fitGPs.R
 \name{fitGPs}
 \alias{fitGPs}
-\title{Fit a gaussian process to a single outcome vector}
+\title{Fit a Gaussian process (GP) to a single outcome vector}
 \usage{
 fitGPs(x, coord, GPmethod, device, training_iter, corStruct, optControl)
 }
@@ -28,7 +28,7 @@ At this point, only \link[nlme]{corGaus} is accepted}
 A vector of length 4 with components range, nugget, sigma and mean
 }
 \description{
-Fit a gaussian process to a single outcome vector
+Fit a Gaussian process (GP) to a single outcome vector
 }
 \details{
 Providing "cuda" as device exploits the available GPU for speedup,

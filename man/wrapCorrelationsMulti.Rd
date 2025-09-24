@@ -4,7 +4,7 @@
 \alias{wrapCorrelationsMulti}
 \title{Find all cross-correlations for a list of matrices}
 \usage{
-wrapCorrelationsMulti(Xl, Yl, Cxl, Eyl, mapToFinest)
+wrapCorrelationsMulti(Xl, Yl, Cxl, Eyl, mapToFinest, jointCoordinates)
 }
 \arguments{
 \item{Xl, Yl}{Lists of matrices of omics measurements}

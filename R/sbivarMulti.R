@@ -16,10 +16,10 @@
 #' @examples
 #' n=1e2;m=8e1;p=3;k=4
 #' ims = 6
-#' X = lapply(selfName(ims), function(i){n = rpois(1, n)
+#' X = lapply(selfName(seq_len(ims)), function(i){n = rpois(1, n)
 #'  matrix(rnorm(n*p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
 #' })
-#' Y = lapply(selfName(ims), function(i){m = rpois(1, m)
+#' Y = lapply(selfName(seq_len(ims)), function(i){m = rpois(1, m)
 #'  matrix(rnorm(m*k), m, k, dimnames = list(NULL, paste0("Y", seq_len(k))))
 #' })
 #' Cx = lapply(X, function(x){n = nrow(x)

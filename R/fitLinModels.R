@@ -11,7 +11,8 @@
 #'
 #' @examples
 #' example(sbivarMulti, "sbivar")
-#' toyDesign = data.frame("covariate" = rnorm(ims), "group" = rep(c("control", "treatment"), length.out = ims))
+#' toyDesign = data.frame("covariate" = rnorm(ims), "group" = rep(c("control", "treatment"),
+#' length.out = ims))
 #' multiFitGams = fitLinModels(estGAMs, design = toyDesign, Formula = out ~ covariate + (1|group))
 #' multiFitMoran = fitLinModels(estMoran, design = toyDesign, Formula = out ~ covariate)
 #' multiFit = fitLinModels(estCorrelations, design = toyDesign, Formula = out ~ covariate)

@@ -1,17 +1,22 @@
 #' Apply one or more tests for bivariate spatial association
 #'
+#' This function calculates measures of spatial association for every image.
+#' The resulting estimates can then be analysed further usign the \link{fitLinModels} function.
+#'
 #' @param Xl,Yl Lists of matrices of omics measurements
 #' @param Cxl,Eyl Lists of corresponding coordinate matrices of dimension two
 #' @param method A character string, indicating which method to apply
-#' @param wo,numNN Passed on to \link{buildWeightMat}.
 #' @param families A vector of length 2 giving outcome values.
 #' @param n_points_grid The number of points in the new grid for the GAMs to be
 #' evaluated on.
 #'
-#' @returns A list containing at least an entry "result", which contains p-values,
-#' adjusted p-values and measures of association, sorted by increasing p-value.
+#' @returns A list containing
+#' \item{estimates}{The estimated measures of association}
+#' \item{method}{The method used to find these estimates}
 #' @export
+#' @seealso [fitLinModels()]
 #' @inheritParams sbivarSingle
+#' @inheritParams buildWeightMat
 #'
 #' @examples
 #' n=1e2;m=8e1;p=3;k=4
@@ -31,7 +36,7 @@
 #' estGAMs = sbivarMulti(X, Y, Cx, Ey, method = "GAMs")
 #' estMoran = sbivarMulti(X, Y, Cx, Ey, method = "Moran")
 #' estCorrelations = sbivarMulti(X, Y, Cx, Ey, method = "Correlation")
-sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list(gaussian(), gaussian()),
+sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
                        method = c("GAMs", "Correlation", "Moran's I"), mapToFinest = FALSE,
                         wo = c("distance", "nn"), numNN = 8, n_points_grid = 5e2){
     method = match.arg(method)
@@ -62,9 +67,9 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list(gaussian(), gaussian())
     }  else if(method == "Correlation"){
         wrapCorrelationsMulti(Xl, Yl, Cxl, Eyl, mapToFinest = mapToFinest,
                               jointCoordinates = jointCoordinates)
-    } else if (method =="Moran's I"){
+    } else if (method == "Moran's I"){
         wrapMoransIMulti(Xl, Yl, Cxl, Eyl, wo = wo, numNN = numNN)
     }
-    return(out)
+    return(list("estimates" = out, "method" = method))
 }
 

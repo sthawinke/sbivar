@@ -9,7 +9,7 @@ sbivarMulti(
   Yl,
   Cxl,
   Eyl,
-  families = list(gaussian(), gaussian()),
+  families = list(X = gaussian(), Y = gaussian()),
   method = c("GAMs", "Correlation", "Moran's I"),
   mapToFinest = FALSE,
   wo = c("distance", "nn"),
@@ -29,17 +29,21 @@ sbivarMulti(
 \item{mapToFinest}{A boolean, should the one-to-one mapping for modified t-test
 occur to the dataset with the best resolution?}
 
-\item{wo, numNN}{Passed on to \link{buildWeightMat}.}
+\item{wo}{The weighting option, either "nn" or "distance}
+
+\item{numNN}{An integer, the number of neighbours}
 
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.}
 }
 \value{
-A list containing at least an entry "result", which contains p-values,
-adjusted p-values and measures of association, sorted by increasing p-value.
+A list containing
+\item{estimates}{The estimated measures of association}
+\item{method}{The method used to find these estimates}
 }
 \description{
-Apply one or more tests for bivariate spatial association
+This function calculates measures of spatial association for every image.
+The resulting estimates can then be analysed further usign the \link{fitLinModels} function.
 }
 \examples{
 n=1e2;m=8e1;p=3;k=4
@@ -59,4 +63,7 @@ Ey = lapply(Y, function(y){m = nrow(y)
 estGAMs = sbivarMulti(X, Y, Cx, Ey, method = "GAMs")
 estMoran = sbivarMulti(X, Y, Cx, Ey, method = "Moran")
 estCorrelations = sbivarMulti(X, Y, Cx, Ey, method = "Correlation")
+}
+\seealso{
+[fitLinModels()]
 }

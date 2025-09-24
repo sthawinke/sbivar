@@ -11,7 +11,11 @@ fitLinModel(ff, y, Control, Terms, modMat, MM, Assign, weights = NULL)
 
 \item{y}{outcome vector}
 
+\item{Control}{A control list for lmerTest::lmer}
+
 \item{modMat}{Design matrix of the fixed effects model}
+
+\item{MM}{a Boolean, should a mixed model fit be attempted?}
 
 \item{Assign, Terms}{Added to fitted fixed effects model}
 

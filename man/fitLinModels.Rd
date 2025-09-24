@@ -4,7 +4,14 @@
 \alias{fitLinModels}
 \title{Fit linear models on replicated image results}
 \usage{
-fitLinModels(measures, design, Formula)
+fitLinModels(
+  measures,
+  design,
+  Formula,
+  Control = lmerControl(check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
+    check.conv.singular = .makeCC(action = "ignore", tol = formals(isSingular)$tol),
+    check.conv.hess = .makeCC(action = "ignore", tol = 1e-06))
+)
 }
 \arguments{
 \item{measures}{A list of measures of bivariate spatial association}
@@ -12,6 +19,8 @@ fitLinModels(measures, design, Formula)
 \item{design}{A design dataframe}
 
 \item{Formula}{A formula for the linear model to be fitted, can contain random effects}
+
+\item{Control}{A control list for lmerTest::lmer}
 }
 \value{
 A data frame containing, sorted by ascending p-value
@@ -22,8 +31,10 @@ The measures are usually estimated using \link{sbivarMulti}
 }
 \examples{
 example(sbivarMulti, "sbivar")
-toyDesign = data.frame("covariate" = rnorm(im))
-multiFitGams = fitLinModels(estGAMs, design = toyDesign,)
+toyDesign = data.frame("covariate" = rnorm(ims))
+multiFitGams = fitLinModels(estGAMs, design = toyDesign, Formula = out ~ covariate)
+multiFitMoran = fitLinModels(estMoran, design = toyDesign, Formula = out ~ covariate)
+multiFit = fitLinModels(estCorrelations, design = toyDesign, Formula = out ~ covariate)
 }
 \seealso{
 \link[lmerTest]{lmer}, \link[stats]{lm}

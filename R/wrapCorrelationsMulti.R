@@ -4,6 +4,7 @@
 #' Observations are matched to nearest neighbours if necessary
 #'
 #' @inheritParams sbivarMulti
+#' @inheritParams wrapModTtest
 #'
 #' @returns A list of named correlation vectors
 #' @importFrom stats cor

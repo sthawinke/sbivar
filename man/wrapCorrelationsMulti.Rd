@@ -13,6 +13,9 @@ wrapCorrelationsMulti(Xl, Yl, Cxl, Eyl, mapToFinest, jointCoordinates)
 
 \item{mapToFinest}{A boolean, should the one-to-one mapping for modified t-test
 occur to the dataset with the best resolution?}
+
+\item{jointCoordinates}{A boolean, are measurements on the same location
+.}
 }
 \value{
 A list of named correlation vectors

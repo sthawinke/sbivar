@@ -5,54 +5,66 @@
 #' @param measures A list of measures of bivariate spatial association
 #' @param design A design dataframe
 #' @param Formula A formula for the linear model to be fitted, can contain random effects
-#'
+#' @param Control A control list for lmerTest::lmer
 #' @returns A data frame containing, sorted by ascending p-value
 #' @export
 #'
 #' @examples
 #' example(sbivarMulti, "sbivar")
-#' toyDesign = data.frame("covariate" = rnorm(im))
-#' multiFitGams = fitLinModels(estGAMs, design = toyDesign,)
+#' toyDesign = data.frame("covariate" = rnorm(ims))
+#' multiFitGams = fitLinModels(estGAMs, design = toyDesign, Formula = out ~ covariate)
+#' multiFitMoran = fitLinModels(estMoran, design = toyDesign, Formula = out ~ covariate)
+#' multiFit = fitLinModels(estCorrelations, design = toyDesign, Formula = out ~ covariate)
 #' @importFrom lmerTest lmer
 #' @importFrom stats formula terms model.matrix
-#' @importFrom lme4 lmerControl .makeCC isSingular lFormula mkReTrms findbars
+#' @importFrom lme4 lmerControl .makeCC isSingular lFormula mkReTrms findbars nobars
 #' @importFrom methods is
+#' @importFrom smoppix centerNumeric named.contr.sum
 #' @seealso \link[lmerTest]{lmer}, \link[stats]{lm}
-fitLinModels = function(measures, design, Formula){
-    stopifnot(length(measures)==nrow(design), is.matrix(design) || is.data.frame(design),
+fitLinModels = function(measures, design, Formula, Control = lmerControl(
+    check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
+    check.conv.singular = .makeCC(action = "ignore", tol = formals(isSingular)$tol),
+    check.conv.hess = .makeCC(action = "ignore", tol = 1e-06)
+)){
+    stopifnot(names(measures) == c("estimates", "method"))
+    method = measures$method
+    measures = measures$estimates
+    stopifnot(length(measures)==nrow(design), is.data.frame(design),
               is.character(Formula) || is(Formula, "formula"))
     Formula = formula(Formula)
-    MM <- any(grepl("\\|", formChar <- characterFormula(Formula)))
-    unPairs = unique(unlist(lapply(measures, names)))
-    Control <- lmerControl(
-        check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
-        check.conv.singular = .makeCC(action = "ignore", tol = formals(isSingular)$tol),
-        check.conv.hess = .makeCC(action = "ignore", tol = 1e-06)
-    )
+    MM <- length(findbars(Formula)) > 0
+    Features = unique(unlist(lapply(measures, names))) # All feature pairs present
+
+    fixedVars = all.vars(nobars(Formula)[[3]])
     #Matrix of outcomes
-    outMat = matrix(0, nrow = nrow(design), ncol = length(unPairs),
-                    dimnames = list(rownames(design), unPairs))
+    outMat = matrix(0, nrow = nrow(design), ncol = length(Features),
+                    dimnames = list(names(measures), Features))
+    if(method %in% c("GAMs", "Correlation")){
+        weightsMat = outMat
+        for(i in names(measures)){
+            weightsMat[i,names(measures[[i]])] = measures[[i]]
+        }
+        #P
+    }
     for(i in names(measures)){
-        measures[[i]][unPairs]
+        outMat[i,names(measures[[i]])] = measures[[i]]
     }
     #Prepare design matrices
-    design = centerNumeric(design)
+    baseDf = data.frame("out" = 0, centerNumeric(design))
     if(MM){
-        ff <- lFormula(Formula, data = data.frame("out" = 0, design),
-                       contrasts = contrasts, na.action = na.omit)
+        ff <- lFormula(Formula, data = baseDf, contrasts = contrasts, na.action = na.omit)
     }
     if (is.null(fixedVars)) {
         contrasts <- NULL
     } else {
-        discreteVars <- selfName(intersect(getDiscreteVars(obj), fixedVars))
+        discreteVars <- selfName(intersect(colnames(design)[!vapply(design, FUN.VALUE = TRUE, is.numeric)], fixedVars))
         contrasts <- lapply(discreteVars, function(x) named.contr.sum)
     }
     modMat <- model.matrix(nobars(Formula), baseDf, contrasts.arg = contrasts) #Fixed effects model matrix
     Assign <- attr(modMat, "assign")
-    contrasts <- contrasts[!names(contrasts) %in% vapply(df, FUN.VALUE = TRUE, is.numeric)]
-    models <- loadBalanceBplapply(Features, function(gene) {
-        df <- buildDataFrame(obj, gene = gene, pi = pi, pppDf = pppDf)
-        out <- if (is.null(df) || sum(id <- !is.na(df$pi)) < 3) {
+    models <- loadBalanceBplapply(Features, function(feat) {
+        baseDf$out = outMat[, feat]
+        out <- if (sum(id <- !is.na(baseDf$out)) < 3) {
             NULL
         } else {
             if(MM){
@@ -60,9 +72,10 @@ fitLinModels = function(measures, design, Formula){
                 attr(ff$X, "assign") <- Assign
                 ff$reTrms$Zt <- ff$reTrms$Zt[, id, drop = FALSE]
             }
-
-            fitLinModel(ff = ff, y = mat[id, "pi"], Terms = terms(Formula), modMat = modMat[id,,drop = FALSE],
-                        weights = mat[id, "weights"], Control = Control, MM = MM, Assign = Assign)
+            fitLinModel(ff = ff, y = baseDf[id, "out"], Terms = terms(Formula),
+                        modMat = modMat[id,,drop = FALSE],
+                        weights = weightsMat[id, feat], Control = Control, MM = MM,
+                        Assign = Assign)
         }
         return(out)
     })
@@ -74,6 +87,7 @@ fitLinModels = function(measures, design, Formula){
 #' @param weights weights vector
 #' @param Assign,Terms Added to fitted fixed effects model
 #' @param modMat Design matrix of the fixed effects model
+#' @param MM a Boolean, should a mixed model fit be attempted?
 #' @inheritParams fitLinModels
 #' @return A fitted model
 #'
@@ -82,6 +96,7 @@ fitLinModels = function(measures, design, Formula){
 #' @returns A fitted lmer model
 #' @importFrom lme4 mkLmerDevfun optimizeLmer mkMerMod
 #' @importFrom stats lm.wfit
+#' @importFrom smoppix lm_from_wfit
 fitLinModel <-function(ff, y, Control, Terms, modMat, MM, Assign, weights = NULL) {
     if(MM){
         fr <- ff$fr                    # this is a data.frame (model frame)

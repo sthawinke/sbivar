@@ -10,6 +10,9 @@ wrapCorrelationsMulti(Xl, Yl, Cxl, Eyl, mapToFinest)
 \item{Xl, Yl}{Lists of matrices of omics measurements}
 
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
+
+\item{mapToFinest}{A boolean, should the one-to-one mapping for modified t-test
+occur to the dataset with the best resolution?}
 }
 \value{
 A list of named correlation vectors

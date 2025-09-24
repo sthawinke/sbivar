@@ -7,6 +7,8 @@
 fitLinModel(Formula, dff, Control, MM, Weight = NULL)
 }
 \arguments{
+\item{Formula}{A formula for the linear model to be fitted, can contain random effects}
+
 \item{dff}{The dataframe}
 
 \item{Control}{Control parameters}
@@ -25,5 +27,5 @@ Fit a linear model for an individual feature pair
 Code is based on smoppix:::fitPiModel, but may diverge
 }
 \seealso{
-\link{fitLMMsSingle}
+\link{fitLinModels}
 }

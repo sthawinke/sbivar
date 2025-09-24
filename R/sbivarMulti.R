@@ -11,6 +11,7 @@
 #' @returns A list containing at least an entry "result", which contains p-values,
 #' adjusted p-values and measures of association, sorted by increasing p-value.
 #' @export
+#' @inheritParams sbivarSingle
 #'
 #' @examples
 #' n=1e2;m=8e1;p=3;k=4
@@ -30,7 +31,8 @@
 #' estGAMs = sbivarMulti(X, Y, Cx, Ey, method = "GAMs")
 #' estMoran = sbivarMulti(X, Y, Cx, Ey, method = "Moran")
 #' estCorrelations = sbivarMulti(X, Y, Cx, Ey, method = "Moran")
-sbivarMulti = function(Xl, Yl, Cxl, Eyl, method = c("GAMs", "Correlation", "Moran's I"),
+sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = rep("gaussian", 2),
+                       method = c("GAMs", "Correlation", "Moran's I"), mapToFinest = FALSE,
                         wo = c("distance", "nn"), numNN = 8, n_points_grid = 5e2){
     method = match.arg(method)
     wo = match.arg(wo)
@@ -57,7 +59,7 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, method = c("GAMs", "Correlation", "Mora
     }  else if(method == "Correlation"){
         wrapCorrelationsMulti(Xl, Yl, Cxl, Eyl, mapToFinest = FALSE)
     } else if (method =="Moran's I"){
-        wrapMoransIMulti(Xl, Yl, Cxl, Eyl)
+        wrapMoransIMulti(Xl, Yl, Cxl, Eyl, wo = wo, numNN = numNN)
     }
     return(out)
 }

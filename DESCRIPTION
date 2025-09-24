@@ -13,7 +13,7 @@ Description: The sbivar package implements a suite of tests for Spatial BIVARiat
 License: GPL-2
 Encoding: UTF-8
 RdMacros: Rdpack
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 biocViews: Transcriptomics, Spatial, Proteomics, Metabolomics
 Depends: R (>= 4.5.0)
 Imports: lme4,lmerTest,mgcv,ggplot2,RANN,concaveman,SpatialPack,BiocParallel,Rdpack,stats,sf,Matrix,smoppix,spatstat.geom,reshape2,methods,abind,nlme

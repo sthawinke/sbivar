@@ -7,11 +7,11 @@
 fitLinModels(measures, design, Formula)
 }
 \arguments{
-\item{measures}{A list of measures of bivairate spatial association}
+\item{measures}{A list of measures of bivariate spatial association}
 
 \item{design}{A design dataframe}
 
-\item{formula}{A formula for the linear model to be fitted, can contain random effects}
+\item{Formula}{A formula for the linear model to be fitted, can contain random effects}
 }
 \value{
 A data frame containing, sorted by ascending p-value

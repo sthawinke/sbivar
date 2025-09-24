@@ -9,7 +9,9 @@ sbivarMulti(
   Yl,
   Cxl,
   Eyl,
+  families = rep("gaussian", 2),
   method = c("GAMs", "Correlation", "Moran's I"),
+  mapToFinest = FALSE,
   wo = c("distance", "nn"),
   numNN = 8,
   n_points_grid = 500
@@ -20,14 +22,17 @@ sbivarMulti(
 
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
+\item{families}{A vector of length 2 giving outcome values.}
+
 \item{method}{A character string, indicating which method to apply}
+
+\item{mapToFinest}{A boolean, should the one-to-one mapping for modified t-test
+occur to the dataset with the best resolution?}
 
 \item{wo, numNN}{Passed on to \link{buildWeightMat}.}
 
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.}
-
-\item{families}{A vector of length 2 giving outcome values.}
 }
 \value{
 A list containing at least an entry "result", which contains p-values,

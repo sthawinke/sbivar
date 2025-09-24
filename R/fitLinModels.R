@@ -11,15 +11,16 @@
 #'
 #' @examples
 #' example(sbivarMulti, "sbivar")
-#' toyDesign = data.frame("covariate" = rnorm(ims))
-#' multiFitGams = fitLinModels(estGAMs, design = toyDesign, Formula = out ~ covariate)
+#' toyDesign = data.frame("covariate" = rnorm(ims), "group" = rep(c("control", "treatment"), length.out = ims))
+#' multiFitGams = fitLinModels(estGAMs, design = toyDesign, Formula = out ~ covariate + (1|group))
 #' multiFitMoran = fitLinModels(estMoran, design = toyDesign, Formula = out ~ covariate)
 #' multiFit = fitLinModels(estCorrelations, design = toyDesign, Formula = out ~ covariate)
 #' @importFrom lmerTest lmer
 #' @importFrom stats formula terms model.matrix
 #' @importFrom lme4 lmerControl .makeCC isSingular lFormula mkReTrms findbars nobars
 #' @importFrom methods is
-#' @importFrom smoppix centerNumeric named.contr.sum
+#' @importFrom smoppix centerNumeric named.contr.sum loadBalanceBplapply
+#' @importFrom BiocParallel bplapply
 #' @seealso \link[lmerTest]{lmer}, \link[stats]{lm}
 fitLinModels = function(measures, design, Formula, Control = lmerControl(
     check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
@@ -33,32 +34,33 @@ fitLinModels = function(measures, design, Formula, Control = lmerControl(
               is.character(Formula) || is(Formula, "formula"))
     Formula = formula(Formula)
     MM <- length(findbars(Formula)) > 0
-    Features = unique(unlist(lapply(measures, names))) # All feature pairs present
+    withWeights <- (method %in% c("GAMs"))
+    namesFun = if(withWeights) rownames else names
+    Features = unique(unlist(lapply(measures, namesFun))) # All feature pairs present
 
     fixedVars = all.vars(nobars(Formula)[[3]])
     #Matrix of outcomes
     outMat = matrix(0, nrow = nrow(design), ncol = length(Features),
                     dimnames = list(names(measures), Features))
-    if(method %in% c("GAMs", "Correlation")){
+    if(withWeights){#, "Correlation"
         weightsMat = outMat
         for(i in names(measures)){
-            weightsMat[i,names(measures[[i]])] = measures[[i]]
+            weightsMat[i,namesFun(measures[[i]])] = 1/measures[[i]][, "se"]^2
         }
-        #P
     }
     for(i in names(measures)){
-        outMat[i,names(measures[[i]])] = measures[[i]]
+        outMat[i,namesFun(measures[[i]])] = if(withWeights) measures[[i]][, "est"] else measures[[i]]
     }
     #Prepare design matrices
     baseDf = data.frame("out" = 0, centerNumeric(design))
-    if(MM){
-        ff <- lFormula(Formula, data = baseDf, contrasts = contrasts, na.action = na.omit)
-    }
     if (is.null(fixedVars)) {
         contrasts <- NULL
     } else {
         discreteVars <- selfName(intersect(colnames(design)[!vapply(design, FUN.VALUE = TRUE, is.numeric)], fixedVars))
         contrasts <- lapply(discreteVars, function(x) named.contr.sum)
+    }
+    if(MM){
+        ff <- lFormula(Formula, data = baseDf, contrasts = contrasts, na.action = na.omit)
     }
     modMat <- model.matrix(nobars(Formula), baseDf, contrasts.arg = contrasts) #Fixed effects model matrix
     Assign <- attr(modMat, "assign")
@@ -74,8 +76,8 @@ fitLinModels = function(measures, design, Formula, Control = lmerControl(
             }
             fitLinModel(ff = ff, y = baseDf[id, "out"], Terms = terms(Formula),
                         modMat = modMat[id,,drop = FALSE],
-                        weights = weightsMat[id, feat], Control = Control, MM = MM,
-                        Assign = Assign)
+                        weights = if(withWeights) weightsMat[id, feat]/sum(weightsMat[id, feat]),
+                        Control = Control, MM = MM, Assign = Assign)
         }
         return(out)
     })
@@ -95,7 +97,7 @@ fitLinModels = function(measures, design, Formula, Control = lmerControl(
 #'
 #' @returns A fitted lmer model
 #' @importFrom lme4 mkLmerDevfun optimizeLmer mkMerMod
-#' @importFrom stats lm.wfit
+#' @importFrom stats lm.wfit lm.fit
 #' @importFrom smoppix lm_from_wfit
 fitLinModel <-function(ff, y, Control, Terms, modMat, MM, Assign, weights = NULL) {
     if(MM){
@@ -113,7 +115,12 @@ fitLinModel <-function(ff, y, Control, Terms, modMat, MM, Assign, weights = NULL
     }
     # Switch to fixed effects model when fit failed
     if(!MM || inherits(mod, "try-error")){
-        mod <- lm_from_wfit(lm.wfit(y = y, x = modMat, w = weights), y = y,
+        Fit = if(is.null(weights)){
+                lm.fit(y = y, x = modMat)
+            } else {
+                lm.wfit(y = y, x = modMat, w = weights)
+            }
+        mod <- lm_from_wfit(Fit, y = y,
                             Assign = Assign, Terms = Terms)
     }
     return(mod)

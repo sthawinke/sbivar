@@ -24,5 +24,6 @@ A vector of length 2: a p-value and an indicator of the sign:
 +1 for positive association, -1 for negative
 }
 \description{
-Perform the score test for significance of the bivariate spatial association for Gaussian processes.
+The test is a score test for the variance of a random effect, that drives the covariance, to be zero,
+developed by \insertCite{Zhang2003}{sbivar}
 }

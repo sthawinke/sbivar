@@ -1,5 +1,8 @@
 #' Perform the score test for significance of the bivariate spatial association for Gaussian processes.
 #'
+#'The test is a score test for the variance of a random effect, that drives the covariance, to be zero,
+#'developed by \insertCite{Zhang2003}{sbivar}
+#'
 #' @inheritParams sbivarSingle
 #' @param x,y outcome vectors
 #' @param altSigmas A prepared series of bivariate association matrices

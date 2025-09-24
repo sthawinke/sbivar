@@ -23,7 +23,7 @@ A dataframe of results sorted by p-value, also containing effective sample size 
 \description{
 If measurements are not on the same location, they are matched using nearest neighbour matching with the \link[RANN]{nn2} function.
 Then modified t-test is applied to all pairs, which tests for the significance
-of the Pearson correlation while accounting for spatial autocorrelation \insertCite{Yang2023}{sbivar}.
+of the Pearson correlation while accounting for spatial autocorrelation \insertCite{Clifford1989}{sbivar}.
 }
 \seealso{
 \link[SpatialPack]{modified.ttest}

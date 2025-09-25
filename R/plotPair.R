@@ -9,11 +9,12 @@
 #' \link{extractResultsMulti}, respectively.
 #' @param featx,featy The features in X and Y to be plotted
 #' @param parameter The linear model parameter used to find the feature with the strongest effect.
+#' @param x,y Outcome vectors
 #'
 #' @returns A ggplot2 object
 #' @export
 #' @examples
-#' example(sbivarSingle, sbivar)
+#' example(sbivarSingle, "sbivar")
 #' plotPairSingle(X[,1], Y[, 1], Cx, Ey)
 #' plotTopResultsSingle(resModtTest, Cx, Ey)
 #' plotPairMulti(Xl, Yl, Cxl, Eyl, featx = "X1", featy = "Y1")

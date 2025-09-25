@@ -16,6 +16,8 @@ plotPairMulti(Xl, Yl, Cxl, Eyl, featx, featy)
 plotTopResultsMulti(resultsMulti, Xl, Yl, Cx, Ey, parameter = "Intercept")
 }
 \arguments{
+\item{x, y}{Outcome vectors}
+
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
 \item{resultsSingle, resultsMulti}{Results, returned by \link{sbivarSingle} and
@@ -24,6 +26,10 @@ plotTopResultsMulti(resultsMulti, Xl, Yl, Cx, Ey, parameter = "Intercept")
 \item{Xl, Yl}{Lists of matrices of omics measurements}
 
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
+
+\item{featx, featy}{The features in X and Y to be plotted}
+
+\item{parameter}{The linear model parameter used to find the feature with the strongest effect.}
 }
 \value{
 A ggplot2 object
@@ -31,4 +37,11 @@ A ggplot2 object
 \description{
 Plot a chosen feature pair for a single or list of matrices,
 or plot the highest ranking feature pair.
+}
+\examples{
+example(sbivarSingle, "sbivar")
+plotPairSingle(X[,1], Y[, 1], Cx, Ey)
+plotTopResultsSingle(resModtTest, Cx, Ey)
+plotPairMulti(Xl, Yl, Cxl, Eyl, featx = "X1", featy = "Y1")
+plotTopResultsMulti(estCorrelations, Xl, Yl, Cxl, Eyl)
 }

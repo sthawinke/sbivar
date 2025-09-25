@@ -11,15 +11,21 @@ checkInputSingle = function(X, Y, Cx, Ey){
     if(n!=nrow(Cx)){
         stop("Dimensions of X and its coordinates Cx do not match!")
     }
-    if(m!=nrow(Ey)){
-        stop("Dimensions of Y and its coordinates Ey do not match!")
-    }
-    if(ncol(Cx)!=2 || ncol(Ey)!=2){
+    if(ncol(Cx)!=2){
         stop("Coordinate matrices must be of dimension 2!")
     }
-    if(n!=m){
-        stop("Only one coordinate matrix Cx supplied, and dimensions of X and Y do not match.
+    if(missing(Ey)){
+        if(n!=m){
+            stop("Only one coordinate matrix Cx supplied, and dimensions of X and Y do not match.
                  Please provide the coordinates of Y too through the Ey argument.")
+        }
+    } else {
+        if(m!=nrow(Ey)){
+            stop("Dimensions of Y and its coordinates Ey do not match!")
+        }
+        if(ncol(Ey)!=2){
+            stop("Coordinate matrices must be of dimension 2!")
+        }
     }
 }
 checkInputMulti = function(Xl, Yl, Cxl, Eyl){

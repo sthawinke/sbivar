@@ -1,7 +1,7 @@
 #' Fit Gaussian processes (GPs) if needed, and perform score tests
 #'
 #' @inheritParams sbivarSingle
-#' @inheritParams fitGPs
+#' @inheritParams fitGP
 #' @param numLscAlts Number of length scales to be tested for bivariate association
 #' @param Quants Most extreme quantiles of the distance distribution to take as lenght scales
 #' @returns A named list of results

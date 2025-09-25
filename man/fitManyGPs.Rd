@@ -11,7 +11,7 @@ fitManyGPs(mat, coord, ...)
 
 \item{coord}{Matrix of coordinates}
 
-\item{...}{passed onto \link{fitGPs}}
+\item{...}{passed onto \link{fitGP}}
 }
 \value{
 Matrix of fitted GP components

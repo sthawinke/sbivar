@@ -16,7 +16,7 @@
 #' occur to the dataset with the best resolution?
 #' @param gpParams Parameters of the Gaussian processes, see details
 #' @inheritParams wrapGPs
-#' @inheritParams fitGPs
+#' @inheritParams fitGP
 #'
 #' @details Any normalization of the data should happen prior to calling this function.
 #' For instance, count data or metabolome data are best scaled to relative values and log-normalized prior to fitting GPs.

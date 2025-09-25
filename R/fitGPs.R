@@ -38,7 +38,7 @@ fitGP = function(x, coord, GPmethod, device, training_iter, corStruct, optContro
 #'
 #' @param mat Matrix of observations
 #' @param coord Matrix of coordinates
-#' @param ... passed onto \link{fitGPs}
+#' @param ... passed onto \link{fitGP}
 #' @returns Matrix of fitted GP components
 fitManyGPs = function(mat, coord, ...){
     simplify2array(loadBalanceBplapply(selfName(colnames(mat)), function(cn){

@@ -2,15 +2,28 @@
 % Please edit documentation in R/plotPair.R
 \name{plotPairSingle}
 \alias{plotPairSingle}
+\alias{plotTopResultsSingle}
+\alias{plotPairMulti}
+\alias{plotTopResultsMulti}
 \title{Plot a feature pair}
 \usage{
 plotPairSingle(x, y, Cx, Ey)
+
+plotTopResultsSingle(resultsSingle, Cx, Ey)
+
+plotPairMulti(Xl, Yl, Cxl, Eyl, featx, featy)
+
+plotTopResultsMulti(resultsMulti, Xl, Yl, Cx, Ey, parameter = "Intercept")
 }
 \arguments{
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
 \item{resultsSingle, resultsMulti}{Results, returned by \link{sbivarSingle} and
-\link{extractResultsNulti}, respectively.}
+\link{extractResultsMulti}, respectively.}
+
+\item{Xl, Yl}{Lists of matrices of omics measurements}
+
+\item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 }
 \value{
 A ggplot2 object

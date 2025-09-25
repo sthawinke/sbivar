@@ -10,7 +10,7 @@ test_that("SbivarSingle works for correct input", {
               multiFit <- fitLinModels(estCorrelations, design = toyDesign,
                                        Formula = out ~ covariate + cofactor + (1|group)))
     #Extract the results
-    expect_identical(names(resGams <- extractResults(multiFitGams, design = toyDesign)),
+    expect_identical(names(resGams <- extractResultsMulti(multiFitGams, design = toyDesign)),
                      c("Intercept", "covariate", "cofactor"))
     expect_identical(colnames(resGams$Intercept), c("Estimate", "SE", "pVal", "pAdj"))
     expect_false(is.unsorted(resGams$Intercept[, "pVal"]))

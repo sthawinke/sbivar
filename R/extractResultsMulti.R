@@ -13,7 +13,7 @@
 #' @export
 #' @rdname fitLinModels
 #' @order 3
-extractResults <- function(models, design, method = "BH") {
+extractResultsMulti <- function(models, design, method = "BH") {
     id <- vapply(models, FUN.VALUE = TRUE, function(x) {
         is(x, "lmerModLmerTest") || is(x, "lm")
     })

@@ -1,6 +1,8 @@
 #' Fit linear models on replicated image results
-#' @description Given measures estimated from replicated images, fit linear models to determine significance.
-#' The measures are usually estimated using \link{sbivarMulti}
+#' @description Given measures estimated from replicated images using \link{sbivarMulti},
+#' fit linear models to determine significance.
+#' To maintain interpretability of the intercept, continuous fixed effect variables are centered,
+#' and sum coding is used for the categorical ones.
 #'
 #' @param measures A list of measures of bivariate spatial association
 #' @param design A design dataframe
@@ -11,11 +13,14 @@
 #'
 #' @examples
 #' example(sbivarMulti, "sbivar")
-#' toyDesign = data.frame("covariate" = rnorm(ims), "group" = rep(c("control", "treatment"),
-#' length.out = ims))
-#' multiFitGams = fitLinModels(estGAMs, design = toyDesign, Formula = out ~ covariate + (1|group))
-#' multiFitMoran = fitLinModels(estMoran, design = toyDesign, Formula = out ~ covariate)
-#' multiFit = fitLinModels(estCorrelations, design = toyDesign, Formula = out ~ covariate)
+#' toyDesign = data.frame("covariate" = rnorm(ims), "cofactor" = factor(rep(c(TRUE, FALSE), length.out = ims)),
+#' "group" = rep(c("control", "treatment"), length.out = ims))
+#' multiFitGams = fitLinModels(estGAMs, design = toyDesign, Formula = out ~ covariate + cofactor + (1|group))
+#' multiFitMoran = fitLinModels(estMoran, design = toyDesign, Formula = out ~ covariate + cofactor)
+#' multiFit = fitLinModels(estCorrelations, design = toyDesign, Formula = out ~ covariate + (1|group))
+#' #Extract the results
+#' resGams = extractResults(multiFitGams, design = toyDesign)
+#' head(resGams$Intercept)
 #' @importFrom lmerTest lmer
 #' @importFrom stats formula terms model.matrix
 #' @importFrom lme4 lmerControl .makeCC isSingular lFormula mkReTrms findbars nobars
@@ -29,21 +34,16 @@ fitLinModels = function(measures, design, Formula, Control = lmerControl(
     check.conv.hess = .makeCC(action = "ignore", tol = 1e-06)
 )){
     stopifnot(names(measures) == c("estimates", "method"))
-    method = measures$method
-    measures = measures$estimates
+    method = measures$method;measures = measures$estimates
     stopifnot(length(measures)==nrow(design), is.data.frame(design),
               is.character(Formula) || is(Formula, "formula"))
-    Formula = formula(Formula)
-    MM <- length(findbars(Formula)) > 0
-    withWeights <- (method %in% c("GAMs"))
+    withWeights <- (method %in% c("GAMs"))#, "Correlation"
     namesFun = if(withWeights) rownames else names
     Features = unique(unlist(lapply(measures, namesFun))) # All feature pairs present
-
-    fixedVars = all.vars(nobars(Formula)[[3]])
-    #Matrix of outcomes
+    #Prepare matrices of outcomes and weights
     outMat = matrix(0, nrow = nrow(design), ncol = length(Features),
                     dimnames = list(names(measures), Features))
-    if(withWeights){#, "Correlation"
+    if(withWeights){
         weightsMat = outMat
         for(i in names(measures)){
             weightsMat[i,namesFun(measures[[i]])] = 1/measures[[i]][, "se"]^2
@@ -52,16 +52,20 @@ fitLinModels = function(measures, design, Formula, Control = lmerControl(
     for(i in names(measures)){
         outMat[i,namesFun(measures[[i]])] = if(withWeights) measures[[i]][, "est"] else measures[[i]]
     }
-    #Prepare design matrices
+    #Prepare design matrices for linear model fitting
+    Formula = formula(Formula)
+    MM <- length(findbars(Formula)) > 0
+    fixedVars = all.vars(nobars(Formula)[[3]])
     baseDf = data.frame("out" = 0, centerNumeric(design))
     if (is.null(fixedVars)) {
         contrasts <- NULL
     } else {
-        discreteVars <- selfName(intersect(colnames(design)[!vapply(design, FUN.VALUE = TRUE, is.numeric)], fixedVars))
+        discreteVars <- selfName(intersect(getDiscreteVars(design), fixedVars))
         contrasts <- lapply(discreteVars, function(x) named.contr.sum)
     }
     if(MM){
         ff <- lFormula(Formula, data = baseDf, contrasts = contrasts, na.action = na.omit)
+        #Prepare random effects fitting
     }
     modMat <- model.matrix(nobars(Formula), baseDf, contrasts.arg = contrasts) #Fixed effects model matrix
     Assign <- attr(modMat, "assign")
@@ -82,6 +86,7 @@ fitLinModels = function(measures, design, Formula, Control = lmerControl(
         }
         return(out)
     })
+    return(models)
 }
 #' Fit a linear model for an individual feature pair
 #'
@@ -96,7 +101,7 @@ fitLinModels = function(measures, design, Formula, Control = lmerControl(
 #'
 #' @details Code is based on smoppix:::fitSingleLmmModel, but may diverge
 #'
-#' @returns A fitted lmer model
+#' @returns A fitted lmer or lm model
 #' @importFrom lme4 mkLmerDevfun optimizeLmer mkMerMod
 #' @importFrom stats lm.wfit lm.fit
 #' @importFrom smoppix lm_from_wfit
@@ -121,8 +126,7 @@ fitLinModel <-function(ff, y, Control, Terms, modMat, MM, Assign, weights = NULL
             } else {
                 lm.wfit(y = y, x = modMat, w = weights)
             }
-        mod <- lm_from_wfit(Fit, y = y,
-                            Assign = Assign, Terms = Terms)
+        mod <- lm_from_wfit(Fit, y = y, Assign = Assign, Terms = Terms)
     }
     return(mod)
 }

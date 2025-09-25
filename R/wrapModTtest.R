@@ -10,6 +10,7 @@
 #' @returns A dataframe of results sorted by p-value, also containing effective sample size (ESS) and correlation estimate.
 #' @importFrom SpatialPack modified.ttest
 #' @seealso \link[SpatialPack]{modified.ttest}
+#' \insertAllCited{}
 wrapModTtest = function(X, Y, Cx, Ey, mapToFinest = FALSE, jointCoordinates = FALSE){
     n = nrow(X);m = nrow(Y)
     if(!jointCoordinates){

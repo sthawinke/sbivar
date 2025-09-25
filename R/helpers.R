@@ -62,3 +62,11 @@ tr = function(x, dim = c(1,2)) {
         stop("Trace function not implemented for ", class(x))
     }
 }
+#' Get all categrocial variables from a dataframe
+#'
+#' @param df The data frane
+#'
+#' @returns A character vector of variable names
+getDiscreteVars = function(df){
+    colnames(df)[!vapply(df, FUN.VALUE = TRUE, is.numeric)]
+}

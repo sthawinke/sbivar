@@ -24,7 +24,7 @@ fitLinModel(ff, y, Control, Terms, modMat, MM, Assign, weights = NULL)
 \value{
 A fitted model
 
-A fitted lmer model
+A fitted lmer or lm model
 }
 \description{
 Fit a linear model for an individual feature pair

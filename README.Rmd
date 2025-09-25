@@ -3,7 +3,9 @@ output: github_document
 title: "<img src='inst/Sbivar.png' align='centre' height='15%' width='15%'/>SBIVAR: Spatial BIVARiate association tests across disjoint coordinate sets"
 ---
 
-This repo provides code for performing bivariate association tests between different spatial modalities measured on the same or consecutive slices, possibly with disjoint coordinate sets. A common coordinate framework (CCF) as obtained from alignment is considered given. As introduced in our [preprint](). A simple use-case is shown below, more extensive documentation can be found in the vignette.
+This repo provides code for performing bivariate association tests between different spatial modalities measured on the same or consecutive slices, possibly with disjoint coordinate sets. A common coordinate framework (CCF) as obtained from alignment is considered given. A simple use-case is shown below, more extensive documentation can be found in the vignette.
+
+<!-- % As introduced in our [preprint](). -->
 
 The package can be installed from GitHub as follows:
 

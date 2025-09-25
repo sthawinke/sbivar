@@ -27,4 +27,5 @@ of the Pearson correlation while accounting for spatial autocorrelation \insertC
 }
 \seealso{
 \link[SpatialPack]{modified.ttest}
+\insertAllCited{}
 }

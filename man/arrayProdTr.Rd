@@ -17,7 +17,7 @@ Returns the matrix resulting from the traces of all matrix products of slices of
 with those of array B of the same dimensions. It is a faster version of
 \code{vapply(seq_len(p), FUN.VALUE = double(p), function(i)\{
      vapply(seq_len(p), FUN.VALUE = double(1), function(j)\{
-         tr(crossprod(arr[,,i], arr2[,,j]))
+         tr(crossprod(arr2[,,i], arr[,,j]))
      \})
 \})}
 }

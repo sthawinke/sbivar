@@ -42,7 +42,7 @@ wrapModTtest = function(X, Y, Cx, Ey, mapToFinest = FALSE, jointCoordinates = FA
 #' \item{id}{The index of the coordinates to retain}
 #' @importFrom RANN nn2
 matchCoords = function(Cx, Ey, mapToFinest){
-    if(mapToX <- xor(n > m, mapToFinest)){
+    if(mapToX <- xor(nrow(Cx) > nrow(Ey), mapToFinest)){
         id <- nn2(Cx, Ey, k = 1)$nn.idx[, 1]
         coordMat = Cx[id,]
     } else {

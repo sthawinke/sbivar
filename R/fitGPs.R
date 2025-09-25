@@ -19,7 +19,7 @@
 #' @returns A vector of length 4 with components range, nugget, sigma and mean
 #' @importFrom stats sigma coef
 #' @importFrom nlme gls
-fitGPs = function(x, coord, GPmethod, device, training_iter, corStruct, optControl){
+fitGP = function(x, coord, GPmethod, device, training_iter, corStruct, optControl){
     if(GPmethod == "gpytorch"){
         pyFit = fitGPsPython(x, coord, training_iter = training_iter, device = device)
         return(unlist(pyFit$Pars))
@@ -42,6 +42,6 @@ fitGPs = function(x, coord, GPmethod, device, training_iter, corStruct, optContr
 #' @returns Matrix of fitted GP components
 fitManyGPs = function(mat, coord, ...){
     simplify2array(loadBalanceBplapply(selfName(colnames(mat)), function(cn){
-        fitGPs(mat[, cn], coord = coord, ...)
+        fitGP(mat[, cn], coord = coord, ...)
     }))
 }

@@ -39,24 +39,11 @@ occur to the dataset with the best resolution?}
 
 \item{families}{A vector of length 2 giving outcome values.}
 
-\item{GPmethod}{The method by which to fit the Gaussian processes,
-passed onto \link[nlme]{gls} as "method" if it equals "REML" or "ML".}
-
-\item{device}{Device to fit the GPs on. Defaults to "cpu",
-can use "gpu" via the python package gpytorch if installed}
-
-\item{training_iter}{Number of training iterations in gpytorch}
-
 \item{gpParams}{Parameters of the Gaussian processes, see details}
 
 \item{Quants}{Most extreme quantiles of the distance distribution to take as lenght scales}
 
 \item{numLscAlts}{Number of length scales to be tested for bivariate association}
-
-\item{optControl}{List of control values, see \link[nlme]{glsControl}}
-
-\item{corStruct}{The correlation object, see \link[nlme]{corStruct}.
-At this point, only \link[nlme]{corGaus} is accepted}
 }
 \value{
 A matrix which contains at least a p-values ("pVal") and a Benjamini-Hochberg adjusted p-value ("pAdj"),

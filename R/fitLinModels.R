@@ -23,7 +23,7 @@
 #' multiFit = fitLinModels(estCorrelations, design = toyDesign, Formula =
 #' out ~ covariate + (1|group))
 #' #Extract the results
-#' resGams = extractResults(multiFitGams, design = toyDesign)
+#' resGams = extractResultsMulti(multiFitGams, design = toyDesign)
 #' head(resGams$Intercept)
 #' @importFrom lmerTest lmer
 #' @importFrom stats formula terms model.matrix

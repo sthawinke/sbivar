@@ -43,24 +43,8 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
     wo = match.arg(wo)
     stopifnot(is.numeric(numNN), is.numeric(n_points_grid), is.character(wo),
               is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family")))
-    if(length(Xl)!=length(Cxl)){
-        stop("Length of outcome matrices Xl and their coordinates Cxl do not match!")
-    }
-    if(!all(vapply(Xl, nrow, FUN.VALUE = 0) == vapply(Cxl, nrow, FUN.VALUE = 0))){
-        stop("Sample size of matrices Xl and their coordinates Cxl do not match!")
-    }
-    if(jointCoordinates <- missing(Eyl)){
-        if(!all(vapply(Xl, FUN.VALUE = 0L, nrow) == vapply(Yl, FUN.VALUE = 0L, nrow))){
-            stop("If Eyl is not supplied, all elements of Xl and Yl must have the number of samples!")
-        }
-    } else {
-        if(length(Yl)!=length(Eyl)){
-            stop("Length of outcome matrices Yl and their coordinates Eyl do not match!")
-        }
-        if(!all(vapply(Yl, nrow, FUN.VALUE = 0) == vapply(Eyl, nrow, FUN.VALUE = 0))){
-            stop("Sample size of matrices Yl and their coordinates Eyl do not match!")
-        }
-    }
+    foo = checkInputMulti(Xl, Yl, Cxl, Eyl)
+    jointCoordinates <- missing(Eyl)
     out = if(method == "GAMs"){
         wrapGAMsMulti(Xl, Yl, Cxl, Eyl, families = families,
                  n_points_grid = n_points_grid)

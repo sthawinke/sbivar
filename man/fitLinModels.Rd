@@ -45,11 +45,15 @@ and sum coding is used for the categorical ones.
 }
 \examples{
 example(sbivarMulti, "sbivar")
-toyDesign = data.frame("covariate" = rnorm(ims), "cofactor" = factor(rep(c(TRUE, FALSE), length.out = ims)),
-"group" = rep(c("control", "treatment"), length.out = ims))
-multiFitGams = fitLinModels(estGAMs, design = toyDesign, Formula = out ~ covariate + cofactor + (1|group))
-multiFitMoran = fitLinModels(estMoran, design = toyDesign, Formula = out ~ covariate + cofactor)
-multiFit = fitLinModels(estCorrelations, design = toyDesign, Formula = out ~ covariate + (1|group))
+toyDesign = data.frame("covariate" = rnorm(ims),
+"cofactor" = factor(rep(c(TRUE, FALSE), length.out = ims)),
+ "group" = rep(c("control", "treatment"), length.out = ims))
+multiFitGams = fitLinModels(estGAMs, design = toyDesign,
+Formula = out ~ covariate + cofactor + (1|group))
+multiFitMoran = fitLinModels(estMoran, design = toyDesign,
+Formula = out ~ covariate + cofactor)
+multiFit = fitLinModels(estCorrelations, design = toyDesign, Formula =
+out ~ covariate + (1|group))
 #Extract the results
 resGams = extractResults(multiFitGams, design = toyDesign)
 head(resGams$Intercept)

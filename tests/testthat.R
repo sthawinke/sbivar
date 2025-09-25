@@ -37,4 +37,7 @@ if(.Platform$OS.type == "unix"){
     register(DoparParam(), default = TRUE)
 }
 #register(SerialParam()) # Switch on when mapping test coverage
+estGAMs = sbivarMulti(Xl, Yl, Cxl, Eyl, method = "GAMs")
+estMoran = sbivarMulti(Xl, Yl, Cxl, Eyl, method = "Moran")
+estCorrelations = sbivarMulti(Xl, Yl, Cxl, Eyl, method = "Correlation")
 test_check("sbivar")

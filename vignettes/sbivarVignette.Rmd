@@ -89,6 +89,9 @@ For serial calculations, for instance if memory is limiting, choose
 register(SerialParam())
 ```
 
+# Data analysis
+
+
 # Troubleshooting
 
 An error like 

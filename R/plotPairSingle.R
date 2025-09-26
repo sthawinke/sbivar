@@ -34,7 +34,8 @@ plotPairSingle = function(X, Y, Cx, Ey, features, normalizationX = c("none", "lo
     normFunX = switch(normalizationX, "none" = identity, "log" = logNorm)
     normFunY = switch(normalizationY, "none" = identity, "log" = logNorm)
     foo = checkInputSingle(X, Y, Cx, Ey)
-    plotPairSingleVectors(x = normFunX(X)[, features[1]], y = normFunY(Y)[, features[2]],
+    plotPairSingleVectors(x = scaleHelpFun(feat = features[1], normFun = normFunX, X = X),
+                          y = scaleHelpFun(feat = features[2], normFun = normFunY, X = Y),
                    Cx = Cx, Ey = Ey, ...)
 
 }
@@ -44,7 +45,7 @@ plotPairSingleVectors = function(x, y, Cx, Ey, size = 2,
     theme_set(theme_bw())
     stopifnot(length(x)==nrow(Cx), length(y)==nrow(Ey), ncol(Ey)==2, ncol(Cx)==2)
     coordMat = rbind(Cx, Ey);colnames(coordMat) = c("x", "y")
-    plotDf = data.frame("outcome" = c(scaleZeroOne(x), scaleZeroOne(y)), coordMat,
+    plotDf = data.frame("outcome" = c(x, y), coordMat,
                         "feature" = rep(modalityNames, times = c(length(x), length(y))))
     ggplot(data = plotDf, aes(x = x, y = y, col = outcome)) +
         geom_point(size = size) + facet_grid(~feature) +

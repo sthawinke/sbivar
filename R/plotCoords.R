@@ -21,7 +21,7 @@
 #'     plotCoords(Cxl[[nam]], Eyl[[nam]], main = nam)
 #' })
 #' par(mfrow=c(1,1))
-#' @importFrom stats points
+#' @importFrom graphics points
 plotCoords = function(Cx, Ey, pch = 1, pchY = 3, cex = 1, ...){
     plot(x = as.matrix(Cx), xlim = range(c(Cx[,1], Ey[,1])), ylim = range(c(Cx[,2], Ey[,2])),
          asp = 1, pch = pch, cex = cex, xlab = "x", ylab = "y", ...)

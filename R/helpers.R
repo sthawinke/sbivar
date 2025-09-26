@@ -83,6 +83,22 @@ scaleZeroOne = function(y, na.rm = TRUE){
 scaleMinusOne = function(y, na.rm = TRUE){
     (y-min(y, na.rm = na.rm))/diff(range(y, na.rm = na.rm))*2-1
 }
+#' Wrapper to normalize, select feature and scale
+#'
+#' @details Returns vector of NA if feature not found, leading to grey in the plots
+#' @param X data matrix
+#' @param feat the feature name
+#' @param normFun normalizing function
+#'
+#' @returns A vector of values
+scaleHelpFun = function(X, feat, normFun){
+    normFun = match.fun(normFun)
+    if(feat %in% colnames(X)){
+        scaleZeroOne(normFun(X)[, feat])
+    } else {
+        rep(NA, nrow(X))
+    }
+}
 #' Log normalize data matrix
 #'
 #' Noramlize to relative expression, add pseudocount and log-normalize

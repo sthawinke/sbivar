@@ -9,6 +9,8 @@ plotTopResultsMulti(resultsMulti, Xl, Yl, Cx, Ey, parameter = "Intercept")
 \arguments{
 \item{Xl, Yl}{Lists of matrices of omics measurements}
 
+\item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
+
 \item{parameter}{The linear model parameter used to find the feature with the strongest effect.}
 }
 \description{
@@ -16,6 +18,6 @@ Plot a chosen or top feature in the analysis for a series of images
 }
 \examples{
 example(fitLinModels, "sbivar")
-plotPairMulti(Xl, Yl, Cxl, Eyl, featx = "X1", featy = "Y1")
 plotTopResultsMulti(resGams, Xl, Yl, Cxl, Eyl)
+plotPairMulti(Xl, Yl, Cxl, Eyl, feauresx = c("X1", "Y1"))
 }

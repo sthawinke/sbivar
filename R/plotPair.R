@@ -35,3 +35,4 @@ plotTopResultsMulti = function(resultsMulti, Xl, Yl, Cx, Ey,
                                parameter = "Intercept"){
     plotPairMulti(Xl, Yl, Cxl, Eyl, featx = featx, featy = featy)
 }
+

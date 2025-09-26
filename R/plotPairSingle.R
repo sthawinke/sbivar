@@ -3,14 +3,14 @@
 #' Plot a chosen feature pair, or the highest ranking feature pair, for a singlepair of images,
 #'
 #' @details For sequence count data, such as transcriptomics, log-normalization
-#' seems indicated to achieve clear plots.
+#' seems indicated to achieve clear plots. The normalization sued for plotting is
+#'  not necessarily the same as the one used for the analysis.
 #'
 #' @inheritParams sbivarSingle
 #' @param resultsSingle Results returned by \link{sbivarSingle}
 #' @param x,y Outcome vectors
-#' @param normalizationX,normalizationY A character string, indicating what normalization is required
-#' for X and Y matrrices, respectively, before plotting.
-#' This is not the same normalization as used for the analysis, see details.
+#' @param normalizationX,normalizationY Character strings, indicating what normalization is required
+#' for X and Y matrices, respectively, before plotting, see details.
 #' @param size Point size
 #' @param ... Passed onto \link{plotPairSingleVectors}
 #'
@@ -18,7 +18,9 @@
 #' @export
 #' @examples
 #' example(sbivarSingle, "sbivar")
+#' # Plot the feature pair with the most significant signal
 #' plotTopResultsSingle(resModtTest, X, Y, Cx, Ey, modalityNames = c("gene", "metabolite"))
+#' # Plot an arbitrary feature pair
 #' plotPairSingle(X, Y, Cx, Ey, features = c("X1", "Y1"))
 plotTopResultsSingle = function(resultsSingle, X, Y, Cx, Ey, ...){
     topPair = rownames(resultsSingle)[1]
@@ -26,10 +28,12 @@ plotTopResultsSingle = function(resultsSingle, X, Y, Cx, Ey, ...){
     plotPairSingle(X = X, Y = Y, features = topFeats, Cx = Cx, Ey = Ey, ...)
 
 }
-#' @export
 #' @rdname plotTopResultsSingle
+#' @export
+#' @param features Feature vector of lenght 2 to be plotted
 plotPairSingle = function(X, Y, Cx, Ey, features, normalizationX = c("none", "log"),
                           normalizationY = c("none", "log"), ...){
+    stopifnot(length(features)==2)
     normalizationX = match.arg(normalizationX);normalizationY = match.arg(normalizationY)
     normFunX = switch(normalizationX, "none" = identity, "log" = logNorm)
     normFunY = switch(normalizationY, "none" = identity, "log" = logNorm)
@@ -40,8 +44,10 @@ plotPairSingle = function(X, Y, Cx, Ey, features, normalizationX = c("none", "lo
 
 }
 #' @rdname plotTopResultsSingle
+#' @param modalityNames Names to be given to the modalities,
+#' appearing in the strip text of the columns
 plotPairSingleVectors = function(x, y, Cx, Ey, size = 2,
-                                 modalityNames = c("feature 1", "feature 2")){
+                                 modalityNames = c("Modality X", "Modality Y")){
     theme_set(theme_bw())
     stopifnot(length(x)==nrow(Cx), length(y)==nrow(Ey), ncol(Ey)==2, ncol(Cx)==2)
     coordMat = rbind(Cx, Ey);colnames(coordMat) = c("x", "y")

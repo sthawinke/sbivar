@@ -1,21 +1,27 @@
 #' Plot a chosen or top feature in the analysis for a series of images
 #'
+#' @param parameter The linear model parameter used to find the feature with the strongest effect.
+#' @param resultsMulti The results list, from call to \link{fitLinModels}
 #' @inheritParams sbivarMulti
 #' @inheritParams plotPairSingle
 #' @examples
 #' example(fitLinModels, "sbivar")
+#' # Plot the feature pair with the most significant signal
 #' plotTopResultsMulti(resGams, Xl, Yl, Cxl, Eyl)
-#' plotPairMulti(Xl, Yl, Cxl, Eyl, feauresx = c("X1", "Y1"))
-#' @param parameter The linear model parameter used to find the feature with the strongest effect.
+#' # Plot an arbitrary feature pair
+#' plotPairMulti(Xl, Yl, Cxl, Eyl, feaures = c("X1", "Y1"))
+#' @export
 plotTopResultsMulti = function(resultsMulti, Xl, Yl, Cx, Ey, parameter = "Intercept"){
     stopifnot(parameter %in% names(resultsMulti))
-    topPair = rownames(resultsMulti[[parameter]][1])
+    topPair = rownames(resultsMulti[[parameter]])[1]
     topFeats = sund(topPair)
     plotPairMulti(Xl, Yl, Cxl, Eyl, features = topFeats)
 }
-#' @rdname plotPairSingle
+#' @rdname plotTopResultsMulti
+#' @export
 plotPairMulti = function(Xl, Yl, Cxl, Eyl, features, normalizationX = c("none", "log"),
-                         normalizationY = c("none", "log"), size = 2){
+                         normalizationY = c("none", "log"), modalityNames = c("Modality X", "Modality Y"),
+                         size = 2){
     normalizationX = match.arg(normalizationX);normalizationY = match.arg(normalizationY)
     normFunX = switch(normalizationX, "none" = identity, "log" = logNorm)
     normFunY = switch(normalizationY, "none" = identity, "log" = logNorm)

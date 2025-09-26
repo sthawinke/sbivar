@@ -25,7 +25,7 @@ This is a useful check of the alignment and overlap
 \examples{
 example(sbivarSingle, "sbivar")
 plotCoords(Cx, Ey)
-For multiple coordinates
+#For multiple coordinates
 example(sbivarMulti, "sbivar")
 par(mfrow = c(2,3))
 foo = lapply(names(Cxl), function(nam){

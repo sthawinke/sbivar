@@ -25,7 +25,7 @@ plotPairSingleVectors(
   Cx,
   Ey,
   size = 2,
-  modalityNames = c("feature 1", "feature 2")
+  modalityNames = c("Modality X", "Modality Y")
 )
 }
 \arguments{
@@ -37,13 +37,17 @@ plotPairSingleVectors(
 
 \item{...}{Passed onto \link{plotPairSingleVectors}}
 
-\item{normalizationX, normalizationY}{A character string, indicating what normalization is required
-for X and Y matrrices, respectively, before plotting.
-This is not the same normalization as used for the analysis, see details.}
+\item{features}{Feature vector of lenght 2 to be plotted}
+
+\item{normalizationX, normalizationY}{Character strings, indicating what normalization is required
+for X and Y matrices, respectively, before plotting, see details.}
 
 \item{x, y}{Outcome vectors}
 
 \item{size}{Point size}
+
+\item{modalityNames}{Names to be given to the modalities,
+appearing in the strip text of the columns}
 }
 \value{
 A ggplot2 object
@@ -53,10 +57,13 @@ Plot a chosen feature pair, or the highest ranking feature pair, for a singlepai
 }
 \details{
 For sequence count data, such as transcriptomics, log-normalization
-seems indicated to achieve clear plots.
+seems indicated to achieve clear plots. The normalization sued for plotting is
+ not necessarily the same as the one used for the analysis.
 }
 \examples{
 example(sbivarSingle, "sbivar")
+# Plot the feature pair with the most significant signal
 plotTopResultsSingle(resModtTest, X, Y, Cx, Ey, modalityNames = c("gene", "metabolite"))
+# Plot an arbitrary feature pair
 plotPairSingle(X, Y, Cx, Ey, features = c("X1", "Y1"))
 }

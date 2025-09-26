@@ -2,22 +2,51 @@
 % Please edit documentation in R/plotPairMulti.R
 \name{plotTopResultsMulti}
 \alias{plotTopResultsMulti}
+\alias{plotPairMulti}
 \title{Plot a chosen or top feature in the analysis for a series of images}
 \usage{
 plotTopResultsMulti(resultsMulti, Xl, Yl, Cx, Ey, parameter = "Intercept")
+
+plotPairMulti(
+  Xl,
+  Yl,
+  Cxl,
+  Eyl,
+  features,
+  normalizationX = c("none", "log"),
+  normalizationY = c("none", "log"),
+  modalityNames = c("Modality X", "Modality Y"),
+  size = 2
+)
 }
 \arguments{
+\item{resultsMulti}{The results list, from call to \link{fitLinModels}}
+
 \item{Xl, Yl}{Lists of matrices of omics measurements}
 
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
 \item{parameter}{The linear model parameter used to find the feature with the strongest effect.}
+
+\item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
+
+\item{features}{Feature vector of lenght 2 to be plotted}
+
+\item{normalizationX, normalizationY}{Character strings, indicating what normalization is required
+for X and Y matrices, respectively, before plotting, see details.}
+
+\item{modalityNames}{Names to be given to the modalities,
+appearing in the strip text of the columns}
+
+\item{size}{Point size}
 }
 \description{
 Plot a chosen or top feature in the analysis for a series of images
 }
 \examples{
 example(fitLinModels, "sbivar")
+# Plot the feature pair with the most significant signal
 plotTopResultsMulti(resGams, Xl, Yl, Cxl, Eyl)
-plotPairMulti(Xl, Yl, Cxl, Eyl, feauresx = c("X1", "Y1"))
+# Plot an arbitrary feature pair
+plotPairMulti(Xl, Yl, Cxl, Eyl, feaures = c("X1", "Y1"))
 }

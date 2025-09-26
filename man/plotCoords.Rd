@@ -4,7 +4,7 @@
 \alias{plotCoords}
 \title{Plot the coordinates of two omics modalities}
 \usage{
-plotCoords(Cx, Ey, pch = 20, cex = 6, pchY = pch, ...)
+plotCoords(Cx, Ey, pch = 1, pchY = 3, cex = 1, ...)
 }
 \arguments{
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
@@ -29,7 +29,7 @@ For multiple coordinates
 example(sbivarMulti, "sbivar")
 par(mfrow = c(2,3))
 foo = lapply(names(Cxl), function(nam){
-plotCoords(Cxl[[nam]], Eyl[[nam]], main = nam)
+    plotCoords(Cxl[[nam]], Eyl[[nam]], main = nam)
 })
 par(mfrow=c(1,1))
 }

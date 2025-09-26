@@ -9,7 +9,7 @@ scaleMinusOne(y, na.rm = TRUE)
 \arguments{
 \item{y}{The vector to be scaled}
 
-\item{na.rm}{passed onto \link[base]{min} and \link[base]{range}}
+\item{na.rm}{Should NA values be removed}
 }
 \value{
 The scaled vector

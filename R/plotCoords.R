@@ -18,10 +18,10 @@
 #' example(sbivarMulti, "sbivar")
 #' par(mfrow = c(2,3))
 #' foo = lapply(names(Cxl), function(nam){
-#' plotCoords(Cxl[[nam]], Eyl[[nam]], main = nam)
+#'     plotCoords(Cxl[[nam]], Eyl[[nam]], main = nam)
 #' })
 #' par(mfrow=c(1,1))
-plotCoords = function(Cx, Ey, pch = 20, cex = 6, pchY = pch,...){
+plotCoords = function(Cx, Ey, pch = 1, pchY = 3, cex = 1, ...){
     plot(x = as.matrix(Cx), xlim = range(c(Cx[,1], Ey[,1])), ylim = range(c(Cx[,2], Ey[,2])),
          asp = 1, pch = pch, cex = cex, xlab = "x", ylab = "y", ...)
     points(as.matrix(Y), col = "blue", pch = pchY, cex = cex)

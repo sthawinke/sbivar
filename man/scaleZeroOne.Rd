@@ -2,18 +2,25 @@
 % Please edit documentation in R/helpers.R
 \name{scaleZeroOne}
 \alias{scaleZeroOne}
+\alias{scaleMinusOne}
 \title{Scale to [0,1] range}
 \usage{
 scaleZeroOne(y, na.rm = TRUE)
+
+scaleZeroOne(y, na.rm = TRUE)
+
+scaleMinusOne(y, na.rm = TRUE)
 }
 \arguments{
 \item{y}{The vector to be scaled}
 
-\item{na.rm}{passed onto \link[base]{min} and \link[base]{range}}
+\item{na.rm}{Should NA values be removed}
 }
 \value{
 The scaled vector
+
+scaled variable
 }
 \description{
-Scale to [0,1] range
+Scale variables to comparable ranges for plotting reasons
 }

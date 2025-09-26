@@ -32,7 +32,7 @@ scaleMinusOne = function(y, na.rm = TRUE){
 #' @param featX,featY vectors of feature names
 #' @return A vector of names
 makeNames = function(featX, featY){
-    make.names(apply(expand.grid(featX, featY), 1, paste, collapse = "_"))
+    make.names(apply(expand.grid(featX, featY), 1, paste, collapse = "--"))
 }
 #' A wrapper for Matrix::bdiag maintaining names
 #'
@@ -69,4 +69,29 @@ tr = function(x, dim = c(1,2)) {
 #' @returns A character vector of variable names
 getDiscreteVars = function(df){
     colnames(df)[!vapply(df, FUN.VALUE = TRUE, is.numeric)]
+}
+#' Scale variables to the [0,1] or [-1,1] range
+#'
+#' Scale variables to comparable ranges for plotting reasons
+#' @param y
+#' @param na.rm Should NA values be removed
+#'
+#' @returns scaled variable
+scaleZeroOne = function(y, na.rm = TRUE){
+    (y-min(y, na.rm = na.rm))/diff(range(y, na.rm = na.rm))
+}
+#' @rdname scaleZeroOne
+scaleMinusOne = function(y, na.rm = TRUE){
+    (y-min(y, na.rm = na.rm))/diff(range(y, na.rm = na.rm))*2-1
+}
+#' Log normalize data matrix
+#'
+#' Noramlize to relative expression, add pseudocount and log-normalize
+#' @param x The matrix
+#' @param pseudoCount A pseudocount added to avoid taking the log of zero
+#'
+#' @returns A log-nromalized matrix
+logNorm = function(x, pseudoCount = 1e-8){
+    x = x[rowSums(x)>0,]
+    log((as.matrix(x)+pseudoCount)/rowSums(x))
 }

@@ -32,7 +32,7 @@ scaleMinusOne = function(y, na.rm = TRUE){
 #' @param featX,featY vectors of feature names
 #' @return A vector of names
 makeNames = function(featX, featY){
-    make.names(apply(expand.grid(featX, featY), 1, paste, collapse = "--"))
+    make.names(apply(expand.grid(featX, featY), 1, paste, collapse = "__"))
 }
 #' A wrapper for Matrix::bdiag maintaining names
 #'
@@ -54,7 +54,7 @@ bdiagn = function(A, B){
 #' @returns A trace or vector of traces
 #' @importFrom methods is
 tr = function(x, dim = c(1,2)) {
-    if(is.matrix(x)|| is(x, "dgeMatrix") || is(x, "dgCMatrix")){
+    if(is.matrix(x) || is(x, "Matrix")){
         sum(diag(x))
     } else if(is.array(x)){
         apply(x, dim, tr)
@@ -73,14 +73,13 @@ getDiscreteVars = function(df){
 #' Scale variables to the [0,1] or [-1,1] range
 #'
 #' Scale variables to comparable ranges for plotting reasons
-#' @param y
+#' @param y The variable to scale
 #' @param na.rm Should NA values be removed
 #'
 #' @returns scaled variable
 scaleZeroOne = function(y, na.rm = TRUE){
     (y-min(y, na.rm = na.rm))/diff(range(y, na.rm = na.rm))
 }
-#' @rdname scaleZeroOne
 scaleMinusOne = function(y, na.rm = TRUE){
     (y-min(y, na.rm = na.rm))/diff(range(y, na.rm = na.rm))*2-1
 }
@@ -92,6 +91,9 @@ scaleMinusOne = function(y, na.rm = TRUE){
 #'
 #' @returns A log-nromalized matrix
 logNorm = function(x, pseudoCount = 1e-8){
+    dn = dimnames(x)
     x = x[rowSums(x)>0,]
-    log((as.matrix(x)+pseudoCount)/rowSums(x))
+    out = log((as.matrix(x)+pseudoCount)/rowSums(x))
+    dimnames(out) = dn
+    return(out)
 }

@@ -29,7 +29,7 @@ wrapModTtest = function(X, Y, Cx, Ey, mapToFinest = FALSE, jointCoordinates = FA
         unlist(modified.ttest(X[, featGrid[i, "featX"]], Y[, featGrid[i, "featY"]],
                        coordMat)[c("corr", "ESS", "p.value")])
     }))
-    colnames(out) = apply(featGrid, 1, paste, collapse = "_")
+    colnames(out) = makeNames(colnames(X), colnames(Y))
     rownames(out) = c("Correlation", "Effective sample size", "pVal")
     t(out)
 }

@@ -7,7 +7,7 @@
 scaleMinusOne(y, na.rm = TRUE)
 }
 \arguments{
-\item{y}{The vector to be scaled}
+\item{y}{The variable to scale}
 
 \item{na.rm}{Should NA values be removed}
 }

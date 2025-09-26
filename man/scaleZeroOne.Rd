@@ -2,17 +2,14 @@
 % Please edit documentation in R/helpers.R
 \name{scaleZeroOne}
 \alias{scaleZeroOne}
-\alias{scaleMinusOne}
 \title{Scale to [0,1] range}
 \usage{
 scaleZeroOne(y, na.rm = TRUE)
 
 scaleZeroOne(y, na.rm = TRUE)
-
-scaleMinusOne(y, na.rm = TRUE)
 }
 \arguments{
-\item{y}{The vector to be scaled}
+\item{y}{The variable to scale}
 
 \item{na.rm}{Should NA values be removed}
 }

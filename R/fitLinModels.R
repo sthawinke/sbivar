@@ -31,12 +31,11 @@
 #' @importFrom methods is
 #' @importFrom smoppix centerNumeric named.contr.sum loadBalanceBplapply
 #' @importFrom BiocParallel bplapply
-#' @seealso \link[lmerTest]{lmer}, \link[stats]{lm}
+#' @seealso \link[lmerTest]{lmer}, \link[stats]{lm}, \link{sbivarMulti}
 fitLinModels = function(measures, design, Formula, Control = lmerControl(
     check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
     check.conv.singular = .makeCC(action = "ignore", tol = formals(isSingular)$tol),
-    check.conv.hess = .makeCC(action = "ignore", tol = 1e-06)
-)){
+    check.conv.hess = .makeCC(action = "ignore", tol = 1e-06))){
     stopifnot(names(measures) == c("estimates", "method"))
     method = measures$method;measures = measures$estimates
     stopifnot(length(measures)==nrow(design), is.data.frame(design),

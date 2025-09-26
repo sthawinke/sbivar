@@ -20,7 +20,7 @@ plotPairMulti(
 )
 }
 \arguments{
-\item{resultsMulti}{The results list, from call to \link{fitLinModels}}
+\item{resultsMulti}{The results list, from call to \link{extractResultsMulti}}
 
 \item{Xl, Yl}{Lists of matrices of omics measurements}
 
@@ -46,7 +46,10 @@ Plot a chosen or top feature in the analysis for a series of images
 \examples{
 example(fitLinModels, "sbivar")
 # Plot the feature pair with the most significant signal
-plotTopResultsMulti(resGams, Xl, Yl, Cxl, Eyl)
+plotTopResultsMulti(multiFitGams, Xl, Yl, Cxl, Eyl)
 # Plot an arbitrary feature pair
-plotPairMulti(Xl, Yl, Cxl, Eyl, feaures = c("X1", "Y1"))
+plotPairMulti(Xl, Yl, Cxl, Eyl, features = c("X1", "Y1"))
+}
+\seealso{
+\link{extractResultsMulti}, \link{sbivarMulti}, \link{fitLinModels}
 }

@@ -1,16 +1,17 @@
 #' Plot a chosen or top feature in the analysis for a series of images
 #'
 #' @param parameter The linear model parameter used to find the feature with the strongest effect.
-#' @param resultsMulti The results list, from call to \link{fitLinModels}
+#' @param resultsMulti The results list, from call to \link{extractResultsMulti}
 #' @inheritParams sbivarMulti
 #' @inheritParams plotPairSingle
 #' @examples
 #' example(fitLinModels, "sbivar")
 #' # Plot the feature pair with the most significant signal
-#' plotTopResultsMulti(resGams, Xl, Yl, Cxl, Eyl)
+#' plotTopResultsMulti(multiFitGams, Xl, Yl, Cxl, Eyl)
 #' # Plot an arbitrary feature pair
-#' plotPairMulti(Xl, Yl, Cxl, Eyl, feaures = c("X1", "Y1"))
+#' plotPairMulti(Xl, Yl, Cxl, Eyl, features = c("X1", "Y1"))
 #' @export
+#' @seealso \link{extractResultsMulti}, \link{sbivarMulti}, \link{fitLinModels}
 plotTopResultsMulti = function(resultsMulti, Xl, Yl, Cx, Ey, parameter = "Intercept"){
     stopifnot(parameter %in% names(resultsMulti))
     topPair = rownames(resultsMulti[[parameter]])[1]

@@ -61,5 +61,7 @@ head(resGams$Intercept)
 \seealso{
 \link{fitLinModels}, \link[stats]{p.adjust}
 
-\link[lmerTest]{lmer}, \link[stats]{lm}
+\link{sbivarMulti}, \sbivar{fitLinModels}
+
+\link[lmerTest]{lmer}, \link[stats]{lm}, \link{sbivarMulti}
 }

@@ -7,7 +7,7 @@
 #' @examples
 #' example(fitLinModels, "sbivar")
 #' # Plot the feature pair with the most significant signal
-#' plotTopResultsMulti(multiFitGams, Xl, Yl, Cxl, Eyl)
+#' plotTopResultsMulti(resGams, Xl, Yl, Cxl, Eyl)
 #' # Plot an arbitrary feature pair
 #' plotPairMulti(Xl, Yl, Cxl, Eyl, features = c("X1", "Y1"))
 #' @export

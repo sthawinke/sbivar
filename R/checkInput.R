@@ -35,6 +35,12 @@ checkInputMulti = function(Xl, Yl, Cxl, Eyl){
     if(!all(vapply(Xl, nrow, FUN.VALUE = 0) == vapply(Cxl, nrow, FUN.VALUE = 0))){
         stop("Sample size of matrices Xl and their coordinates Cxl do not match!")
     }
+    if(is.null(names(Xl)) || is.null(names(Yl)) || is.null(names(Cxl))){
+        stop("Xl, Yl and Cxl must be named lists")
+    }
+    if(!identical(names(Xl), names(Yl)) || !identical(names(Yl), names(Cxl))){
+        stop("All names of Xl, Yl and Cxl must be identical")
+    }
     if(missing(Eyl)){
         if(!all(vapply(Xl, FUN.VALUE = 0L, nrow) == vapply(Yl, FUN.VALUE = 0L, nrow))){
             stop("If Eyl is not supplied, all elements of Xl and Yl must have the number of samples!")
@@ -46,5 +52,12 @@ checkInputMulti = function(Xl, Yl, Cxl, Eyl){
         if(!all(vapply(Yl, nrow, FUN.VALUE = 0) == vapply(Eyl, nrow, FUN.VALUE = 0))){
             stop("Sample size of matrices Yl and their coordinates Eyl do not match!")
         }
+        if(is.null(names(Eyl))){
+            stop("Eyl must be a named list")
+        }
+        if(!identical(names(Eyl), names(Xl))){
+            stop("Eyl must be named identically to Xl, Yl and Cxl")
+        }
     }
+
 }

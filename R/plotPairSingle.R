@@ -6,10 +6,7 @@
 #' seems indicated to achieve clear plots.
 #'
 #' @inheritParams sbivarSingle
-#' @param resultsSingle,resultsMulti Results, returned by \link{sbivarSingle} and
-#' \link{extractResultsMulti}, respectively.
-#' @param featx,featy The features in X and Y to be plotted
-#' @param parameter The linear model parameter used to find the feature with the strongest effect.
+#' @param resultsSingle Results returned by \link{sbivarSingle}
 #' @param x,y Outcome vectors
 #' @param normalizationX,normalizationY A character string, indicating what normalization is required
 #' for X and Y matrrices, respectively, before plotting.
@@ -21,14 +18,16 @@
 #' @export
 #' @examples
 #' example(sbivarSingle, "sbivar")
+#' plotTopResultsSingle(resModtTest, X, Y, Cx, Ey, modalityNames = c("gene", "metabolite"))
 #' plotPairSingle(X, Y, Cx, Ey, features = c("X1", "Y1"))
-#' plotTopResultsSingle(resModtTest, X, Y, Cx, Ey)
 plotTopResultsSingle = function(resultsSingle, X, Y, Cx, Ey, ...){
     topPair = rownames(resultsSingle)[1]
-    topFeats = strsplit(topPair, split = "__")[[1]]
+    topFeats = sund(topPair)
     plotPairSingle(X = X, Y = Y, features = topFeats, Cx = Cx, Ey = Ey, ...)
 
 }
+#' @export
+#' @rdname plotTopResultsSingle
 plotPairSingle = function(X, Y, Cx, Ey, features, normalizationX = c("none", "log"),
                           normalizationY = c("none", "log"), ...){
     normalizationX = match.arg(normalizationX);normalizationY = match.arg(normalizationY)

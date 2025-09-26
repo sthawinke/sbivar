@@ -2,10 +2,22 @@
 % Please edit documentation in R/plotPairSingle.R
 \name{plotTopResultsSingle}
 \alias{plotTopResultsSingle}
+\alias{plotPairSingle}
 \alias{plotPairSingleVectors}
 \title{Plot a feature pair}
 \usage{
 plotTopResultsSingle(resultsSingle, X, Y, Cx, Ey, ...)
+
+plotPairSingle(
+  X,
+  Y,
+  Cx,
+  Ey,
+  features,
+  normalizationX = c("none", "log"),
+  normalizationY = c("none", "log"),
+  ...
+)
 
 plotPairSingleVectors(
   x,
@@ -17,8 +29,7 @@ plotPairSingleVectors(
 )
 }
 \arguments{
-\item{resultsSingle, resultsMulti}{Results, returned by \link{sbivarSingle} and
-\link{extractResultsMulti}, respectively.}
+\item{resultsSingle}{Results returned by \link{sbivarSingle}}
 
 \item{X, Y}{Matrices of omics measurements}
 
@@ -26,17 +37,13 @@ plotPairSingleVectors(
 
 \item{...}{Passed onto \link{plotPairSingleVectors}}
 
-\item{x, y}{Outcome vectors}
-
-\item{size}{Point size}
-
-\item{featx, featy}{The features in X and Y to be plotted}
-
-\item{parameter}{The linear model parameter used to find the feature with the strongest effect.}
-
 \item{normalizationX, normalizationY}{A character string, indicating what normalization is required
 for X and Y matrrices, respectively, before plotting.
 This is not the same normalization as used for the analysis, see details.}
+
+\item{x, y}{Outcome vectors}
+
+\item{size}{Point size}
 }
 \value{
 A ggplot2 object
@@ -50,6 +57,6 @@ seems indicated to achieve clear plots.
 }
 \examples{
 example(sbivarSingle, "sbivar")
+plotTopResultsSingle(resModtTest, X, Y, Cx, Ey, modalityNames = c("gene", "metabolite"))
 plotPairSingle(X, Y, Cx, Ey, features = c("X1", "Y1"))
-plotTopResultsSingle(resModtTest, X, Y, Cx, Ey)
 }

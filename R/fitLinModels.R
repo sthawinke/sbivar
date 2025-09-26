@@ -43,7 +43,7 @@ fitLinModels = function(measures, design, Formula, Control = lmerControl(
               is.character(Formula) || is(Formula, "formula"))
     withWeights <- (method %in% c("GAMs"))#, "Correlation"
     namesFun = if(withWeights) rownames else names
-    Features = unique(unlist(lapply(measures, namesFun))) # All feature pairs present
+    Features = selfName(unique(unlist(lapply(measures, namesFun)))) # All feature pairs present
     #Prepare matrices of outcomes and weights
     outMat = matrix(0, nrow = nrow(design), ncol = length(Features),
                     dimnames = list(names(measures), Features))

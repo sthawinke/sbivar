@@ -97,3 +97,12 @@ logNorm = function(x, pseudoCount = 1e-8){
     dimnames(out) = dn
     return(out)
 }
+#' Split a string
+#'
+#' @param string The string
+#' @param split string to split by
+#'
+#' @returns A character vector of length 2
+sund = function(string, split = "__"){
+    strsplit(string, split = split)[[1]]
+}

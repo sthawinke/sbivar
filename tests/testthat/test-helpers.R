@@ -11,7 +11,7 @@ test_that("Helper functions do their job tests work", {
         (foo[1] >= -1) && (foo[2] <= 1)
     })
     expect_identical(makeNames(c("gene1", "gene2"), c("compoundA", "compoundB")),
-                     c("gene1_compoundA", "gene2_compoundA", "gene1_compoundB", "gene2_compoundB"))
+                     c("gene1__compoundA", "gene2__compoundA", "gene1__compoundB", "gene2__compoundB"))
     mat = matrix(rnorm(9), 3, 3, dimnames = list(LETTERS[1:3], letters[1:3]))
     expect_identical(tr(mat), sum(diag(mat)))
     arr = array(rnorm(27), dim = c(3,3,3))

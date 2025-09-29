@@ -97,14 +97,14 @@ As example dataset, we load the one by @Vicari2024, which includes replicated me
 
 ```{r}
 data(Vicari)
-head(str(Vicari))
+names(Vicari)
 ```
 
-This object consists of four lists of length six: _MetaboliteCoords_ and _TranscriptCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. It is always a good idea to check the alignment of the coordinates:
+This object consists of four lists of length six: _MetaboliteCoords_ and _TranscriptCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. Only the 10 most abundant features per modality are included in the package The Metabolite measurements were augmented by a pseudocount of 10$^{-8}$ to avoid zeroes. It is always a good idea to check the alignment of the coordinates:
 
 ```{r}
 par(mfrow = c(2,3))
-plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords)
+plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.5)
 par(mfrow = c(1,1))
 ```
 
@@ -141,14 +141,71 @@ Plot the most significantly spatially associated gene-metabolite pair `r gpGam <
 plotTopResultsSingle(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
 ```
 
-We can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes[gpGam, "corxy], 3)`:
+We can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes[gpGam, "corxy"], 3)`:
 
 ```{r}
 plotGAMsTopResults(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
 ```
 
+Another available analysis is the modified t-test after sample matching:
 
+```{r}
+modTRes = sbivarSingle(singleStx, singleMet, singleStxCoords, singleMetCoords, 
+                      method = "Modified t-test")
+head(modTRes)
+```
 
+Plot the top result:
+
+```{r}
+plotTopResultsSingle(modTRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
+```
+
+Finally, also Gaussian processes (GPs) can be applied to single images. Yet fitting GPs and calculating the score tests statistics can be computation and memory intensive!
+
+```{r gp, eval = FALSE}
+gpRes = sbivarSingle(singleStx, singleMet, singleStxCoords, singleMetCoords, 
+                      method = "GPs")
+head(gpRes)
+```
+
+## Multi-image analysis
+
+Next, we analyse the six images jointly. Let's look at their names:
+
+```{r}
+names(Vicari$TranscriptOutcomes)
+```
+
+We see that the first three and the last three are replicates from different mice (V11L12-109 and V11T16-085). We construct a variable identifying the mouse, consisting of the first 10 characters os the names:
+
+```{r}
+mouse = vapply(names(Vicari$TranscriptOutcomes), FUN.VALUE = character(1), function(x) substr(x,1, 10))
+```
+
+For the multi-image case, we can also use bivariate Moran's I as measure of spatial association, with weights of the weight matrix decaying with distance:
+
+```{r}
+multiMoranRes = sbivarMulti(Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes, 
+                            Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, 
+                            method = "Moran", wo = "distance")
+```
+
+Next we plug the calculated Moran's I values into a linear model, with random effects for the individual mice:
+
+```{r}
+design = data.frame("mouse" = mouse)
+multiMoranLmms = fitLinModels(multiMoranRes, design, Formula = ~ (1|mouse))
+```
+
+Extract the results for the desired parameter (the intercept)
+
+```{r}
+multiMoranLmmsRes  = extractResultsMulti(multiMoranLmms, design)$Intercept
+head(multiMoranLmmsRes)
+```
+
+No features are significantly associated after multiplicity correction. This is in part caused by different experimental parameters used for the different sections, i.e. these are not real replicates yet, as technology is still being developed.
 
 # Troubleshooting
 

@@ -6,10 +6,12 @@
 #'
 #' @param measures A list of measures of bivariate spatial association
 #' @param design A design dataframe
-#' @param Formula A formula for the linear model to be fitted, can contain random effects
+#' @param Formula A formula for the linear model to be fitted, can contain random effects.
 #' @param Control A control list for lmerTest::lmer
 #' @returns A data frame containing, sorted by ascending p-value
 #' @export
+#' @details The left hand side of the Formula can be provided or not,
+#' it will be replaced by "out" for downstream analysis
 #'
 #' @examples
 #' example(sbivarMulti, "sbivar")
@@ -17,11 +19,11 @@
 #' "cofactor" = factor(rep(c(TRUE, FALSE), length.out = ims)),
 #'  "group" = rep(c("control", "treatment"), length.out = ims))
 #' multiFitGams = fitLinModels(estGAMs, design = toyDesign,
-#' Formula = out ~ covariate + cofactor + (1|group))
+#' Formula =  ~ covariate + cofactor + (1|group))
 #' multiFitMoran = fitLinModels(estMoran, design = toyDesign,
-#' Formula = out ~ covariate + cofactor)
+#' Formula =  ~ covariate + cofactor)
 #' multiFit = fitLinModels(estCorrelations, design = toyDesign, Formula =
-#' out ~ covariate + (1|group))
+#'  ~ covariate + (1|group))
 #' #Extract the results
 #' resGams = extractResultsMulti(multiFitGams, design = toyDesign)
 #' head(resGams$Intercept)
@@ -56,7 +58,8 @@ fitLinModels = function(measures, design, Formula, Control = lmerControl(
         outMat[i,namesFun(measures[[i]])] = if(withWeights) measures[[i]][, "est"] else measures[[i]]
     }
     #Prepare design matrices for linear model fitting
-    Formula = formula(Formula)
+    Formula = replaceLhs(formula(Formula))
+    #Replace outcome variable by "out"
     MM <- length(findbars(Formula)) > 0
     fixedVars = all.vars(nobars(Formula)[[3]])
     baseDf = data.frame("out" = 0, centerNumeric(design))

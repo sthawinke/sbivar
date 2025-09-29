@@ -25,7 +25,7 @@ fitLinModels(
 
 \item{measures}{A list of measures of bivariate spatial association}
 
-\item{Formula}{A formula for the linear model to be fitted, can contain random effects}
+\item{Formula}{A formula for the linear model to be fitted, can contain random effects.}
 
 \item{Control}{A control list for lmerTest::lmer}
 }
@@ -43,17 +43,21 @@ fit linear models to determine significance.
 To maintain interpretability of the intercept, continuous fixed effect variables are centered,
 and sum coding is used for the categorical ones.
 }
+\details{
+The left hand side of the Formula can be provided or not,
+it will be replaced by "out" for downstream analysis
+}
 \examples{
 example(sbivarMulti, "sbivar")
 toyDesign = data.frame("covariate" = rnorm(ims),
 "cofactor" = factor(rep(c(TRUE, FALSE), length.out = ims)),
  "group" = rep(c("control", "treatment"), length.out = ims))
 multiFitGams = fitLinModels(estGAMs, design = toyDesign,
-Formula = out ~ covariate + cofactor + (1|group))
+Formula =  ~ covariate + cofactor + (1|group))
 multiFitMoran = fitLinModels(estMoran, design = toyDesign,
-Formula = out ~ covariate + cofactor)
+Formula =  ~ covariate + cofactor)
 multiFit = fitLinModels(estCorrelations, design = toyDesign, Formula =
-out ~ covariate + (1|group))
+ ~ covariate + (1|group))
 #Extract the results
 resGams = extractResultsMulti(multiFitGams, design = toyDesign)
 head(resGams$Intercept)

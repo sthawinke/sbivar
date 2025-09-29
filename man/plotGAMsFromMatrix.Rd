@@ -17,8 +17,6 @@ plotGAMsFromMatrix(
 \arguments{
 \item{X, Y}{Matrices of omics measurements}
 
-\item{features}{The features to plot}
-
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
 \item{families}{A vector of length 2 giving outcome values.}

@@ -43,7 +43,7 @@
 #' resModtTestJoint = sbivarSingle(X, Y[seq_len(nrow(X)),], Cx, method = "Modified")
 #' resModtGPs = sbivarSingle(X, Y, Cx, Ey, method = "GPs")
 sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs"),
-                  n_points_grid = 5e2, mapToFinest = FALSE, families = list("X" = gaussian(), "Y" = gaussian()),
+                  n_points_grid = 6e2, mapToFinest = FALSE, families = list("X" = gaussian(), "Y" = gaussian()),
                   GPmethod = c("REML", "ML", "gpytorch"), device = c("cpu", "cuda"),
                   training_iter = 100L, gpParams, Quants = c(0.005, 0.5), numLscAlts = 10,
                   optControl = lmeControl(opt = "optim", maxIter = 5e2,

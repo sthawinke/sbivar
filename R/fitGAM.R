@@ -11,20 +11,22 @@
 #' @importFrom mgcv gam s
 #' @import stats
 fitGAM = function(df, outcome, k = -1, family = gaussian(), offset = NULL){
-    gam(as.formula(paste(outcome, " ~ s(x, y, k = k)")), data = df, family = family,
-        offset = offset)
+    try(gam(as.formula(paste(outcome, " ~ s(x, y, k = k)")), data = df, family = family,
+        offset = offset), silent = TRUE)
 }
 #' Fit GAMs to all columns of a dataframe, as a wrapper for fitGAM
 #'
 #' @param mat The matrix of outcomes
 #' @param coord The coordinate matrix
+#' @param modality Character vector indicating which modality is being fit.
+#' For debugging purposes mainly
 #' @param ... Passed onto \link{fitGAM}
 #' @inheritParams fitGAM
 #'
 #' @returns A list of GAM models
 #' @importFrom smoppix loadBalanceBplapply
 #' @importFrom BiocParallel bplapply
-fitManyGAMs = function(mat, coord, family = gaussian(), ...){
+fitManyGAMs = function(mat, coord, family = gaussian(), modality, ...){
     cns = selfName(colnames(mat))
     df = data.frame(as.matrix(mat), coord)
     if(family$family != "gaussian"){
@@ -34,8 +36,12 @@ fitManyGAMs = function(mat, coord, family = gaussian(), ...){
     }
     offset = switch(family$link, "inverse" = 1/libSizes,
                     "log" = log(libSizes), NULL)
-    loadBalanceBplapply(cns, function(cn){
+    fits <- loadBalanceBplapply(cns, function(cn){
         fitGAM(df, outcome = cn, offset = offset, family = family, ...)
     })
+    if(!any(id <- vapply(fits, FUN.VALUE = TRUE, is, "gam"))){
+        stop("All GAM fits failed in modality ", modality, ", please investigate cause")
+    }
+    return(fits[id])
 }
 

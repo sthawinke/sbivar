@@ -41,7 +41,7 @@ plotPairSingle = function(X, Y, Cx, Ey, features, normalizationX = c("none", "lo
     normFunY = switch(normalizationY, "none" = identity, "log" = logNorm)
     plotPairSingleVectors(x = scaleHelpFun(feat = features[1], normFun = normFunX, X = X),
                           y = scaleHelpFun(feat = features[2], normFun = normFunY, X = Y),
-                   Cx = Cx, Ey = Ey, ...)
+                   Cx = Cx, Ey = Ey, modalityNames = features,...)
 
 }
 #' @rdname plotTopResultsSingle

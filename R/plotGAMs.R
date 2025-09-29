@@ -6,6 +6,7 @@
 #' @param offsets List of length two with offsets
 #' @param scaleFun The scaling function to be applied before plotting
 #' @param addTitle A booleam, should a title be plotted
+#' @param features The features to plot
 #' @param ... passed onto \link{fitGAM}
 #'
 #' @returns A ggplot object
@@ -18,7 +19,8 @@
 #' @importFrom reshape2 melt
 plotGAMs = function(x, y, Cx, Ey, newGrid, offsets = list(), scaleFun = "scaleMinusOne",
                     families = list("X" = gaussian(), "Y" = gaussian()),
-                    addTitle = TRUE, n_points_grid = 5e2, ...){
+                    addTitle = TRUE, n_points_grid = min(length(x), length(y)),
+                    features = c("x", "y"), ...){
     stopifnot(is.numeric(n_points_grid), all(vapply(families, FUN.VALUE = TRUE, is, "family")))
     colnames(Cx) = colnames(Ey) = c("x", "y")
     scaleFun = get(as.character(scaleFun), mode = "function", getNamespace("sbivar"))
@@ -30,14 +32,14 @@ plotGAMs = function(x, y, Cx, Ey, newGrid, offsets = list(), scaleFun = "scaleMi
                      offset = offsets[["Y"]], outcome = "value", ...)
     predx = vcovPredGam(modelx, newdata = newGrid)
     predy = vcovPredGam(modely, newdata = newGrid)
-    corContr = (cen1 <- (predx$pred-mean(predx$pred)))*(cen2 <- (predy$pred-mean(predy$pred)))
+    corContr = (predx$pred-mean(predx$pred))*(predy$pred-mean(predy$pred))
     corEst = sum(corContr)/((nrow(newGrid)-1)*sd(predx$pred)*sd(predy$pred))
     dat = rbind(data.frame(newGrid, value = scaleFun(predx$pred), feature = "x"),
                 data.frame(newGrid, value = scaleFun(predy$pred), feature = "y"),
                 data.frame(newGrid, value = scaleFun(corContr), feature = "cor"))
     gridMolt = melt(dat, id.vars = c("x", "y", "feature"), value.name = "Value")
     gridMolt$feature = factor(gridMolt$feature, levels = c("x", "y", "cor"),
-                              labels = c("x", "y", "cor"), ordered = TRUE)
+                              labels = c(features[1], features[2], "cor"), ordered = TRUE)
     ggplot(gridMolt, aes(x, y, fill = Value)) +
         geom_raster() + coord_fixed() +
         facet_grid( ~ feature) +
@@ -48,7 +50,6 @@ plotGAMs = function(x, y, Cx, Ey, newGrid, offsets = list(), scaleFun = "scaleMi
 #' A wrapper frunction to plot from matrices
 #'
 #' @inheritParams sbivarSingle
-#' @param features The features to plot
 #' @param ... Passed onto \link{plotGAMs}.
 #'
 #' @returns See \link{plotGAMs}
@@ -62,7 +63,7 @@ plotGAMsFromMatrix = function(X, Y, features, Cx, Ey,
     offsets = list("X" = makeOffset(X, families[["X"]]),
                    "Y" = makeOffset(Y, families[["Y"]]))
     plotGAMs(x = X[, features[1]], y = Y[,features[2]], Cx = Cx, Ey = Ey,
-             families = families, offsets = offsets, ...)
+             families = families, offsets = offsets,  features = features, ...)
 }
 #' @export
 #' @inheritParams plotTopResultsSingle

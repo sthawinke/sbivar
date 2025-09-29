@@ -4,7 +4,7 @@
 \alias{fitManyGAMs}
 \title{Fit GAMs to all columns of a dataframe, as a wrapper for fitGAM}
 \usage{
-fitManyGAMs(mat, coord, family = gaussian(), ...)
+fitManyGAMs(mat, coord, family = gaussian(), modality, ...)
 }
 \arguments{
 \item{mat}{The matrix of outcomes}
@@ -12,6 +12,9 @@ fitManyGAMs(mat, coord, family = gaussian(), ...)
 \item{coord}{The coordinate matrix}
 
 \item{family}{A character string indicating the family, see \link[stats]{family}.}
+
+\item{modality}{Character vector indicating which modality is being fit.
+For debugging purposes mainly}
 
 \item{...}{Passed onto \link{fitGAM}}
 }

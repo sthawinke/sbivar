@@ -14,7 +14,7 @@ sbivarMulti(
   mapToFinest = FALSE,
   wo = c("distance", "nn"),
   numNN = 8,
-  n_points_grid = 500
+  n_points_grid = 600
 )
 }
 \arguments{

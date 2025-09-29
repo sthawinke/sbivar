@@ -10,7 +10,7 @@ sbivarSingle(
   Cx,
   Ey,
   method = c("GAMs", "Modified t-test", "GPs"),
-  n_points_grid = 500,
+  n_points_grid = 600,
   mapToFinest = FALSE,
   families = list(X = gaussian(), Y = gaussian()),
   GPmethod = c("REML", "ML", "gpytorch"),

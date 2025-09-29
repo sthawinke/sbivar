@@ -6,8 +6,8 @@
 #' @importFrom smoppix loadBalanceBplapply
 #' @importFrom BiocParallel bplapply
 wrapGAMs = function(X, Y, Cx, Ey, families, n_points_grid){
-    gamsx = fitManyGAMs(mat = X, coord = Cx, family = families[["X"]])
-    gamsy = fitManyGAMs(mat = Y, coord = Ey, family = families[["Y"]])
+    gamsx = fitManyGAMs(mat = X, coord = Cx, family = families[["X"]], modality = "X")
+    gamsy = fitManyGAMs(mat = Y, coord = Ey, family = families[["Y"]], modality = "Y")
     ng = buildNewGrid(Cx = Cx, Ey = Ey, n_points_grid = n_points_grid)
     out = loadBalanceBplapply(selfName(names(gamsx)), function(featx){
         predx <- vcovPredGam(gamsx[[featx]], newdata = ng)
@@ -19,5 +19,6 @@ wrapGAMs = function(X, Y, Cx, Ey, families, n_points_grid){
     #Reformat to long format
     t(matrix(unlist(out), 3, length(gamsx)*length(gamsy),
              dimnames = list(c("corxy", "se.corxy", "pVal"),
-                             makeNames(names(gamsx), names(gamsy)))))
+              paste(rep(names(gamsx), each = length(gamsy)), rep(names(gamsy), times = length(gamsx)),
+                    sep = "__"))))
 }

@@ -36,5 +36,6 @@ wrapGPs = function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, device,
     })
     #Reformat to long format
     t(matrix(unlist(out), 2, ncol(X)*ncol(Y),
-             dimnames = list(c("pVal", "sign"), makeNames(colnames(X), colnames(Y)))))
+             dimnames = list(c("pVal", "sign"),
+    paste(rep(colnames(X), each = ncol(Y)), rep(colnames(Y), times = ncol(X)), sep = "__"))))
 }

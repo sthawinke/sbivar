@@ -122,3 +122,15 @@ logNorm = function(x, pseudoCount = 1e-8){
 sund = function(string, split = "__"){
     strsplit(string, split = split)[[1]]
 }
+
+#' Replace the left hand side of a formula by a fixed string
+#'
+#' @param x a formula
+#' @param repl the replacement string
+#'
+#' @returns A formula
+#' @importFrom stats formula
+replaceLhs = function(x, repl = "out"){
+    out = paste(repl, "~", deparse(x[[length(x)]]))
+    return(formula(out))
+}

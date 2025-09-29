@@ -14,7 +14,8 @@ plotGAMs(
   scaleFun = "scaleMinusOne",
   families = list(X = gaussian(), Y = gaussian()),
   addTitle = TRUE,
-  n_points_grid = 500,
+  n_points_grid = min(length(x), length(y)),
+  features = c("x", "y"),
   ...
 )
 }
@@ -35,6 +36,8 @@ plotGAMs(
 
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.}
+
+\item{features}{The features to plot}
 
 \item{...}{passed onto \link{fitGAM}}
 }

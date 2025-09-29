@@ -30,7 +30,7 @@ plotPairMulti(
 
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
-\item{features}{Feature vector of lenght 2 to be plotted}
+\item{features}{Feature vector of length 2 to be plotted}
 
 \item{normalizationX, normalizationY}{Character strings, indicating what normalization is required
 for X and Y matrices, respectively, before plotting, see details.}

@@ -20,13 +20,15 @@ plotTopResultsMulti = function(resultsMulti, Xl, Yl, Cx, Ey, parameter = "Interc
 }
 #' @rdname plotTopResultsMulti
 #' @export
+#' @param features Feature vector of length 2 to be plotted
 plotPairMulti = function(Xl, Yl, Cxl, Eyl, features, normalizationX = c("none", "log"),
                          normalizationY = c("none", "log"), modalityNames = c("Modality X", "Modality Y"),
                          size = 2){
+    foo = checkInputMulti(Xl, Yl, Cxl, Eyl)
+    stopifnot(length(features)==2)
     normalizationX = match.arg(normalizationX);normalizationY = match.arg(normalizationY)
     normFunX = switch(normalizationX, "none" = identity, "log" = logNorm)
     normFunY = switch(normalizationY, "none" = identity, "log" = logNorm)
-    foo = checkInputMulti(Xl, Yl, Cxl, Eyl)
     theme_set(theme_bw())
     dfList = Reduce(f = rbind, lapply(names(Xl), function(nam){
         coordMat = rbind(Cxl[[nam]], Eyl[[nam]]);colnames(coordMat) = c("x", "y")

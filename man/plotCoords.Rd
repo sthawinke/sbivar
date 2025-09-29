@@ -4,7 +4,7 @@
 \alias{plotCoords}
 \title{Plot the coordinates of two omics modalities}
 \usage{
-plotCoords(Cx, Ey, pch = 1, pchY = 3, cex = 1, ...)
+plotCoords(Cx, Ey, pch = 1, pchY = 3, cex = 0.8, ...)
 }
 \arguments{
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
@@ -20,7 +20,11 @@ Plots to the plotting device
 }
 \description{
 Plot the coordinates of two modalities onto the same coordinate framework, in two different colours.
-This is a useful check of the alignment and overlap
+This is a useful check of the alignment and overlap.
+}
+\details{
+plotCoordsMulti() is a wrapper for plotCoords for lists of coordinates,
+and requires the user to set par(mar = ) appropriately
 }
 \examples{
 example(sbivarSingle, "sbivar")

@@ -1,9 +1,9 @@
 #' Plot a feature pair
 #'
-#' Plot a chosen feature pair, or the highest ranking feature pair, for a singlepair of images,
+#' Plot a chosen feature pair, or the highest ranking feature pair, for a single pair of images
 #'
 #' @details For sequence count data, such as transcriptomics, log-normalization
-#' seems indicated to achieve clear plots. The normalization sued for plotting is
+#' seems indicated to achieve clear plots. The normalization used for plotting is
 #'  not necessarily the same as the one used for the analysis.
 #'
 #' @inheritParams sbivarSingle
@@ -19,7 +19,8 @@
 #' @examples
 #' example(sbivarSingle, "sbivar")
 #' # Plot the feature pair with the most significant signal
-#' plotTopResultsSingle(resModtTest, X, Y, Cx, Ey, modalityNames = c("gene", "metabolite"))
+#' plotTopResultsSingle(resModtTest, X, Y, Cx, Ey,
+#' modalityNames = c("gene", "metabolite"))
 #' # Plot an arbitrary feature pair
 #' plotPairSingle(X, Y, Cx, Ey, features = c("X1", "Y1"))
 plotTopResultsSingle = function(resultsSingle, X, Y, Cx, Ey, ...){
@@ -30,14 +31,14 @@ plotTopResultsSingle = function(resultsSingle, X, Y, Cx, Ey, ...){
 }
 #' @rdname plotTopResultsSingle
 #' @export
-#' @param features Feature vector of lenght 2 to be plotted
+#' @param features Feature vector of length 2 to be plotted
 plotPairSingle = function(X, Y, Cx, Ey, features, normalizationX = c("none", "log"),
                           normalizationY = c("none", "log"), ...){
     stopifnot(length(features)==2)
+    foo = checkInputSingle(X, Y, Cx, Ey)
     normalizationX = match.arg(normalizationX);normalizationY = match.arg(normalizationY)
     normFunX = switch(normalizationX, "none" = identity, "log" = logNorm)
     normFunY = switch(normalizationY, "none" = identity, "log" = logNorm)
-    foo = checkInputSingle(X, Y, Cx, Ey)
     plotPairSingleVectors(x = scaleHelpFun(feat = features[1], normFun = normFunX, X = X),
                           y = scaleHelpFun(feat = features[2], normFun = normFunY, X = Y),
                    Cx = Cx, Ey = Ey, ...)

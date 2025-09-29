@@ -91,6 +91,22 @@ register(SerialParam())
 
 # Data analysis
 
+As example dataset, we load the one by @Vicari2024, which includes replicated measurements of spatial transcriptomics and metabolomics coprofiled on mouse brain sections. A subset of the data is available in the _sbivar_ package and can be loaded as:
+
+```{r}
+data(Vicari)
+head(str(Vicari))
+```
+
+This object consists of four lists of length six: _MetaboliteCoords_ and _TranscriptCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. It is always a good idea to check the alignment of the coordinates:
+
+```{r}
+par(mfrow = c(2,3))
+plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords)
+par(mfrow = c(1,1))
+```
+
+The alignment seems successful, notice that some tissue areas are only covered by one modality though.
 
 # Troubleshooting
 

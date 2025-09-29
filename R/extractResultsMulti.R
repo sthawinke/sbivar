@@ -13,7 +13,7 @@
 #' @export
 #' @rdname fitLinModels
 #' @order 3
-#' @seealso \link{sbivarMulti}, \sbivar{fitLinModels}
+#' @seealso \link{sbivarMulti}, \link{fitLinModels}
 extractResultsMulti <- function(models, design, method = "BH") {
     id <- vapply(models, FUN.VALUE = TRUE, function(x) {
         is(x, "lmerModLmerTest") || is(x, "lm")

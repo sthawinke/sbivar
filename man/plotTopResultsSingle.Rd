@@ -37,7 +37,7 @@ plotPairSingleVectors(
 
 \item{...}{Passed onto \link{plotPairSingleVectors}}
 
-\item{features}{Feature vector of lenght 2 to be plotted}
+\item{features}{Feature vector of length 2 to be plotted}
 
 \item{normalizationX, normalizationY}{Character strings, indicating what normalization is required
 for X and Y matrices, respectively, before plotting, see details.}
@@ -53,17 +53,18 @@ appearing in the strip text of the columns}
 A ggplot2 object
 }
 \description{
-Plot a chosen feature pair, or the highest ranking feature pair, for a singlepair of images,
+Plot a chosen feature pair, or the highest ranking feature pair, for a single pair of images
 }
 \details{
 For sequence count data, such as transcriptomics, log-normalization
-seems indicated to achieve clear plots. The normalization sued for plotting is
+seems indicated to achieve clear plots. The normalization used for plotting is
  not necessarily the same as the one used for the analysis.
 }
 \examples{
 example(sbivarSingle, "sbivar")
 # Plot the feature pair with the most significant signal
-plotTopResultsSingle(resModtTest, X, Y, Cx, Ey, modalityNames = c("gene", "metabolite"))
+plotTopResultsSingle(resModtTest, X, Y, Cx, Ey,
+modalityNames = c("gene", "metabolite"))
 # Plot an arbitrary feature pair
 plotPairSingle(X, Y, Cx, Ey, features = c("X1", "Y1"))
 }

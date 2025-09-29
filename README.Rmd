@@ -25,3 +25,16 @@ Once installed, you can load the package
 library(sbivar)
 ```
 
+As example dataset, we load the one by @Vicari2024, which includes replicated measurements of spatial transcriptomics and metabolomics coprofiled on mouse brain sections. A subset of the data is available in the _sbivar_ package and can be loaded as:
+
+```{r}
+data(Vicari)
+```
+
+
+
+<!-- A more extensive description of the sbivar functionality can be found in the vignette, which can be accessed by calling -->
+
+<!-- ```{r openVignette, eval = FALSE} -->
+<!-- browseVignettes("sbivar") -->
+<!-- ``` -->

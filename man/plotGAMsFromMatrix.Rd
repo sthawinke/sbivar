@@ -7,8 +7,7 @@
 plotGAMsFromMatrix(
   X,
   Y,
-  featX,
-  featY,
+  features,
   Cx,
   Ey,
   families = list(X = gaussian(), Y = gaussian()),
@@ -18,7 +17,7 @@ plotGAMsFromMatrix(
 \arguments{
 \item{X, Y}{Matrices of omics measurements}
 
-\item{featX, featY}{The features to plot}
+\item{features}{The features to plot}
 
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 

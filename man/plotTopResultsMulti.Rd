@@ -5,7 +5,7 @@
 \alias{plotPairMulti}
 \title{Plot a chosen or top feature in the analysis for a series of images}
 \usage{
-plotTopResultsMulti(resultsMulti, Xl, Yl, Cx, Ey, parameter = "Intercept")
+plotTopResultsMulti(resultsMulti, Xl, Yl, Cxl, Eyl, parameter = "Intercept")
 
 plotPairMulti(
   Xl,
@@ -24,11 +24,9 @@ plotPairMulti(
 
 \item{Xl, Yl}{Lists of matrices of omics measurements}
 
-\item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
+\item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
 \item{parameter}{The linear model parameter used to find the feature with the strongest effect.}
-
-\item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
 \item{features}{Feature vector of length 2 to be plotted}
 

@@ -2,9 +2,12 @@
 % Please edit documentation in R/plotCoords.R
 \name{plotCoords}
 \alias{plotCoords}
+\alias{plotCoordsMulti}
 \title{Plot the coordinates of two omics modalities}
 \usage{
 plotCoords(Cx, Ey, pch = 1, pchY = 3, cex = 0.8, ...)
+
+plotCoordsMulti(Cxl, Eyl, ...)
 }
 \arguments{
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
@@ -14,6 +17,8 @@ plotCoords(Cx, Ey, pch = 1, pchY = 3, cex = 0.8, ...)
 \item{cex}{Expansion factor}
 
 \item{...}{passed onto plot()}
+
+\item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 }
 \value{
 Plots to the plotting device

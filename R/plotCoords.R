@@ -31,6 +31,7 @@ plotCoords = function(Cx, Ey, pch = 1, pchY = 3, cex = 0.8, ...){
 }
 #' @inheritParams sbivarMulti
 #' @export
+#' @rdname plotCoords
 plotCoordsMulti = function(Cxl, Eyl, ...){
     stopifnot(identical(names(Cxl),names(Eyl)))
     foo = lapply(names(Cxl), function(nam) {

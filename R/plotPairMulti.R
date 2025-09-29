@@ -12,7 +12,7 @@
 #' plotPairMulti(Xl, Yl, Cxl, Eyl, features = c("X1", "Y1"))
 #' @export
 #' @seealso \link{extractResultsMulti}, \link{sbivarMulti}, \link{fitLinModels}
-plotTopResultsMulti = function(resultsMulti, Xl, Yl, Cx, Ey, parameter = "Intercept"){
+plotTopResultsMulti = function(resultsMulti, Xl, Yl, Cxl, Eyl, parameter = "Intercept"){
     stopifnot(parameter %in% names(resultsMulti))
     topPair = rownames(resultsMulti[[parameter]])[1]
     topFeats = sund(topPair)

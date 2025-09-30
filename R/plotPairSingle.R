@@ -46,7 +46,7 @@ plotPairSingle = function(X, Y, Cx, Ey, features, normalizationX = c("none", "lo
 #' @rdname plotTopResultsSingle
 #' @param modalityNames Names to be given to the modalities,
 #' appearing in the strip text of the columns
-plotPairSingleVectors = function(x, y, Cx, Ey, size = 2,
+plotPairSingleVectors = function(x, y, Cx, Ey, size = 1.25,
                                  modalityNames = c("Modality X", "Modality Y")){
     theme_set(theme_bw())
     stopifnot(length(x)==nrow(Cx), length(y)==nrow(Ey), ncol(Ey)==2, ncol(Cx)==2)

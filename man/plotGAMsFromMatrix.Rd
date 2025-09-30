@@ -21,7 +21,7 @@ plotGAMsFromMatrix(
 
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
-\item{families}{A vector of length 2 giving outcome values.}
+\item{families}{A vector of length 2 giving the distributional families for the outcome values. See details.}
 
 \item{...}{Passed onto \link{plotGAMs}.}
 }

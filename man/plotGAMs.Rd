@@ -2,6 +2,7 @@
 % Please edit documentation in R/plotGAMs.R
 \name{plotGAMs}
 \alias{plotGAMs}
+\alias{plotGAMsTopResults}
 \title{Plot the fitted splines, and the correlation between them}
 \usage{
 plotGAMs(
@@ -18,6 +19,8 @@ plotGAMs(
   features = c("x", "y"),
   ...
 )
+
+plotGAMsTopResults(resultsSingle, X, Y, Cx, Ey, ...)
 }
 \arguments{
 \item{x, y}{outcome vetors}
@@ -30,7 +33,7 @@ plotGAMs(
 
 \item{scaleFun}{The scaling function to be applied before plotting}
 
-\item{families}{A vector of length 2 giving outcome values.}
+\item{families}{A vector of length 2 giving the distributional families for the outcome values. See details.}
 
 \item{addTitle}{A booleam, should a title be plotted}
 
@@ -40,12 +43,21 @@ evaluated on.}
 \item{features}{The features to plot}
 
 \item{...}{passed onto \link{fitGAM}}
+
+\item{resultsSingle}{Results returned by \link{sbivarSingle}}
+
+\item{X, Y}{Matrices of omics measurements}
 }
 \value{
 A ggplot object
 }
 \description{
-Plot the fitted splines, and the correlation between them
+Spawns a three-panel plot with the splines fitted for the two variables, plus a visualization
+of regions with positive and negative correlations between those splines.
+}
+\note{
+Both spline surfaces are scaled to the [-1,1] range,
+the same as the correlation has naturally, for legibility.
 }
 \examples{
 example(sbivarSingle, "sbivar")

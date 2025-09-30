@@ -9,7 +9,7 @@
 #' @param X,Y Matrices of omics measurements
 #' @param Cx,Ey Corresponding coordinate matrices of dimension two
 #' @param method A character string, indicating which method to apply
-#' @param families A vector of length 2 giving outcome values.
+#' @param families A vector of length 2 giving the distributional families for the outcome values. See details.
 #' @param n_points_grid The number of points in the new grid for the GAMs to be
 #' evaluated on.
 #' @param mapToFinest A boolean, should the one-to-one mapping for modified t-test
@@ -20,6 +20,8 @@
 #'
 #' @details Any normalization of the data should happen prior to calling this function.
 #' For instance, count data or metabolome data are best scaled to relative values and log-normalized prior to fitting GPs.
+#' For GAMs, usually no normalization is needed, as the non-gaussianity is taken care of by
+#' the outcome distribution, offset and link functions. Currently, identity, inverse and log-link are implemented.
 #'
 #' @returns A matrix which contains at least a p-values ("pVal") and a Benjamini-Hochberg adjusted p-value ("pAdj"),
 #' sorted by increasing p-value.

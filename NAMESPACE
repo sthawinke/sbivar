@@ -3,6 +3,7 @@
 export(buildNewGrid)
 export(extractResultsMulti)
 export(fitLinModels)
+export(logNorm)
 export(plotCoords)
 export(plotCoordsMulti)
 export(plotGAMs)

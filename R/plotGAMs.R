@@ -1,5 +1,11 @@
 #' Plot the fitted splines, and the correlation between them
 #'
+#' Spawns a three-panel plot with the splines fitted for the two variables, plus a visualization
+#' of regions with positive and negative correlations between those splines.
+#'
+#' @note Both spline surfaces are scaled to the [-1,1] range,
+#' the same as the correlation has naturally, for legibility.
+#'
 #' @inheritParams wrapGAMs
 #' @param x,y outcome vetors
 #' @param newGrid The grid in which to evaluate the GAMs
@@ -39,13 +45,14 @@ plotGAMs = function(x, y, Cx, Ey, newGrid, offsets = list(), scaleFun = "scaleMi
                 data.frame(newGrid, value = scaleFun(corContr), feature = "cor"))
     gridMolt = melt(dat, id.vars = c("x", "y", "feature"), value.name = "Value")
     gridMolt$feature = factor(gridMolt$feature, levels = c("x", "y", "cor"),
-                              labels = c(features[1], features[2], "cor"), ordered = TRUE)
+                              labels = c(features[1], features[2], "Correlation"),
+                              ordered = TRUE)
     ggplot(gridMolt, aes(x, y, fill = Value)) +
         geom_raster() + coord_fixed() +
         facet_grid( ~ feature) +
         scale_fill_viridis_c(option = "H", name = "") +
         if(addTitle)
-            labs(title = paste("Estimated spline surfaces, and contributions to correlation estimate", round(corEst, 3)))
+            labs(title = paste("Spline surfaces, and contributions to correlation estimate", round(corEst, 3)))
 }
 #' A wrapper frunction to plot from matrices
 #'
@@ -61,13 +68,22 @@ plotGAMs = function(x, y, Cx, Ey, newGrid, offsets = list(), scaleFun = "scaleMi
 #' plotGAMsFromMatrix(X, Y, features = c("X1", "Y1"), Cx = Cx, Ey = Ey)
 plotGAMsFromMatrix = function(X, Y, features, Cx, Ey,
                          families = list("X" = gaussian(), "Y" = gaussian()), ...){
+    if(families[["X"]]$family!="gaussian"){
+        X = X[idX <- (rowSums(X)>0),]
+        Cx = Cx[idX,]
+    }
+    if(families[["Y"]]$family!="gaussian"){
+        Y = Y[idY <- (rowSums(Y)>0),]
+        Ey = Ey[idY,]
+    }
     offsets = list("X" = makeOffset(X, families[["X"]]),
                    "Y" = makeOffset(Y, families[["Y"]]))
     plotGAMs(x = X[, features[1]], y = Y[,features[2]], Cx = Cx, Ey = Ey,
-             families = families, offsets = offsets,  features = features, ...)
+             families = families, offsets = offsets, features = features, ...)
 }
 #' @export
 #' @inheritParams plotTopResultsSingle
+#' @rdname plotGAMs
 plotGAMsTopResults = function(resultsSingle, X, Y, Cx, Ey, ...){
     topFeats = sund(rownames(resultsSingle)[1])
     plotGAMsFromMatrix(X = X, Y = Y, features = topFeats, Cx = Cx, Ey = Ey, ...)

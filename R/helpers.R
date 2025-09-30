@@ -99,16 +99,21 @@ scaleHelpFun = function(X, feat, normFun){
         rep(NA, nrow(X))
     }
 }
-#' Log normalize data matrix
+#' Log normalize a data matrix
 #'
-#' Noramlize to relative expression, add pseudocount and log-normalize
+#' Normalize to relative expression, add pseudocount and log-normalize
 #' @param x The matrix
 #' @param pseudoCount A pseudocount added to avoid taking the log of zero
 #'
-#' @returns A log-nromalized matrix
+#' @returns A log-normalized matrix
+#' @export
+#' @examples
+#' mat = matrix(rpois(2000), 40, 50)
+#' lnMat = logNorm(mat)
 logNorm = function(x, pseudoCount = 1e-8){
+    stopifnot(is.matrix(x), all(x>=0))
+    x = x[rowSums(x)>0,,drop = FALSE]
     dn = dimnames(x)
-    x = x[rowSums(x)>0,]
     out = log((as.matrix(x)+pseudoCount)/rowSums(x))
     dimnames(out) = dn
     return(out)

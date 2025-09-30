@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers.R
 \name{logNorm}
 \alias{logNorm}
-\title{Log normalize data matrix}
+\title{Log normalize a data matrix}
 \usage{
 logNorm(x, pseudoCount = 1e-08)
 }
@@ -12,8 +12,12 @@ logNorm(x, pseudoCount = 1e-08)
 \item{pseudoCount}{A pseudocount added to avoid taking the log of zero}
 }
 \value{
-A log-nromalized matrix
+A log-normalized matrix
 }
 \description{
-Noramlize to relative expression, add pseudocount and log-normalize
+Normalize to relative expression, add pseudocount and log-normalize
+}
+\examples{
+mat = matrix(rpois(2000), 40, 50)
+lnMat = logNorm(mat)
 }

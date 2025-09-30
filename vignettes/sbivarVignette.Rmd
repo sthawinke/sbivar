@@ -16,8 +16,8 @@ bibliography: ../inst/REFERENCES.bib
 
 ```{r, echo=FALSE}
 htmltools::img(src = knitr::image_uri("../inst/Sbivar.png"),
-               style = 'position:absolute; top:0; right:0; padding:10px;',
-               alt = 'logo', width = "200px", heigth = "200px")
+               style = 'position:absolute; top:0; right:0; padding:8px;',
+               alt = 'logo', width = "300px", heigth = "200px")
 ```
 
 ```{r setup, include=FALSE, echo=FALSE}
@@ -36,7 +36,7 @@ This vignette demonstrates the use of the _sbivar_ package: Spatial BIVARiate as
 The package can be installed from Bioconductor as follows:
 
 ```{r install, eval = FALSE}
-library(Biocmanager)
+library(BiocManager)
 install("sbivar")
 ```
 
@@ -55,7 +55,7 @@ library(sbivar)
 
 # Multithreading
 
-The _sbivar_ package can be computationally intensive, since the number of bivariate tests equals the product of the numbers of features in both modalities. For this reason we provide multithreading through the _BiocParallel_ package. 
+The _sbivar_ package can be computationally intensive, since the number of bivariate tests equals the product of the numbers of features of both modalities. For this reason we provide multithreading through the _BiocParallel_ package. 
 
 ```{r}
 library(BiocParallel)
@@ -83,7 +83,7 @@ if(.Platform$OS.type == "unix"){
 ```
 
 Wherever applicable, the registered backend will be used throughout the analysis.
-For serial calculations, for instance if memory is limiting, choose
+For serial calculations, for instance if memory is limiting, choose instead
 
 ```{r , eval = FALSE}
 register(SerialParam())
@@ -93,26 +93,26 @@ register(SerialParam())
 
 ## Data exploration
 
-As example dataset, we load the one by @Vicari2024, which includes replicated measurements of spatial transcriptomics and metabolomics coprofiled on mouse brain sections. A subset of the data is available in the _sbivar_ package and can be loaded as:
+As example dataset, we use the one by @Vicari2024, which includes replicated measurements of spatial transcriptomics and metabolomics coprofiled on mouse brain sections. A subset of the data is available in the _sbivar_ package and can be loaded as:
 
 ```{r}
 data(Vicari)
 names(Vicari)
 ```
 
-This object consists of four lists of length six: _MetaboliteCoords_ and _TranscriptCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. Only the 10 most abundant features per modality are included in the package The Metabolite measurements were augmented by a pseudocount of 10$^{-8}$ to avoid zeroes. It is always a good idea to check the alignment of the coordinates:
+This object consists of four lists of length six: _TranscriptCoords_ and _MetaboliteCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. Only the 10 most abundant features per modality are included in the package. The Metabolite measurements were augmented by a pseudocount of 10$^{-8}$ to avoid zeroes. The _sbivar_ package assumes that the data have been pre-aligned. Yet it is always a good idea to check the alignment visually:
 
-```{r}
+```{r, fig.height = 7}
 par(mfrow = c(2,3))
-plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.5)
+plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.25)
 par(mfrow = c(1,1))
 ```
 
 The alignment seems successful, notice that some tissue areas are only covered by one modality though.
 
-## Single image analysis
+## Single-image analysis
 
-The Vicari data consist of six image which are best analysed jointly, but for didactical purposes we also analyse a single image here, the sample "V11L12-109_A1".
+The Vicari data consist of six images which are best analysed jointly, but for didactical purposes we also analyse a single image here, the sample "V11L12-109_A1".
 
 ```{r}
 singleSample = "V11L12-109_A1"
@@ -122,14 +122,15 @@ singleMetCoords = Vicari$MetaboliteCoords[[singleSample]]
 singleMet = Vicari$MetaboliteOutcomes[[singleSample]]
 ```
 
-Now analyse this single sample using generalized additive models (GAMs), with a negative binomial outcome distribution for the transcriptome data, and a gamma outcome distribution for the metabolome data. A log-link is used in both cases.
+We analyse this single sample using generalized additive models (GAMs), with a negative binomial outcome distribution for the transcriptome data, and a gamma outcome distribution for the metabolome data. A log-link is used in both cases.
 
 ```{r}
-gamRes = sbivarSingle(singleStx, singleMet, singleStxCoords, singleMetCoords, 
-                      method = "GAMs", families = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log")))
+FamiliesViari = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log"))
+gamRes = sbivarSingle(singleStx, singleMet, singleStxCoords, singleMetCoords, method = "GAMs", 
+                     families = FamiliesViari)
 ```
 
-Have a look at the results:
+Have a look at the results, which are sorted by increasing p-value:
 
 ```{r}
 head(gamRes)
@@ -137,28 +138,23 @@ head(gamRes)
 
 Plot the most significantly spatially associated gene-metabolite pair `r gpGam <- rownames(gamRes)[1]`:
 
-```{r}
+```{r, fig.height = 5}
 plotTopResultsSingle(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
 ```
 
-We can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes[gpGam, "corxy"], 3)`:
+We see a clear negative relationship. We can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes[gpGam, "corxy"], 3)`:
 
 ```{r}
-plotGAMsTopResults(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
+plotGAMsTopResults(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords, 
+                   families = FamiliesViari)
 ```
 
-Another available analysis is the modified t-test after sample matching:
+Another available analysis is the modified t-test by @Clifford1989 after sample matching:
 
 ```{r}
 modTRes = sbivarSingle(singleStx, singleMet, singleStxCoords, singleMetCoords, 
                       method = "Modified t-test")
 head(modTRes)
-```
-
-Plot the top result:
-
-```{r}
-plotTopResultsSingle(modTRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
 ```
 
 Finally, also Gaussian processes (GPs) can be applied to single images. Yet fitting GPs and calculating the score tests statistics can be computation and memory intensive!
@@ -177,10 +173,11 @@ Next, we analyse the six images jointly. Let's look at their names:
 names(Vicari$TranscriptOutcomes)
 ```
 
-We see that the first three and the last three are replicates from different mice (V11L12-109 and V11T16-085). We construct a variable identifying the mouse, consisting of the first 10 characters os the names:
+We see that the first three and the last three are replicates from different mice (V11L12-109 and V11T16-085). We construct a variable identifying the mouse, consisting of the first 10 characters of the names:
 
 ```{r}
-mouse = vapply(names(Vicari$TranscriptOutcomes), FUN.VALUE = character(1), function(x) substr(x,1, 10))
+mouse = vapply(names(Vicari$TranscriptOutcomes), FUN.VALUE = character(1), 
+               function(x) substr(x,1, 10))
 ```
 
 For the multi-image case, we can also use bivariate Moran's I as measure of spatial association, with weights of the weight matrix decaying with distance:
@@ -207,7 +204,7 @@ head(multiMoranLmmsRes$Intercept)
 
 No features are significantly associated after multiplicity correction. This is in part caused by different experimental parameters used for the different sections, i.e. these are not real replicates yet, as technology is still being developed. For illustration, we plot the feature pair with the smallest p-values nevertheless:
 
-```{r}
+```{r , fig.height = 9}
 plotTopResultsMulti(multiMoranLmmsRes, 
     Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes, 
     Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.4)

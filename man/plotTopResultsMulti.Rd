@@ -23,7 +23,7 @@ plotPairMulti(
   features,
   normalizationX = c("none", "log"),
   normalizationY = c("none", "log"),
-  size = 2
+  size = 1.25
 )
 }
 \arguments{

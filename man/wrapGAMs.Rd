@@ -11,7 +11,7 @@ wrapGAMs(X, Y, Cx, Ey, families, n_points_grid)
 
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
-\item{families}{A vector of length 2 giving outcome values.}
+\item{families}{A vector of length 2 giving the distributional families for the outcome values. See details.}
 
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.}

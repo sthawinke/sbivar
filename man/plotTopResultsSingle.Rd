@@ -24,7 +24,7 @@ plotPairSingleVectors(
   y,
   Cx,
   Ey,
-  size = 2,
+  size = 1.25,
   modalityNames = c("Modality X", "Modality Y")
 )
 }

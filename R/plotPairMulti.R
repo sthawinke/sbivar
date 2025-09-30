@@ -23,8 +23,7 @@ plotTopResultsMulti = function(resultsMulti, Xl, Yl, Cxl, Eyl, parameter = "Inte
 #' @export
 #' @param features Feature vector of length 2 to be plotted
 plotPairMulti = function(Xl, Yl, Cxl, Eyl, features, normalizationX = c("none", "log"),
-                         normalizationY = c("none", "log"),
-                         size = 2){
+                         normalizationY = c("none", "log"), size = 1.25){
     foo = checkInputMulti(Xl, Yl, Cxl, Eyl)
     stopifnot(length(features)==2)
     normalizationX = match.arg(normalizationX);normalizationY = match.arg(normalizationY)

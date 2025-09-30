@@ -37,7 +37,7 @@ evaluated on.}
 \item{mapToFinest}{A boolean, should the one-to-one mapping for modified t-test
 occur to the dataset with the best resolution?}
 
-\item{families}{A vector of length 2 giving outcome values.}
+\item{families}{A vector of length 2 giving the distributional families for the outcome values. See details.}
 
 \item{GPmethod}{The method by which to fit the Gaussian processes,
 passed onto \link[nlme]{gls} as "method" if it equals "REML" or "ML".}
@@ -72,6 +72,8 @@ If true, a joint analysis is run, with a warning.
 
 Any normalization of the data should happen prior to calling this function.
 For instance, count data or metabolome data are best scaled to relative values and log-normalized prior to fitting GPs.
+For GAMs, usually no normalization is needed, as the non-gaussianity is taken care of by
+the outcome distribution, offset and link functions. Currently, identity, inverse and log-link are implemented.
 
 gpParams must be a list of length 2 with names 'X' and 'Y', consisting of matrices
 with rownames "mean", "nugget", "range" and "sigma", and column names as in X and Y.

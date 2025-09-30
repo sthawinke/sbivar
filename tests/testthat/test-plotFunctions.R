@@ -1,6 +1,6 @@
 context("Plotting functions for single and multiple images")
 test_that("Single image plotting function works", {
-    expect_is(plotTopResultsSingle(resModtTest, X, Y, Cx, Ey, modalityNames = c("gene", "metabolite")),
+    expect_is(plotTopResultsSingle(resModtTest, X, Y, Cx, Ey),
               "ggplot")
     expect_is(plotPairSingle(X, Y, Cx, Ey, features = c("X1", "Y1")), "ggplot")
 })

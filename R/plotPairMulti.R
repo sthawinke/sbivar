@@ -12,17 +12,18 @@
 #' plotPairMulti(Xl, Yl, Cxl, Eyl, features = c("X1", "Y1"))
 #' @export
 #' @seealso \link{extractResultsMulti}, \link{sbivarMulti}, \link{fitLinModels}
-plotTopResultsMulti = function(resultsMulti, Xl, Yl, Cxl, Eyl, parameter = "Intercept"){
+#' @return A ggplot object
+plotTopResultsMulti = function(resultsMulti, Xl, Yl, Cxl, Eyl, parameter = "Intercept", ...){
     stopifnot(parameter %in% names(resultsMulti))
     topPair = rownames(resultsMulti[[parameter]])[1]
     topFeats = sund(topPair)
-    plotPairMulti(Xl, Yl, Cxl, Eyl, features = topFeats)
+    plotPairMulti(Xl, Yl, Cxl, Eyl, features = topFeats, ...)
 }
 #' @rdname plotTopResultsMulti
 #' @export
 #' @param features Feature vector of length 2 to be plotted
 plotPairMulti = function(Xl, Yl, Cxl, Eyl, features, normalizationX = c("none", "log"),
-                         normalizationY = c("none", "log"), modalityNames = c("Modality X", "Modality Y"),
+                         normalizationY = c("none", "log"),
                          size = 2){
     foo = checkInputMulti(Xl, Yl, Cxl, Eyl)
     stopifnot(length(features)==2)
@@ -35,7 +36,7 @@ plotPairMulti = function(Xl, Yl, Cxl, Eyl, features, normalizationX = c("none", 
         data.frame("outcome" = c(scaleHelpFun(Xl[[nam]], feat = features[1], normFun = normFunX),
                                  scaleHelpFun(Yl[[nam]], feat = features[2], normFun = normFunY)),
                    "image" = nam, coordMat,
-                   "feature" = rep(modalityNames, times = c(nrow(Xl[[nam]]), nrow(Yl[[nam]]))))
+                   "feature" = rep(features, times = c(nrow(Xl[[nam]]), nrow(Yl[[nam]]))))
     }))
     ggplot(data = dfList, aes(x = x, y = y, col = outcome)) +
         geom_point(size = size) + facet_grid(image~feature) +

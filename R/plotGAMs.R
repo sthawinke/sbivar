@@ -50,6 +50,7 @@ plotGAMs = function(x, y, Cx, Ey, newGrid, offsets = list(), scaleFun = "scaleMi
 #' A wrapper frunction to plot from matrices
 #'
 #' @inheritParams sbivarSingle
+#' @inheritParams plotGAMs
 #' @param ... Passed onto \link{plotGAMs}.
 #'
 #' @returns See \link{plotGAMs}
@@ -57,7 +58,7 @@ plotGAMs = function(x, y, Cx, Ey, newGrid, offsets = list(), scaleFun = "scaleMi
 #'
 #' @examples
 #' example(sbivarSingle, "sbivar")
-#' plotGAMsFromMatrix(X, Y, featX = "X1", featY = "Y1", Cx = Cx, Ey = Ey)
+#' plotGAMsFromMatrix(X, Y, features = c("X1", "Y1"), Cx = Cx, Ey = Ey)
 plotGAMsFromMatrix = function(X, Y, features, Cx, Ey,
                          families = list("X" = gaussian(), "Y" = gaussian()), ...){
     offsets = list("X" = makeOffset(X, families[["X"]]),

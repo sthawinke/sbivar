@@ -23,9 +23,9 @@ buildWeightMat = function(Cx, Ey, wo = c("distance", "nn"), numNN = 8){
         nnMatXY = nn2(Cx, Ey, k = numNN)$nn.idx
         nnMatYX = nn2(Ey, Cx, k = numNN)$nn.idx
         n = nrow(Cx); m = nrow(Ey)
-        wm = sparseMatrix(x = rep(1/((n+m)*numNN), (n+m)*numNN),
+        wm = as.matrix(sparseMatrix(x = rep(1/((n+m)*numNN), (n+m)*numNN),
                           i = c(rep(seq_len(n), times = numNN), c(t(nnMatXY))),
-                          j = c(nnMatYX, rep(seq_len(m), each = numNN)))
+                          j = c(nnMatYX, rep(seq_len(m), each = numNN))))
     }
     return(wm/sum(wm))
 }

@@ -17,6 +17,8 @@ test_that("SbivarSingle throws errors for incorrect input", {
     expect_error(sbivarSingle(X, Y, Cx, Ey, method = "GAMs",
                               families = list("X" = gaussian(), "Y" = mean)))
     expect_error(sbivarSingle(X, Y, Cx, Y, method = "Modified"))
+    expect_error(sbivarSingle(X, Y, X, Ey, method = "Modified"))
+    expect_error(sbivarSingle(X, Y, Cx[-1,], Ey, method = "GAMs"))
 })
 test_that("sbivarMulti works for correct input", {
     gamList <- sbivarMulti(Xl, Yl, Cxl, Eyl, method = "GAMs")
@@ -32,4 +34,6 @@ test_that("sbivarMulti throws errors for incorrect input", {
     expect_error(sbivarMulti(Xl, Yl, Cxl, method = "GAMs"))
     expect_error(sbivarMulti(Xl, Yl, Cxl, method = "GAMs",
                              families = list("X" = gaussian(), "Y" = mean)))
+    expect_error(sbivarMulti(Xl, Yl, Cxl[-1], Eyl, method = "Moran's I"))
+    expect_error(sbivarMulti(Xl, Yl, Cxl, Cxl, method = "Moran's I"))
 })

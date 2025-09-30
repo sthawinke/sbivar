@@ -5,7 +5,15 @@
 \alias{plotPairMulti}
 \title{Plot a chosen or top feature in the analysis for a series of images}
 \usage{
-plotTopResultsMulti(resultsMulti, Xl, Yl, Cxl, Eyl, parameter = "Intercept")
+plotTopResultsMulti(
+  resultsMulti,
+  Xl,
+  Yl,
+  Cxl,
+  Eyl,
+  parameter = "Intercept",
+  ...
+)
 
 plotPairMulti(
   Xl,
@@ -15,7 +23,6 @@ plotPairMulti(
   features,
   normalizationX = c("none", "log"),
   normalizationY = c("none", "log"),
-  modalityNames = c("Modality X", "Modality Y"),
   size = 2
 )
 }
@@ -28,15 +35,17 @@ plotPairMulti(
 
 \item{parameter}{The linear model parameter used to find the feature with the strongest effect.}
 
+\item{...}{Passed onto \link{plotPairSingleVectors}}
+
 \item{features}{Feature vector of length 2 to be plotted}
 
 \item{normalizationX, normalizationY}{Character strings, indicating what normalization is required
 for X and Y matrices, respectively, before plotting, see details.}
 
-\item{modalityNames}{Names to be given to the modalities,
-appearing in the strip text of the columns}
-
 \item{size}{Point size}
+}
+\value{
+A ggplot object
 }
 \description{
 Plot a chosen or top feature in the analysis for a series of images

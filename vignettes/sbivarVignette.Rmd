@@ -201,11 +201,17 @@ multiMoranLmms = fitLinModels(multiMoranRes, design, Formula = ~ (1|mouse))
 Extract the results for the desired parameter (the intercept)
 
 ```{r}
-multiMoranLmmsRes  = extractResultsMulti(multiMoranLmms, design)$Intercept
-head(multiMoranLmmsRes)
+multiMoranLmmsRes  = extractResultsMulti(multiMoranLmms, design)
+head(multiMoranLmmsRes$Intercept)
 ```
 
-No features are significantly associated after multiplicity correction. This is in part caused by different experimental parameters used for the different sections, i.e. these are not real replicates yet, as technology is still being developed.
+No features are significantly associated after multiplicity correction. This is in part caused by different experimental parameters used for the different sections, i.e. these are not real replicates yet, as technology is still being developed. For illustration, we plot the feature pair with the smallest p-values nevertheless:
+
+```{r}
+plotTopResultsMulti(multiMoranLmmsRes, 
+    Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes, 
+    Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.4)
+```
 
 # Troubleshooting
 

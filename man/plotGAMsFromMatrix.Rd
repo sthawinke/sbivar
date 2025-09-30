@@ -17,6 +17,8 @@ plotGAMsFromMatrix(
 \arguments{
 \item{X, Y}{Matrices of omics measurements}
 
+\item{features}{The features to plot}
+
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
 \item{families}{A vector of length 2 giving outcome values.}
@@ -31,5 +33,5 @@ A wrapper frunction to plot from matrices
 }
 \examples{
 example(sbivarSingle, "sbivar")
-plotGAMsFromMatrix(X, Y, featX = "X1", featY = "Y1", Cx = Cx, Ey = Ey)
+plotGAMsFromMatrix(X, Y, features = c("X1", "Y1"), Cx = Cx, Ey = Ey)
 }

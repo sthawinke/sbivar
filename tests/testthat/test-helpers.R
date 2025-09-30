@@ -1,5 +1,5 @@
 context("Unit tests for small auxiliary function")
-test_that("Helper functions do their job tests work", {
+test_that("Helper functions do their job", {
     expect_identical(makePval(0), 1)
     expect_identical(names(selfName("gene1")), "gene1")
     expect_true({
@@ -20,4 +20,6 @@ test_that("Helper functions do their job tests work", {
     mat2 = matrix(rnorm(9), 3, 3, dimnames = list(paste0("X", LETTERS[1:3]), paste0("X", letters[1:3])))
     expect_identical(dimnames(bdiagn(mat, mat2)), list(c(rownames(mat), rownames(mat2)),
                                                        c(colnames(mat), colnames(mat2))))
+    expect_identical(as.character(replaceLhs(~(1|rat))[[2]]), "out")
+    expect_identical(as.character(replaceLhs(outcome~(1|rat))[[2]]), "out")
 })

@@ -1,4 +1,4 @@
-#' Fit linear models on replicated image results
+#' Fit linear models on measures calculated for replicated images, and extract the results
 #' @description Given measures estimated from replicated images using \link{sbivarMulti},
 #' fit linear models to determine significance.
 #' To maintain interpretability of the intercept, continuous fixed effect variables are centered,
@@ -8,10 +8,10 @@
 #' @param design A design dataframe
 #' @param Formula A formula for the linear model to be fitted, can contain random effects.
 #' @param Control A control list for lmerTest::lmer
-#' @returns A data frame containing, sorted by ascending p-value
+#' @returns For fitLinModels(), a list of linear models
 #' @export
-#' @details The left hand side of the Formula can be provided or not,
-#' it will be replaced by "out" for downstream analysis
+#' @details The left hand side of "Formula" can be provided or not,
+#' but it will be overridden by "out" for downstream analysis
 #'
 #' @examples
 #' example(sbivarMulti, "sbivar")
@@ -33,7 +33,8 @@
 #' @importFrom methods is
 #' @importFrom smoppix centerNumeric named.contr.sum loadBalanceBplapply
 #' @importFrom BiocParallel bplapply
-#' @seealso \link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}
+#' @seealso \link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}, \link[stats]{p.adjust}
+#' @order 1
 fitLinModels = function(measures, design, Formula, Control = lmerControl(
     check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
     check.conv.singular = .makeCC(action = "ignore", tol = formals(isSingular)$tol),

@@ -1,19 +1,15 @@
-#' Extract results from a list of fitted LMMs
+#' @description extractResultsMulti() returns the results as matrix, including adjusted p-values, and sorted by p-value.
 #'
-#' The results are returned as matrix, including adjusted p-values, and sorted by .
-#'
-#' @param models The models
+#' @param models The fitted linear models
 #' @param method Multiplicity correction method passed onto p.adjust
 #'
 #' @importFrom stats p.adjust anova
 #' @importFrom methods is
-#' @return A list of matrices, all containing estimate, standard error,
+#' @return For extractResultsMulti() a list of matrices, all containing estimate, standard error,
 #' p-value and adjusted p-value
-#' @seealso \link{fitLinModels}, \link[stats]{p.adjust}
 #' @export
 #' @rdname fitLinModels
-#' @order 3
-#' @seealso \link{sbivarMulti}, \link{fitLinModels}
+#' @order 2
 extractResultsMulti <- function(models, design, method = "BH") {
     id <- vapply(models, FUN.VALUE = TRUE, function(x) {
         is(x, "lmerModLmerTest") || is(x, "lm")

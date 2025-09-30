@@ -3,6 +3,7 @@
 \name{plotGAMs}
 \alias{plotGAMs}
 \alias{plotGAMsTopResults}
+\alias{plotGAMsFromMatrix}
 \title{Plot the fitted splines, and the correlation between them}
 \usage{
 plotGAMs(
@@ -21,9 +22,19 @@ plotGAMs(
 )
 
 plotGAMsTopResults(resultsSingle, X, Y, Cx, Ey, ...)
+
+plotGAMsFromMatrix(
+  X,
+  Y,
+  features,
+  Cx,
+  Ey,
+  families = list(X = gaussian(), Y = gaussian()),
+  ...
+)
 }
 \arguments{
-\item{x, y}{outcome vetors}
+\item{x, y}{outcome vectors}
 
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
@@ -35,7 +46,7 @@ plotGAMsTopResults(resultsSingle, X, Y, Cx, Ey, ...)
 
 \item{families}{A vector of length 2 giving the distributional families for the outcome values. See details.}
 
-\item{addTitle}{A booleam, should a title be plotted}
+\item{addTitle}{A boolean, should a title be plotted}
 
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.}
@@ -43,8 +54,6 @@ evaluated on.}
 \item{features}{The features to plot}
 
 \item{...}{passed onto \link{fitGAM}}
-
-\item{resultsSingle}{Results returned by \link{sbivarSingle}}
 
 \item{X, Y}{Matrices of omics measurements}
 }
@@ -54,12 +63,21 @@ A ggplot object
 \description{
 Spawns a three-panel plot with the splines fitted for the two variables, plus a visualization
 of regions with positive and negative correlations between those splines.
+The splines are refitted using \link{fitGAM}, so no gam-objects can be provided.
+}
+\details{
+plotGAMsFromMatrix() takes entire outcome matrices X and Y as argument,
+to be able to account for offsets in refitting the GAMs.
+
+plotGAMsTopResults() plots the feature with the smallest p-value in resultsSingle.
 }
 \note{
-Both spline surfaces are scaled to the [-1,1] range,
-the same as the correlation has naturally, for legibility.
+Both spline surfaces are scaled to the [-1,1] range, the same as
+the correlation has naturally, for legibility.
 }
 \examples{
 example(sbivarSingle, "sbivar")
 plotGAMs(X[, 1], Y[, 1], Cx, Ey)
+plotGAMsFromMatrix(X, Y, features = c("X1", "Y1"), Cx = Cx, Ey = Ey)
+plotGAMsTopResults(resGAMs, X, Y, Cx = Cx, Ey = Ey)
 }

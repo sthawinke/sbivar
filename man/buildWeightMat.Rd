@@ -2,7 +2,7 @@
 % Please edit documentation in R/buildWeightMat.R
 \name{buildWeightMat}
 \alias{buildWeightMat}
-\title{Build a weight matrix for Moran's I}
+\title{Build a weight matrix for bivariate Moran's I}
 \usage{
 buildWeightMat(Cx, Ey, wo = c("distance", "nn"), numNN = 8)
 }
@@ -14,9 +14,9 @@ buildWeightMat(Cx, Ey, wo = c("distance", "nn"), numNN = 8)
 \item{numNN}{An integer, the number of neighbours}
 }
 \value{
-A weight matrix, sparse for the case "nn
+A weight matrix
 }
 \description{
-Build different weight matrices to be used in the calculation of the Moran's I
+Build a weight matrix to be used in the calculation of the bivariate Moran's I
 statistic.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/CCT.R
 \name{CCT}
 \alias{CCT}
-\title{An analytical p-value combination method using the Cauchy distribution. Taken from xihaoli/STAAR}
+\title{An analytical p-value combination method using the Cauchy distribution.}
 \usage{
 CCT(pvals, weights = NULL)
 }
@@ -11,14 +11,15 @@ CCT(pvals, weights = NULL)
 between 0 to 1, to be combined.}
 
 \item{weights}{a numeric vector of non-negative weights. If \code{NULL}, the
-equal weights are assumed (default = NULL).}
+equal weights are assumed.}
 }
 \value{
-The aggregated p-value combining p-values from the vector \code{pvals}.
+The aggregated p-value
 }
 \description{
 The \code{CCT} function takes in a numeric vector of p-values, a numeric
-vector of non-negative weights, and return the aggregated p-value using Cauchy method.
+vector of non-negative weights, and return the aggregated p-value using Cauchy combination rule
+The code was taken from the xihaoli/STAAR github repo, and adapted
 }
 \references{
 Liu, Y., & Xie, J. (2020). Cauchy combination test: a powerful test

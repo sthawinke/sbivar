@@ -126,8 +126,7 @@ We analyse this single sample using generalized additive models (GAMs), with a n
 
 ```{r}
 FamiliesViari = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log"))
-gamRes = sbivarSingle(singleStx, singleMet, singleStxCoords, singleMetCoords, method = "GAMs", 
-                     families = FamiliesViari)
+gamRes = sbivarSingle(singleStx, singleMet, singleStxCoords, singleMetCoords, method = "GAMs",  families = FamiliesViari)
 ```
 
 Have a look at the results, which are sorted by increasing p-value:
@@ -145,8 +144,7 @@ plotTopResultsSingle(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoo
 We see a clear negative relationship. We can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes[gpGam, "corxy"], 3)`:
 
 ```{r}
-plotGAMsTopResults(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords, 
-                   families = FamiliesViari)
+plotGAMsTopResults(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords, families = FamiliesViari)
 ```
 
 Another available analysis is the modified t-test by @Clifford1989 after sample matching:

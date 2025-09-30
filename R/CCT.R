@@ -1,12 +1,13 @@
-#' An analytical p-value combination method using the Cauchy distribution. Taken from xihaoli/STAAR
+#' An analytical p-value combination method using the Cauchy distribution.
 #'
 #' The \code{CCT} function takes in a numeric vector of p-values, a numeric
-#' vector of non-negative weights, and return the aggregated p-value using Cauchy method.
+#' vector of non-negative weights, and return the aggregated p-value using Cauchy combination rule
+#' The code was taken from the xihaoli/STAAR github repo, and adapted
 #' @param pvals a numeric vector of p-values, where each of the element is
 #' between 0 to 1, to be combined.
 #' @param weights a numeric vector of non-negative weights. If \code{NULL}, the
-#' equal weights are assumed (default = NULL).
-#' @return The aggregated p-value combining p-values from the vector \code{pvals}.
+#' equal weights are assumed.
+#' @return The aggregated p-value
 #' @references Liu, Y., & Xie, J. (2020). Cauchy combination test: a powerful test
 #' with analytic p-value calculation under arbitrary dependency structures.
 #' \emph{Journal of the American Statistical Association}, \emph{115}(529), 393-402.

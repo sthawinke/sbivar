@@ -7,6 +7,7 @@ test_that("SbivarSingle works for correct input", {
                                           method = "Modified")[, "pVal"]))
     expect_message(sbivarSingle(X, X, Cx, Cx, method = "Modified"))
     expect_silent(sbivarSingle(X, Y, Cx, Ey, method = "GAMs"))
+    expect_is(sbivarSingle(X, Y, Cx, Ey, method = "GPs"), "matrix")
 })
 test_that("SbivarSingle throws errors for incorrect input", {
     expect_error(sbivarSingle(X, Y, Cx, Ey, method = "Moran's I"))
@@ -19,6 +20,9 @@ test_that("SbivarSingle throws errors for incorrect input", {
     expect_error(sbivarSingle(X, Y, Cx, Y, method = "Modified"))
     expect_error(sbivarSingle(X, Y, X, Ey, method = "Modified"))
     expect_error(sbivarSingle(X, Y, Cx[-1,], Ey, method = "GAMs"))
+    expect_error(sbivarSingle(X, Y, Cx, Ey, method = "GPs",
+        corStruct = nlme::corExp(form = ~ x + y, nugget = TRUE, value = c(1, 0.25))))
+
 })
 test_that("sbivarMulti works for correct input", {
     gamList <- sbivarMulti(Xl, Yl, Cxl, Eyl, method = "GAMs")

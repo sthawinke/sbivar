@@ -5,10 +5,10 @@
 \alias{Vicari}
 \title{Spatial transcriptomics and metabolomics data of mouse brain}
 \format{
-Four lists of A data matrix
+Four lists of data matrices:
 \describe{
   \item{TranscriptCoords,MetaboliteCoords}{Coordinate lists}
-  \item{TranscriptOutcomes,MetaboliteOutcomes}{Character vector with gene identities}
+  \item{TranscriptOutcomes,MetaboliteOutcomes}{Outcome matrices}
 }
 }
 \source{
@@ -19,8 +19,8 @@ data(Vicari)
 }
 \description{
 Spatial transcriptomics and metabolomics data measured on the same tissue sections
- of mouse brains on a regular grid by \insertCite{Vicari2024}{sbivar}. Only a subset of the data, consisting of
- the 20 most abundant transcripts and metabolites for 6 samples are included in the package for computational and memory reasons.
+ of mouse brains on a regular grid by \insertCite{Vicari2024;nobrackets}{sbivar}. Only a subset of the data, consisting of
+ the 10 most abundant transcripts and metabolites for 6 samples, are included in the package for computational and memory reasons.
 The data consist of two lists of outcome variables and two lists of coordinates
 }
 \references{

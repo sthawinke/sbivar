@@ -18,6 +18,6 @@ A log-normalized matrix
 Normalize to relative expression, add pseudocount and log-normalize
 }
 \examples{
-mat = matrix(rpois(2000), 40, 50)
+mat = matrix(rpois(2000, lambda = 3), 40, 50)
 lnMat = logNorm(mat)
 }

@@ -53,10 +53,10 @@ can use "gpu" via the python package gpytorch if installed}
 
 \item{numLscAlts}{Number of length scales to be tested for bivariate association}
 
-\item{optControl}{List of control values, see \link[nlme]{glsControl}}
+\item{optControl}{List of control values, see \link[nlme]{glsControl}.}
 
 \item{corStruct}{The correlation object, see \link[nlme]{corStruct}.
-At this point, only \link[nlme]{corGaus} is accepted}
+At this point, only \link[nlme]{corGaus} is accepted.}
 }
 \value{
 A matrix which contains at least a p-values ("pVal") and a Benjamini-Hochberg adjusted p-value ("pAdj"),

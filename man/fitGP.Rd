@@ -20,20 +20,24 @@ can use "gpu" via the python package gpytorch if installed}
 \item{training_iter}{Number of training iterations in gpytorch}
 
 \item{corStruct}{The correlation object, see \link[nlme]{corStruct}.
-At this point, only \link[nlme]{corGaus} is accepted}
+At this point, only \link[nlme]{corGaus} is accepted.}
 
-\item{optControl}{List of control values, see \link[nlme]{glsControl}}
+\item{optControl}{List of control values, see \link[nlme]{glsControl}.}
 }
 \value{
 A vector of length 4 with components range, nugget, sigma and mean
 }
 \description{
-Fit a Gaussian process (GP) to a single outcome vector
+A Gaussian process (GP) models the spatial autocovariance using a kernel function
+that descibes the covariance as a decreasing function of distance between observations.
 }
 \details{
-Providing "cuda" as device exploits the available GPU for speedup,
-especially for large GPs (thousands of observations). Setting GPmethod to
- "ML" or "REML" leads to model fitting in R using the \link[nlme]{gls} function.
-Setting GPmethod to "gpytorch" uses the eponymous python package, with the option of gpu acceleration.
+Setting GPmethod to "ML" or "REML" leads to model fitting in R using the \link[nlme]{gls} function.
+Setting GPmethod to "gpytorch" uses the eponymous python package. This has the option of gpu acceleration
+when providing "cuda" as device. This uses the available GPU for speedup, especially for large GPs (thousands of observations).
 The parametrization of the GPs is the one common in geostatistics, as described in \link[nlme]{gls}.
+Results from gpytorch are transformed to this parametrtization for uniformity.
+}
+\note{
+Fitting GPs can be computation and memory intensive!
 }

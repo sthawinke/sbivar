@@ -7,7 +7,7 @@
 fitGAM(df, outcome, k = -1, family = gaussian(), offset = NULL)
 }
 \arguments{
-\item{df}{The dataframe containing outcome and}
+\item{df}{The dataframe containing outcome and coordinates}
 
 \item{outcome}{A character vector indicating the outcome variable}
 
@@ -20,8 +20,11 @@ spatial transcriptomic data, already on the scale of the regressor,
 so log-transformed for count models}
 }
 \value{
-A fitted GAM model
+A fitted GAM model, or try-error when the fit fails
 }
 \description{
-Fit a GAM model to a single variable
+A generalized additive model (GAM) captures spatial dependence through a bivariate spatial spline.
+}
+\seealso{
+\link[mgcv]{gam}
 }

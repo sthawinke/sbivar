@@ -11,6 +11,7 @@
 #' @importFrom SpatialPack modified.ttest
 #' @seealso \link[SpatialPack]{modified.ttest}
 #' \insertAllCited{}
+#' @importFrom Rdpack reprompt
 wrapModTtest = function(X, Y, Cx, Ey, mapToFinest = FALSE, jointCoordinates = FALSE){
     n = nrow(X);m = nrow(Y)
     if(!jointCoordinates){

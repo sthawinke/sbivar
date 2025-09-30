@@ -1,15 +1,17 @@
 #' Fit a GAM model to a single variable
 #'
-#' @param df The dataframe containing outcome and
+#' A generalized additive model (GAM) captures spatial dependence through a bivariate spatial spline.
+#' @param df The dataframe containing outcome and coordinates
 #' @param outcome A character vector indicating the outcome variable
 #' @param k Dimension of the basis of the smooth term see \link[mgcv]{s}.
 #' @param family A character string indicating the family, see \link[stats]{family}.
 #' @param offset A numeric vector with the offset, e.g. the library sizes for
 #' spatial transcriptomic data, already on the scale of the regressor,
 #' so log-transformed for count models
-#' @returns A fitted GAM model
+#' @returns A fitted GAM model, or try-error when the fit fails
 #' @importFrom mgcv gam s
 #' @import stats
+#' @seealso \link[mgcv]{gam}
 fitGAM = function(df, outcome, k = -1, family = gaussian(), offset = NULL){
     try(gam(as.formula(paste(outcome, " ~ s(x, y, k = k)")), data = df, family = family,
         offset = offset), silent = TRUE)

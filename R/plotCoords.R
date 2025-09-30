@@ -3,7 +3,7 @@
 #' Plot the coordinates of two modalities onto the same coordinate framework, in two different colours.
 #' This is a useful check of the alignment and overlap.
 #' @details plotCoordsMulti() is a wrapper for plotCoords for lists of coordinates,
-#' and requires the user to set par(mar = ) appropriately
+#' and requires the user to set par(mar = ) appropriately, so all plots are shown.
 #'
 #' @inheritParams sbivarSingle
 #' @param cex Expansion factor

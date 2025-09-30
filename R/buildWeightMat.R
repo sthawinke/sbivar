@@ -1,6 +1,6 @@
-#' Build a weight matrix for Moran's I
+#' Build a weight matrix for bivariate Moran's I
 #'
-#' Build different weight matrices to be used in the calculation of the Moran's I
+#' Build a weight matrix to be used in the calculation of the bivariate Moran's I
 #' statistic.
 #'
 #' @param Cx,Ey Two coordinate matrices
@@ -9,7 +9,7 @@
 #' @importFrom RANN nn2
 #' @importFrom Matrix sparseMatrix
 #' @importFrom spatstat.geom crossdist
-#' @return A weight matrix, sparse for the case "nn
+#' @return A weight matrix
 buildWeightMat = function(Cx, Ey, wo = c("distance", "nn"), numNN = 8){
     wo = match.arg(wo)
     if(wo == "distance"){

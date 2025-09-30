@@ -2,16 +2,22 @@
 #'
 #' Spawns a three-panel plot with the splines fitted for the two variables, plus a visualization
 #' of regions with positive and negative correlations between those splines.
+#' The splines are refitted using \link{fitGAM}, so no gam-objects can be provided.
 #'
-#' @note Both spline surfaces are scaled to the [-1,1] range,
-#' the same as the correlation has naturally, for legibility.
+#' plotGAMsFromMatrix() takes entire outcome matrices X and Y as argument,
+#' to be able to account for offsets in refitting the GAMs.
+#'
+#' plotGAMsTopResults() plots the feature with the smallest p-value in resultsSingle.
+#'
+#' @note Both spline surfaces are scaled to the [-1,1] range, the same as
+#' the correlation has naturally, for legibility.
 #'
 #' @inheritParams wrapGAMs
-#' @param x,y outcome vetors
+#' @param x,y outcome vectors
 #' @param newGrid The grid in which to evaluate the GAMs
 #' @param offsets List of length two with offsets
 #' @param scaleFun The scaling function to be applied before plotting
-#' @param addTitle A booleam, should a title be plotted
+#' @param addTitle A boolean, should a title be plotted
 #' @param features The features to plot
 #' @param ... passed onto \link{fitGAM}
 #'
@@ -21,8 +27,11 @@
 #' @examples
 #' example(sbivarSingle, "sbivar")
 #' plotGAMs(X[, 1], Y[, 1], Cx, Ey)
+#' plotGAMsFromMatrix(X, Y, features = c("X1", "Y1"), Cx = Cx, Ey = Ey)
+#' plotGAMsTopResults(resGAMs, X, Y, Cx = Cx, Ey = Ey)
 #' @import ggplot2
 #' @importFrom reshape2 melt
+#' @order 1
 plotGAMs = function(x, y, Cx, Ey, newGrid, offsets = list(), scaleFun = "scaleMinusOne",
                     families = list("X" = gaussian(), "Y" = gaussian()),
                     addTitle = TRUE, n_points_grid = min(length(x), length(y)),
@@ -54,20 +63,11 @@ plotGAMs = function(x, y, Cx, Ey, newGrid, offsets = list(), scaleFun = "scaleMi
         if(addTitle)
             labs(title = paste("Spline surfaces, and contributions to correlation estimate", round(corEst, 3)))
 }
-#' A wrapper frunction to plot from matrices
-#'
-#' @inheritParams sbivarSingle
-#' @inheritParams plotGAMs
-#' @param ... Passed onto \link{plotGAMs}.
-#'
-#' @returns See \link{plotGAMs}
 #' @export
-#'
-#' @examples
-#' example(sbivarSingle, "sbivar")
-#' plotGAMsFromMatrix(X, Y, features = c("X1", "Y1"), Cx = Cx, Ey = Ey)
+#' @rdname plotGAMs
+#' @order 3
 plotGAMsFromMatrix = function(X, Y, features, Cx, Ey,
-                         families = list("X" = gaussian(), "Y" = gaussian()), ...){
+                    families = list("X" = gaussian(), "Y" = gaussian()), ...){
     if(families[["X"]]$family!="gaussian"){
         X = X[idX <- (rowSums(X)>0),]
         Cx = Cx[idX,]
@@ -82,8 +82,8 @@ plotGAMsFromMatrix = function(X, Y, features, Cx, Ey,
              families = families, offsets = offsets, features = features, ...)
 }
 #' @export
-#' @inheritParams plotTopResultsSingle
 #' @rdname plotGAMs
+#' @order 2
 plotGAMsTopResults = function(resultsSingle, X, Y, Cx, Ey, ...){
     topFeats = sund(rownames(resultsSingle)[1])
     plotGAMsFromMatrix(X = X, Y = Y, features = topFeats, Cx = Cx, Ey = Ey, ...)

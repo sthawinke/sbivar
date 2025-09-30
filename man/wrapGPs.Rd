@@ -39,9 +39,9 @@ passed onto \link[nlme]{gls} as "method" if it equals "REML" or "ML".}
 \item{training_iter}{Number of training iterations in gpytorch}
 
 \item{corStruct}{The correlation object, see \link[nlme]{corStruct}.
-At this point, only \link[nlme]{corGaus} is accepted}
+At this point, only \link[nlme]{corGaus} is accepted.}
 
-\item{optControl}{List of control values, see \link[nlme]{glsControl}}
+\item{optControl}{List of control values, see \link[nlme]{glsControl}.}
 }
 \value{
 A named list of results

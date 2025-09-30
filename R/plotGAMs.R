@@ -19,6 +19,7 @@
 #' @param scaleFun The scaling function to be applied before plotting
 #' @param addTitle A boolean, should a title be plotted
 #' @param features The features to plot
+#' @param resultsSingle Result of a call to \link{sbivarSingle}
 #' @param ... passed onto \link{fitGAM}
 #'
 #' @returns A ggplot object

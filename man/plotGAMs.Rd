@@ -55,6 +55,8 @@ evaluated on.}
 
 \item{...}{passed onto \link{fitGAM}}
 
+\item{resultsSingle}{Result of a call to \link{sbivarSingle}}
+
 \item{X, Y}{Matrices of omics measurements}
 }
 \value{

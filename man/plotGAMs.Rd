@@ -44,7 +44,8 @@ plotGAMsFromMatrix(
 
 \item{scaleFun}{The scaling function to be applied before plotting}
 
-\item{families}{A vector of length 2 giving the distributional families for the outcome values. See details.}
+\item{families}{A vector of length 2 giving the distributional families
+for the outcome values. See details of \link{sbivarSingle}.}
 
 \item{addTitle}{A boolean, should a title be plotted}
 

@@ -13,14 +13,14 @@ wrapCorrelationsMulti(Xl, Yl, Cxl, Eyl, mapToFinest, jointCoordinates)
 
 \item{mapToFinest}{Passed onto \link{wrapModTtest}}
 
-\item{jointCoordinates}{A boolean, are measurements on the same location}
+\item{jointCoordinates}{A boolean, are measurements on the same location?}
 }
 \value{
 A list of named correlation vectors
 }
 \description{
 Find all raw cross-correlations between lists of observations matrices from different modalities.
-Observations are matched to nearest neighbours if necessary
+Observations are first matched to nearest neighbours if necessary
 }
 \seealso{
 \link{matchCoords}

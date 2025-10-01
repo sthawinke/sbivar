@@ -15,5 +15,7 @@ testGAM(modelx, modely, predx, predy)
 A vector with correlation, its standard error and the p-value
 }
 \description{
-Test for correlation between the predictions of two GAM models
+The variance of the correlation between the spline surfaces is found by
+propagating the uncertainties on the spline parameters through uncertainty on
+the spline predictions to uncertainty on the correlation estimate.
 }

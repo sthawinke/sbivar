@@ -13,6 +13,7 @@
 #' \item{method}{The method used to find these estimates}
 #' @export
 #' @seealso \link{fitLinModels}
+#' @note All methods use multithreading on the cluster provided using the BiocParallel package
 #' @inheritParams sbivarSingle
 #' @examples
 #' n=1e2;m=8e1;p=3;k=4

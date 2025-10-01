@@ -39,6 +39,9 @@ A list containing
 This function calculates measures of spatial association for every image.
 The resulting estimates can then be analysed further using the \link{fitLinModels} function.
 }
+\note{
+All methods use multithreading on the cluster provided using the BiocParallel package
+}
 \examples{
 n=1e2;m=8e1;p=3;k=4
 ims = 6

@@ -1,13 +1,14 @@
-#' Perform the score test for significance of the bivariate spatial association for Gaussian processes.
+#' Perform the score test for significance of the bivariate spatial association in a Gaussian process.
 #'
-#'The test is a score test for the variance of a random effect, that drives the covariance, to be zero,
-#'developed by \insertCite{Zhang2003}{sbivar}
+#' This function tests for the variance of a random effect, causing the covariance, to be zero.
+#' It is a score test as developed by \insertCite{Zhang2003}{sbivar}, with the test statistic
+#' having a scaled chi-square distribution.
 #'
 #' @inheritParams sbivarSingle
 #' @param x,y outcome vectors
 #' @param altSigmas A prepared series of bivariate association matrices
 #' @param distMat The distance matrix of Cx and Ey
-#' @param solXonly,solYonly Parametersof the Gaussian process
+#' @param solXonly,solYonly Parameters of the Gaussian processes of x and y
 #' @param sx Inverse of the covariance matrix of x. Will be calculated if missing.
 #' @inheritParams buildAltSigmas
 #'
@@ -16,6 +17,8 @@
 #' @importFrom stats pchisq dist
 #' @importFrom abind abind
 #' @importFrom Matrix bdiag
+#' @references
+#' \insertAllCited{}
 testGP = function(x, y, Cx, Ey, altSigmas, distMat, solXonly, solYonly, sx){
     n = length(x);m=length(y)
     idN = seq_len(n);idM = n+seq_len(m) #Indices for x and y

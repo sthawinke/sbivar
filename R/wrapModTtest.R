@@ -1,17 +1,18 @@
-#' Perform nearest-neighbour matching if necessary, and apply all pairwise tests.
+#' Perform modified t-tests for all pairs, after performing nearest-neighbour matching if necessary
 #'
 #' If measurements are not on the same location, they are matched using nearest neighbour matching with the \link[RANN]{nn2} function.
 #' Then modified t-test is applied to all pairs, which tests for the significance
 #' of the Pearson correlation while accounting for spatial autocorrelation \insertCite{Clifford1989}{sbivar}.
 #'
 #' @inheritParams sbivarSingle
-#' @param jointCoordinates A boolean, are measurements on the same location
+#' @param jointCoordinates A boolean, are measurements on the same location?
 #' @param mapToFinest A boolean, should the one-to-one mapping for modified t-test
 #' occur to the dataset with the best resolution, i.e. the one with the highest sample size?
 #'.
 #' @returns A dataframe of results sorted by p-value, also containing effective sample size (ESS) and correlation estimate.
 #' @importFrom SpatialPack modified.ttest
 #' @seealso \link[SpatialPack]{modified.ttest}
+#' @references
 #' \insertAllCited{}
 #' @importFrom Rdpack reprompt
 wrapModTtest = function(X, Y, Cx, Ey, mapToFinest = FALSE, jointCoordinates = FALSE){
@@ -38,11 +39,15 @@ wrapModTtest = function(X, Y, Cx, Ey, mapToFinest = FALSE, jointCoordinates = FA
 }
 #' Match coordinates to the nearest neighbour
 #'
-#' @inheritParams sbivarSingle
+#' Match elements of two coordinate matrices to their nearest neighbour using the
+#' \link[RANN]{nn2} function
+#'
+#' @inheritParams wrapModTtest
+#' @param Cx,Ey coordinate matrices
 #'
 #' @returns A list with components
 #' \item{coordMat}{The new, single coordinate matrix}
-#' \item{matToX}{A boolean, should X coordinates be taken}
+#' \item{mapToX}{A boolean, should X coordinates be taken}
 #' \item{id}{The index of the coordinates to retain}
 #' @importFrom RANN nn2
 matchCoords = function(Cx, Ey, mapToFinest){

@@ -61,6 +61,9 @@ with rownames "mean", "nugget", "range" and "sigma", and column names as in X an
 This argument allows to pass parameters of the Gaussian processes estimated with other software
 to perform the score test.
 }
+\note{
+All methods use multithreading on the cluster provided using the BiocParallel package
+}
 \examples{
 n=7e1;m=9e1;p=3;k=4
 X = matrix(rnorm(n*p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))

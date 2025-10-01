@@ -1,15 +1,13 @@
 #' Return predictions of a gam, along with their variance-covariance matrix
 #'
+#' The spline predictions are found as X *coef with X the spline basis and coef the spline coefficients.
 #' The covariance matrix of the predictions is found using the formula:
-#' Cov(pred) = X * Var(coef) * X'
-#' Where X is the basis matrix (design matrix for smooth terms), and Var(coef) is the covariance matrix of the coefficients
-#' From help(predict.gam): When type="lpmatrix" then a matrix is returned which
-#' yields the values of the linear predictor (minus any offset) when postmultiplied by
-#' the parameter vector (in this case se.fit is ignored). The latter option is most useful
-#' for getting variance estimates for quantities derived from the model: for example integrated quantities, or derivatives of smooths.
+#' Cov(pred) = X * Var(coef) * X',
+#' where X is the basis matrix (design matrix for smooth terms), and Var(coef)
+#' is the covariance matrix of the coefficients.
 #'
 #' @param model The gam model
-#' @param newdata The grid on which new predictions are done
+#' @param newdata The grid on which new predictions are made
 #' @return A list with components
 #' \item{pred}{A vector of predictions}
 #' \item{vcov}{Variance-covariance matrix of the predictions}
@@ -28,9 +26,9 @@ vcovPredGam = function(model, newdata){
     #Checked using predict.gam(,se.fit = TRUE)
     return(list("pred" = predOut, "vcov" = prediction_cov_matrix))
 }
-#' Get approximate variance-covariance matrix of spline predictions
+#' Get approximate variance of the
 #'
-#' @param vcovMat Variance-covariance matrix of spline coefficients
+#' @param vcovMat Variance-covariance matrix of spline predictions
 #' @param cen Centered observations
 #' @param x Observations
 #' @param link Link function

@@ -11,10 +11,7 @@ wrapGAMsMulti(Xl, Yl, Cxl, Eyl, families, n_points_grid)
 
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
-\item{families}{A vector of length 2 giving the distributional families for the outcome values. See details.}
-
-\item{n_points_grid}{The number of points in the new grid for the GAMs to be
-evaluated on.}
+\item{families, n_points_grid}{See \link{wrapGAMs}}
 }
 \value{
 A list named like Xl, containing all results

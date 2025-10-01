@@ -28,7 +28,7 @@ wrapGPs(
 
 \item{numLscAlts}{Number of length scales to be tested for bivariate association}
 
-\item{Quants}{Most extreme quantiles of the distance distribution to take as lenght scales}
+\item{Quants}{Most extreme quantiles of the distance distribution to take as length scales}
 
 \item{device}{Device to fit the GPs on. Defaults to "cpu",
 one can also use "gpu" via the python package gpytorch if a GPU is available}

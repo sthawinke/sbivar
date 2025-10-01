@@ -6,7 +6,7 @@
 #' @inheritParams sbivarMulti
 #'
 #' @returns A list of named Moran's I vectors
-#' @seealso buildWeightMat
+#' @seealso \link{buildWeightMat}
 wrapMoransIMulti = function(Xl, Yl, Cxl, Eyl, wo, numNN){
     lapply(selfName(names(Xl)), function(nam){
         out = c(crossprod(scale(Xl[[nam]]), buildWeightMat(Cxl[[nam]], Eyl[[nam]], wo = wo, numNN = numNN))

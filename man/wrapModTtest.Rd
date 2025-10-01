@@ -2,7 +2,7 @@
 % Please edit documentation in R/wrapModTtest.R
 \name{wrapModTtest}
 \alias{wrapModTtest}
-\title{Perform nearest-neighbour matching if necessary, and apply all pairwise tests.}
+\title{Perform modified t-tests for all pairs, after performing nearest-neighbour matching if necessary}
 \usage{
 wrapModTtest(X, Y, Cx, Ey, mapToFinest = FALSE, jointCoordinates = FALSE)
 }
@@ -15,7 +15,7 @@ wrapModTtest(X, Y, Cx, Ey, mapToFinest = FALSE, jointCoordinates = FALSE)
 occur to the dataset with the best resolution, i.e. the one with the highest sample size?
 .}
 
-\item{jointCoordinates}{A boolean, are measurements on the same location}
+\item{jointCoordinates}{A boolean, are measurements on the same location?}
 }
 \value{
 A dataframe of results sorted by p-value, also containing effective sample size (ESS) and correlation estimate.
@@ -25,7 +25,9 @@ If measurements are not on the same location, they are matched using nearest nei
 Then modified t-test is applied to all pairs, which tests for the significance
 of the Pearson correlation while accounting for spatial autocorrelation \insertCite{Clifford1989}{sbivar}.
 }
+\references{
+\insertAllCited{}
+}
 \seealso{
 \link[SpatialPack]{modified.ttest}
-\insertAllCited{}
 }

@@ -21,5 +21,5 @@ Find all raw Moran's I values between lists of observations matrices from differ
 Observation matrices are scaled and centered prior to calculation
 }
 \seealso{
-buildWeightMat
+\link{buildWeightMat}
 }

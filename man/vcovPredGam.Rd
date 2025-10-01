@@ -9,7 +9,7 @@ vcovPredGam(model, newdata)
 \arguments{
 \item{model}{The gam model}
 
-\item{newdata}{The grid on which new predictions are done}
+\item{newdata}{The grid on which new predictions are made}
 }
 \value{
 A list with components
@@ -17,13 +17,11 @@ A list with components
 \item{vcov}{Variance-covariance matrix of the predictions}
 }
 \description{
+The spline predictions are found as X *coef with X the spline basis and coef the spline coefficients.
 The covariance matrix of the predictions is found using the formula:
-Cov(pred) = X * Var(coef) * X'
-Where X is the basis matrix (design matrix for smooth terms), and Var(coef) is the covariance matrix of the coefficients
-From help(predict.gam): When type="lpmatrix" then a matrix is returned which
-yields the values of the linear predictor (minus any offset) when postmultiplied by
-the parameter vector (in this case se.fit is ignored). The latter option is most useful
-for getting variance estimates for quantities derived from the model: for example integrated quantities, or derivatives of smooths.
+Cov(pred) = X * Var(coef) * X',
+where X is the basis matrix (design matrix for smooth terms), and Var(coef)
+is the covariance matrix of the coefficients.
 }
 \seealso{
 \link[mgcv]{vcov.gam}, \link[mgcv]{predict.gam}

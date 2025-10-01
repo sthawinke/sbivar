@@ -3,7 +3,7 @@
 #' @inheritParams sbivarSingle
 #' @inheritParams fitGP
 #' @param numLscAlts Number of length scales to be tested for bivariate association
-#' @param Quants Most extreme quantiles of the distance distribution to take as lenght scales
+#' @param Quants Most extreme quantiles of the distance distribution to take as length scales
 #' @returns A named list of results
 #' @importFrom smoppix loadBalanceBplapply
 #' @importFrom BiocParallel bplapply

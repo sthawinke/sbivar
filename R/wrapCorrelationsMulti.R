@@ -1,7 +1,7 @@
 #' Find all cross-correlations for a list of matrices
 #' @description
 #' Find all raw cross-correlations between lists of observations matrices from different modalities.
-#' Observations are matched to nearest neighbours if necessary
+#' Observations are first matched to nearest neighbours if necessary
 #'
 #' @inheritParams sbivarMulti
 #' @inheritParams wrapModTtest

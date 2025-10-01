@@ -1,6 +1,6 @@
 #' Wrapper function to fit GAMs and find correlations and standard error for data lists
 #'
-#' @inheritParams wrapGAMs
+#' @param families,n_points_grid See \link{wrapGAMs}
 #' @inheritParams sbivarMulti
 #'
 #' @returns A list named like Xl, containing all results

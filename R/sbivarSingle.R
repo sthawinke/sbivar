@@ -25,6 +25,7 @@
 #' @importFrom stats p.adjust
 #' @importFrom methods is
 #' @importFrom nlme corGaus lmeControl
+#' @note All methods use multithreading on the cluster provided using the BiocParallel package
 #' @details gpParams must be a list of length 2 with names 'X' and 'Y', consisting of matrices
 #' with rownames "mean", "nugget", "range" and "sigma", and column names as in X and Y.
 #' This argument allows to pass parameters of the Gaussian processes estimated with other software
@@ -44,9 +45,8 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs
                   n_points_grid = 6e2, mapToFinest = FALSE, families = list("X" = gaussian(), "Y" = gaussian()),
                   GPmethod = c("REML", "ML", "gpytorch"), device = c("cpu", "cuda"),
                   training_iter = 100L, gpParams, Quants = c(0.005, 0.5), numLscAlts = 10,
-                  optControl = lmeControl(opt = "optim", maxIter = 5e2,
-                                                msMaxIter = 5e2, niterEM = 1e3,
-                                                msMaxEval = 1e3),
+                  optControl = lmeControl(opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
+                                          niterEM = 1e3, msMaxEval = 1e3),
                   corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25))){
     stopifnot(is.numeric(n_points_grid), ncol(Cx) == 2, is.character(method),
               all(vapply(families, FUN.VALUE = TRUE, is, "family")), is.list(optControl),

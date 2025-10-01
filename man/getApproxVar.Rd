@@ -2,12 +2,12 @@
 % Please edit documentation in R/vcovPredGam.R
 \name{getApproxVar}
 \alias{getApproxVar}
-\title{Get approximate variance-covariance matrix of spline predictions}
+\title{Get approximate variance of the}
 \usage{
 getApproxVar(vcovMat, cen, x, link)
 }
 \arguments{
-\item{vcovMat}{Variance-covariance matrix of spline coefficients}
+\item{vcovMat}{Variance-covariance matrix of spline predictions}
 
 \item{cen}{Centered observations}
 
@@ -19,5 +19,5 @@ getApproxVar(vcovMat, cen, x, link)
 Variance-covariance matrix of the spline predictions
 }
 \description{
-Get approximate variance-covariance matrix of spline predictions
+Get approximate variance of the
 }

@@ -7,16 +7,19 @@
 matchCoords(Cx, Ey, mapToFinest)
 }
 \arguments{
-\item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
+\item{Cx, Ey}{coordinate matrices}
 
-\item{mapToFinest}{Passed onto \link{wrapModTtest}}
+\item{mapToFinest}{A boolean, should the one-to-one mapping for modified t-test
+occur to the dataset with the best resolution, i.e. the one with the highest sample size?
+.}
 }
 \value{
 A list with components
 \item{coordMat}{The new, single coordinate matrix}
-\item{matToX}{A boolean, should X coordinates be taken}
+\item{mapToX}{A boolean, should X coordinates be taken}
 \item{id}{The index of the coordinates to retain}
 }
 \description{
-Match coordinates to the nearest neighbour
+Match elements of two coordinate matrices to their nearest neighbour using the
+\link[RANN]{nn2} function
 }

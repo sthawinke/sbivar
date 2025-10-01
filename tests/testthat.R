@@ -7,7 +7,6 @@ Y = matrix(rnorm(m*k), m, k, dimnames = list(NULL, paste0("Y", seq_len(k))))
 Cx = matrix(runif(n*2), n, 2)
 Ey = matrix(runif(m*2), m, 2)
 colnames(Cx) = colnames(Ey) = c("x", "y")
-resModtTest = sbivarSingle(X, Y, Cx, Ey, method = "Modified")
 #Multiple images
 ims = 6
 Xl = lapply(selfName(seq_len(ims)), function(i){n = rpois(1, n)
@@ -38,6 +37,8 @@ toyDesign = data.frame("covariate" = rnorm(ims),
 #     register(DoparParam(), default = TRUE)
 # }
 register(SerialParam()) # Switch on when mapping test coverage
+resModtTest = sbivarSingle(X, Y, Cx, Ey, method = "Modified")
+resGAMs = sbivarSingle(X, Y, Cx, Ey, method = "GAM")
 estGAMs = sbivarMulti(Xl, Yl, Cxl, Eyl, method = "GAMs")
 estMoran = sbivarMulti(Xl, Yl, Cxl, Eyl, method = "Moran", wo = "nn")
 estCorrelations = sbivarMulti(Xl, Yl, Cxl, Eyl, method = "Correlation")

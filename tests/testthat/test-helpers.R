@@ -12,7 +12,7 @@ test_that("Helper functions do their job", {
     })
     expect_identical(makeNames(c("gene1", "gene2"), c("compoundA", "compoundB")),
                      c("gene1__compoundA", "gene2__compoundA", "gene1__compoundB", "gene2__compoundB"))
-    mat = matrix(rnorm(9), 3, 3, dimnames = list(LETTERS[1:3], letters[1:3]))
+    mat = matrix(rnorm(9, mean = 2), 3, 3, dimnames = list(LETTERS[1:3], letters[1:3]))
     expect_identical(tr(mat), sum(diag(mat)))
     arr = array(rnorm(27), dim = c(3,3,3))
     expect_identical(tr(arr, dim = 3), vapply(seq_len(dim(arr)[3]), FUN.VALUE = double(1),
@@ -22,4 +22,8 @@ test_that("Helper functions do their job", {
                                                        c(colnames(mat), colnames(mat2))))
     expect_identical(as.character(replaceLhs(~(1|rat))[[2]]), "out")
     expect_identical(as.character(replaceLhs(outcome~(1|rat))[[2]]), "out")
+    expect_identical(dimnames(mat), dimnames(logNorm(mat)))
+})
+test_that("Helper functions fail where appropriate", {
+    expect_error(tr(list()))
 })

@@ -26,18 +26,18 @@ toyDesign = data.frame("covariate" = rnorm(ims),
                        "cofactor" = factor(rep(c(TRUE, FALSE), length.out = ims)),
                        "group" = rep(c("control", "treatment"), length.out = ims))
 # Register the parallel backend
-nCores <- 2
-if(.Platform$OS.type == "unix"){
-    #On unix-based systems, use MulticoreParam
-    register(MulticoreParam(nCores))
-} else {
-    #On windows, use makeCluster
-    library(doParallel)
-    Clus = makeCluster(nCores)
-    registerDoParallel(Clus)
-    register(DoparParam(), default = TRUE)
-}
-#register(SerialParam()) # Switch on when mapping test coverage
+# nCores <- 2
+# if(.Platform$OS.type == "unix"){
+#     #On unix-based systems, use MulticoreParam
+#     register(MulticoreParam(nCores))
+# } else {
+#     #On windows, use makeCluster
+#     library(doParallel)
+#     Clus = makeCluster(nCores)
+#     registerDoParallel(Clus)
+#     register(DoparParam(), default = TRUE)
+# }
+register(SerialParam()) # Switch on when mapping test coverage
 estGAMs = sbivarMulti(Xl, Yl, Cxl, Eyl, method = "GAMs")
 estMoran = sbivarMulti(Xl, Yl, Cxl, Eyl, method = "Moran", wo = "nn")
 estCorrelations = sbivarMulti(Xl, Yl, Cxl, Eyl, method = "Correlation")

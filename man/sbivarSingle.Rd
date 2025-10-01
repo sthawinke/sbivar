@@ -15,6 +15,7 @@ sbivarSingle(
   families = list(X = gaussian(), Y = gaussian()),
   GPmethod = c("REML", "ML", "gpytorch"),
   device = c("cpu", "cuda"),
+  verbose = TRUE,
   training_iter = 100L,
   gpParams,
   Quants = c(0.005, 0.5),
@@ -36,6 +37,8 @@ sbivarSingle(
 \item{mapToFinest}{Passed onto \link{wrapModTtest}}
 
 \item{GPmethod, device, training_iter, Quants, numLscAlts, optControl, corStruct}{Passed onto \link{fitGP}}
+
+\item{verbose}{Should info on type of analysis be printed?}
 
 \item{gpParams}{Parameters of the Gaussian processes, see details}
 }

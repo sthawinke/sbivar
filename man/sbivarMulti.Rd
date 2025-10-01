@@ -14,7 +14,8 @@ sbivarMulti(
   mapToFinest = FALSE,
   wo = c("distance", "nn"),
   numNN = 8,
-  n_points_grid = 600
+  n_points_grid = 600,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ sbivarMulti(
 \item{mapToFinest}{Passed onto \link{wrapModTtest}}
 
 \item{wo, numNN}{Passed onto \link{buildWeightMat}}
+
+\item{verbose}{Should info on type of analysis be printed?}
 }
 \value{
 A list containing

@@ -13,6 +13,7 @@
 #' @param gpParams Parameters of the Gaussian processes, see details
 #' @param GPmethod,device,training_iter,Quants,numLscAlts,optControl,corStruct Passed onto \link{fitGP}
 #' @param n_points_grid,families Passed onto \link{wrapGAMs}
+#' @param verbose Should info on type of analysis be printed?
 #'
 #' @details Any normalization of the data should happen prior to calling this function.
 #' For instance, count data or metabolome data are best scaled to relative values and log-normalized prior to fitting GPs.
@@ -43,7 +44,7 @@
 #' resModtGPs = sbivarSingle(X, Y, Cx, Ey, method = "GPs")
 sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs"),
                   n_points_grid = 6e2, mapToFinest = FALSE, families = list("X" = gaussian(), "Y" = gaussian()),
-                  GPmethod = c("REML", "ML", "gpytorch"), device = c("cpu", "cuda"),
+                  GPmethod = c("REML", "ML", "gpytorch"), device = c("cpu", "cuda"), verbose = TRUE,
                   training_iter = 100L, gpParams, Quants = c(0.005, 0.5), numLscAlts = 10,
                   optControl = lmeControl(opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
                                           niterEM = 1e3, msMaxEval = 1e3),
@@ -51,7 +52,10 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs
     stopifnot(is.numeric(n_points_grid), ncol(Cx) == 2, is.character(method),
               all(vapply(families, FUN.VALUE = TRUE, is, "family")), is.list(optControl),
               is.numeric(training_iter), inherits(corStruct, "corStruct"),
-              inherits(corStruct, "corGaus"), length(Quants)==2, is.numeric(Quants))
+              inherits(corStruct, "corGaus"), length(Quants)==2, is.numeric(Quants), is.logical(verbose))
+    if(verbose){
+        message("Performing analysis on a single image\n")
+    }
     n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y)
     method = match.arg(method)
     GPmethod = match.arg(GPmethod)

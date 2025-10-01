@@ -3,7 +3,7 @@
 #' Plot a chosen feature pair, or the highest ranking feature pair, for a single pair of images
 #'
 #' @details For sequence count data, such as transcriptomics, log-normalization
-#' seems indicated to achieve clear plots. The normalization used for plotting is
+#' seems indicated to achieve clear plots (normalizationX = "log", see  \link{logNorm}). The normalization used for plotting is
 #'  not necessarily the same as the one used for the analysis.
 #'
 #' @inheritParams sbivarSingle
@@ -40,12 +40,13 @@ plotPairSingle = function(X, Y, Cx, Ey, features, normalizationX = c("none", "lo
     normFunY = switch(normalizationY, "none" = identity, "log" = logNorm)
     plotPairSingleVectors(x = scaleHelpFun(feat = features[1], normFun = normFunX, X = X),
                           y = scaleHelpFun(feat = features[2], normFun = normFunY, X = Y),
-                   Cx = Cx, Ey = Ey, modalityNames = features,...)
+                   Cx = Cx, Ey = Ey, modalityNames = features, ...)
 
 }
 #' @rdname plotTopResultsSingle
 #' @param modalityNames Names to be given to the modalities,
-#' appearing in the strip text of the columns
+#' appearing in the strip text of the columns. For plotTopResultsSingle() and
+#' plotPairSingle(), the feature names are used.
 plotPairSingleVectors = function(x, y, Cx, Ey, size = 1.25,
                                  modalityNames = c("Modality X", "Modality Y")){
     theme_set(theme_bw())

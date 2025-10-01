@@ -1,23 +1,19 @@
 #' Apply one or more tests for bivariate spatial association
 #'
 #' This function calculates measures of spatial association for every image.
-#' The resulting estimates can then be analysed further usign the \link{fitLinModels} function.
+#' The resulting estimates can then be analysed further using the \link{fitLinModels} function.
 #'
 #' @param Xl,Yl Lists of matrices of omics measurements
 #' @param Cxl,Eyl Lists of corresponding coordinate matrices of dimension two
 #' @param method A character string, indicating which method to apply
-#' @param families A vector of length 2 giving outcome values.
-#' @param n_points_grid The number of points in the new grid for the GAMs to be
-#' evaluated on.
-#'
+#' @param families,n_points_grid Passed onto \link{wrapGAMsMulti}
+#' @param wo,numNN Passed onto \link{buildWeightMat}
 #' @returns A list containing
 #' \item{estimates}{The estimated measures of association}
 #' \item{method}{The method used to find these estimates}
 #' @export
-#' @seealso [fitLinModels()]
+#' @seealso \link{fitLinModels}
 #' @inheritParams sbivarSingle
-#' @inheritParams buildWeightMat
-#'
 #' @examples
 #' n=1e2;m=8e1;p=3;k=4
 #' ims = 6

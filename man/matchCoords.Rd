@@ -9,8 +9,7 @@ matchCoords(Cx, Ey, mapToFinest)
 \arguments{
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
-\item{mapToFinest}{A boolean, should the one-to-one mapping for modified t-test
-occur to the dataset with the best resolution?}
+\item{mapToFinest}{Passed onto \link{wrapModTtest}}
 }
 \value{
 A list with components

@@ -11,11 +11,9 @@ wrapCorrelationsMulti(Xl, Yl, Cxl, Eyl, mapToFinest, jointCoordinates)
 
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
-\item{mapToFinest}{A boolean, should the one-to-one mapping for modified t-test
-occur to the dataset with the best resolution?}
+\item{mapToFinest}{Passed onto \link{wrapModTtest}}
 
-\item{jointCoordinates}{A boolean, are measurements on the same location
-.}
+\item{jointCoordinates}{A boolean, are measurements on the same location}
 }
 \value{
 A list of named correlation vectors

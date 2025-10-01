@@ -9,14 +9,10 @@
 #' @param X,Y Matrices of omics measurements
 #' @param Cx,Ey Corresponding coordinate matrices of dimension two
 #' @param method A character string, indicating which method to apply
-#' @param families A vector of length 2 giving the distributional families for the outcome values. See details.
-#' @param n_points_grid The number of points in the new grid for the GAMs to be
-#' evaluated on.
-#' @param mapToFinest A boolean, should the one-to-one mapping for modified t-test
-#' occur to the dataset with the best resolution?
+#' @param mapToFinest Passed onto \link{wrapModTtest}
 #' @param gpParams Parameters of the Gaussian processes, see details
-#' @inheritParams wrapGPs
-#' @inheritParams fitGP
+#' @param GPmethod,device,training_iter,Quants,numLscAlts,optControl,corStruct Passed onto \link{fitGP}
+#' @param n_points_grid,families Passed onto \link{wrapGAMs}
 #'
 #' @details Any normalization of the data should happen prior to calling this function.
 #' For instance, count data or metabolome data are best scaled to relative values and log-normalized prior to fitting GPs.

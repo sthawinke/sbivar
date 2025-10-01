@@ -9,7 +9,7 @@ buildWeightMat(Cx, Ey, wo = c("distance", "nn"), numNN = 8)
 \arguments{
 \item{Cx, Ey}{Two coordinate matrices}
 
-\item{wo}{The weighting option, either "nn" or "distance}
+\item{wo}{The weighting option, either "nn" or "distance"}
 
 \item{numNN}{An integer, the number of neighbours}
 }

@@ -6,7 +6,7 @@
 #' @param x outcome vector
 #' @param coord Coordinate matrix
 #' @param device Device to fit the GPs on. Defaults to "cpu",
-#' can use "gpu" via the python package gpytorch if installed
+#' one can also use "gpu" via the python package gpytorch if a GPU is available
 #' @param GPmethod The method by which to fit the Gaussian processes,
 #' passed onto \link[nlme]{gls} as "method" if it equals "REML" or "ML".
 #' @param training_iter Number of training iterations in gpytorch
@@ -15,9 +15,9 @@
 #' @param optControl List of control values, see \link[nlme]{glsControl}.
 #' @details Setting GPmethod to "ML" or "REML" leads to model fitting in R using the \link[nlme]{gls} function.
 #' Setting GPmethod to "gpytorch" uses the eponymous python package. This has the option of gpu acceleration
-#' when providing "cuda" as device. This uses the available GPU for speedup, especially for large GPs (thousands of observations).
+#' when providing "cuda" as device. The GPs are then fit on the available GPU for speedup.
 #' The parametrization of the GPs is the one common in geostatistics, as described in \link[nlme]{gls}.
-#' Results from gpytorch are transformed to this parametrtization for uniformity.
+#' Results from gpytorch are transformed to this parametrization for uniformity.
 #'
 #' @returns A vector of length 4 with components range, nugget, sigma and mean
 #' @importFrom stats sigma coef

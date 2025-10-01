@@ -66,11 +66,8 @@ A ggplot object
 Spawns a three-panel plot with the splines fitted for the two variables, plus a visualization
 of regions with positive and negative correlations between those splines.
 The splines are refitted using \link{fitGAM}, so no gam-objects can be provided.
-}
-\details{
 plotGAMsFromMatrix() takes entire outcome matrices X and Y as argument,
-to be able to account for offsets in refitting the GAMs.
-
+to be able to account for offsets in refitting the GAMs.#'
 plotGAMsTopResults() plots the feature with the smallest p-value in resultsSingle.
 }
 \note{

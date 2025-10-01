@@ -11,9 +11,7 @@ wrapMoransIMulti(Xl, Yl, Cxl, Eyl, wo, numNN)
 
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
-\item{wo}{The weighting option, either "nn" or "distance}
-
-\item{numNN}{An integer, the number of neighbours}
+\item{wo, numNN}{Passed onto \link{buildWeightMat}}
 }
 \value{
 A list of named Moran's I vectors

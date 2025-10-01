@@ -31,7 +31,7 @@ wrapGPs(
 \item{Quants}{Most extreme quantiles of the distance distribution to take as lenght scales}
 
 \item{device}{Device to fit the GPs on. Defaults to "cpu",
-can use "gpu" via the python package gpytorch if installed}
+one can also use "gpu" via the python package gpytorch if a GPU is available}
 
 \item{GPmethod}{The method by which to fit the Gaussian processes,
 passed onto \link[nlme]{gls} as "method" if it equals "REML" or "ML".}

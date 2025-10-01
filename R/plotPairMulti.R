@@ -1,17 +1,19 @@
 #' Plot a chosen or top feature in the analysis for a series of images
 #'
 #' @param parameter The linear model parameter used to find the feature with the strongest effect.
+#' The default is the intercept, so overall effect.
 #' @param resultsMulti The results list, from call to \link{extractResultsMulti}
 #' @inheritParams sbivarMulti
 #' @inheritParams plotPairSingle
+#' @param ... passed onto plotPairMulti()
 #' @examples
 #' example(fitLinModels, "sbivar")
-#' # Plot the feature pair with the most significant signal
-#' plotTopResultsMulti(resGams, Xl, Yl, Cxl, Eyl)
+#' # Plot the feature pair with the most significant signal for a certain parameter, here "cofactor"
+#' plotTopResultsMulti(resGams, Xl, Yl, Cxl, Eyl, parameter = "cofactor")
 #' # Plot an arbitrary feature pair
 #' plotPairMulti(Xl, Yl, Cxl, Eyl, features = c("X1", "Y1"))
 #' @export
-#' @seealso \link{extractResultsMulti}, \link{sbivarMulti}, \link{fitLinModels}
+#' @seealso \link{extractResultsMulti}, \link{fitLinModels}
 #' @return A ggplot object
 plotTopResultsMulti = function(resultsMulti, Xl, Yl, Cxl, Eyl, parameter = "Intercept", ...){
     stopifnot(parameter %in% names(resultsMulti))
@@ -22,6 +24,7 @@ plotTopResultsMulti = function(resultsMulti, Xl, Yl, Cxl, Eyl, parameter = "Inte
 #' @rdname plotTopResultsMulti
 #' @export
 #' @param features Feature vector of length 2 to be plotted
+#' @inherit plotPairSingle details
 plotPairMulti = function(Xl, Yl, Cxl, Eyl, features, normalizationX = c("none", "log"),
                          normalizationY = c("none", "log"), size = 1.25){
     foo = checkInputMulti(Xl, Yl, Cxl, Eyl)

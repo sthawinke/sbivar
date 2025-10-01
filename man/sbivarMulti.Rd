@@ -22,19 +22,13 @@ sbivarMulti(
 
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
-\item{families}{A vector of length 2 giving outcome values.}
+\item{families, n_points_grid}{Passed onto \link{wrapGAMsMulti}}
 
 \item{method}{A character string, indicating which method to apply}
 
-\item{mapToFinest}{A boolean, should the one-to-one mapping for modified t-test
-occur to the dataset with the best resolution?}
+\item{mapToFinest}{Passed onto \link{wrapModTtest}}
 
-\item{wo}{The weighting option, either "nn" or "distance}
-
-\item{numNN}{An integer, the number of neighbours}
-
-\item{n_points_grid}{The number of points in the new grid for the GAMs to be
-evaluated on.}
+\item{wo, numNN}{Passed onto \link{buildWeightMat}}
 }
 \value{
 A list containing
@@ -43,7 +37,7 @@ A list containing
 }
 \description{
 This function calculates measures of spatial association for every image.
-The resulting estimates can then be analysed further usign the \link{fitLinModels} function.
+The resulting estimates can then be analysed further using the \link{fitLinModels} function.
 }
 \examples{
 n=1e2;m=8e1;p=3;k=4
@@ -65,5 +59,5 @@ estMoran = sbivarMulti(Xl, Yl, Cxl, Eyl, method = "Moran")
 estCorrelations = sbivarMulti(Xl, Yl, Cxl, Eyl, method = "Correlation")
 }
 \seealso{
-[fitLinModels()]
+\link{fitLinModels}
 }

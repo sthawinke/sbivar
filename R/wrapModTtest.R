@@ -6,6 +6,8 @@
 #'
 #' @inheritParams sbivarSingle
 #' @param jointCoordinates A boolean, are measurements on the same location
+#' @param mapToFinest A boolean, should the one-to-one mapping for modified t-test
+#' occur to the dataset with the best resolution, i.e. the one with the highest sample size?
 #'.
 #' @returns A dataframe of results sorted by p-value, also containing effective sample size (ESS) and correlation estimate.
 #' @importFrom SpatialPack modified.ttest

@@ -1,7 +1,9 @@
 #' Wrapper function to fit GAMs and test for all possible combinations
 #'
 #' @inheritParams sbivarSingle
-#'
+#' @param families A vector of length 2 giving the distributional families for the outcome values. See details.
+#' @param n_points_grid The number of points in the new grid for the GAMs to be
+#' evaluated on.
 #' @returns A named list of results
 #' @importFrom smoppix loadBalanceBplapply
 #' @importFrom BiocParallel bplapply

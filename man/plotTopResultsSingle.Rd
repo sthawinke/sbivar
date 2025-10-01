@@ -47,7 +47,8 @@ for X and Y matrices, respectively, before plotting, see details.}
 \item{size}{Point size}
 
 \item{modalityNames}{Names to be given to the modalities,
-appearing in the strip text of the columns}
+appearing in the strip text of the columns. For plotTopResultsSingle() and
+plotPairSingle(), the feature names are used.}
 }
 \value{
 A ggplot2 object
@@ -57,7 +58,7 @@ Plot a chosen feature pair, or the highest ranking feature pair, for a single pa
 }
 \details{
 For sequence count data, such as transcriptomics, log-normalization
-seems indicated to achieve clear plots. The normalization used for plotting is
+seems indicated to achieve clear plots (normalizationX = "log", see  \link{logNorm}). The normalization used for plotting is
  not necessarily the same as the one used for the analysis.
 }
 \examples{

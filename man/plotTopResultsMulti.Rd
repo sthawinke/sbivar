@@ -33,9 +33,10 @@ plotPairMulti(
 
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
-\item{parameter}{The linear model parameter used to find the feature with the strongest effect.}
+\item{parameter}{The linear model parameter used to find the feature with the strongest effect.
+The default is the intercept, so overall effect.}
 
-\item{...}{Passed onto \link{plotPairSingleVectors}}
+\item{...}{passed onto plotPairMulti()}
 
 \item{features}{Feature vector of length 2 to be plotted}
 
@@ -50,13 +51,18 @@ A ggplot object
 \description{
 Plot a chosen or top feature in the analysis for a series of images
 }
+\details{
+For sequence count data, such as transcriptomics, log-normalization
+seems indicated to achieve clear plots (normalizationX = "log", see  \link{logNorm}). The normalization used for plotting is
+ not necessarily the same as the one used for the analysis.
+}
 \examples{
 example(fitLinModels, "sbivar")
-# Plot the feature pair with the most significant signal
-plotTopResultsMulti(resGams, Xl, Yl, Cxl, Eyl)
+# Plot the feature pair with the most significant signal for a certain parameter, here "cofactor"
+plotTopResultsMulti(resGams, Xl, Yl, Cxl, Eyl, parameter = "cofactor")
 # Plot an arbitrary feature pair
 plotPairMulti(Xl, Yl, Cxl, Eyl, features = c("X1", "Y1"))
 }
 \seealso{
-\link{extractResultsMulti}, \link{sbivarMulti}, \link{fitLinModels}
+\link{extractResultsMulti}, \link{fitLinModels}
 }

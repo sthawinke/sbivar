@@ -6,7 +6,7 @@
 \alias{sbivar}
 \title{sbivar: Test for Spatial Bivariate Association Across Omics Types}
 \description{
-The sbivar package implements a suite of tests for Spatial BIVARiate association across omics modalities with disjoint coordinate sets. Implemented tests are generalized additive models, modified t-test, bivariate Moran's I and Gaussian processes. Both single images and replicated experiments can be analysed.
+The sbivar package implements a suite of tests for Spatial BIVARiate association across omics modalities, with possibly disjoint coordinate sets. Implemented tests are generalized additive models (GAMs), modified t-test, bivariate Moran's I and Gaussian processes (GPs). Both single images and replicated experiments can be analysed.
 }
 \seealso{
 Useful links:

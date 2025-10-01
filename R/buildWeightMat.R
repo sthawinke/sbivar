@@ -4,7 +4,7 @@
 #' statistic.
 #'
 #' @param Cx,Ey Two coordinate matrices
-#' @param wo The weighting option, either "nn" or "distance
+#' @param wo The weighting option, either "nn" or "distance"
 #' @param numNN An integer, the number of neighbours
 #' @importFrom RANN nn2
 #' @importFrom Matrix sparseMatrix

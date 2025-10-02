@@ -139,7 +139,7 @@ head(gamRes)
 Plot the most significantly spatially associated gene-metabolite pair `r gpGam <- rownames(gamRes)[1]`:
 
 ```{r, fig.height = 5}
-plotTopResults(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
+plotTopPair(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
 ```
 
 We see a clear negative relationship. We can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes[gpGam, "corxy"], 3)`:
@@ -205,7 +205,7 @@ head(multiMoranLmmsRes$Intercept)
 No features are significantly associated after multiplicity correction. This is in part caused by different experimental parameters used for the different sections, i.e. these are not real replicates yet, as technology is still being developed. For illustration, we plot the feature pair with the smallest p-values nevertheless:
 
 ```{r plottopMulti, fig.height = 10}
-plotTopResults(multiMoranLmmsRes, 
+plotTopPair(multiMoranLmmsRes, 
     Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes, 
     Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.4)
 ```
@@ -240,7 +240,7 @@ resSpatExp = sbivar(StxSE, MetSE, assayX = "transcripts", assayY = "metabolites"
 Plot the top result, again providing the _SpatialExperiment_ objects
 
 ```{r plotTopSE}
-plotTopResults(resSpatExp, StxSE, MetSE)
+plotTopPair(resSpatExp, StxSE, MetSE)
 ```
 
 Now we construct a _MultiAssayExperiment_ object

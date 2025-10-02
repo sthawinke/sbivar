@@ -33,6 +33,9 @@ checkInputSingle = function(X, Y, Cx, Ey){
     }
 }
 checkInputMulti = function(Xl, Yl, Cxl, Eyl){
+    if(length(Xl)==1){
+        stop("Lists of length1 not allowed, please convert to matrix!")
+    }
     if(length(Xl)!=length(Cxl)){
         stop("Length of outcome matrices Xl and their coordinates Cxl do not match!")
     }

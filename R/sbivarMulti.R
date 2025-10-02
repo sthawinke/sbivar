@@ -11,6 +11,7 @@
 #' @returns A list containing
 #' \item{estimates}{The estimated measures of association}
 #' \item{method}{The method used to find these estimates}
+#' \item{multiplicity}{"multi", a flag for the type of analysis}
 #' @seealso \link{fitLinModels}
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
 #' @inheritParams sbivarSingle
@@ -35,6 +36,6 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
     } else if (method == "Moran's I"){
         wrapMoransIMulti(Xl, Yl, Cxl, Eyl, wo = wo, numNN = numNN)
     }
-    return(list("estimates" = out, "method" = method))
+    return(list("estimates" = out, "method" = method, "multiplicity" = "multi"))
 }
 

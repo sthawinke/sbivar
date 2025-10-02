@@ -127,7 +127,6 @@ logNorm = function(x, pseudoCount = 1e-8){
 sund = function(string, split = "__"){
     strsplit(string, split = split)[[1]]
 }
-
 #' Replace the left hand side of a formula by a fixed string
 #'
 #' @param x a formula
@@ -138,4 +137,36 @@ sund = function(string, split = "__"){
 replaceLhs = function(x, repl = "out"){
     out = paste(repl, "~", deparse(x[[length(x)]]))
     return(formula(out))
+}
+#' Is there any double underscore in the character vector?
+#'
+#' @param charVec The character vector
+#'
+#' @returns A boolean
+findDoubleUnderScore = function(charVec){
+    any(grepl("__", charVec))
+}
+#' Extract an assay, and transpose
+#'
+#' @param x The SummarizedExperiment object
+#' @param assayName The name of the assay
+#'
+#' @returns The required assay, transposed
+#' @importFrom SummarizedExperiment assay
+assayT = function(x, assayName){
+    t(assay(x, assayName))
+}
+#' Split a SpatialExperiment object into images
+#'
+#' Split Spatial Experiment into a list of SpatialExperiment objects,
+#' based on a variable present in the colData slot
+#'
+#' @param spe The SpatialExperiment object
+#' @param sample_id A character vector
+#'
+#' @returns A list of SpatialExperiment objects
+#' @importFrom SummarizedExperiment colData
+splitSpatialExperiment = function(spe, sample_id){
+    spe_list <- split(colnames(spe), colData(spe)[,sample_id])
+    lapply(spe_list, function(cols) spe[, cols])
 }

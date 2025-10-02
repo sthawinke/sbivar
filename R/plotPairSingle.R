@@ -19,12 +19,13 @@
 #' @examples
 #' example(sbivarSingle, "sbivar")
 #' # Plot the feature pair with the most significant signal
-#' plotTopResultsSingle(resModtTest, X, Y, Cx, Ey)
+#' plotTopResults(resModtTest, X, Y, Cx, Ey)
 #' # Plot an arbitrary feature pair
 #' plotPairSingle(X, Y, Cx, Ey, features = c("X1", "Y1"))
 plotTopResultsSingle = function(resultsSingle, X, Y, Cx, Ey, ...){
     topFeats = sund(rownames(resultsSingle$results)[1])
-    plotPairSingle(X = X, Y = Y, features = topFeats, Cx = Cx, Ey = Ey, ...)
+    plotPairSingle(X = X, Y = Y, features = topFeats, Cx = Cx, Ey = Ey,
+                   assayX = resultsSingle$assayX, assayY = resultsSingle$assayY, ...)
 
 }
 #' @rdname plotTopResultsSingle
@@ -33,6 +34,14 @@ plotTopResultsSingle = function(resultsSingle, X, Y, Cx, Ey, ...){
 plotPairSingle = function(X, Y, Cx, Ey, features, normalizationX = c("none", "log"),
                           normalizationY = c("none", "log"), ...){
     stopifnot(length(features)==2)
+    if(inherits(X, "SpatialExperiment")){
+        Cx = spatialCoords(Xl)
+        X = assayT(X, assayX)
+    }
+    if(inherits(Y, "SpatialExperiment")){
+        Ey = spatialCoords(Y)
+        Y = assayT(Y, assayY)
+    }
     foo = checkInputSingle(X, Y, Cx, Ey)
     normalizationX = match.arg(normalizationX);normalizationY = match.arg(normalizationY)
     normFunX = switch(normalizationX, "none" = identity, "log" = logNorm)
@@ -40,7 +49,6 @@ plotPairSingle = function(X, Y, Cx, Ey, features, normalizationX = c("none", "lo
     plotPairSingleVectors(x = scaleHelpFun(feat = features[1], normFun = normFunX, X = X),
                           y = scaleHelpFun(feat = features[2], normFun = normFunY, X = Y),
                    Cx = Cx, Ey = Ey, modalityNames = features, ...)
-
 }
 #' @rdname plotTopResultsSingle
 #' @param modalityNames Names to be given to the modalities,

@@ -139,7 +139,7 @@ head(gamRes)
 Plot the most significantly spatially associated gene-metabolite pair `r gpGam <- rownames(gamRes)[1]`:
 
 ```{r, fig.height = 5}
-plotTopResultsSingle(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
+plotTopResults(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
 ```
 
 We see a clear negative relationship. We can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes[gpGam, "corxy"], 3)`:
@@ -205,7 +205,7 @@ head(multiMoranLmmsRes$Intercept)
 No features are significantly associated after multiplicity correction. This is in part caused by different experimental parameters used for the different sections, i.e. these are not real replicates yet, as technology is still being developed. For illustration, we plot the feature pair with the smallest p-values nevertheless:
 
 ```{r plottopMulti, fig.height = 10}
-plotTopResultsMulti(multiMoranLmmsRes, 
+plotTopResults(multiMoranLmmsRes, 
     Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes, 
     Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.4)
 ```
@@ -237,12 +237,11 @@ resSpatExp = sbivar(StxSE, MetSE, assayX = "transcripts", assayY = "metabolites"
                     families = FamiliesViari, method = "GAMs")
 ```
 
-Plot the top result, again providing the _SpatialExperiment_ object
+Plot the top result, again providing the _SpatialExperiment_ objects
 
 ```{r plotTopSE}
-plotTopResultsSingle(resSpatExp, StxSE, MetSE)
+plotTopResults(resSpatExp, StxSE, MetSE)
 ```
-
 
 Now we construct a _MultiAssayExperiment_ object
 
@@ -254,8 +253,10 @@ MAE
 
 We run the same analysis, now providing the experiment names on top of the assay names (since a _MultiAssayExperiment_ can contain more than two modalities):
 
-```{r makeMAE}
-resMAE = sbivar(MAE, assayX = "transcripts", assayY = "metabolites",  experiments = c("transcripts", "metabolites"), families = FamiliesViari, method = "GAMs")
+```{r analyseMAE}
+resMAE = sbivar(MAE, assayX = "transcripts", assayY = "metabolites", 
+                experiments = c("transcripts", "metabolites"), 
+                families = FamiliesViari, method = "GAMs")
 ```
 
 ### Multi-image case
@@ -283,6 +284,9 @@ As expected, this yields the same result as before with list input.
 
 Another option is to provide only two _SpatialExperiment_ objects, but provide a _sample_id_ argument that identifies the different images:
 
+```{r SEidentifier}
+
+```
 
 # Troubleshooting
 

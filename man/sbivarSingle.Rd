@@ -43,8 +43,12 @@ sbivarSingle(
 \item{gpParams}{Parameters of the Gaussian processes, see details}
 }
 \value{
-A matrix which contains at least a p-values ("pVal") and a Benjamini-Hochberg adjusted p-value ("pAdj"),
-sorted by increasing p-value.
+A list with at least the following components
+\item{result}{A matrix which contains at least a p-values ("pVal") and a
+Benjamini-Hochberg adjusted p-value ("pAdj"), sorted by increasing p-value.}
+\item{families}{As provided}
+\item{method}{As provided}
+\item{multiplicity}{"single", a flag for the type of analysis}
 }
 \description{
 The tests can be applied to either disjoint or joint coordinate sets.

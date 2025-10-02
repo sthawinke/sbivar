@@ -15,11 +15,11 @@ sbivar(X, ...)
 
 \S4method{sbivar}{matrix}(X, Y, Cx, Ey, ...)
 
-\S4method{sbivar}{list}(X, Y, Cx, Ey, assayX, assayY, ...)
+\S4method{sbivar}{list}(X, Y, Cx, Ey, assayX = NULL, assayY = NULL, ...)
 
-\S4method{sbivar}{SpatialExperiment}(X, Y, assayX, assayY, ...)
+\S4method{sbivar}{SpatialExperiment}(X, Y, assayX, assayY, sample_id_x, sample_id_y = sample_id_x, ...)
 
-\S4method{sbivar}{MultiAssayExperiment}(X, experiments, ...)
+\S4method{sbivar}{MultiAssayExperiment}(X, experiments, assayX, assayY, ...)
 }
 \arguments{
 \item{X}{the input object, see methods('sbivar')}
@@ -30,6 +30,9 @@ sbivar(X, ...)
 
 \item{assayX, assayY}{Assay names to be used in the analysis,
 see \link[SummarizedExperiment]{assay}}
+
+\item{sample_id_x, sample_id_y}{If provided, these are used to discriminate between different images
+included in the same SpatialExperiment objects X and Y. By default, they are assumed to be the same for both X and Y}
 
 \item{experiments}{Names of the experiments in X to be used in the analysis}
 }

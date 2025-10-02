@@ -64,7 +64,7 @@ seems indicated to achieve clear plots (normalizationX = "log", see  \link{logNo
 \examples{
 example(sbivarSingle, "sbivar")
 # Plot the feature pair with the most significant signal
-plotTopResultsSingle(resModtTest, X, Y, Cx, Ey)
+plotTopResults(resModtTest, X, Y, Cx, Ey)
 # Plot an arbitrary feature pair
 plotPairSingle(X, Y, Cx, Ey, features = c("X1", "Y1"))
 }

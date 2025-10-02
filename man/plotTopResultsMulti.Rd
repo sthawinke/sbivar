@@ -23,7 +23,9 @@ plotPairMulti(
   features,
   normalizationX = c("none", "log"),
   normalizationY = c("none", "log"),
-  size = 1.25
+  size = 1.25,
+  assayX,
+  assayY
 )
 }
 \arguments{
@@ -59,7 +61,7 @@ seems indicated to achieve clear plots (normalizationX = "log", see  \link{logNo
 \examples{
 example(fitLinModels, "sbivar")
 # Plot the feature pair with the most significant signal for a certain parameter, here "cofactor"
-plotTopResultsMulti(resGams, Xl, Yl, Cxl, Eyl, parameter = "cofactor")
+plotTopResults(resGams, Xl, Yl, Cxl, Eyl, parameter = "cofactor")
 # Plot an arbitrary feature pair
 plotPairMulti(Xl, Yl, Cxl, Eyl, features = c("X1", "Y1"))
 }

@@ -21,10 +21,11 @@
 #' the outcome distribution, offset and link functions. Currently, identity, inverse and log-link are implemented.
 #'
 #' @returns A list with at least the following components
-#' \item{result}{A matrix which contains at least a p-values ("pVal") and a Benjamini-Hochberg adjusted p-value ("pAdj"),
-#' sorted by increasing p-value.}
+#' \item{result}{A matrix which contains at least a p-values ("pVal") and a
+#' Benjamini-Hochberg adjusted p-value ("pAdj"), sorted by increasing p-value.}
 #' \item{families}{As provided}
 #' \item{method}{As provided}
+#' \item{multiplicity}{"single", a flag for the type of analysis}
 #' @importFrom stats p.adjust
 #' @importFrom methods is
 #' @importFrom nlme corGaus lmeControl
@@ -98,6 +99,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs
     }
     out = cbind(out, "pAdj" = p.adjust(out[, "pVal"], method = "BH"))
     result = out[order(out[, "pVal"]),]
-    list("result" = result, "families" = families, "method" = method)
+    list("result" = result, "families" = families, "method" = method,
+         "multiplicity" = "single")
 }
 

@@ -9,24 +9,32 @@
 #' @examples
 #' example(fitLinModels, "sbivar")
 #' # Plot the feature pair with the most significant signal for a certain parameter, here "cofactor"
-#' plotTopResultsMulti(resGams, Xl, Yl, Cxl, Eyl, parameter = "cofactor")
+#' plotTopResults(resGams, Xl, Yl, Cxl, Eyl, parameter = "cofactor")
 #' # Plot an arbitrary feature pair
 #' plotPairMulti(Xl, Yl, Cxl, Eyl, features = c("X1", "Y1"))
-#' @export
 #' @seealso \link{extractResultsMulti}, \link{fitLinModels}
 #' @return A ggplot object
 plotTopResultsMulti = function(resultsMulti, Xl, Yl, Cxl, Eyl, parameter = "Intercept", ...){
     stopifnot(parameter %in% names(resultsMulti))
     topPair = rownames(resultsMulti[[parameter]])[1]
     topFeats = sund(topPair)
-    plotPairMulti(Xl, Yl, Cxl, Eyl, features = topFeats, ...)
+    plotPairMulti(Xl, Yl, Cxl, Eyl, features = topFeats, assayX = resultsMulti$assayX,
+                  assayY = resultsMulti$assayY, ...)
 }
 #' @rdname plotTopResultsMulti
 #' @export
 #' @param features Feature vector of length 2 to be plotted
 #' @inherit plotPairSingle details
 plotPairMulti = function(Xl, Yl, Cxl, Eyl, features, normalizationX = c("none", "log"),
-                         normalizationY = c("none", "log"), size = 1.25){
+                         normalizationY = c("none", "log"), size = 1.25, assayX, assayY){
+    if(inherits(Xl[[1]], "SpatialExperiment")){
+        Cxl = lapply(Xl, spatialCoords)
+        Xl = lapply(Xl, assayT, assayX)
+    }
+    if(inherits(Yl[[1]], "SpatialExperiment")){
+        Exl = lapply(Yl, spatialCoords)
+        Yl = lapply(Yl, assayT, assayX)
+    }
     foo = checkInputMulti(Xl, Yl, Cxl, Eyl)
     stopifnot(length(features)==2)
     normalizationX = match.arg(normalizationX);normalizationY = match.arg(normalizationY)
@@ -46,4 +54,12 @@ plotPairMulti = function(Xl, Yl, Cxl, Eyl, features, normalizationX = c("none", 
         xlab("Dimension 1") + ylab("Dimension 2") + coord_fixed() +
         theme(axis.text = element_blank(), axis.ticks = element_blank())
 }
-
+plotTopResults = function(results, ...){
+    if(results$multiplicity == "single"){
+        plotTopResultsSingle(results, ...)
+    } else if(results$multiplicity == "multi"){
+            plotTopResultsMulti(results, ...)
+    } else {
+        stop("Multiplicity tag unknown")
+    }
+}

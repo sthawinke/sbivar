@@ -37,6 +37,7 @@ sbivarMulti(
 A list containing
 \item{estimates}{The estimated measures of association}
 \item{method}{The method used to find these estimates}
+\item{multiplicity}{"multi", a flag for the type of analysis}
 }
 \description{
 This function calculates measures of spatial association for every image.

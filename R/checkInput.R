@@ -69,11 +69,3 @@ checkInputMulti = function(Xl, Yl, Cxl, Eyl){
     }
 
 }
-#' Is there any double underscore in the character vector?
-#'
-#' @param charVec The character vector
-#'
-#' @returns A boolean
-findDoubleUnderScore = function(charVec){
-    any(grepl("__", charVec))
-}

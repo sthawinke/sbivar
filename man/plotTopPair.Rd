@@ -95,7 +95,7 @@ plotPairSingle(X, Y, Cx, Ey, features = c("X1", "Y1"))
 ### Multi image
 example(fitLinModels, "sbivar")
 # Plot the feature pair with the most significant signal for a certain parameter,
-here "cofactor"
+#here "cofactor"
 plotTopPair(resGams, Xl, Yl, Cxl, Eyl, parameter = "cofactor")
 # Plot an arbitrary feature pair
 plotPairMulti(Xl, Yl, Cxl, Eyl, features = c("X1", "Y1"))

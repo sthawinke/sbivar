@@ -282,11 +282,25 @@ head(multiMoranLmmsResSE$Intercept)
 
 As expected, this yields the same result as before with list input.
 
-Another option is to provide only two _SpatialExperiment_ objects, but provide a _sample_id_ argument that identifies the different images:
+Another option is to provide only two _SpatialExperiment_ objects, but provide a _sample_id_ argument that identifies the different images. For illustration, we construct such objects from the Vicari data.
 
 ```{r SEidentifier}
-
+SEsingleStx = SpatialExperiment(assays = list("transcripts" = t(Reduce(Vicari$TranscriptOutcomes, f = rbind))), spatialCoords = Reduce(Vicari$TranscriptCoords, f = rbind), 
+                                colData = data.frame("sample_id" = rep(names(Vicari$TranscriptOutcomes), times = vapply(Vicari$TranscriptOutcomes, FUN.VALUE = 0L, nrow))))
+SEsingleMet = SpatialExperiment(assays = list("metabolites" = t(Reduce(Vicari$MetaboliteOutcomes, f = rbind))), spatialCoords = Reduce(Vicari$MetaboliteCoords, f = rbind), 
+                                colData = data.frame("sample_id" = rep(names(Vicari$MetaboliteOutcomes), times = vapply(Vicari$MetaboliteOutcomes, FUN.VALUE = 0L, nrow))))
 ```
+
+And run the same analysis:
+
+```{r singleSEanalysis}
+sbivarMultiSingleSE = sbivar(SEsingleStx, SEsingleMet, sample_id_x = "sample_id",
+                             assayX = "transcripts", assayY = "metabolites", method = "Correlation")
+multiMoranLmmsSingleSE = fitLinModels(sbivarMultiSingleSE, design, Formula = ~ (1|mouse))
+multiMoranLmmsResSingleSE = extractResultsMulti(multiMoranLmmsSingleSE, design)
+head(multiMoranLmmsResSingleSE$Intercept)
+```
+
 
 # Troubleshooting
 

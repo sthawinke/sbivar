@@ -167,6 +167,6 @@ assayT = function(x, assayName){
 #' @returns A list of SpatialExperiment objects
 #' @importFrom SummarizedExperiment colData
 splitSpatialExperiment = function(spe, sample_id){
-    spe_list <- split(colnames(spe), colData(spe)[,sample_id])
+    spe_list <- split(seq_len(ncol(spe)), colData(spe)[,sample_id])
     lapply(spe_list, function(cols) spe[, cols])
 }

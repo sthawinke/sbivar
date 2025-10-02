@@ -25,14 +25,14 @@
 #' ### Multi image
 #' example(fitLinModels, "sbivar")
 #' # Plot the feature pair with the most significant signal for a certain parameter,
-#' here "cofactor"
+#' #here "cofactor"
 #' plotTopPair(resGams, Xl, Yl, Cxl, Eyl, parameter = "cofactor")
 #' # Plot an arbitrary feature pair
 #' plotPairMulti(Xl, Yl, Cxl, Eyl, features = c("X1", "Y1"))
 plotTopPair = function(results, rank = 1, parameter = "Intercept", ...){
     stopifnot(is.numeric(rank))
     if(results$multiplicity == "single"){
-        topFeats = sund(rownames(results$results)[rank])
+        topFeats = sund(rownames(results$result)[rank])
         plotPairSingle(X = X, Y = Y, features = topFeats, Cx = Cx, Ey = Ey,
                        assayX = results$assayX, assayY = results$assayY, ...)
     } else if(results$multiplicity == "multi"){

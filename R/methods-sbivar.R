@@ -13,18 +13,17 @@ setMethod("sbivar", "matrix", function(X, Y, Cx, Ey, ...) {
 #' @export
 #' @inheritParams sbivarMulti
 #' @importFrom SpatialExperiment spatialCoords
-#' @importFrom SummarizedExperiment assay
 setMethod("sbivar", "list", function(X, Y, Cx, Ey, assayX = NULL, assayY = NULL, ...) {
     if(!is.list(Y)){
         stop("Since X is a list, Y must be so too!")
     }
     if(all(vapply(X, FUN.VALUE = TRUE, inherits, "SpatialExperiment"))){
         Cx = lapply(X, spatialCoords)
-        X = lapply(X, function(y) assay(y, assayX))
+        X = lapply(X, function(y) assayT(y, assayX))
     }
     if(all(vapply(Y, FUN.VALUE = TRUE, inherits, "SpatialExperiment"))){
         Ey = lapply(Y, spatialCoords)
-        Y = lapply(Y, function(y) assay(y, assayY))
+        Y = lapply(Y, function(y) assayT(y, assayY))
     }
     c(sbivarMulti(X, Y, Cx, Ey, ...), "assayX" = assayX, "assayY" = assayY)
 })
@@ -35,14 +34,13 @@ setMethod("sbivar", "list", function(X, Y, Cx, Ey, assayX = NULL, assayY = NULL,
 #' @rdname sbivar
 #' @export
 #' @importFrom SpatialExperiment spatialCoords
-#' @importFrom SummarizedExperiment assay
 setMethod("sbivar", "SpatialExperiment", function(X, Y, assayX, assayY, sample_id_x,
                                                   sample_id_y = sample_id_x, ...) {
     if(!inherits(Y, "SpatialExperiment")){
         stop("Since X is a SpatialExperiment object, Y must be so too!")
     }
-    out = if(missing(sample_id)){
-        c(sbivar(t(assay(X, assayX)), t(assay(Y, assayY)), spatialCoords(X), spatialCoords(Y)),
+    out = if(missing(sample_id_x)){
+        c(sbivar(assayT(X, assayX), assayT(Y, assayY), spatialCoords(X), spatialCoords(Y)),
           "assayX" = assayX, "assayY" = assayY, ...)
     } else {
         sbivar(splitSpatialExperiment(X, sample_id_x),

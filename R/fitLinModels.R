@@ -39,7 +39,10 @@ fitLinModels = function(measures, design, Formula, Control = lmerControl(
     check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
     check.conv.singular = .makeCC(action = "ignore", tol = formals(isSingular)$tol),
     check.conv.hess = .makeCC(action = "ignore", tol = 1e-06))){
-    stopifnot(names(measures) == c("estimates", "method"))
+    stopifnot(all(c("estimates", "method", "multiplicity") %in% names(measures)))
+    if(measures$multiplicity == "single"){
+        stop("Fitting linear models only makes sense for multi-image analyses!")
+    }
     method = measures$method;measures = measures$estimates
     stopifnot(length(measures)==nrow(design), is.data.frame(design),
               is.character(Formula) || is(Formula, "formula"))

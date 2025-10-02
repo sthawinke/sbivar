@@ -37,11 +37,11 @@ if(.Platform$OS.type == "unix"){
     register(DoparParam(), default = TRUE)
 }
 #register(SerialParam()) # Switch on when mapping test coverage
-resModtTest = sbivarSingle(X, Y, Cx, Ey, method = "Modified")
-resGAMs = sbivarSingle(X, Y, Cx, Ey, method = "GAM")
-estGAMs = sbivarMulti(Xl, Yl, Cxl, Eyl, method = "GAMs")
-estMoran = sbivarMulti(Xl, Yl, Cxl, Eyl, method = "Moran", wo = "nn")
-estCorrelations = sbivarMulti(Xl, Yl, Cxl, Eyl, method = "Correlation")
+resModtTest = sbivar(X, Y, Cx, Ey, method = "Modified")
+resGAMs = sbivar(X, Y, Cx, Ey, method = "GAM")
+estGAMs = sbivar(Xl, Yl, Cxl, Eyl, method = "GAMs")
+estMoran = sbivar(Xl, Yl, Cxl, Eyl, method = "Moran", wo = "nn")
+estCorrelations = sbivar(Xl, Yl, Cxl, Eyl, method = "Correlation")
 multiFitGams = fitLinModels(estGAMs, design = toyDesign, Formula = out ~ covariate + cofactor + (1|group))
 multiFitMoran = fitLinModels(estMoran, design = toyDesign, Formula = out ~ covariate + cofactor)
 multiFit = fitLinModels(estCorrelations, design = toyDesign, Formula = out ~ covariate + (1|group))

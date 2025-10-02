@@ -27,6 +27,10 @@ checkInputSingle = function(X, Y, Cx, Ey){
             stop("Coordinate matrices must be of dimension 2!")
         }
     }
+    if(findDoubleUnderScore(c(colnames(X), colnames(Y)))){
+        stop("Double underscores found in feature names. Please change the names,
+             as the double underscore is used in this package to separate feature pairs!")
+    }
 }
 checkInputMulti = function(Xl, Yl, Cxl, Eyl){
     if(length(Xl)!=length(Cxl)){
@@ -59,5 +63,17 @@ checkInputMulti = function(Xl, Yl, Cxl, Eyl){
             stop("Eyl must be named identically to Xl, Yl and Cxl")
         }
     }
+    if(findDoubleUnderScore(unlist(lapply(c(Xl, Yl), colnames)))){
+        stop("Double underscores found in feature names. Please change the names,
+             as the double underscore is used in this package to separate feature pairs!")
+    }
 
+}
+#' Is there any double underscore in the character vector?
+#'
+#' @param charVec The character vector
+#'
+#' @returns A boolean
+findDoubleUnderScore = function(charVec){
+    any(grepl("__", charVec))
 }

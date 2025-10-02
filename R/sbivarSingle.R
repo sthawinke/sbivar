@@ -20,9 +20,11 @@
 #' For GAMs, usually no normalization is needed, as the non-gaussianity is taken care of by
 #' the outcome distribution, offset and link functions. Currently, identity, inverse and log-link are implemented.
 #'
-#' @returns A matrix which contains at least a p-values ("pVal") and a Benjamini-Hochberg adjusted p-value ("pAdj"),
-#' sorted by increasing p-value.
-#' @export
+#' @returns A list with at least the following components
+#' \item{result}{A matrix which contains at least a p-values ("pVal") and a Benjamini-Hochberg adjusted p-value ("pAdj"),
+#' sorted by increasing p-value.}
+#' \item{families}{As provided}
+#' \item{method}{As provided}
 #' @importFrom stats p.adjust
 #' @importFrom methods is
 #' @importFrom nlme corGaus lmeControl
@@ -31,17 +33,6 @@
 #' with rownames "mean", "nugget", "range" and "sigma", and column names as in X and Y.
 #' This argument allows to pass parameters of the Gaussian processes estimated with other software
 #' to perform the score test.
-#' @examples
-#' n=7e1;m=9e1;p=3;k=4
-#' X = matrix(rnorm(n*p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
-#' Y = matrix(rnorm(m*k), m, k, dimnames = list(NULL, paste0("Y", seq_len(k))))
-#' Cx = matrix(runif(n*2), n, 2)
-#' Ey = matrix(runif(m*2), m, 2)
-#' colnames(Cx) = colnames(Ey) = c("x", "y")
-#' resGAMs = sbivarSingle(X, Y, Cx, Ey, method = "GAMs")
-#' resModtTest = sbivarSingle(X, Y, Cx, Ey, method = "Modified")
-#' resModtTestJoint = sbivarSingle(X, Y[seq_len(nrow(X)),], Cx, method = "Modified")
-#' resModtGPs = sbivarSingle(X, Y, Cx, Ey, method = "GPs")
 sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs"),
                   n_points_grid = 6e2, mapToFinest = FALSE, families = list("X" = gaussian(), "Y" = gaussian()),
                   GPmethod = c("REML", "ML", "gpytorch"), device = c("cpu", "cuda"), verbose = TRUE,
@@ -106,6 +97,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs
                      jointCoordinates = jointCoordinates)
     }
     out = cbind(out, "pAdj" = p.adjust(out[, "pVal"], method = "BH"))
-    out[order(out[, "pVal"]),]
+    result = out[order(out[, "pVal"]),]
+    list("result" = result, "families" = families, "method" = method)
 }
 

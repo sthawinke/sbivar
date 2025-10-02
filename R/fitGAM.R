@@ -42,7 +42,8 @@ fitManyGAMs = function(mat, coord, family = gaussian(), modality, ...){
         fitGAM(df, outcome = cn, offset = offset, family = family, ...)
     })
     if(!any(id <- vapply(fits, FUN.VALUE = TRUE, is, "gam"))){
-        stop("All GAM fits failed in modality ", modality, ", please investigate cause")
+        stop("All GAM fits failed in modality ", modality,
+             ", please investigate cause! First error message:\n", fits[[1]])
     }
     return(fits[id])
 }

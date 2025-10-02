@@ -11,28 +11,9 @@
 #' @returns A list containing
 #' \item{estimates}{The estimated measures of association}
 #' \item{method}{The method used to find these estimates}
-#' @export
 #' @seealso \link{fitLinModels}
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
 #' @inheritParams sbivarSingle
-#' @examples
-#' n=1e2;m=8e1;p=3;k=4
-#' ims = 6
-#' Xl = lapply(selfName(seq_len(ims)), function(i){n = rpois(1, n)
-#'  matrix(rnorm(n*p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
-#' })
-#' Yl = lapply(selfName(seq_len(ims)), function(i){m = rpois(1, m)
-#'  matrix(rnorm(m*k), m, k, dimnames = list(NULL, paste0("Y", seq_len(k))))
-#' })
-#' Cxl = lapply(Xl, function(x){n = nrow(x)
-#'     matrix(runif(n*2), n, 2, dimnames = list(NULL, c("x", "y")))
-#' })
-#' Eyl = lapply(Yl, function(y){m = nrow(y)
-#'     matrix(runif(m*2), m, 2, dimnames = list(NULL, c("x", "y")))
-#' })
-#' estGAMs = sbivarMulti(Xl, Yl, Cxl, Eyl, method = "GAMs")
-#' estMoran = sbivarMulti(Xl, Yl, Cxl, Eyl, method = "Moran")
-#' estCorrelations = sbivarMulti(Xl, Yl, Cxl, Eyl, method = "Correlation")
 sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
                        method = c("GAMs", "Correlation", "Moran's I"), mapToFinest = FALSE,
                         wo = c("distance", "nn"), numNN = 8, n_points_grid = 6e2, verbose = TRUE){
@@ -41,7 +22,7 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
     stopifnot(is.numeric(numNN), is.numeric(n_points_grid), is.character(wo), is.logical(verbose),
               is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family")))
     if(verbose){
-        message("Performing analysis on a multiple images jointly\n")
+        message("Performing analysis on multiple images jointly\n")
     }
     foo = checkInputMulti(Xl, Yl, Cxl, Eyl)
     jointCoordinates <- missing(Eyl)

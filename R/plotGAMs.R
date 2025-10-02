@@ -84,14 +84,13 @@ plotGAMsFromMatrix = function(X, Y, features, Cx, Ey,
 #' @rdname plotGAMs
 #' @order 2
 plotGAMsTopResults = function(resultsSingle, X, Y, Cx, Ey, ...){
-    topFeats = sund(rownames(resultsSingle)[1])
+    topFeats = sund(rownames(resultsSingle$results)[1])
     plotGAMsFromMatrix(X = X, Y = Y, features = topFeats, Cx = Cx, Ey = Ey, ...)
 }
 #' Make a list of offsets
 #'
 #' @param X The data matrix
 #' @param family The distribution family
-#'
 #' @returns A list of length two with offsets
 makeOffset = function(X, family){
     out = if(family$family != "gaussian"){

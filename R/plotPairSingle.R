@@ -23,8 +23,7 @@
 #' # Plot an arbitrary feature pair
 #' plotPairSingle(X, Y, Cx, Ey, features = c("X1", "Y1"))
 plotTopResultsSingle = function(resultsSingle, X, Y, Cx, Ey, ...){
-    topPair = rownames(resultsSingle)[1]
-    topFeats = sund(topPair)
+    topFeats = sund(rownames(resultsSingle$results)[1])
     plotPairSingle(X = X, Y = Y, features = topFeats, Cx = Cx, Ey = Ey, ...)
 
 }

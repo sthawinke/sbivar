@@ -39,7 +39,8 @@ plotPairSingleVectors(
   Cx,
   Ey,
   size = 1.25,
-  modalityNames = c("Modality X", "Modality Y")
+  modalityNames = c("Modality X", "Modality Y"),
+  ...
 )
 }
 \arguments{

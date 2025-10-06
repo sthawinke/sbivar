@@ -33,13 +33,13 @@ plotTopPair = function(results, rank = 1, parameter = "Intercept", ...){
     stopifnot(is.numeric(rank))
     if(results$multiplicity == "single"){
         topFeats = sund(rownames(results$result)[rank])
-        plotPairSingle(X = X, Y = Y, features = topFeats, Cx = Cx, Ey = Ey,
-                       assayX = results$assayX, assayY = results$assayY, ...)
+        plotPairSingle(features = topFeats, assayX = results$assayX,
+                       assayY = results$assayY, ...)
     } else if(results$multiplicity == "multi"){
         stopifnot(parameter %in% names(results$result))
         topFeats = sund(rownames(results$result)[[parameter]][rank])
-plotPairMulti(Xl, Yl, Cxl, Eyl, features = topFeats,
-              assayX = results$assayX, assayY = results$assayY, ...)
+        plotPairMulti(features = topFeats, assayX = results$assayX,
+              assayY = results$assayY, ...)
     } else {
         stop("Multiplicity tag unknown")
     }
@@ -112,7 +112,7 @@ plotPairSingle = function(X, Y, Cx, Ey, features, normalizationX = c("none", "lo
 #' plotPairSingle(), the feature names are used.
 #' @order 4
 plotPairSingleVectors = function(x, y, Cx, Ey, size = 1.25,
-                                 modalityNames = c("Modality X", "Modality Y")){
+                                 modalityNames = c("Modality X", "Modality Y"), ... ){
     theme_set(theme_bw())
     stopifnot(length(x)==nrow(Cx), length(y)==nrow(Ey), ncol(Ey)==2, ncol(Cx)==2)
     coordMat = rbind(Cx, Ey);colnames(coordMat) = c("x", "y")

@@ -10,6 +10,9 @@
 wrapGPs = function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, device,
                    GPmethod, training_iter, corStruct, optControl){
     if(missing(gpParams)){
+        if(GPmethod == "gpytorch"){
+            stop("Interface with python not yet implemented, set GP method to 'REML' or 'ML'")
+        }
         gpsx = fitManyGPs(mat = X, coord = Cx,
                           device = device, GPmethod = GPmethod,
                           training_iter = training_iter, corStruct = corStruct,

@@ -133,20 +133,21 @@ gamRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
 Have a look at the results, which are sorted by increasing p-value:
 
 ```{r}
-head(gamRes)
+head(gamRes$result)
 ```
 
 Plot the most significantly spatially associated gene-metabolite pair `r gpGam <- rownames(gamRes)[1]`:
 
 ```{r, fig.height = 5}
-plotTopPair(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
+plotTopPair(gamRes, X = singleStx, Y = singleMet, Cx = singleStxCoords, 
+            Ey = singleMetCoords)
 ```
 
 We see a clear negative relationship. We can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes[gpGam, "corxy"], 3)`:
 
 ```{r}
-plotGAMsTopResults(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords, 
-                   families = FamiliesViari)
+plotGAMsTopResults(gamRes, X = singleStx, Y = singleMet, Ex = singleStxCoords, 
+                   Ey = singleMetCoords, families = FamiliesViari)
 ```
 
 Another available analysis is the modified t-test by @Clifford1989 after sample matching:

@@ -58,6 +58,7 @@ plotGAMs = function(x, y, Cx, Ey, newGrid, offsets = list(), scaleFun = "scaleMi
     ggplot(gridMolt, aes(x, y, fill = Value)) +
         geom_raster() + coord_fixed() +
         facet_grid( ~ feature) +
+        theme(axis.text.x = element_text(angle = 90)) +
         scale_fill_viridis_c(option = "H", name = "") +
         if(addTitle)
             labs(title = paste("Spline surfaces, and contributions to correlation estimate", round(corEst, 3)))

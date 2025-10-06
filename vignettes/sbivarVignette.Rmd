@@ -152,7 +152,7 @@ plotGAMsTopResults(gamRes, X = singleStx, Y = singleMet, Cx = singleStxCoords,
 
 Another available analysis is the modified t-test by @Clifford1989 after sample matching:
 
-```{r}
+```{r civModT}
 modTRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, 
                       method = "Modified t-test")
 head(modTRes$result)
@@ -169,7 +169,7 @@ head(gpRes$result)
 
 Next, we analyse the six images jointly. Let's look at their names:
 
-```{r}
+```{r namesVic}
 names(Vicari$TranscriptOutcomes)
 ```
 
@@ -217,7 +217,7 @@ The _SpatialExperiment_ and _MultiAssayExperiment_ classes are used in Bioconduc
 
 For illustration, we first construct _SpatialExperiment_ objects for the single-image case:
 
-```{r SEConstruct}
+```{r SEConstruct, message=FALSE}
 library(SpatialExperiment, quietly = TRUE)
 StxSE = SpatialExperiment(assays = list("transcripts" = t(singleStx)), spatialCoords = singleStxCoords)
 MetSE = SpatialExperiment(assays = list("metabolites" = t(singleMet)), spatialCoords = singleMetCoords)
@@ -250,12 +250,12 @@ MAE = MultiAssayExperiment(experiments = list("transcripts" = StxSE, "metabolite
 MAE
 ```
 
-We run a similar analysis based on Pearson correlation, now providing the experiment names on top of the assay names (since a _MultiAssayExperiment_ can contain more than two modalities):
+We run a the same analysis, now providing the experiment names on top of the assay names (since a _MultiAssayExperiment_ can contain more than two modalities):
 
 ```{r analyseMAE}
 resMAE = sbivar(MAE, assayX = "transcripts", assayY = "metabolites", 
-                experimentsX = "transcripts", experimentY = "metabolites", 
-                families = FamiliesViari, method = "Correlation")
+                experimentX = "transcripts", experimentY = "metabolites", 
+                families = FamiliesViari, method = "GAM")
 ```
 
 ### Multi-image

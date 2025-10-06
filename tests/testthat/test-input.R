@@ -1,13 +1,13 @@
 context("Unit tests for input errors")
 test_that("SbivarSingle works for correct input", {
-    expect_is(sbivar(X, Y, Cx, Ey, method = "GAMs"), "matrix")
-    expect_identical(colnames(sbivar(X, Y, Cx, Ey, method = "Modified")),
+    sbiRes = sbivar(X, Y, Cx, Ey, method = "GAMs")
+    expect_is(sbiRes, "list")
+    expect_message(sbiResMod <- sbivar(X, X, Cx, Cx, method = "Modified"))
+    expect_identical(colnames(sbiResMod$result),
                      c("Correlation", "Effective sample size", "pVal", "pAdj"))
-    expect_false(is.unsorted(sbivar(X, Y[seq_len(nrow(X)),], Cx,
-                                          method = "Modified")[, "pVal"]))
-    expect_message(sbivar(X, X, Cx, Cx, method = "Modified"))
+    expect_false(is.unsorted(sbiRes$result[, "pVal"]))
     expect_silent(sbivar(X, Y, Cx, Ey, method = "GAMs", verbose = FALSE))
-    expect_is(sbivar(X, Y, Cx, Ey, method = "GPs"), "matrix")
+    expect_is(sbivar(X, Y, Cx, Ey, method = "GPs"), "list")
 })
 test_that("SbivarSingle throws errors for incorrect input", {
     expect_error(sbivar(X, Y, Cx, Ey, method = "Moran's I"))
@@ -27,7 +27,7 @@ test_that("SbivarSingle throws errors for incorrect input", {
 test_that("sbivarMulti works for correct input", {
     gamList <- sbivar(Xl, Yl, Cxl, Eyl, method = "GAMs")
     expect_is(gamList, "list")
-    expect_identical(names(gamList), c("estimates", "method"))
+    expect_identical(names(gamList), c("estimates", "method", "multiplicity", "families"))
     expect_is(gamList$estimates[[1]], "matrix")
     expect_is(sbivar(Xl, Yl, Cxl, Eyl, method = "Moran's I"), "list")
     expect_is(sbivar(Xl, Yl, Cxl, Eyl, method = "Correlation"), "list")
@@ -58,9 +58,9 @@ test_that("Sbivar works on BioConductor objects SpatialExperiment and MultiAssay
                                   spatialCoords = prot_coords)
     # --- Combine into MultiAssayExperiment ---
     mae <- MultiAssayExperiment(experiments = list(RNA = spe_rna, Protein = spe_prot))
-    expect_is(sbivar(mae, experiments = c("RNA", "Protein"), assayX = "counts",
-             assayY = "counts", families = list("X" = mgcv::nb(), "Y" = mgcv::nb())), "matrix")
+    expect_is(sbivar(mae, experimentX = "RNA", experimentY = "Protein", assayX = "counts",
+             assayY = "counts", families = list("X" = mgcv::nb(), "Y" = mgcv::nb())), "list")
     #Provide separate SpatialExperiment objects
     expect_is(sbivar(mae[["RNA"]], mae[["Protein"]], assayX = "counts",
-            assayY = "counts", families = list("X" = mgcv::nb(), "Y" = mgcv::nb())), "matrix")
+            assayY = "counts", families = list("X" = mgcv::nb(), "Y" = mgcv::nb())), "list")
 })

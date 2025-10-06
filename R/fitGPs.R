@@ -5,11 +5,8 @@
 #' @note Fitting GPs can be computation and memory intensive!
 #' @param x outcome vector
 #' @param coord Coordinate matrix
-#' @param device Device to fit the GPs on. Defaults to "cpu",
-#' one can also use "gpu" via the python package gpytorch if a GPU is available
 #' @param GPmethod The method by which to fit the Gaussian processes,
 #' passed onto \link[nlme]{gls} as "method" if it equals "REML" or "ML".
-#' @param training_iter Number of training iterations in gpytorch
 #' @param corStruct The correlation object, see \link[nlme]{corStruct}.
 #' At this point, only \link[nlme]{corGaus} is accepted.
 #' @param optControl List of control values, see \link[nlme]{glsControl}.
@@ -22,20 +19,15 @@
 #' @returns A vector of length 4 with components range, nugget, sigma and mean
 #' @importFrom stats sigma coef
 #' @importFrom nlme gls
-fitGP = function(x, coord, GPmethod, device, training_iter, corStruct, optControl){
-    if(GPmethod == "gpytorch"){
-        pyFit = fitGPsPython(x, coord, training_iter = training_iter, device = device)
-        return(unlist(pyFit$Pars))
-    } else {
-        xModGls <- do.call(nlme::gls, args = list("model" = formula("out ~ 1"),
-                            "data" = data.frame("out" = x, coord),
-                            "method" = GPmethod, "correlation" = corStruct,
-                            "control" = optControl))
-        xPars = c(coef(xModGls$modelStruct$corStruct, unconstrained = FALSE),
-                  sigma(xModGls))
-        names(xPars) = c("range", "nugget", "sigma")
-        c(xPars, "mean" = unname(coef(xModGls)[1]))
-    }
+fitGP = function(x, coord, GPmethod, corStruct, optControl){
+    xModGls <- do.call(nlme::gls, args = list("model" = formula("out ~ 1"),
+                        "data" = data.frame("out" = x, coord),
+                        "method" = GPmethod, "correlation" = corStruct,
+                        "control" = optControl))
+    xPars = c(coef(xModGls$modelStruct$corStruct, unconstrained = FALSE),
+              sigma(xModGls))
+    names(xPars) = c("range", "nugget", "sigma")
+    c(xPars, "mean" = unname(coef(xModGls)[1]))
 }
 #' A wrapper to fit GPs on all columns of a matrix
 #'

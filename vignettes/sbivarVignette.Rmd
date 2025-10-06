@@ -47,6 +47,12 @@ library(devtools)
 install_github("sthawinke/sbivar")
 ```
 
+The _sbivar_ package depends on the _smoppix_ package of the same author of at leat version 1.1.8, which can be installed as:
+
+```{r installSmoppix, eval = FALSE}
+install_github("sthawinke/moppix")
+```
+
 Once installed, we can load the package:
 
 ```{r load}

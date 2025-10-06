@@ -86,6 +86,7 @@ plotGAMsFromMatrix = function(X, Y, features, Cx, Ey,
 #' @order 2
 #' @inheritParams plotTopPair
 plotGAMsTopResults = function(resultsSingle, X, Y, Cx, Ey, topRank = 1, ...){
+    stopifnot(is.numeric(topRank))
     topFeats = sund(rownames(resultsSingle$result)[topRank])
     plotGAMsFromMatrix(X = X, Y = Y, features = topFeats, Cx = Cx, Ey = Ey, ...)
 }

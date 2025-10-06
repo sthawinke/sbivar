@@ -7,20 +7,13 @@
 #' @returns A named list of results
 #' @importFrom smoppix loadBalanceBplapply
 #' @importFrom BiocParallel bplapply
-wrapGPs = function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, device,
+wrapGPs = function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants,
                    GPmethod, training_iter, corStruct, optControl){
     if(missing(gpParams)){
-        if(GPmethod == "gpytorch"){
-            stop("Interface with python not yet implemented, set GP method to 'REML' or 'ML'")
-        }
-        gpsx = fitManyGPs(mat = X, coord = Cx,
-                          device = device, GPmethod = GPmethod,
-                          training_iter = training_iter, corStruct = corStruct,
-                          optControl = optControl)
-        gpsy = fitManyGPs(mat = Y, coord = Ey,
-                          device = device, GPmethod = GPmethod,
-                          training_iter = training_iter, corStruct = corStruct,
-                          optControl = optControl)
+        gpsx = fitManyGPs(mat = X, coord = Cx, GPmethod = GPmethod,
+                          corStruct = corStruct, optControl = optControl)
+        gpsy = fitManyGPs(mat = Y, coord = Ey, GPmethod = GPmethod,
+                          corStruct = corStruct, optControl = optControl)
     } else {
         #Extract fits
         gpsx = gpParams$X;gpsy = gpParams$Y

@@ -4,7 +4,8 @@
 #' To maintain interpretability of the intercept, continuous fixed effect variables are centered,
 #' and sum coding is used for the categorical ones.
 #'
-#' @param measures A list of measures of bivariate spatial association
+#' @param result A result with the measures of bivariate spatial association,
+#' from a call to the \link{sbivar} function with multiple images
 #' @param design A design dataframe
 #' @param Formula A formula for the linear model to be fitted, can contain random effects.
 #' @param Control A control list for lmerTest::lmer

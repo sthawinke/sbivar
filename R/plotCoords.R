@@ -17,10 +17,9 @@
 #' example(sbivar, "sbivar")
 #' plotCoords(Cx, Ey)
 #' #For multiple coordinates
-#' example(sbivarMulti, "sbivar")
 #' par(mfrow = c(2,3))
-#' foo = lapply(names(Cxl), function(nam){
-#'     plotCoords(Cxl[[nam]], Eyl[[nam]], main = nam)
+#' foo = lapply(names(Vicari$TranscriptCoords), function(nam){
+#'     plotCoords(Vicari$TranscriptCoords[[nam]], Vicari$MetaboliteCoords[[nam]], main = nam)
 #' })
 #' par(mfrow=c(1,1))
 #' @importFrom graphics points

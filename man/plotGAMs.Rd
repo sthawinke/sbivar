@@ -78,7 +78,7 @@ Both spline surfaces are scaled to the [-1,1] range, the same as
 the correlation has naturally, for legibility.
 }
 \examples{
-example(sbivarSingle, "sbivar")
+example(sbivar, "sbivar")
 plotGAMs(X[, 1], Y[, 1], Cx, Ey)
 plotGAMsFromMatrix(X, Y, features = c("X1", "Y1"), Cx = Cx, Ey = Ey)
 plotGAMsTopResults(resGAMs, X, Y, Cx = Cx, Ey = Ey)

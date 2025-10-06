@@ -17,7 +17,7 @@
 #'  not necessarily the same as the one used for the analysis.
 #' @examples
 #' ### Single image
-#' example(sbivarSingle, "sbivar")
+#' example(sbivar, "sbivar")
 #' # Plot the feature pair with the most significant signal
 #' plotTopPair(resModtTest, X, Y, Cx, Ey)
 #' # Plot an arbitrary feature pair
@@ -29,7 +29,7 @@
 #' plotTopPair(resGams, Xl, Yl, Cxl, Eyl, parameter = "cofactor")
 #' # Plot an arbitrary feature pair
 #' plotPairMulti(Xl, Yl, Cxl, Eyl, features = c("X1", "Y1"))
-plotTopPair = function(results, topRank = 1, parameter = "Intercept", ...){
+plotTopPair = function(results, ..., topRank = 1, parameter = "Intercept"){
     stopifnot(is.numeric(topRank))
     if(results$multiplicity == "single"){
         topFeats = sund(rownames(results$result)[topRank])

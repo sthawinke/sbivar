@@ -24,7 +24,7 @@
 #' @export
 #'
 #' @examples
-#' example(sbivarSingle, "sbivar")
+#' example(sbivar, "sbivar")
 #' plotGAMs(X[, 1], Y[, 1], Cx, Ey)
 #' plotGAMsFromMatrix(X, Y, features = c("X1", "Y1"), Cx = Cx, Ey = Ey)
 #' plotGAMsTopResults(resGAMs, X, Y, Cx = Cx, Ey = Ey)

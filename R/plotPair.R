@@ -6,7 +6,7 @@
 #' @param results The results list, from call to \link{extractResultsMulti}
 #' @param topRank An integer, the feature pair with the rank-th smallest p-value is plotted
 #' @param ... passed onto lower level functions
-#' @inheritParams sbivar
+#' @inheritParams sbivarMulti
 #' @inheritParams plotPairSingle
 #' @seealso \link{extractResultsMulti}, \link{fitLinModels}
 #' @return A ggplot object

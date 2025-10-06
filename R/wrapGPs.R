@@ -8,7 +8,7 @@
 #' @importFrom smoppix loadBalanceBplapply
 #' @importFrom BiocParallel bplapply
 wrapGPs = function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants,
-                   GPmethod, training_iter, corStruct, optControl){
+                   GPmethod, corStruct, optControl){
     if(missing(gpParams)){
         gpsx = fitManyGPs(mat = X, coord = Cx, GPmethod = GPmethod,
                           corStruct = corStruct, optControl = optControl)

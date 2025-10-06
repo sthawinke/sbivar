@@ -55,7 +55,7 @@ The default is the intercept, i.e. the overall effect.}
 
 \item{...}{passed onto lower level functions}
 
-\item{X}{the input object, see methods('sbivar')}
+\item{X, Y}{Matrices of omics measurements}
 
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
@@ -64,8 +64,9 @@ The default is the intercept, i.e. the overall effect.}
 \item{normalizationX, normalizationY}{Character strings, indicating what normalization is required
 for X and Y matrices, respectively, before plotting, see details.}
 
-\item{assayX, assayY}{Assay names to be used in the analysis,
-see \link[SummarizedExperiment]{assay}}
+\item{Xl, Yl}{Lists of matrices of omics measurements}
+
+\item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
 \item{size}{Point size}
 

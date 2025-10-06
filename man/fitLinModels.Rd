@@ -52,9 +52,9 @@ but it will be overridden by "out" for downstream analysis
 example(sbivar, "sbivar")
 mouse = substr(names(Vicari$TranscriptOutcomes), 1, 10)
 design = data.frame("mouse" = mouse) # The design matrix
-multiMoranLmms = fitLinModels(multiMoranRes, design, Formula = ~ (1|mouse))
+multiMoranLmms = fitLinModels(VicariRes, design, Formula = ~ (1|mouse))
 #Extract the results
-resMoran = extractResultsMulti(multiMoranLmms, design = toyDesign)
+resMoran = extractResultsMulti(multiMoranLmms, design = design)
 head(resMoran$result$Intercept)
 }
 \seealso{

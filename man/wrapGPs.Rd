@@ -13,7 +13,6 @@ wrapGPs(
   numLscAlts,
   Quants,
   GPmethod,
-  training_iter,
   corStruct,
   optControl
 )

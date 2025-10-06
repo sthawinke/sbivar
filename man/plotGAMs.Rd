@@ -21,7 +21,7 @@ plotGAMs(
   ...
 )
 
-plotGAMsTopResults(resultsSingle, X, Y, Cx, Ey, ...)
+plotGAMsTopResults(resultsSingle, X, Y, Cx, Ey, topRank = 1, ...)
 
 plotGAMsFromMatrix(
   X,
@@ -59,6 +59,8 @@ evaluated on.}
 \item{resultsSingle}{Result of a call to \link{sbivarSingle}}
 
 \item{X, Y}{Matrices of omics measurements}
+
+\item{topRank}{An integer, the feature pair with the rank-th smallest p-value is plotted}
 }
 \value{
 A ggplot object

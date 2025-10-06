@@ -83,8 +83,9 @@ plotGAMsFromMatrix = function(X, Y, features, Cx, Ey,
 #' @export
 #' @rdname plotGAMs
 #' @order 2
-plotGAMsTopResults = function(resultsSingle, X, Y, Cx, Ey, ...){
-    topFeats = sund(rownames(resultsSingle$results)[1])
+#' @inheritParams plotTopPair
+plotGAMsTopResults = function(resultsSingle, X, Y, Cx, Ey, topRank = 1, ...){
+    topFeats = sund(rownames(resultsSingle$result)[topRank])
     plotGAMsFromMatrix(X = X, Y = Y, features = topFeats, Cx = Cx, Ey = Ey, ...)
 }
 #' Make a list of offsets

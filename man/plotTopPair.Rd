@@ -7,7 +7,7 @@
 \alias{plotPairSingleVectors}
 \title{Plot a top feature pair from the analysis, or an arbitrary pair for a series of images}
 \usage{
-plotTopPair(results, rank = 1, parameter = "Intercept", ...)
+plotTopPair(results, topRank = 1, parameter = "Intercept", ...)
 
 plotPairSingle(
   X,
@@ -17,6 +17,8 @@ plotPairSingle(
   features,
   normalizationX = c("none", "log"),
   normalizationY = c("none", "log"),
+  assayX,
+  assayY,
   ...
 )
 
@@ -46,7 +48,7 @@ plotPairSingleVectors(
 \arguments{
 \item{results}{Results returned by \link{sbivarSingle}}
 
-\item{rank}{An integer, the feature pair with the rank-th smallest p-value is plotted}
+\item{topRank}{An integer, the feature pair with the rank-th smallest p-value is plotted}
 
 \item{parameter}{The linear model parameter used to find the feature with the strongest effect.
 The default is the intercept, i.e. the overall effect.}

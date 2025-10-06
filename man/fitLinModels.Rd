@@ -6,7 +6,7 @@
 \title{Fit linear models on measures calculated for replicated images, and extract the results}
 \usage{
 fitLinModels(
-  measures,
+  result,
   design,
   Formula,
   Control = lmerControl(check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
@@ -14,20 +14,20 @@ fitLinModels(
     check.conv.hess = .makeCC(action = "ignore", tol = 1e-06))
 )
 
-extractResultsMulti(models, design, method = "BH")
+extractResultsMulti(result, design, method = "BH")
 }
 \arguments{
-\item{measures}{A list of measures of bivariate spatial association}
-
 \item{design}{A design dataframe}
 
 \item{Formula}{A formula for the linear model to be fitted, can contain random effects.}
 
 \item{Control}{A control list for lmerTest::lmer}
 
-\item{models}{The fitted linear models}
-
 \item{method}{Multiplicity correction method passed onto p.adjust}
+
+\item{measures}{A list of measures of bivariate spatial association}
+
+\item{models}{The fitted linear models}
 }
 \value{
 For fitLinModels(), a list of linear models

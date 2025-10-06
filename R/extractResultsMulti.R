@@ -10,23 +10,23 @@
 #' @export
 #' @rdname fitLinModels
 #' @order 2
-extractResultsMulti <- function(models, design, method = "BH") {
-    id <- vapply(models, FUN.VALUE = TRUE, function(x) {
+extractResultsMulti <- function(result, design, method = "BH") {
+    id <- vapply(result$result, FUN.VALUE = TRUE, function(x) {
         is(x, "lmerModLmerTest") || is(x, "lm")
     })
     out <- if (!any(id)) {
         warning("No lmerModLmerTest or lm models found!")
         return(list("Intercept" = NULL, "fixedEffects" = NULL))
     } else {
-        Summaries <- loadBalanceBplapply(models[id], function(x) summary(x)$coef)
+        Summaries <- loadBalanceBplapply(result$result[id], function(x) summary(x)$coef)
         ints <- t(vapply(Summaries, FUN.VALUE = double(3), function(x) {
             x["(Intercept)", c("Estimate", "Std. Error", "Pr(>|t|)")]
         }))
         colnames(ints) <- c("Estimate", "SE", "pVal")
         intMat <- cbind(ints, pAdj = p.adjust(ints[, "pVal"], method = method))[order(ints[
             ,"pVal"]), ] # Order by p-value
-        AnovaTabs <- loadBalanceBplapply(models[id], anova)
-        fixedVars = selfName(unique(unlist(lapply(models[id], function(x){
+        AnovaTabs <- loadBalanceBplapply(result$result[id], anova)
+        fixedVars = selfName(unique(unlist(lapply(result$result[id], function(x){
             all.vars(terms(x))[-1]
         }))))
         categoricalVars = getDiscreteVars(design)
@@ -67,5 +67,6 @@ extractResultsMulti <- function(models, design, method = "BH") {
         })
         c(list("Intercept" = intMat), fixedOut)
     }
-    return(out)
+    return(c(list("result" = out, "assayX" = result$assayX, "assayY" = result$assayY),
+             result[c("method", "families", "multiplicity")]))
 }

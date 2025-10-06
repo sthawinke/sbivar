@@ -35,18 +35,18 @@
 #' @importFrom BiocParallel bplapply
 #' @seealso \link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}, \link[stats]{p.adjust}
 #' @order 1
-fitLinModels = function(measures, design, Formula, Control = lmerControl(
+fitLinModels = function(result, design, Formula, Control = lmerControl(
     check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
     check.conv.singular = .makeCC(action = "ignore", tol = formals(isSingular)$tol),
     check.conv.hess = .makeCC(action = "ignore", tol = 1e-06))){
-    stopifnot(all(c("estimates", "method", "multiplicity") %in% names(measures)))
-    if(measures$multiplicity == "single"){
+    stopifnot(all(c("estimates", "method", "multiplicity") %in% names(result)))
+    if(result$multiplicity == "single"){
         stop("Fitting linear models only makes sense for multi-image analyses!")
     }
-    method = measures$method;measures = measures$estimates
+    measures = result$estimates
     stopifnot(length(measures)==nrow(design), is.data.frame(design),
               is.character(Formula) || is(Formula, "formula"))
-    withWeights <- (method %in% c("GAMs"))#, "Correlation"
+    withWeights <- (result$method %in% c("GAMs"))#, "Correlation"
     namesFun = if(withWeights) rownames else names
     Features = selfName(unique(unlist(lapply(measures, namesFun)))) # All feature pairs present
     #Prepare matrices of outcomes and weights
@@ -74,10 +74,12 @@ fitLinModels = function(measures, design, Formula, Control = lmerControl(
         contrasts <- lapply(discreteVars, function(x) named.contr.sum)
     }
     if(MM){
-        ff <- lFormula(Formula, data = baseDf, contrasts = contrasts, na.action = na.omit)
+        ff <- lFormula(Formula, data = baseDf, contrasts = contrasts,
+                       na.action = na.omit)
         #Prepare random effects fitting
     }
-    modMat <- model.matrix(nobars(Formula), baseDf, contrasts.arg = contrasts) #Fixed effects model matrix
+    modMat <- model.matrix(nobars(Formula), baseDf, contrasts.arg = contrasts)
+    #Fixed effects model matrix
     Assign <- attr(modMat, "assign")
     models <- loadBalanceBplapply(Features, function(feat) {
         baseDf$out = outMat[, feat]
@@ -96,7 +98,8 @@ fitLinModels = function(measures, design, Formula, Control = lmerControl(
         }
         return(out)
     })
-    return(models)
+    return(c(list("result" = models, "assayX" = result$assayX, "assayY" = result$assayY),
+             result[c("method", "families", "multiplicity")]))
 }
 #' Fit a linear model for an individual feature pair
 #'
@@ -109,7 +112,7 @@ fitLinModels = function(measures, design, Formula, Control = lmerControl(
 #' @inheritParams fitLinModels
 #' @return A fitted model
 #'
-#' @details Code is based on smoppix:::fitSingleLmmModel, but may diverge
+#' @details The code is based on smoppix:::fitSingleLmmModel, but may diverge
 #'
 #' @returns A fitted lmer or lm model
 #' @importFrom lme4 mkLmerDevfun optimizeLmer mkMerMod

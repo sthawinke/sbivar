@@ -30,5 +30,5 @@ A fitted lmer or lm model
 Fit a linear model for an individual feature pair
 }
 \details{
-Code is based on smoppix:::fitSingleLmmModel, but may diverge
+The code is based on smoppix:::fitSingleLmmModel, but may diverge
 }

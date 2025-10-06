@@ -146,7 +146,7 @@ plotTopPair(gamRes, X = singleStx, Y = singleMet, Cx = singleStxCoords,
 We see a clear negative relationship. We can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes[gpGam, "corxy"], 3)`:
 
 ```{r}
-plotGAMsTopResults(gamRes, X = singleStx, Y = singleMet, Ex = singleStxCoords, 
+plotGAMsTopResults(gamRes, X = singleStx, Y = singleMet, Cx = singleStxCoords, 
                    Ey = singleMetCoords, families = FamiliesViari)
 ```
 
@@ -155,7 +155,7 @@ Another available analysis is the modified t-test by @Clifford1989 after sample 
 ```{r}
 modTRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, 
                       method = "Modified t-test")
-head(modTRes)
+head(modTRes$result)
 ```
 
 Finally, also Gaussian processes (GPs) can be applied to single images. Yet fitting GPs and calculating the score tests statistics can be computation and memory intensive!
@@ -163,7 +163,7 @@ Finally, also Gaussian processes (GPs) can be applied to single images. Yet fitt
 ```{r gp, eval = FALSE}
 gpRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, 
                       method = "GPs")
-head(gpRes)
+head(gpRes$result)
 ```
 
 ## Multi-image analysis
@@ -176,16 +176,16 @@ names(Vicari$TranscriptOutcomes)
 
 We see that the first three and the last three are replicates from different mice (V11L12-109 and V11T16-085). We construct a variable identifying the mouse, consisting of the first 10 characters of the names:
 
-```{r}
+```{r mouseVariable}
 mouse = vapply(names(Vicari$TranscriptOutcomes), FUN.VALUE = character(1), 
                function(x) substr(x,1, 10))
 ```
 
 For the multi-image case, we can also use bivariate Moran's I as measure of spatial association, with weights of the weight matrix decaying with distance:
 
-```{r}
-multiMoranRes = sbivar(X = Vicari$TranscriptOutcomes, Y = Vicari$MetaboliteOutcomes, 
-                            Cx = Vicari$TranscriptCoords, Ey = Vicari$MetaboliteCoords, 
+```{r multiMoran}
+multiMoranRes = sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes, 
+                            Vicari$TranscriptCoords, Vicari$MetaboliteCoords, 
                             method = "Moran", wo = "distance")
 ```
 
@@ -200,7 +200,7 @@ Extract the results for the desired parameter (the intercept)
 
 ```{r extractMulti}
 multiMoranLmmsRes = extractResultsMulti(multiMoranLmms, design)
-head(multiMoranLmmsRes$Intercept)
+head(multiMoranLmmsRes$result$Intercept)
 ```
 
 No features are significantly associated after multiplicity correction. This is in part caused by different experimental parameters used for the different sections, i.e. these are not real replicates yet, as technology is still being developed. For illustration, we plot the feature pair with the smallest p-values nevertheless:
@@ -238,10 +238,10 @@ resSpatExp = sbivar(StxSE, MetSE, assayX = "transcripts", assayY = "metabolites"
                     families = FamiliesViari, method = "GAMs")
 ```
 
-Plot the top result, again providing the _SpatialExperiment_ objects
+Plot the second most significant result, again providing the _SpatialExperiment_ objects
 
 ```{r plotTopSE}
-plotTopPair(resSpatExp, StxSE, MetSE)
+plotTopPair(resSpatExp, X = StxSE, Y = MetSE, topRank = 2)
 ```
 
 Now we construct a _MultiAssayExperiment_ object
@@ -262,23 +262,22 @@ resMAE = sbivar(MAE, assayX = "transcripts", assayY = "metabolites",
 
 ### Multi-image case
 
-For the multi-image case, there are several options. One is to construct a list of _SpatialExperiment_ objects, and feed these to the _sbivar_ function:
+For the multi-image case, there are several options. One is to provide a list of _SpatialExperiment_ objects to the _sbivar_ function. We construct such list here for illustrative purposes:
 
 ```{r multiListSE}
-StxSElist = lapply(names(Vicari$TranscriptOutcomes), function(nam){
+StxSElist = lapply(selfName(names(Vicari$TranscriptOutcomes)), function(nam){
     SpatialExperiment(assays = list("transcripts" = t(Vicari$TranscriptOutcomes[[nam]])),
                       spatialCoords = Vicari$TranscriptCoords[[nam]])
 })
-MetSElist = lapply(names(Vicari$MetaboliteOutcomes), function(nam){
+MetSElist = lapply(selfName(names(Vicari$MetaboliteOutcomes)), function(nam){
     SpatialExperiment(assays = list("metabolites" = t(Vicari$MetaboliteOutcomes[[nam]])),
                       spatialCoords = Vicari$MetaboliteCoords[[nam]])
 })
-multiMoranResSE = sbivar(X = Vicari$TranscriptOutcomes, Y = Vicari$MetaboliteOutcomes, 
-                            Cx = Vicari$TranscriptCoords, Ey = Vicari$MetaboliteCoords, 
-                            method = "Moran", wo = "distance")
+multiMoranResSE = sbivar(X = StxSElist, Y = MetSElist, assayX = "transcripts", assayY = "metabolites",
+                         method = "Moran", wo = "distance")
 multiMoranLmmsSE = fitLinModels(multiMoranResSE, design, Formula = ~ (1|mouse))
 multiMoranLmmsResSE = extractResultsMulti(multiMoranLmmsSE, design)
-head(multiMoranLmmsResSE$Intercept)
+head(multiMoranLmmsResSE$result$Intercept)
 ```
 
 As expected, this yields the same result as before with list input.
@@ -286,10 +285,20 @@ As expected, this yields the same result as before with list input.
 Another option is to provide only two _SpatialExperiment_ objects, but provide a _sample_id_ argument that identifies the different images. For illustration, we construct such objects from the Vicari data.
 
 ```{r SEidentifier}
-SEsingleStx = SpatialExperiment(assays = list("transcripts" = t(Reduce(Vicari$TranscriptOutcomes, f = rbind))), spatialCoords = Reduce(Vicari$TranscriptCoords, f = rbind), 
-                                colData = data.frame("sample_id" = rep(names(Vicari$TranscriptOutcomes), times = vapply(Vicari$TranscriptOutcomes, FUN.VALUE = 0L, nrow))))
-SEsingleMet = SpatialExperiment(assays = list("metabolites" = t(Reduce(Vicari$MetaboliteOutcomes, f = rbind))), spatialCoords = Reduce(Vicari$MetaboliteCoords, f = rbind), 
-                                colData = data.frame("sample_id" = rep(names(Vicari$MetaboliteOutcomes), times = vapply(Vicari$MetaboliteOutcomes, FUN.VALUE = 0L, nrow))))
+SEsingleStx = SpatialExperiment(assays = list("transcripts" = t(Reduce(Vicari$TranscriptOutcomes, f = rbind))), 
+                                spatialCoords = Reduce(Vicari$TranscriptCoords, f = rbind), 
+                                colData = data.frame("sample_id" = rep(names(Vicari$TranscriptOutcomes), 
+                                                    times = vapply(Vicari$TranscriptOutcomes, FUN.VALUE = 0L, nrow))))
+SEsingleMet = SpatialExperiment(assays = list("metabolites" = t(Reduce(Vicari$MetaboliteOutcomes, f = rbind))), 
+                                spatialCoords = Reduce(Vicari$MetaboliteCoords, f = rbind), 
+                                colData = data.frame("sample_id" = rep(names(Vicari$MetaboliteOutcomes), 
+                                                    times = vapply(Vicari$MetaboliteOutcomes, FUN.VALUE = 0L, nrow))))
+```
+
+A quick look:
+
+```{r singleStxLook}
+SEsingleStx
 ```
 
 And run the same analysis:
@@ -299,9 +308,8 @@ sbivarMultiSingleSE = sbivar(SEsingleStx, SEsingleMet, sample_id_x = "sample_id"
                              assayX = "transcripts", assayY = "metabolites", method = "Correlation")
 multiMoranLmmsSingleSE = fitLinModels(sbivarMultiSingleSE, design, Formula = ~ (1|mouse))
 multiMoranLmmsResSingleSE = extractResultsMulti(multiMoranLmmsSingleSE, design)
-head(multiMoranLmmsResSingleSE$Intercept)
+head(multiMoranLmmsResSingleSE$result$Intercept)
 ```
-
 
 # Troubleshooting
 

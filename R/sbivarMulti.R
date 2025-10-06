@@ -36,6 +36,7 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
     } else if (method == "Moran's I"){
         wrapMoransIMulti(Xl, Yl, Cxl, Eyl, wo = wo, numNN = numNN)
     }
-    return(list("estimates" = out, "method" = method, "multiplicity" = "multi"))
+    return(list("estimates" = out, "method" = method, "multiplicity" = "multi",
+                "families" = families))
 }
 

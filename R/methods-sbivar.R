@@ -18,10 +18,16 @@ setMethod("sbivar", "list", function(X, Y, Cx, Ey, assayX = NULL, assayY = NULL,
         stop("Since X is a list, Y must be so too!")
     }
     if(all(vapply(X, FUN.VALUE = TRUE, inherits, "SpatialExperiment"))){
+        if(is.null(assayX)){
+            stop("Provide the name of the assay through the 'assayX' argument!")
+        }
         Cx = lapply(X, spatialCoords)
         X = lapply(X, function(y) assayT(y, assayX))
     }
     if(all(vapply(Y, FUN.VALUE = TRUE, inherits, "SpatialExperiment"))){
+        if(is.null(assayY)){
+            stop("Provide the name of the assay through the 'assayY' argument!")
+        }
         Ey = lapply(Y, spatialCoords)
         Y = lapply(Y, function(y) assayT(y, assayY))
     }
@@ -40,8 +46,8 @@ setMethod("sbivar", "SpatialExperiment", function(X, Y, assayX, assayY, sample_i
         stop("Since X is a SpatialExperiment object, Y must be so too!")
     }
     out = if(missing(sample_id_x)){
-        c(sbivar(assayT(X, assayX), assayT(Y, assayY), spatialCoords(X), spatialCoords(Y)),
-          "assayX" = assayX, "assayY" = assayY, ...)
+        c(sbivar(assayT(X, assayX), assayT(Y, assayY), spatialCoords(X), spatialCoords(Y), ...),
+          "assayX" = assayX, "assayY" = assayY)
     } else {
         sbivar(splitSpatialExperiment(X, sample_id_x),
                splitSpatialExperiment(Y, sample_id_y), assayX = assayX, assayY = assayY,...)

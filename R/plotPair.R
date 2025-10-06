@@ -4,7 +4,7 @@
 #' @param parameter The linear model parameter used to find the feature with the strongest effect.
 #' The default is the intercept, i.e. the overall effect.
 #' @param results The results list, from call to \link{extractResultsMulti}
-#' @param rank An integer, the feature pair with the rank-th smallest p-value is plotted
+#' @param topRank An integer, the feature pair with the rank-th smallest p-value is plotted
 #' @param ... passed onto lower level functions
 #' @inheritParams sbivarMulti
 #' @inheritParams plotPairSingle
@@ -29,15 +29,15 @@
 #' plotTopPair(resGams, Xl, Yl, Cxl, Eyl, parameter = "cofactor")
 #' # Plot an arbitrary feature pair
 #' plotPairMulti(Xl, Yl, Cxl, Eyl, features = c("X1", "Y1"))
-plotTopPair = function(results, rank = 1, parameter = "Intercept", ...){
-    stopifnot(is.numeric(rank))
+plotTopPair = function(results, topRank = 1, parameter = "Intercept", ...){
+    stopifnot(is.numeric(topRank))
     if(results$multiplicity == "single"){
-        topFeats = sund(rownames(results$result)[rank])
+        topFeats = sund(rownames(results$result)[topRank])
         plotPairSingle(features = topFeats, assayX = results$assayX,
                        assayY = results$assayY, ...)
     } else if(results$multiplicity == "multi"){
         stopifnot(parameter %in% names(results$result))
-        topFeats = sund(rownames(results$result)[[parameter]][rank])
+        topFeats = sund(rownames(results$result[[parameter]])[topRank])
         plotPairMulti(features = topFeats, assayX = results$assayX,
               assayY = results$assayY, ...)
     } else {
@@ -88,10 +88,10 @@ plotPairMulti = function(Xl, Yl, Cxl, Eyl, features, normalizationX = c("none", 
 #' @export
 #' @order 2
 plotPairSingle = function(X, Y, Cx, Ey, features, normalizationX = c("none", "log"),
-                          normalizationY = c("none", "log"), ...){
+                          normalizationY = c("none", "log"), assayX, assayY, ...){
     stopifnot(length(features)==2)
     if(inherits(X, "SpatialExperiment")){
-        Cx = spatialCoords(Xl)
+        Cx = spatialCoords(X)
         X = assayT(X, assayX)
     }
     if(inherits(Y, "SpatialExperiment")){

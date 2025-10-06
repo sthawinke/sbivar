@@ -4,7 +4,7 @@
 \alias{fitGP}
 \title{Fit a Gaussian process (GP) to a single outcome vector}
 \usage{
-fitGP(x, coord, GPmethod, device, training_iter, corStruct, optControl)
+fitGP(x, coord, GPmethod, corStruct, optControl)
 }
 \arguments{
 \item{x}{outcome vector}
@@ -13,11 +13,6 @@ fitGP(x, coord, GPmethod, device, training_iter, corStruct, optControl)
 
 \item{GPmethod}{The method by which to fit the Gaussian processes,
 passed onto \link[nlme]{gls} as "method" if it equals "REML" or "ML".}
-
-\item{device}{Device to fit the GPs on. Defaults to "cpu",
-one can also use "gpu" via the python package gpytorch if a GPU is available}
-
-\item{training_iter}{Number of training iterations in gpytorch}
 
 \item{corStruct}{The correlation object, see \link[nlme]{corStruct}.
 At this point, only \link[nlme]{corGaus} is accepted.}

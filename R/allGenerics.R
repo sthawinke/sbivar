@@ -2,7 +2,7 @@
 #' @description
 #' Perform the spatial analysis of choice, either on a single or multiple images.
 #' Depending on the input, the workhorse functions \link{sbivarSingle}
-#' (for matrix, SpatialExperiment or MultiAssayExperiment) or \link{sbivarMulti} (for a list) are called.
+#' (single-image) or \link{sbivarMulti} (multi-image) are called.
 #' @rdname sbivar
 #' @importFrom methods setGeneric setMethod
 #' @export
@@ -28,6 +28,6 @@
 #' resModtGPs = sbivar(seX, seY, assayX = "transcripts", assayY = "metabolites", method = "GPs")
 #' #Multi-image analysis on Vicari data
 #' data(Vicari)
-#' sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
-#' method = "GAMs", families = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log")))
+#' VicariRes = sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
+#' Vicari$TranscriptCoords, Vicari$MetaboliteCoords, method = "Moran", wo = "distance")
 setGeneric("sbivar", function(X, ...) standardGeneric("sbivar"))

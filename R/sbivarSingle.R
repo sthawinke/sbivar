@@ -51,7 +51,6 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs
     n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y)
     method = match.arg(method)
     GPmethod = match.arg(GPmethod)
-    device = match.arg(device)
     foo = checkInputSingle(X, Y, Cx, Ey)
     if(missing(Ey)){
         #Run a joint analysis
@@ -91,8 +90,8 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs
                  n_points_grid = n_points_grid)
     } else if(method == "GPs"){
         wrapGPs(X = X, Y = Y, Cx = Cx, Ey = Ey, gpParams = gpParams, Quants = Quants,
-                GPmethod = GPmethod, device  = device, training_iter = training_iter,
-                corStruct = corStruct, optControl = optControl, numLscAlts = numLscAlts)
+                GPmethod = GPmethod, corStruct = corStruct, optControl = optControl,
+                numLscAlts = numLscAlts)
     } else if(method == "Modified t-test"){
         wrapModTtest(X = X, Y = Y, Cx = Cx, Ey = Ey, mapToFinest = mapToFinest,
                      jointCoordinates = jointCoordinates)

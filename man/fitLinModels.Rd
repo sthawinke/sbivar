@@ -17,6 +17,9 @@ fitLinModels(
 extractResultsMulti(result, design, method = "BH")
 }
 \arguments{
+\item{result}{A result with the measures of bivariate spatial association,
+from a call to the \link{sbivar} function with multiple images}
+
 \item{design}{A design dataframe}
 
 \item{Formula}{A formula for the linear model to be fitted, can contain random effects.}
@@ -24,8 +27,6 @@ extractResultsMulti(result, design, method = "BH")
 \item{Control}{A control list for lmerTest::lmer}
 
 \item{method}{Multiplicity correction method passed onto p.adjust}
-
-\item{measures}{A list of measures of bivariate spatial association}
 
 \item{models}{The fitted linear models}
 }
@@ -48,19 +49,13 @@ The left hand side of "Formula" can be provided or not,
 but it will be overridden by "out" for downstream analysis
 }
 \examples{
-example(sbivarMulti, "sbivar")
-toyDesign = data.frame("covariate" = rnorm(ims),
-"cofactor" = factor(rep(c(TRUE, FALSE), length.out = ims)),
- "group" = rep(c("control", "treatment"), length.out = ims))
-multiFitGams = fitLinModels(estGAMs, design = toyDesign,
-Formula =  ~ covariate + cofactor + (1|group))
-multiFitMoran = fitLinModels(estMoran, design = toyDesign,
-Formula =  ~ covariate + cofactor)
-multiFit = fitLinModels(estCorrelations, design = toyDesign, Formula =
- ~ covariate + (1|group))
+example(sbivar, "sbivar")
+mouse = substr(names(Vicari$TranscriptOutcomes), 1, 10)
+design = data.frame("mouse" = mouse) # The design matrix
+multiMoranLmms = fitLinModels(multiMoranRes, design, Formula = ~ (1|mouse))
 #Extract the results
-resGams = extractResultsMulti(multiFitGams, design = toyDesign)
-head(resGams$Intercept)
+resMoran = extractResultsMulti(multiMoranLmms, design = toyDesign)
+head(resMoran$result$Intercept)
 }
 \seealso{
 \link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}, \link[stats]{p.adjust}

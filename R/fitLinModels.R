@@ -15,19 +15,13 @@
 #' but it will be overridden by "out" for downstream analysis
 #'
 #' @examples
-#' example(sbivarMulti, "sbivar")
-#' toyDesign = data.frame("covariate" = rnorm(ims),
-#' "cofactor" = factor(rep(c(TRUE, FALSE), length.out = ims)),
-#'  "group" = rep(c("control", "treatment"), length.out = ims))
-#' multiFitGams = fitLinModels(estGAMs, design = toyDesign,
-#' Formula =  ~ covariate + cofactor + (1|group))
-#' multiFitMoran = fitLinModels(estMoran, design = toyDesign,
-#' Formula =  ~ covariate + cofactor)
-#' multiFit = fitLinModels(estCorrelations, design = toyDesign, Formula =
-#'  ~ covariate + (1|group))
+#' example(sbivar, "sbivar")
+#' mouse = substr(names(Vicari$TranscriptOutcomes), 1, 10)
+#' design = data.frame("mouse" = mouse) # The design matrix
+#' multiMoranLmms = fitLinModels(multiMoranRes, design, Formula = ~ (1|mouse))
 #' #Extract the results
-#' resGams = extractResultsMulti(multiFitGams, design = toyDesign)
-#' head(resGams$Intercept)
+#' resMoran = extractResultsMulti(multiMoranLmms, design = toyDesign)
+#' head(resMoran$result$Intercept)
 #' @importFrom lmerTest lmer
 #' @importFrom stats formula terms model.matrix
 #' @importFrom lme4 lmerControl .makeCC isSingular lFormula mkReTrms findbars nobars

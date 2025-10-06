@@ -13,10 +13,8 @@ sbivarSingle(
   n_points_grid = 600,
   mapToFinest = FALSE,
   families = list(X = gaussian(), Y = gaussian()),
-  GPmethod = c("REML", "ML", "gpytorch"),
-  device = c("cpu", "cuda"),
+  GPmethod = c("REML", "ML"),
   verbose = TRUE,
-  training_iter = 100L,
   gpParams,
   Quants = c(0.005, 0.5),
   numLscAlts = 10,
@@ -36,7 +34,7 @@ sbivarSingle(
 
 \item{mapToFinest}{Passed onto \link{wrapModTtest}}
 
-\item{GPmethod, device, training_iter, Quants, numLscAlts, optControl, corStruct}{Passed onto \link{fitGP}}
+\item{GPmethod, Quants, numLscAlts, optControl, corStruct}{Passed onto \link{fitGP}}
 
 \item{verbose}{Should info on type of analysis be printed?}
 

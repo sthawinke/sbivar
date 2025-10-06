@@ -25,10 +25,12 @@
 #' ### Multi image
 #' example(fitLinModels, "sbivar")
 #' # Plot the feature pair with the most significant signal for a certain parameter,
-#' #here "cofactor"
-#' plotTopPair(resGams, Xl, Yl, Cxl, Eyl, parameter = "cofactor")
+#' #here the intercept (overall effect)
+#' plotTopPair(resMoran, Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
+#' Vicari$TranscriptCoords, Vicari$MetaboliteCoords, parameter = "Intercept")
 #' # Plot an arbitrary feature pair
-#' plotPairMulti(Xl, Yl, Cxl, Eyl, features = c("X1", "Y1"))
+#' plotPairMulti(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
+#' Vicari$TranscriptCoords, Vicari$MetaboliteCoords, features = c("mt.Nd2", "X555.20713"))
 plotTopPair = function(results, ..., topRank = 1, parameter = "Intercept"){
     stopifnot(is.numeric(topRank))
     if(results$multiplicity == "single"){

@@ -23,6 +23,8 @@ sbivar(X, ...)
 
 \item{...}{additional constructor and analysis arguments}
 
+\item{Y}{Matrix or SpatialExperiment object of second modality}
+
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
 \item{assayX, assayY}{Assay names to be used in the analysis,

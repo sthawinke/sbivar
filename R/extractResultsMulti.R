@@ -1,6 +1,5 @@
 #' @description extractResultsMulti() returns the results as matrix, including adjusted p-values, and sorted by p-value.
 #'
-#' @param models The fitted linear models
 #' @param method Multiplicity correction method passed onto p.adjust
 #'
 #' @importFrom stats p.adjust anova

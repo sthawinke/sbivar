@@ -77,7 +77,7 @@ plotPairMulti = function(Xl, Yl, Cxl, Eyl, features, normalizationX = c("none", 
         xlab("Dimension 1") + ylab("Dimension 2") + coord_fixed() +
         theme(axis.text = element_blank(), axis.ticks = element_blank())
 }
-#' @inheritParams sbivarSingle
+#' @inheritParams sbivar
 #' @param results Results returned by \link{sbivarSingle}
 #' @param x,y Outcome vectors
 #' @param normalizationX,normalizationY Character strings, indicating what normalization is required

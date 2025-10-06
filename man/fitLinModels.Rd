@@ -27,8 +27,6 @@ from a call to the \link{sbivar} function with multiple images}
 \item{Control}{A control list for lmerTest::lmer}
 
 \item{method}{Multiplicity correction method passed onto p.adjust}
-
-\item{models}{The fitted linear models}
 }
 \value{
 For fitLinModels(), a list of linear models

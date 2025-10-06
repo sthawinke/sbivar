@@ -14,7 +14,7 @@
 #' @export
 #'
 #' @examples
-#' example(sbivarSingle, "sbivar")
+#' example(sbivar, "sbivar")
 #' plotCoords(Cx, Ey)
 #' #For multiple coordinates
 #' example(sbivarMulti, "sbivar")

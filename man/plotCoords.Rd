@@ -32,7 +32,7 @@ plotCoordsMulti() is a wrapper for plotCoords for lists of coordinates,
 and requires the user to set par(mar = ) appropriately, so all plots are shown.
 }
 \examples{
-example(sbivarSingle, "sbivar")
+example(sbivar, "sbivar")
 plotCoords(Cx, Ey)
 #For multiple coordinates
 example(sbivarMulti, "sbivar")

@@ -23,7 +23,7 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
     stopifnot(is.numeric(numNN), is.numeric(n_points_grid), is.character(wo), is.logical(verbose),
               is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family")))
     if(verbose){
-        message("Performing analysis on ", length(Xl), " images")
+        message("Performing sbivar analysis on ", length(Xl), " images")
     }
     foo = checkInputMulti(Xl, Yl, Cxl, Eyl)
     jointCoordinates <- missing(Eyl)

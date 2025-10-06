@@ -55,10 +55,10 @@ setMethod("sbivar", "SpatialExperiment", function(X, Y, assayX, assayY, sample_i
     return(out)
 })
 #' @rdname sbivar
-#' @param experiments Names of the experiments in X to be used in the analysis
+#' @param experimentX,experimentY Names of the experiments in X to be used in the analysis
 #' @export
 #' @importFrom MultiAssayExperiment MultiAssayExperiment
-setMethod("sbivar", "MultiAssayExperiment", function(X, experiments, assayX, assayY, ...) {
+setMethod("sbivar", "MultiAssayExperiment", function(X, experimentX, experimentY, assayX, assayY, ...) {
     stopifnot(is.character(experiments), length(experiments)==2,
               all(experiments %in% names(X)))
     if(!all(id <- vapply(experiments, FUN.VALUE = TRUE,
@@ -66,5 +66,5 @@ setMethod("sbivar", "MultiAssayExperiment", function(X, experiments, assayX, ass
         stop("All components of the MultiAssayExperiment provided must be SpatialExperiment objects.
              Components ", experiments[!id], " are not!")
     }
-    sbivar(X[[experiments[1]]], X[[experiments[2]]], assayX = assayX, assayY = assayY, ...)
+    sbivar(X[[experimentX]], X[[experimentY]], assayX = assayX, assayY = assayY, ...)
 })

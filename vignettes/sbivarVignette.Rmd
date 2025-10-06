@@ -100,7 +100,7 @@ data(Vicari)
 names(Vicari)
 ```
 
-This object consists of four lists of length six: _TranscriptCoords_ and _MetaboliteCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. Only the 10 most abundant features per modality are included in the package. The Metabolite measurements were augmented by a pseudocount of 10$^{-8}$ to avoid zeroes. The _sbivar_ package assumes that the data have been pre-aligned. Yet it is always a good idea to check the alignment visually:
+This object consists of four lists of length six: _TranscriptCoords_ and _MetaboliteCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. Only the 10 most abundant features per modality are included in the package. The metabolite measurements were augmented by a pseudocount of 10$^{-8}$ to avoid zeroes. The _sbivar_ package assumes that the data have been pre-aligned. Yet it is always a good idea to check the alignment visually:
 
 ```{r, fig.height = 7}
 par(mfrow = c(2,3))
@@ -136,14 +136,14 @@ Have a look at the results, which are sorted by increasing p-value:
 head(gamRes$result)
 ```
 
-Plot the most significantly spatially associated gene-metabolite pair `r gpGam <- rownames(gamRes)[1]`:
+Plot the most significantly spatially associated gene-metabolite pair `r gpGam <- rownames(gamRes$result)[1]`:
 
 ```{r, fig.height = 5}
 plotTopPair(gamRes, X = singleStx, Y = singleMet, Cx = singleStxCoords, 
             Ey = singleMetCoords)
 ```
 
-We see a clear negative relationship. We can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes[gpGam, "corxy"], 3)`:
+We see a clear negative relationship. We can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes$result[gpGam, "corxy"], 3)`:
 
 ```{r}
 plotGAMsTopResults(gamRes, X = singleStx, Y = singleMet, Cx = singleStxCoords, 
@@ -158,11 +158,10 @@ modTRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
 head(modTRes$result)
 ```
 
-Finally, also Gaussian processes (GPs) can be applied to single images. Yet fitting GPs and calculating the score tests statistics can be computation and memory intensive!
+Finally, also Gaussian processes (GPs) can be applied to single images. Yet fitting GPs and calculating the score tests statistics can be computation and memory intensive! Hence the code is shown, but not run:
 
 ```{r gp, eval = FALSE}
-gpRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, 
-                      method = "GPs")
+gpRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, method = "GPs")
 head(gpRes$result)
 ```
 
@@ -177,8 +176,7 @@ names(Vicari$TranscriptOutcomes)
 We see that the first three and the last three are replicates from different mice (V11L12-109 and V11T16-085). We construct a variable identifying the mouse, consisting of the first 10 characters of the names:
 
 ```{r mouseVariable}
-mouse = vapply(names(Vicari$TranscriptOutcomes), FUN.VALUE = character(1), 
-               function(x) substr(x,1, 10))
+mouse = substr(names(Vicari$TranscriptOutcomes), 1, 10)
 ```
 
 For the multi-image case, we can also use bivariate Moran's I as measure of spatial association, with weights of the weight matrix decaying with distance:
@@ -196,7 +194,7 @@ design = data.frame("mouse" = mouse)
 multiMoranLmms = fitLinModels(multiMoranRes, design, Formula = ~ (1|mouse))
 ```
 
-Extract the results for the desired parameter (the intercept)
+Extract the results and show the results for the intercept, i.e. the overall effect
 
 ```{r extractMulti}
 multiMoranLmmsRes = extractResultsMulti(multiMoranLmms, design)
@@ -220,7 +218,7 @@ The _SpatialExperiment_ and _MultiAssayExperiment_ classes are used in Bioconduc
 For illustration, we first construct _SpatialExperiment_ objects for the single-image case:
 
 ```{r SEConstruct}
-library(SpatialExperiment)
+library(SpatialExperiment, quietly = TRUE)
 StxSE = SpatialExperiment(assays = list("transcripts" = t(singleStx)), spatialCoords = singleStxCoords)
 MetSE = SpatialExperiment(assays = list("metabolites" = t(singleMet)), spatialCoords = singleMetCoords)
 ```
@@ -252,15 +250,15 @@ MAE = MultiAssayExperiment(experiments = list("transcripts" = StxSE, "metabolite
 MAE
 ```
 
-We run the same analysis, now providing the experiment names on top of the assay names (since a _MultiAssayExperiment_ can contain more than two modalities):
+We run a similar analysis based on Pearson correlation, now providing the experiment names on top of the assay names (since a _MultiAssayExperiment_ can contain more than two modalities):
 
 ```{r analyseMAE}
 resMAE = sbivar(MAE, assayX = "transcripts", assayY = "metabolites", 
-                experiments = c("transcripts", "metabolites"), 
-                families = FamiliesViari, method = "GAMs")
+                experimentsX = "transcripts", experimentY = "metabolites", 
+                families = FamiliesViari, method = "Correlation")
 ```
 
-### Multi-image case
+### Multi-image
 
 For the multi-image case, there are several options. One is to provide a list of _SpatialExperiment_ objects to the _sbivar_ function. We construct such list here for illustrative purposes:
 

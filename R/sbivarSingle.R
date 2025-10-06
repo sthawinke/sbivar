@@ -46,7 +46,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs
               is.numeric(training_iter), inherits(corStruct, "corStruct"),
               inherits(corStruct, "corGaus"), length(Quants)==2, is.numeric(Quants), is.logical(verbose))
     if(verbose){
-        message("Performing analysis on a single image\n")
+        message("Performing sbivar analysis on a single image\n")
     }
     n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y)
     method = match.arg(method)

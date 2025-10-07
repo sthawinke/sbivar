@@ -1,5 +1,5 @@
-<img src='inst/Sbivar.png' align='centre' height='20%' width='20%'/>SBIVAR:
-Spatial BIVARiate association tests across disjoint coordinate sets
+SBIVAR: Spatial BIVARiate association tests across disjoint coordinate
+sets<img src='inst/Sbivar.png' align='right' height='20%' width='20%'/>
 ================
 
 This repo provides code for performing bivariate association tests
@@ -39,7 +39,7 @@ alignment of the coordinates:
 
 ``` r
 par(mfrow = c(2,3))
-plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.5)
+plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.25)
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
@@ -68,14 +68,16 @@ data, and a gamma outcome distribution for the metabolome data. A
 log-link is used in both cases.
 
 ``` r
-gamRes = sbivarSingle(singleStx, singleMet, singleStxCoords, singleMetCoords, 
-                      method = "GAMs", families = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log")))
+gamRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, 
+    method = "GAMs", families = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log")))
 ```
+
+    ## Performing sbivar analysis on a single image
 
 Have a look at the results:
 
 ``` r
-head(gamRes)
+head(gamRes$result)
 ```
 
     ##                         corxy   se.corxy         pVal         pAdj
@@ -89,7 +91,7 @@ head(gamRes)
 Plot the most significantly spatially associated gene-metabolite pair :
 
 ``` r
-plotTopResultsSingle(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
+plotTopPair(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
@@ -103,6 +105,12 @@ plotGAMsTopResults(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoord
 
 ![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
+Write the results to a spreadsheet
+
+``` r
+writeSbivarToXlsx(gamRes, file = "myfile.xlsx")
+```
+
 ## Multi-image analysis
 
 Next, we analyse the six images jointly. First construct a variable
@@ -110,7 +118,7 @@ identifying the mouse, consisting of the first 10 characters of the
 names:
 
 ``` r
-mouse = vapply(names(Vicari$TranscriptOutcomes), FUN.VALUE = character(1), function(x) substr(x,1, 10))
+mouse = substr(names(Vicari$TranscriptOutcomes),1, 10)
 ```
 
 For the multi-image case, we use bivariate Moran’s I as measure of
@@ -118,10 +126,12 @@ spatial association, with weights of the weight matrix decaying with
 distance:
 
 ``` r
-multiMoranRes = sbivarMulti(Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes, 
-                            Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, 
+multiMoranRes = sbivar(X = Vicari$TranscriptOutcomes, Y = Vicari$MetaboliteOutcomes, 
+                            Cx = Vicari$TranscriptCoords, Ey = Vicari$MetaboliteCoords, 
                             method = "Moran", wo = "distance")
 ```
+
+    ## Performing sbivar analysis on 6 images
 
 Next we plug the calculated Moran’s I values into a linear model, with
 random effects for the individual mice:
@@ -135,7 +145,7 @@ Extract the results for the desired parameter (the intercept)
 
 ``` r
 multiMoranLmmsRes  = extractResultsMulti(multiMoranLmms, design)
-head(multiMoranLmmsRes$Intercept)
+head(multiMoranLmmsRes$result$Intercept)
 ```
 
     ##                        Estimate          SE       pVal      pAdj
@@ -151,9 +161,9 @@ For illustration, we plot the feature pair with the smallest p-values
 nevertheless:
 
 ``` r
-plotTopResultsMulti(multiMoranLmmsRes, 
+plotTopPair(multiMoranLmmsRes, 
     Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes, 
-    Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.4)
+    Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.3)
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->

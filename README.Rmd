@@ -1,6 +1,6 @@
 ---
 output: github_document
-title: "<img src='inst/Sbivar.png' align='centre' height='20%' width='20%'/>SBIVAR: Spatial BIVARiate association tests across disjoint coordinate sets"
+title: "SBIVAR: Spatial BIVARiate association tests across disjoint coordinate sets<img src='inst/Sbivar.png' align='right' height='20%' width='20%'/>"
 ---
 
 This repo provides code for performing bivariate association tests between different spatial modalities measured on the same or consecutive slices, possibly with disjoint coordinate sets. A common coordinate framework (CCF) as obtained from alignment is considered given.
@@ -25,17 +25,17 @@ Once installed, you can load the package
 library(sbivar)
 ```
 
-As example dataset, we load the one by [Vicari et al. (2024)](https://doi.org/10.1038/s41587-023-01937-y), which includes replicated measurements of spatial transcriptomics and metabolomics coprofiled on mouse brain sections. A subset of the data is available in the _sbivar_ package and can be loaded as:
+As example dataset, we use the one by [Vicari et al. (2024)](https://doi.org/10.1038/s41587-023-01937-y), which includes replicated measurements of spatial transcriptomics and metabolomics coprofiled on mouse brain sections. A subset of the data is available in the _sbivar_ package and can be loaded as:
 
 ```{r}
 data(Vicari)
 ```
 
-This object consists of four lists of length six: _MetaboliteCoords_ and _TranscriptCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. Checking the alignment of the coordinates:
+This object consists of four lists of length six: _MetaboliteCoords_ and _TranscriptCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. A first sanity check is to look at the alignment of the coordinates:
 
 ```{r}
 par(mfrow = c(2,3))
-plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.5)
+plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.25)
 par(mfrow = c(1,1))
 ```
 
@@ -54,26 +54,32 @@ singleMet = Vicari$MetaboliteOutcomes[[singleSample]]
 Now analyse this single sample using generalized additive models (GAMs), with a negative binomial outcome distribution for the transcriptome data, and a gamma outcome distribution for the metabolome data. A log-link is used in both cases.
 
 ```{r}
-gamRes = sbivarSingle(singleStx, singleMet, singleStxCoords, singleMetCoords, 
-                      method = "GAMs", families = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log")))
+gamRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, 
+    method = "GAMs", families = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log")))
 ```
 
 Have a look at the results:
 
 ```{r}
-head(gamRes)
+head(gamRes$result)
 ```
 
-Plot the most significantly spatially associated gene-metabolite pair `r gpGam <- rownames(gamRes)[1]`:
+Plot the most significantly spatially associated gene-metabolite pair `r gpGam <- rownames(gamRes$result)[1]`:
 
-```{r}
-plotTopResultsSingle(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
+```{r, fig.height = 4}
+plotTopPair(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
 ```
 
-We can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes[gpGam, "corxy"], 3)`:
+We can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes$result[gpGam, "corxy"], 3)`:
 
 ```{r, fig.height = 3.5}
 plotGAMsTopResults(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
+```
+
+Write the results to a spreadsheet
+
+```{r writeSbivar, eval = FALSE}
+writeSbivarToXlsx(gamRes, file = "myfile.xlsx")
 ```
 
 ## Multi-image analysis
@@ -81,14 +87,14 @@ plotGAMsTopResults(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoord
 Next, we analyse the six images jointly. First construct a variable identifying the mouse, consisting of the first 10 characters of the names:
 
 ```{r}
-mouse = vapply(names(Vicari$TranscriptOutcomes), FUN.VALUE = character(1), function(x) substr(x,1, 10))
+mouse = substr(names(Vicari$TranscriptOutcomes),1, 10)
 ```
 
 For the multi-image case, we use bivariate Moran's I as measure of spatial association, with weights of the weight matrix decaying with distance:
 
 ```{r}
-multiMoranRes = sbivarMulti(Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes, 
-                            Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, 
+multiMoranRes = sbivar(X = Vicari$TranscriptOutcomes, Y = Vicari$MetaboliteOutcomes, 
+                            Cx = Vicari$TranscriptCoords, Ey = Vicari$MetaboliteCoords, 
                             method = "Moran", wo = "distance")
 ```
 
@@ -103,15 +109,15 @@ Extract the results for the desired parameter (the intercept)
 
 ```{r}
 multiMoranLmmsRes  = extractResultsMulti(multiMoranLmms, design)
-head(multiMoranLmmsRes$Intercept)
+head(multiMoranLmmsRes$result$Intercept)
 ```
 
 No features are significantly associated after multiplicity correction. For illustration, we plot the feature pair with the smallest p-values nevertheless:
 
 ```{r, fig.height = 9}
-plotTopResultsMulti(multiMoranLmmsRes, 
+plotTopPair(multiMoranLmmsRes, 
     Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes, 
-    Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.4)
+    Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.3)
 ```
 
 <!-- A more extensive description of the sbivar functionality can be found in the vignette, which can be accessed by calling -->

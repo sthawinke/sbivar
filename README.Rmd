@@ -33,15 +33,15 @@ data(Vicari)
 
 This object consists of four lists of length six: _MetaboliteCoords_ and _TranscriptCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. A first sanity check is to look at the alignment of the coordinates:
 
-```{r plotvicari}
+```{r plotvicari, fig.width = 7}
 par(mfrow = c(2,3))
-plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.25)
+plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.2)
 par(mfrow = c(1,1))
 ```
 
 ## Single-image analysis
 
-The Vicari data consist of six image which are best analysed jointly, but for didactical purposes we also analyse a single image here, the sample "V11L12-109_A1".
+The Vicari data consist of six images which are best analysed jointly, but for didactical purposes we also analyse a single image here, the sample "V11L12-109_A1".
 
 ```{r selsingle}
 singleSample = "V11L12-109_A1"

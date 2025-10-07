@@ -172,6 +172,12 @@ gpRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
 head(gpRes$result)
 ```
 
+The analysis results can be written to an external spreadsheet using the following one-liner
+
+```{r sbivarSingleOut, eval = FALSE}
+writeSbivarToXlsx(modTRes, file = "myfile.xlsx")
+```
+
 ## Multi-image analysis
 
 Next, we analyse the six images jointly. Let's look at their names:
@@ -214,6 +220,12 @@ No features are significantly associated after multiplicity correction. This is 
 plotTopPair(multiMoranLmmsRes, 
     Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes, 
     Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.4)
+```
+
+Again, the results of the multi-image analysis can be written to an external spreadsheet. Setting _sigLevel_ to 1 means all feature pairs are written to the file:
+
+```{r sbivarMultiOut, eval = FALSE}
+writeSbivarToXlsx(multiMoranLmmsRes, file = "myfile2.xlsx", sigLevel = 1)
 ```
 
 ## SpatialExperiment and MultiAssayExperiment as inputs

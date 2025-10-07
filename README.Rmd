@@ -11,7 +11,13 @@ The package can be installed from GitHub as follows:
 
 ```{r installAndLoadGitHub, eval = FALSE}
 library(devtools)
-install_github("sthawinke/sbivar")
+install_github("sthawinke/sbivar", build_vignettes = TRUE)
+```
+
+The _sbivar_ package depends on the _smoppix_ package of the same author of at least version 1.1.8, which can be installed as:
+
+```{r installSmoppix, eval = FALSE}
+install_github("sthawinke/smoppix")
 ```
 
 ```{r install, eval = FALSE, echo = FALSE}
@@ -33,7 +39,7 @@ data(Vicari)
 
 This object consists of four lists of length six: _MetaboliteCoords_ and _TranscriptCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. A first sanity check is to look at the alignment of the coordinates:
 
-```{r plotvicari, fig.width = 7}
+```{r plotvicari, fig.width = 8.5}
 par(mfrow = c(2,3))
 plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.2)
 par(mfrow = c(1,1))
@@ -120,8 +126,8 @@ plotTopPair(multiMoranLmmsRes,
     Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.3)
 ```
 
-<!-- A more extensive description of the sbivar functionality can be found in the vignette, which can be accessed by calling -->
+A more extensive description of the sbivar functionality can be found in the vignette, accessed by calling
 
-<!-- ```{r openVignette, eval = FALSE} -->
-<!-- browseVignettes("sbivar") -->
-<!-- ``` -->
+```{r openVignette, eval = FALSE}
+browseVignettes("sbivar")
+```

@@ -44,7 +44,7 @@ Alternatively, the latest version can be installed from github as:
 
 ```{r installAndLoadGitHub, eval = FALSE}
 library(devtools)
-install_github("sthawinke/sbivar", buildVignettes = TRUE)
+install_github("sthawinke/sbivar")
 ```
 
 The _sbivar_ package depends on the _smoppix_ package of the same author of at least version 1.1.8, which can be installed as:
@@ -274,10 +274,10 @@ MAE
 
 We run a the same analysis, now providing the experiment names on top of the assay names (since a _MultiAssayExperiment_ can contain more than two modalities):
 
-```{r analyseMAE}
+```{r analyseMAE, eval = FALSE}
 resMAE = sbivar(MAE, assayX = "transcripts", assayY = "metabolites", 
                 experimentX = "transcripts", experimentY = "metabolites", 
-                families = FamiliesViari, method = "GAM")
+                families = FamiliesViari, method = "GAMs")
 ```
 
 ### Multi-image

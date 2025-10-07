@@ -13,7 +13,7 @@ The package can be installed from GitHub as follows:
 
 ``` r
 library(devtools)
-install_github("sthawinke/sbivar")
+install_github("sthawinke/sbivar", build_vignettes = TRUE)
 ```
 
 Once installed, you can load the package
@@ -39,7 +39,7 @@ is to look at the alignment of the coordinates:
 
 ``` r
 par(mfrow = c(2,3))
-plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.25)
+plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.2)
 ```
 
 ![](README_files/figure-gfm/plotvicari-1.png)<!-- -->
@@ -50,7 +50,7 @@ par(mfrow = c(1,1))
 
 ## Single-image analysis
 
-The Vicari data consist of six image which are best analysed jointly,
+The Vicari data consist of six images which are best analysed jointly,
 but for didactical purposes we also analyse a single image here, the
 sample “V11L12-109_A1”.
 
@@ -168,10 +168,9 @@ plotTopPair(multiMoranLmmsRes,
 
 ![](README_files/figure-gfm/topPairMulti-1.png)<!-- -->
 
-<!-- A more extensive description of the sbivar functionality can be found in the vignette, which can be accessed by calling -->
+A more extensive description of the sbivar functionality can be found in
+the vignette, accessed by calling
 
-<!-- ```{r openVignette, eval = FALSE} -->
-
-<!-- browseVignettes("sbivar") -->
-
-<!-- ``` -->
+``` r
+browseVignettes("sbivar")
+```

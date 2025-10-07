@@ -38,7 +38,7 @@ if(.Platform$OS.type == "unix"){
 }
 #register(SerialParam()) # Switch on when mapping test coverage
 resModtTest = sbivar(X, Y, Cx, Ey, method = "Modified")
-resGAMs = sbivar(X, Y, Cx, Ey, method = "GAM")
+resGAMsSingle = sbivar(X, Y, Cx, Ey, method = "GAM")
 estGAMs = sbivar(Xl, Yl, Cxl, Eyl, method = "GAMs")
 estMoran = sbivar(Xl, Yl, Cxl, Eyl, method = "Moran", wo = "nn")
 estCorrelations = sbivar(Xl, Yl, Cxl, Eyl, method = "Correlation")
@@ -46,5 +46,5 @@ multiFitGams = fitLinModels(estGAMs, design = toyDesign, Formula = out ~ covaria
 multiFitMoran = fitLinModels(estMoran, design = toyDesign, Formula = out ~ covariate + cofactor)
 multiFit = fitLinModels(estCorrelations, design = toyDesign, Formula = out ~ covariate + (1|group))
 #Extract the results
-resGams = extractResultsMulti(multiFitGams, design = toyDesign)
+resGAMsMulti = extractResultsMulti(multiFitGams, design = toyDesign)
 test_check("sbivar")

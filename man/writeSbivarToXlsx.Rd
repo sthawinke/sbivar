@@ -27,7 +27,7 @@ only features exceeding the threshold are written to the file. Set this paramete
 }
 \value{
 Returns invisible with a message when writing operation successful,
-otherwise throws an error.
+otherwise throws a warning.
 }
 \description{
 The results of single- or multi-image analysis are written to an excel spreadsheet
@@ -38,4 +38,16 @@ If no feature exceeds the significance threshold for a certain parameter,
 an empty tab is created. For each fixed effect, a single tab is written.
 The "baseline" tabs indicate the overall patterns, the other tabs are named after the fixed effects
 and indicate departure from this baseline depending on this fixed effect
+}
+\examples{
+example(sbivar, "sbivar")
+#The significance level is set to 1 here for illustration,
+#meaning that all feature pairs will be written to the spreadsheet.
+# Single result
+writeSbivarToXlsx(resGAMs, file = "tmpFile", sigLevel = 1)
+file.remove("tmpFile.xlsx")
+#Multiple results
+example(fitLinModels, "sbivar")
+writeSbivarToXlsx(resMoran, file = "tmpFile", sigLevel = 1)
+file.remove("tmpFile.xlsx")
 }

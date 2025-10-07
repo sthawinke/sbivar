@@ -16,9 +16,20 @@
 #' The "baseline" tabs indicate the overall patterns, the other tabs are named after the fixed effects
 #' and indicate departure from this baseline depending on this fixed effect
 #' @return Returns invisible with a message when writing operation successful,
-#' otherwise throws an error.
+#' otherwise throws a warning.
 #' @export
-#' #' @importFrom openxlsx createWorkbook writeData addWorksheet saveWorkbook getSheetNames
+#' @importFrom openxlsx createWorkbook writeData addWorksheet saveWorkbook getSheetNames
+#' @examples
+#' example(sbivar, "sbivar")
+#' #The significance level is set to 1 here for illustration,
+#' #meaning that all feature pairs will be written to the spreadsheet.
+#' # Single result
+#' writeSbivarToXlsx(resGAMs, file = "tmpFile", sigLevel = 1)
+#' file.remove("tmpFile.xlsx")
+#' #Multiple results
+#' example(fitLinModels, "sbivar")
+#' writeSbivarToXlsx(resMoran, file = "tmpFile", sigLevel = 1)
+#' file.remove("tmpFile.xlsx")
 writeSbivarToXlsx = function(results, file, overwrite = FALSE, digits = 3,
                              sigLevel = 0.05){
     stopifnot(is.logical(overwrite), is.character(file), is.numeric(digits),
@@ -34,67 +45,34 @@ writeSbivarToXlsx = function(results, file, overwrite = FALSE, digits = 3,
             stop("File ", file, " already exists! Set overwrite = TRUE to overwrite")
         }
     }
-    pis <- names(obj)
-    fixedEffects <- names(obj[[1]]$results$fixedEffects)
     wb <- createWorkbook()
-    for (pi in pis) {
-        for (effect in c("Intercept", fixedEffects)) {
-            mat <- switch(effect,
-                          "Intercept" = obj[[pi]]$results$Intercept,
-                          obj[[pi]]$results$fixedEffects[[effect]]
-            )
-            mat <- mat[!is.na(mat[, "pAdj"]), , drop = FALSE]
-            # Only significant features
-            subMat <- mat[mat[, "pAdj"] < sigLevel, , drop = FALSE]
+    res = switch(results$multiplicity, "multi" = results$result,
+               "single" = list("Baseline" = results$result))
+    for(nam in names(res)){
+        mat = res[[nam]]
+        mat <- mat[!is.na(mat[, "pAdj"]), , drop = FALSE]
+        # Only significant features
+        mat <- mat[mat[, "pAdj"] <= sigLevel, , drop = FALSE]
+        if(nrow(mat)){#Only add sheet when significant findings
             # Rounding
             for (i in c("pVal", "pAdj")) {
-                subMat[, i] <- signif(subMat[, i], digits)
+                mat[, i] <- signif(mat[, i], digits)
             }
-            for (i in setdiff(colnames(subMat), c("pVal", "pAdj"))) {
-                subMat[, i] <- round(subMat[, i], digits)
+            for (i in setdiff(colnames(mat), c("pVal", "pAdj"))) {
+                mat[, i] <- round(mat[, i], digits)
             }
-            for (smallPI in switch(effect,
-                                   "Intercept" = c(TRUE, FALSE),
-                                   TRUE
-            )) {
-                subMat2 <- if (effect == "Intercept") {
-                    subMat[match.fun(if (smallPI) "<" else ">")(subMat[, "Estimate"], 0.5), , drop = FALSE]
-                } else {
-                    subMat
-                }
-                if(nrow(subMat2)){
-                    #Only add sheet when significant findings
-                    sheetName <- makeSheetName(pi, effect, smallPI)
-                    addWorksheet(wb, sheetName) # Create sheet and write data to it
-                    writeData(wb, sheet = sheetName, x = data.frame(subMat2), colNames = TRUE, rowNames = TRUE)
-                }
-            }
+            sheetName = if(nam=="Intercept") "Baseline" else nam
+            addWorksheet(wb, sheetName) # Create sheet and write data to it
+            writeData(wb, sheet = sheetName, x = data.frame(mat), colNames = TRUE,
+                      rowNames = TRUE)
         }
     }
-    saveWorkbook(wb, file = file, overwrite = overwrite)
-    message(length(getSheetNames(file)), " tabs successfully written to ", file)
-}
-#' @note Sheet names cannot exceed 31 characters
-makeSheetName <- function(pi, effect, smallPI = TRUE) {
-    keyword <- if (grepl("Pair", pi)) {
-        if (effect != "Intercept") {
-            "Colocalization"
-        } else if (smallPI) {
-            "Colocalized"
-        } else {
-            "Antilocalized"
-        }
-    } else if (grepl("nn", pi)) {
-        if (smallPI) "Aggregation" else "Regularity"
+    if(length(wb$worksheets)){
+        saveWorkbook(wb, file = file, overwrite = overwrite)
+        message(length(getSheetNames(file)), " tabs successfully written to ", file)
     } else {
-        paste(if (smallPI) "Close to" else "Far from", pi)
+        warning("No significant features at significance level ", sigLevel,
+        " after multiplicity correction!\nNo file was created.")
     }
-    if (grepl("Cell", pi)) {
-        keyword <- paste(keyword, "in cell")
-    }
-    out <- paste0(keyword, "_", switch(effect,
-                                       "Intercept" = "baseline",
-                                       effect
-    ))
-    substr(out, 1, min(nchar(out), 31))
 }
+

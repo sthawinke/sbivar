@@ -22,7 +22,7 @@ Once installed, you can load the package
 library(sbivar)
 ```
 
-As example dataset, we load the one by [Vicari et
+As example dataset, we use the one by [Vicari et
 al. (2024)](https://doi.org/10.1038/s41587-023-01937-y), which includes
 replicated measurements of spatial transcriptomics and metabolomics
 coprofiled on mouse brain sections. A subset of the data is available in
@@ -34,15 +34,15 @@ data(Vicari)
 
 This object consists of four lists of length six: *MetaboliteCoords* and
 *TranscriptCoords* for the coordinates, and *TranscriptOutcomes* and
-*MetaboliteOutcomes* for the feature measurements. Checking the
-alignment of the coordinates:
+*MetaboliteOutcomes* for the feature measurements. A first sanity check
+is to look at the alignment of the coordinates:
 
 ``` r
 par(mfrow = c(2,3))
 plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.25)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](README_files/figure-gfm/plotvicari-1.png)<!-- -->
 
 ``` r
 par(mfrow = c(1,1))
@@ -94,7 +94,7 @@ Plot the most significantly spatially associated gene-metabolite pair :
 plotTopPair(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](README_files/figure-gfm/toppairsingle-1.png)<!-- -->
 
 We can also plot the corresponding spline fit, with the contributions to
 the correlation -0.624:
@@ -103,7 +103,7 @@ the correlation -0.624:
 plotGAMsTopResults(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](README_files/figure-gfm/plotgamsingle-1.png)<!-- -->
 
 Write the results to a spreadsheet
 
@@ -166,7 +166,7 @@ plotTopPair(multiMoranLmmsRes,
     Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.3)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+![](README_files/figure-gfm/topPairMulti-1.png)<!-- -->
 
 <!-- A more extensive description of the sbivar functionality can be found in the vignette, which can be accessed by calling -->
 

@@ -27,13 +27,13 @@ library(sbivar)
 
 As example dataset, we use the one by [Vicari et al. (2024)](https://doi.org/10.1038/s41587-023-01937-y), which includes replicated measurements of spatial transcriptomics and metabolomics coprofiled on mouse brain sections. A subset of the data is available in the _sbivar_ package and can be loaded as:
 
-```{r}
+```{r datavicari}
 data(Vicari)
 ```
 
 This object consists of four lists of length six: _MetaboliteCoords_ and _TranscriptCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. A first sanity check is to look at the alignment of the coordinates:
 
-```{r}
+```{r plotvicari}
 par(mfrow = c(2,3))
 plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.25)
 par(mfrow = c(1,1))
@@ -43,7 +43,7 @@ par(mfrow = c(1,1))
 
 The Vicari data consist of six image which are best analysed jointly, but for didactical purposes we also analyse a single image here, the sample "V11L12-109_A1".
 
-```{r}
+```{r selsingle}
 singleSample = "V11L12-109_A1"
 singleStxCoords = Vicari$TranscriptCoords[[singleSample]]
 singleStx = Vicari$TranscriptOutcomes[[singleSample]]
@@ -53,26 +53,26 @@ singleMet = Vicari$MetaboliteOutcomes[[singleSample]]
 
 Now analyse this single sample using generalized additive models (GAMs), with a negative binomial outcome distribution for the transcriptome data, and a gamma outcome distribution for the metabolome data. A log-link is used in both cases.
 
-```{r}
+```{r gamSingle}
 gamRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, 
     method = "GAMs", families = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log")))
 ```
 
 Have a look at the results:
 
-```{r}
+```{r headsingle}
 head(gamRes$result)
 ```
 
 Plot the most significantly spatially associated gene-metabolite pair `r gpGam <- rownames(gamRes$result)[1]`:
 
-```{r, fig.height = 4}
+```{r toppairsingle, fig.height = 4}
 plotTopPair(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
 ```
 
 We can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes$result[gpGam, "corxy"], 3)`:
 
-```{r, fig.height = 3.5}
+```{r plotgamsingle, fig.height = 3.5}
 plotGAMsTopResults(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
 ```
 
@@ -86,13 +86,13 @@ writeSbivarToXlsx(gamRes, file = "myfile.xlsx")
 
 Next, we analyse the six images jointly. First construct a variable identifying the mouse, consisting of the first 10 characters of the names:
 
-```{r}
+```{r mouse}
 mouse = substr(names(Vicari$TranscriptOutcomes),1, 10)
 ```
 
 For the multi-image case, we use bivariate Moran's I as measure of spatial association, with weights of the weight matrix decaying with distance:
 
-```{r}
+```{r multivic}
 multiMoranRes = sbivar(X = Vicari$TranscriptOutcomes, Y = Vicari$MetaboliteOutcomes, 
                             Cx = Vicari$TranscriptCoords, Ey = Vicari$MetaboliteCoords, 
                             method = "Moran", wo = "distance")
@@ -100,21 +100,21 @@ multiMoranRes = sbivar(X = Vicari$TranscriptOutcomes, Y = Vicari$MetaboliteOutco
 
 Next we plug the calculated Moran's I values into a linear model, with random effects for the individual mice:
 
-```{r}
+```{r linmodsVic}
 design = data.frame("mouse" = mouse)
 multiMoranLmms = fitLinModels(multiMoranRes, design, Formula = ~ (1|mouse))
 ```
 
 Extract the results for the desired parameter (the intercept)
 
-```{r}
+```{r headMultiVic}
 multiMoranLmmsRes  = extractResultsMulti(multiMoranLmms, design)
 head(multiMoranLmmsRes$result$Intercept)
 ```
 
 No features are significantly associated after multiplicity correction. For illustration, we plot the feature pair with the smallest p-values nevertheless:
 
-```{r, fig.height = 9}
+```{r topPairMulti, fig.height = 9}
 plotTopPair(multiMoranLmmsRes, 
     Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes, 
     Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.3)

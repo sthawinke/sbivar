@@ -16,6 +16,13 @@ library(devtools)
 install_github("sthawinke/sbivar", build_vignettes = TRUE)
 ```
 
+The *sbivar* package depends on the *smoppix* package of the same author
+of at least version 1.1.8, which can be installed as:
+
+``` r
+install_github("sthawinke/smoppix")
+```
+
 Once installed, you can load the package
 
 ``` r

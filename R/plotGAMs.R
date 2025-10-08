@@ -76,6 +76,7 @@ plotGAMsFromMatrix = function(X, Y, features, Cx, Ey,
         Y = Y[idY <- (rowSums(Y)>0),]
         Ey = Ey[idY,]
     }
+    X = giveValidNames(X);Y = giveValidNames(Y)
     offsets = list("X" = makeOffset(X, families[["X"]]),
                    "Y" = makeOffset(Y, families[["Y"]]))
     plotGAMs(x = X[, features[1]], y = Y[,features[2]], Cx = Cx, Ey = Ey,

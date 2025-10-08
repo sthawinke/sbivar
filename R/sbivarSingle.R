@@ -49,6 +49,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs
         message("Performing sbivar analysis on a single image\n")
     }
     n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y)
+    X = giveValidNames(X);Y = giveValidNames(Y)
     method = match.arg(method)
     GPmethod = match.arg(GPmethod)
     foo = checkInputSingle(X, Y, Cx, Ey)

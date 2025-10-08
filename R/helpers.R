@@ -34,6 +34,15 @@ scaleMinusOne = function(y, na.rm = TRUE){
 makeNames = function(featX, featY){
     make.names(apply(expand.grid(featX, featY), 1, paste, collapse = "__"))
 }
+#' Give a matrix valid names
+#'
+#' @param X the matrix
+#'
+#' @returns The same matrix, with potentially adapted column names
+giveValidNames = function(X){
+    colnames(X) = make.names(colnames(X))
+    return(X)
+}
 #' A wrapper for Matrix::bdiag maintaining names
 #'
 #' @param A,B Matrix to be used in \link[Matrix]{bdiag}

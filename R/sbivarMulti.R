@@ -25,6 +25,7 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
     if(verbose){
         message("Performing sbivar analysis on ", length(Xl), " images")
     }
+    Xl = lapply(Xl, giveValidNames);Yl = lapply(Yl, giveValidNames)
     foo = checkInputMulti(Xl, Yl, Cxl, Eyl)
     jointCoordinates <- missing(Eyl)
     out = if(method == "GAMs"){

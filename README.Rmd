@@ -7,17 +7,16 @@ This repo provides code for performing bivariate association tests between diffe
 
 <!-- % As introduced in our [preprint](). -->
 
+Before installing the _sbivar_ package, an update of the _smoppix_ package from Github (or BioConductor _devel_ branch) of the same author of at least version 1.1.8 may be needed to gain access to previously unexported functions. The latest version of the _smoppix_ can be installed as:
+
+```{r installSmoppix, eval = FALSE}
+devtools::install_github("sthawinke/smoppix")
+```
+
 The package can be installed from GitHub as follows:
 
 ```{r installAndLoadGitHub, eval = FALSE}
-library(devtools)
 devtools::install_github("sthawinke/sbivar", build_vignettes = TRUE)
-```
-
-The _sbivar_ package depends on the _smoppix_ package of the same author of at least version 1.1.8, which can be installed as:
-
-```{r installSmoppix, eval = FALSE}
-install_github("sthawinke/smoppix")
 ```
 
 ```{r install, eval = FALSE, echo = FALSE}

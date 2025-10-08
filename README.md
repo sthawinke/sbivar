@@ -9,18 +9,20 @@ framework (CCF) as obtained from alignment is considered given.
 
 <!-- % As introduced in our [preprint](). -->
 
+Before installing the *sbivar* package, an update of the *smoppix*
+package from Github (or BioConductor *devel* branch) of the same author
+of at least version 1.1.8 may be needed to gain access to previously
+unexported functions. The latest version of the *smoppix* can be
+installed as:
+
+``` r
+devtools::install_github("sthawinke/smoppix")
+```
+
 The package can be installed from GitHub as follows:
 
 ``` r
-library(devtools)
-install_github("sthawinke/sbivar", build_vignettes = TRUE)
-```
-
-The *sbivar* package depends on the *smoppix* package of the same author
-of at least version 1.1.8, which can be installed as:
-
-``` r
-install_github("sthawinke/smoppix")
+devtools::install_github("sthawinke/sbivar", build_vignettes = TRUE)
 ```
 
 Once installed, you can load the package

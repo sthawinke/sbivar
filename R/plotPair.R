@@ -62,6 +62,7 @@ plotPairMulti = function(Xl, Yl, Cxl, Eyl, features, normalizationX = c("none", 
     }
     Xl = lapply(Xl, giveValidNames);Yl = lapply(Yl, giveValidNames)
     foo = checkInputMulti(Xl, Yl, Cxl, Eyl)
+    features = make.names(features)
     stopifnot(length(features)==2)
     normalizationX = match.arg(normalizationX);normalizationY = match.arg(normalizationY)
     normFunX = switch(normalizationX, "none" = identity, "log" = logNorm)
@@ -102,6 +103,7 @@ plotPairSingle = function(X, Y, Cx, Ey, features, normalizationX = c("none", "lo
         Y = assayT(Y, assayY)
     }
     X = giveValidNames(X);Y = giveValidNames(Y)
+    features = make.names(features)
     foo = checkInputSingle(X, Y, Cx, Ey)
     normalizationX = match.arg(normalizationX);normalizationY = match.arg(normalizationY)
     normFunX = switch(normalizationX, "none" = identity, "log" = logNorm)

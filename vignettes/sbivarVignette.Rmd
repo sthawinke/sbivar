@@ -203,14 +203,14 @@ multiMoranRes = sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
 Next we plug the calculated Moran's I values into a linear model, with random effects for the individual mice:
 
 ```{r multiLmms}
-design = data.frame("mouse" = mouse)
-multiMoranLmms = fitLinModels(multiMoranRes, design, Formula = ~ (1|mouse))
+designDf = data.frame("mouse" = mouse)
+multiMoranLmms = fitLinModels(multiMoranRes, designDf, Formula = ~ (1|mouse))
 ```
 
 Extract the results and show the results for the intercept, i.e. the overall effect
 
 ```{r extractMulti}
-multiMoranLmmsRes = extractResultsMulti(multiMoranLmms, design)
+multiMoranLmmsRes = extractResultsMulti(multiMoranLmms, designDf)
 head(multiMoranLmmsRes$result$Intercept)
 ```
 
@@ -295,8 +295,8 @@ MetSElist = lapply(selfName(names(Vicari$MetaboliteOutcomes)), function(nam){
 })
 multiMoranResSE = sbivar(X = StxSElist, Y = MetSElist, assayX = "transcripts", 
                          assayY = "metabolites", method = "Moran", wo = "distance")
-multiMoranLmmsSE = fitLinModels(multiMoranResSE, design, Formula = ~ (1|mouse))
-multiMoranLmmsResSE = extractResultsMulti(multiMoranLmmsSE, design)
+multiMoranLmmsSE = fitLinModels(multiMoranResSE, designDf, Formula = ~ (1|mouse))
+multiMoranLmmsResSE = extractResultsMulti(multiMoranLmmsSE, designDf)
 head(multiMoranLmmsResSE$result$Intercept)
 ```
 
@@ -329,9 +329,9 @@ And run the same analysis:
 sbivarMultiSingleSE = sbivar(SEsingleStx, SEsingleMet, sample_id_x = "sample_id",
                              assayX = "transcripts", assayY = "metabolites", 
                              method = "Correlation")
-multiMoranLmmsSingleSE = fitLinModels(sbivarMultiSingleSE, design, 
+multiMoranLmmsSingleSE = fitLinModels(sbivarMultiSingleSE, designDf, 
                                       Formula = ~ (1|mouse))
-multiMoranLmmsResSingleSE = extractResultsMulti(multiMoranLmmsSingleSE, design)
+multiMoranLmmsResSingleSE = extractResultsMulti(multiMoranLmmsSingleSE, designDf)
 ```
 
 # Troubleshooting

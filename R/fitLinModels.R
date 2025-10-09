@@ -6,7 +6,7 @@
 #'
 #' @param result A result with the measures of bivariate spatial association,
 #' from a call to the \link{sbivar} function with multiple images
-#' @param design A design dataframe
+#' @param designDf A design dataframe
 #' @param Formula A formula for the linear model to be fitted, can contain random effects.
 #' @param Control A control list for lmerTest::lmer
 #' @returns For fitLinModels(), a list of linear models
@@ -30,7 +30,7 @@
 #' @importFrom BiocParallel bplapply
 #' @seealso \link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}, \link[stats]{p.adjust}
 #' @order 1
-fitLinModels = function(result, design, Formula, Control = lmerControl(
+fitLinModels = function(result, designDf, Formula, verbose = TRUE, Control = lmerControl(
     check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
     check.conv.singular = .makeCC(action = "ignore", tol = formals(isSingular)$tol),
     check.conv.hess = .makeCC(action = "ignore", tol = 1e-06))){
@@ -39,13 +39,13 @@ fitLinModels = function(result, design, Formula, Control = lmerControl(
         stop("Fitting linear models only makes sense for multi-image analyses!")
     }
     measures = result$estimates
-    stopifnot(length(measures)==nrow(design), is.data.frame(design),
+    stopifnot(length(measures)==nrow(designDf), is.data.frame(designDf),
               is.character(Formula) || is(Formula, "formula"))
     withWeights <- (result$method %in% c("GAMs"))#, "Correlation"
     namesFun = if(withWeights) rownames else names
     Features = selfName(unique(unlist(lapply(measures, namesFun)))) # All feature pairs present
     #Prepare matrices of outcomes and weights
-    outMat = matrix(0, nrow = nrow(design), ncol = length(Features),
+    outMat = matrix(0, nrow = nrow(designDf), ncol = length(Features),
                     dimnames = list(names(measures), Features))
     if(withWeights){
         weightsMat = outMat
@@ -61,11 +61,11 @@ fitLinModels = function(result, design, Formula, Control = lmerControl(
     #Replace outcome variable by "out"
     MM <- length(findbars(Formula)) > 0
     fixedVars = all.vars(nobars(Formula)[[3]])
-    baseDf = data.frame("out" = 0, centerNumeric(design))
+    baseDf = data.frame("out" = 0, centerNumeric(designDf))
     if (is.null(fixedVars)) {
         contrasts <- NULL
     } else {
-        discreteVars <- selfName(intersect(getDiscreteVars(design), fixedVars))
+        discreteVars <- selfName(intersect(getDiscreteVars(designDf), fixedVars))
         contrasts <- lapply(discreteVars, function(x) named.contr.sum)
     }
     if(MM){

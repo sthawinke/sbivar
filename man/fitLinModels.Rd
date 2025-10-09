@@ -7,8 +7,9 @@
 \usage{
 fitLinModels(
   result,
-  design,
+  designDf,
   Formula,
+  verbose = TRUE,
   Control = lmerControl(check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
     check.conv.singular = .makeCC(action = "ignore", tol = formals(isSingular)$tol),
     check.conv.hess = .makeCC(action = "ignore", tol = 1e-06))
@@ -20,7 +21,7 @@ extractResultsMulti(result, design, method = "BH")
 \item{result}{A result with the measures of bivariate spatial association,
 from a call to the \link{sbivar} function with multiple images}
 
-\item{design}{A design dataframe}
+\item{designDf}{A design dataframe}
 
 \item{Formula}{A formula for the linear model to be fitted, can contain random effects.}
 

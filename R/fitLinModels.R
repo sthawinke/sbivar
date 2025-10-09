@@ -27,7 +27,7 @@
 #' @importFrom lme4 lmerControl .makeCC isSingular lFormula mkReTrms findbars nobars
 #' @importFrom methods is
 #' @importFrom smoppix centerNumeric named.contr.sum loadBalanceBplapply
-#' @importFrom BiocParallel bplapply
+#' @importFrom BiocParallel bplapply bpparam
 #' @seealso \link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}, \link[stats]{p.adjust}
 #' @order 1
 fitLinModels = function(result, designDf, Formula, verbose = TRUE, Control = lmerControl(
@@ -76,6 +76,9 @@ fitLinModels = function(result, designDf, Formula, verbose = TRUE, Control = lme
     modMat <- model.matrix(nobars(Formula), baseDf, contrasts.arg = contrasts)
     #Fixed effects model matrix
     Assign <- attr(modMat, "assign")
+    if(verbose)
+        message("Fitting ", length(Features), if(MM) " mixed" else " fixed",
+                " effects models on ", bpparam()$workers, " cores")
     models <- loadBalanceBplapply(Features, function(feat) {
         baseDf$out = outMat[, feat]
         out <- if (sum(id <- !is.na(baseDf$out)) < 3) {

@@ -340,11 +340,11 @@ multiMoranLmmsResSingleSE = extractResultsMulti(multiMoranLmmsSingleSE, designDf
 
 ## AnnData
 
-AnnData is python data format often used to store spatial experiment results, which can also be read into R. An AnnData object is e.g. created by reading an '.h5ad' with the functionality of the _anndata_ R-package. Here we adapted one a file from [https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/GZFCWC](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/GZFCWC) from the publication by @Godfrey2025, keeping its structure but subsetting it to only necessary components and the 10 most abundant features per modality. For illustration, this file is included in the _sbivar_ package and can be loaded (if the _anndata_ and _zellkonverter_ packages are installed) as:
+AnnData is python data format often used to store spatial experiment results, which can also be read into R. An AnnData object is e.g. created by reading an '.h5ad' with the functionality of the _anndata_ R-package. Here we adapted one a file from the [study](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/GZFCWC) by @Godfrey2025, keeping its structure but subsetting it to only necessary components and the 10 most abundant features per modality. For illustration, this file is included in the _sbivar_ package and can be read in (if the _anndata_ and _zellkonverter_ packages are installed) as:
 
-```{r readh5ad}
+```{r readh5ad, message = FALSE}
 if(reqadzk <- (require(anndata) && require(zellkonverter))){
-    annDataObj = read_h5ad(system.file("h5adData", "LC_170_subset.h5ad", package = "sbivar"))      #Read in subset h5ad file
+    annDataObj = read_h5ad(system.file("h5adData", "LC_170_subset.h5ad", package = "sbivar"))
 }
 ```
 

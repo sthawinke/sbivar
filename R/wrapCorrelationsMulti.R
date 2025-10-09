@@ -9,8 +9,11 @@
 #' @returns A list of named correlation vectors
 #' @importFrom stats cor
 #' @seealso \link{matchCoords}
-wrapCorrelationsMulti = function(Xl, Yl, Cxl, Eyl, mapToFinest, jointCoordinates){
+wrapCorrelationsMulti = function(Xl, Yl, Cxl, Eyl, mapToFinest, jointCoordinates,
+                                 verbose){
     lapply(selfName(names(Xl)), function(nam){
+        if(verbose)
+            printIteration(nam, names(Xl))
         if(!jointCoordinates && !identical(Xl[[nam]], Yl[[nam]])){
             matchedCoords = matchCoords(Cxl[[nam]], Eyl[[nam]], mapToFinest = mapToFinest)
             coordMat = matchedCoords$coordMat

@@ -179,3 +179,12 @@ splitSpatialExperiment = function(spe, sample_id){
     spe_list <- split(seq_len(ncol(spe)), colData(spe)[,sample_id])
     lapply(spe_list, function(cols) spe[, cols])
 }
+#' Print a message for the current iteration
+#'
+#' @param current current state of the iterator
+#' @param all vector of all iterators
+#'
+#' @returns prints message to output
+printIteration = function(current, all){
+    message("Image ", which(all==current), " of ", length(all))
+}

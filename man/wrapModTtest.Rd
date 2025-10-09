@@ -4,7 +4,7 @@
 \alias{wrapModTtest}
 \title{Perform modified t-tests for all pairs, after performing nearest-neighbour matching if necessary}
 \usage{
-wrapModTtest(X, Y, Cx, Ey, mapToFinest = FALSE, jointCoordinates = FALSE)
+wrapModTtest(X, Y, Cx, Ey, mapToFinest, jointCoordinates, verbose)
 }
 \arguments{
 \item{X, Y}{Matrices of omics measurements}
@@ -16,6 +16,8 @@ occur to the dataset with the best resolution, i.e. the one with the highest sam
 .}
 
 \item{jointCoordinates}{A boolean, are measurements on the same location?}
+
+\item{verbose}{Should info on type of analysis be printed?}
 }
 \value{
 A dataframe of results sorted by p-value, also containing effective sample size (ESS) and correlation estimate.

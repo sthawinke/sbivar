@@ -15,6 +15,7 @@
 #' @seealso \link{fitLinModels}
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
 #' @inheritParams sbivarSingle
+#' @importFrom BiocParallel bpparam
 sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
                        method = c("GAMs", "Correlation", "Moran's I"), mapToFinest = FALSE,
                         wo = c("distance", "nn"), numNN = 8, n_points_grid = 6e2, verbose = TRUE){
@@ -23,19 +24,20 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
     stopifnot(is.numeric(numNN), is.numeric(n_points_grid), is.character(wo), is.logical(verbose),
               is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family")))
     if(verbose){
-        message("Performing sbivar analysis on ", length(Xl), " images")
+        message("Starting sbivar analysis of ", length(Xl), " images on ",
+                bpparam()$workers, " computing cores")
     }
     Xl = lapply(Xl, giveValidNames);Yl = lapply(Yl, giveValidNames)
     foo = checkInputMulti(Xl, Yl, Cxl, Eyl)
     jointCoordinates <- missing(Eyl)
     out = if(method == "GAMs"){
         wrapGAMsMulti(Xl, Yl, Cxl, Eyl, families = families,
-                 n_points_grid = n_points_grid)
+                 n_points_grid = n_points_grid, verbose = verbose)
     }  else if(method == "Correlation"){
         wrapCorrelationsMulti(Xl, Yl, Cxl, Eyl, mapToFinest = mapToFinest,
-                              jointCoordinates = jointCoordinates)
+                              jointCoordinates = jointCoordinates, verbose = verbose)
     } else if (method == "Moran's I"){
-        wrapMoransIMulti(Xl, Yl, Cxl, Eyl, wo = wo, numNN = numNN)
+        wrapMoransIMulti(Xl, Yl, Cxl, Eyl, wo = wo, numNN = numNN, verbose = verbose)
     }
     return(list("estimates" = out, "method" = method, "multiplicity" = "multi",
                 "families" = families))

@@ -4,7 +4,7 @@
 \alias{wrapMoransIMulti}
 \title{Find all Moran's I statistics for a list of matrices}
 \usage{
-wrapMoransIMulti(Xl, Yl, Cxl, Eyl, wo, numNN)
+wrapMoransIMulti(Xl, Yl, Cxl, Eyl, wo, numNN, verbose)
 }
 \arguments{
 \item{Xl, Yl}{Lists of matrices of omics measurements}
@@ -12,6 +12,8 @@ wrapMoransIMulti(Xl, Yl, Cxl, Eyl, wo, numNN)
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
 \item{wo, numNN}{Passed onto \link{buildWeightMat}}
+
+\item{verbose}{Should info on type of analysis be printed?}
 }
 \value{
 A list of named Moran's I vectors

@@ -4,7 +4,7 @@
 \alias{wrapCorrelationsMulti}
 \title{Find all cross-correlations for a list of matrices}
 \usage{
-wrapCorrelationsMulti(Xl, Yl, Cxl, Eyl, mapToFinest, jointCoordinates)
+wrapCorrelationsMulti(Xl, Yl, Cxl, Eyl, mapToFinest, jointCoordinates, verbose)
 }
 \arguments{
 \item{Xl, Yl}{Lists of matrices of omics measurements}
@@ -14,6 +14,8 @@ wrapCorrelationsMulti(Xl, Yl, Cxl, Eyl, mapToFinest, jointCoordinates)
 \item{mapToFinest}{Passed onto \link{wrapModTtest}}
 
 \item{jointCoordinates}{A boolean, are measurements on the same location?}
+
+\item{verbose}{Should info on type of analysis be printed?}
 }
 \value{
 A list of named correlation vectors

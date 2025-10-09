@@ -7,8 +7,10 @@
 #'
 #' @returns A list of named Moran's I vectors
 #' @seealso \link{buildWeightMat}
-wrapMoransIMulti = function(Xl, Yl, Cxl, Eyl, wo, numNN){
+wrapMoransIMulti = function(Xl, Yl, Cxl, Eyl, wo, numNN, verbose){
     lapply(selfName(names(Xl)), function(nam){
+        if(verbose)
+            printIteration(nam, names(Xl))
         out = c(crossprod(scale(Xl[[nam]]), buildWeightMat(Cxl[[nam]], Eyl[[nam]], wo = wo, numNN = numNN))
                 %*% scale(Yl[[nam]]))
         names(out) = makeNames(colnames(Xl[[nam]]), colnames(Yl[[nam]]))

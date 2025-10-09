@@ -6,3 +6,8 @@
 # 0.1.2
 
 - Enforce valid names on data matrices with giveValidNames()
+
+# 0.1.3
+
+- Make the package more verbose, printing progress on fitting and
+  testing

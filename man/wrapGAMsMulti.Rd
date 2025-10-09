@@ -4,7 +4,7 @@
 \alias{wrapGAMsMulti}
 \title{Wrapper function to fit GAMs and find correlations and standard error for data lists}
 \usage{
-wrapGAMsMulti(Xl, Yl, Cxl, Eyl, families, n_points_grid)
+wrapGAMsMulti(Xl, Yl, Cxl, Eyl, families, n_points_grid, verbose)
 }
 \arguments{
 \item{Xl, Yl}{Lists of matrices of omics measurements}
@@ -12,6 +12,8 @@ wrapGAMsMulti(Xl, Yl, Cxl, Eyl, families, n_points_grid)
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
 \item{families, n_points_grid}{See \link{wrapGAMs}}
+
+\item{verbose}{Should info on type of analysis be printed?}
 }
 \value{
 A list named like Xl, containing all results

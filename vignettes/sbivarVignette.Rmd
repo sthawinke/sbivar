@@ -325,7 +325,7 @@ SEsingleStx
 
 And run the same analysis:
 
-```{r singleSEanalysis}
+```{r singleSEanalysis, eval = FALSE}
 sbivarMultiSingleSE = sbivar(SEsingleStx, SEsingleMet, sample_id_x = "sample_id",
                              assayX = "transcripts", assayY = "metabolites", 
                              method = "Correlation")

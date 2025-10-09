@@ -14,7 +14,8 @@ wrapGPs(
   Quants,
   GPmethod,
   corStruct,
-  optControl
+  optControl,
+  verbose
 )
 }
 \arguments{
@@ -35,6 +36,8 @@ passed onto \link[nlme]{gls} as "method" if it equals "REML" or "ML".}
 At this point, only \link[nlme]{corGaus} is accepted.}
 
 \item{optControl}{List of control values, see \link[nlme]{glsControl}.}
+
+\item{verbose}{Should info on type of analysis be printed?}
 }
 \value{
 A named list of results

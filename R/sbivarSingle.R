@@ -29,6 +29,7 @@
 #' @importFrom stats p.adjust
 #' @importFrom methods is
 #' @importFrom nlme corGaus lmeControl
+#' @importFrom BiocParallel bpparam
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
 #' @details gpParams must be a list of length 2 with names 'X' and 'Y', consisting of matrices
 #' with rownames "mean", "nugget", "range" and "sigma", and column names as in X and Y.
@@ -46,7 +47,8 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs
              inherits(corStruct, "corStruct"),
               inherits(corStruct, "corGaus"), length(Quants)==2, is.numeric(Quants), is.logical(verbose))
     if(verbose){
-        message("Performing sbivar analysis on a single image\n")
+        message("Starting sbivar analysis of a single image on ",
+        bpparam()$workers, " computing cores")
     }
     n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y)
     X = giveValidNames(X);Y = giveValidNames(Y)
@@ -88,14 +90,14 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs
     colnames(Cx) = colnames(Ey) = c("x", "y")
     out = if(method == "GAMs"){
         wrapGAMs(X = X, Y = Y, Cx = Cx, Ey = Ey, families = families,
-                 n_points_grid = n_points_grid)
+                 n_points_grid = n_points_grid, verbose = verbose)
     } else if(method == "GPs"){
         wrapGPs(X = X, Y = Y, Cx = Cx, Ey = Ey, gpParams = gpParams, Quants = Quants,
                 GPmethod = GPmethod, corStruct = corStruct, optControl = optControl,
-                numLscAlts = numLscAlts)
+                numLscAlts = numLscAlts, verbose = verbose)
     } else if(method == "Modified t-test"){
         wrapModTtest(X = X, Y = Y, Cx = Cx, Ey = Ey, mapToFinest = mapToFinest,
-                     jointCoordinates = jointCoordinates)
+                     jointCoordinates = jointCoordinates, verbose = verbose)
     }
     out = cbind(out, "pAdj" = p.adjust(out[, "pVal"], method = "BH"))
     result = out[order(out[, "pVal"]),]

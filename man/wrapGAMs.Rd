@@ -4,7 +4,7 @@
 \alias{wrapGAMs}
 \title{Wrapper function to fit GAMs and test for all possible combinations}
 \usage{
-wrapGAMs(X, Y, Cx, Ey, families, n_points_grid)
+wrapGAMs(X, Y, Cx, Ey, families, n_points_grid, verbose)
 }
 \arguments{
 \item{X, Y}{Matrices of omics measurements}
@@ -16,6 +16,8 @@ for the outcome values. See details of \link{sbivarSingle}.}
 
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.}
+
+\item{verbose}{Should info on type of analysis be printed?}
 }
 \value{
 A named list of results

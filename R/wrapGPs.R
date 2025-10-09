@@ -7,11 +7,17 @@
 #' @returns A named list of results
 #' @importFrom smoppix loadBalanceBplapply
 #' @importFrom BiocParallel bplapply
-wrapGPs = function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants,
-                   GPmethod, corStruct, optControl){
+wrapGPs = function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
+                   corStruct, optControl, verbose){
     if(missing(gpParams)){
+        if(verbose){
+            message("Fitting GPs for first modality (", ncol(X), " features)")
+        }
         gpsx = fitManyGPs(mat = X, coord = Cx, GPmethod = GPmethod,
                           corStruct = corStruct, optControl = optControl)
+        if(verbose){
+            message("Fitting GPs for second modality (", ncol(Y), " features)")
+        }
         gpsy = fitManyGPs(mat = Y, coord = Ey, GPmethod = GPmethod,
                           corStruct = corStruct, optControl = optControl)
     } else {
@@ -23,6 +29,10 @@ wrapGPs = function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants,
     idN = seq_len(n);idM = n+seq_len(m) #Indices for x and y
     altSigmas = buildAltSigmas(distMat, numLscAlts = numLscAlts, Quants = Quants,
                                idN = idN, idM = idM)
+    if(verbose){
+        message("Performing all ", ncol(X)*ncol(Y),
+                " pairwise score tests on fitted GPs ...")
+    }
     out = loadBalanceBplapply(selfName(colnames(X)), function(featx){
         sx = base::solve(buildSigmaGp(gpsx[, featx], distMat = distMat[idN, idN]))
         vapply(selfName(colnames(Y)), FUN.VALUE = double(2), function(featy){

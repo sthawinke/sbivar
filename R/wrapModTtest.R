@@ -15,9 +15,11 @@
 #' @references
 #' \insertAllCited{}
 #' @importFrom Rdpack reprompt
-wrapModTtest = function(X, Y, Cx, Ey, mapToFinest = FALSE, jointCoordinates = FALSE){
+wrapModTtest = function(X, Y, Cx, Ey, mapToFinest, jointCoordinates, verbose){
     n = nrow(X);m = nrow(Y)
     if(!jointCoordinates){
+        if(verbose)
+            message("Matching coordinates")
         matchedCoords = matchCoords(Cx, Ey, mapToFinest = mapToFinest)
         coordMat = matchedCoords$coordMat
         if(matchedCoords$mapToX){
@@ -29,6 +31,9 @@ wrapModTtest = function(X, Y, Cx, Ey, mapToFinest = FALSE, jointCoordinates = FA
         coordMat = Cx
     }
     featGrid = expand.grid("featX" = colnames(X), "featY" = colnames(Y))
+    if(verbose){
+        message("Performing ", ncol(X)*ncol(Y), " modified t-tests")
+    }
     out = simplify2array(loadBalanceBplapply(seq_len(nrow(featGrid)), function(i){
         unlist(modified.ttest(X[, featGrid[i, "featX"]], Y[, featGrid[i, "featY"]],
                        coordMat)[c("corr", "ESS", "p.value")])

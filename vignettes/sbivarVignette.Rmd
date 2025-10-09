@@ -228,11 +228,15 @@ Again, the results of the multi-image analysis can be written to an external spr
 writeSbivarToXlsx(multiMoranLmmsRes, file = "myfile2.xlsx", sigLevel = 1)
 ```
 
-## SpatialExperiment and MultiAssayExperiment as inputs
+## Other common input formats
+
+Apart from matrices and lists, also other data objects from the Bioconductor universe can be analysed by _sbivar_.
+
+### SpatialExperiment and MultiAssayExperiment
 
 The [SpatialExperiment](https://doi.org/doi:10.18129/B9.bioc.SpatialExperiment) and [MultiAssayExperiment](https://doi.org/doi:10.18129/B9.bioc.MultiAssayExperiment) classes are used in Bioconductor to store spatial (multi) omics experiments. The _sbivar_ package provides functionality for doing analysis on these objects directly, for the general case of disjoint coordinate sets between the modalities. 
 
-### Single-image
+#### Single-image
 
 For illustration, we first construct _SpatialExperiment_ objects for the single-image case:
 
@@ -280,7 +284,7 @@ resMAE = sbivar(MAE, assayX = "transcripts", assayY = "metabolites",
                 families = FamiliesViari, method = "GAMs")
 ```
 
-### Multi-image
+#### Multi-image
 
 For the multi-image case, there are several options. One is to provide a list of _SpatialExperiment_ objects to the _sbivar_ function. We construct such list here for illustrative purposes:
 
@@ -332,6 +336,49 @@ sbivarMultiSingleSE = sbivar(SEsingleStx, SEsingleMet, sample_id_x = "sample_id"
 multiMoranLmmsSingleSE = fitLinModels(sbivarMultiSingleSE, designDf, 
                                       Formula = ~ (1|mouse))
 multiMoranLmmsResSingleSE = extractResultsMulti(multiMoranLmmsSingleSE, designDf)
+```
+
+### AnnData
+
+AnnData is python data format often used to store spatial experiment results, which can also be read into R. An AnnData object is e.g. created by reading an '.h5ad' with the functionality of the _anndata_ R-package. Here we take a file from [https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/GZFCWC](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/GZFCWC) from the publication by @Godfrey2025.
+
+```{r readh5ad}
+if(reqadzk <- (require(anndata) && require(zellkonverter))){
+    download.file(url ="https://dataverse.harvard.edu/api/access/datafile/10714505?format=original", destfile = "LC_170.h5ad") #Download the h5ad file from the repository
+    annDataObj = read_h5ad("LC_170.h5ad") #Read it in
+    file.remove("LC_170.h5ad") #Remove the file
+}
+```
+
+We suggest converting it to a _SingleCellExperiment_ object from the eponymous R-package using the _zellkonverter_ package:
+
+```{r anndata}
+if(reqadzk){
+    sceStx <- AnnData2SCE(annDataObj, X_name = "X")
+}
+```
+
+Note that a _SingleCellExperiment_ object can only contain one modality at the time, here the transcriptomics. From there on, it is only a small step to a _SpatialExperiment_ object as accepted by _sbivar_. The only tricky part are the spatial coordinates, which have no fixed slot in the _AnnData_ object. Here, they have been stored in the "obsm" slot of the _AnnData_ object, which means they have ended up in the "reducedDims" slot of the _SingleCellExperiment_ object. In addition, we create a _SpatialExperiment_ object for the metabolomics data, which has oddly been stored in the unstructured ("uns") slot of the _AnnData_ object. To keep build times of this vignette low, we again only look at a subset of 10 features
+
+```{r scetospe}
+if(reqadzk){
+    library(SpatialExperiment)
+    speStx <- SpatialExperiment(list("Stx" = assay(sceStx, "X")[1:10,]), 
+                                colData = colData(sceStx), spatialCoords = reducedDims(sceStx)$spatial)
+    #Now for the metabolomics data too
+    speMet = SpatialExperiment(list("msi" = t(annDataObj$uns$msi)[1:10,]), colData = colData(sceStx), spatialCoords = reducedDims(sceStx)$spatial)
+    rownames(speMet) = annDataObj$uns[["mz_features"]][1:10]
+}
+```
+
+Note that in this example, the samples of the two modalities have been pre-matched (the "spatialCoords" slot is the same), which is in general not recommended. The above code chunks should not be applied thoughtlessly, as the _AnnData_ structure is not very strict on the data types it includes. The analysis is then run as:
+
+```{r speanalyse}
+GodfreyRes = sbivar(speStx, speMet, assayX = "Stx", assayY = "msi")
+```
+
+```{r plottopGodfrey}
+plotTopPair(GodfreyRes, speStx, speMet)
 ```
 
 # Troubleshooting

@@ -25,6 +25,8 @@ from a call to the \link{sbivar} function with multiple images}
 
 \item{Formula}{A formula for the linear model to be fitted, can contain random effects.}
 
+\item{verbose}{Should a message with number of linear models and cores be printed?}
+
 \item{Control}{A control list for lmerTest::lmer}
 
 \item{method}{Multiplicity correction method passed onto p.adjust}

@@ -9,6 +9,7 @@
 #' @param designDf A design dataframe
 #' @param Formula A formula for the linear model to be fitted, can contain random effects.
 #' @param Control A control list for lmerTest::lmer
+#' @param verbose Should a message with number of linear models and cores be printed?
 #' @returns For fitLinModels(), a list of linear models
 #' @export
 #' @details The left hand side of "Formula" can be provided or not,

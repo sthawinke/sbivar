@@ -9,7 +9,7 @@
 #' @export
 #' @rdname fitLinModels
 #' @order 2
-extractResultsMulti <- function(result, design, method = "BH") {
+extractResultsMulti <- function(result, designDf, method = "BH") {
     id <- vapply(result$result, FUN.VALUE = TRUE, function(x) {
         is(x, "lmerModLmerTest") || is(x, "lm")
     })
@@ -28,10 +28,10 @@ extractResultsMulti <- function(result, design, method = "BH") {
         fixedVars = selfName(unique(unlist(lapply(result$result[id], function(x){
             all.vars(terms(x))[-1]
         }))))
-        categoricalVars = getDiscreteVars(design)
+        categoricalVars = getDiscreteVars(designDf)
         fixedOut <- lapply(fixedVars, function(Var) {
             if(discr <- Var %in% categoricalVars){
-                unVals <- unique(design[[Var]])
+                unVals <- unique(designDf[[Var]])
                 emptyCoef <- rep_len(NA, length(unVals))
                 names(emptyCoef) <- paste0(Var, unVals) # Prepare empty coefficient
             } else {

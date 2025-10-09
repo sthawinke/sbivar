@@ -18,10 +18,10 @@
 #' @examples
 #' example(sbivar, "sbivar")
 #' mouse = substr(names(Vicari$TranscriptOutcomes), 1, 10)
-#' design = data.frame("mouse" = mouse) # The design matrix
-#' multiMoranLmms = fitLinModels(VicariRes, design, Formula = ~ (1|mouse))
+#' designDf = data.frame("mouse" = mouse) # The design matrix
+#' multiMoranLmms = fitLinModels(VicariRes, designDf, Formula = ~ (1|mouse))
 #' #Extract the results
-#' resMoran = extractResultsMulti(multiMoranLmms, design = design)
+#' resMoran = extractResultsMulti(multiMoranLmms, designDf = designDf)
 #' head(resMoran$result$Intercept)
 #' @importFrom lmerTest lmer
 #' @importFrom stats formula terms model.matrix

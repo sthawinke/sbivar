@@ -15,7 +15,7 @@ fitLinModels(
     check.conv.hess = .makeCC(action = "ignore", tol = 1e-06))
 )
 
-extractResultsMulti(result, design, method = "BH")
+extractResultsMulti(result, designDf, method = "BH")
 }
 \arguments{
 \item{result}{A result with the measures of bivariate spatial association,
@@ -52,10 +52,10 @@ but it will be overridden by "out" for downstream analysis
 \examples{
 example(sbivar, "sbivar")
 mouse = substr(names(Vicari$TranscriptOutcomes), 1, 10)
-design = data.frame("mouse" = mouse) # The design matrix
-multiMoranLmms = fitLinModels(VicariRes, design, Formula = ~ (1|mouse))
+designDf = data.frame("mouse" = mouse) # The design matrix
+multiMoranLmms = fitLinModels(VicariRes, designDf, Formula = ~ (1|mouse))
 #Extract the results
-resMoran = extractResultsMulti(multiMoranLmms, design = design)
+resMoran = extractResultsMulti(multiMoranLmms, designDf = designDf)
 head(resMoran$result$Intercept)
 }
 \seealso{

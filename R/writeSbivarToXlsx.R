@@ -46,7 +46,10 @@ writeSbivarToXlsx = function(results, file, overwrite = FALSE, digits = 3,
         }
     }
     wb <- createWorkbook()
-    res = ifelse(results$multi, list("Baseline" = results$result), results$result)
+    res = if(results$multi)
+        results$result
+    else
+        list("Baseline" = results$result)
     for(nam in names(res)){
         mat = res[[nam]]
         mat <- mat[!is.na(mat[, "pAdj"]), , drop = FALSE]

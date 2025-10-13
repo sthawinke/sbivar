@@ -201,7 +201,9 @@ getSpatialCoords = function(X, Cx){
     if(inherits(X, "SpatialExperiment")){
         spatialCoords(X)
     } else if(is.list(X)){
-        mapply(X, Cx, FUN = getSpatialCoords)
+        lapply(selfName(names(X)), function(i){
+            getSpatialCoords(X[[i]], Cx[[i]])
+        })
     } else{
         Cx
     }

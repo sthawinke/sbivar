@@ -37,13 +37,11 @@ plotTopPair = function(results, ..., topRank = 1, parameter = "Intercept"){
         topFeats = sund(rownames(results$result)[topRank])
         plotPairSingle(features = topFeats, assayX = results$assayX,
                        assayY = results$assayY, ...)
-    } else if(results$multi){
+    } else {
         stopifnot(parameter %in% names(results$result))
         topFeats = sund(rownames(results$result[[parameter]])[topRank])
         plotPairMulti(features = topFeats, assayX = results$assayX,
               assayY = results$assayY, ...)
-    } else {
-        stop("Multiplicity tag unknown")
     }
 }
 #' @rdname plotTopPair
@@ -52,15 +50,10 @@ plotTopPair = function(results, ..., topRank = 1, parameter = "Intercept"){
 #' @order 3
 plotPairMulti = function(Xl, Yl, Cxl, Eyl, features, normalizationX = c("none", "log"),
                          normalizationY = c("none", "log"), size = 1.25, assayX, assayY){
-    if(inherits(Xl[[1]], "SpatialExperiment")){
-        Cxl = lapply(Xl, spatialCoords)
-        Xl = lapply(Xl, assayT, assayX)
-    }
-    if(inherits(Yl[[1]], "SpatialExperiment")){
-        Exl = lapply(Yl, spatialCoords)
-        Yl = lapply(Yl, assayT, assayX)
-    }
-    Xl = lapply(Xl, giveValidNames);Yl = lapply(Yl, giveValidNames)
+    Cxl = getSpatialCoords(Xl, Cxl)
+    Xl =  lapply(getX(Xl, assayX), giveValidNames)
+    Eyl = getSpatialCoords(Yl, Eyl)
+    Yl = lapply(getX(Yl, assayY), giveValidNames)
     foo = checkInputMulti(Xl, Yl, Cxl, Eyl)
     features = make.names(features)
     stopifnot(length(features)==2)

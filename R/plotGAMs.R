@@ -11,13 +11,12 @@
 #' the correlation has naturally, for legibility.
 #'
 #' @inheritParams wrapGAMs
-#' @param x,y outcome vectors
-#' @param newGrid The grid in which to evaluate the GAMs
 #' @param offsets List of length two with offsets
 #' @param scaleFun The scaling function to be applied before plotting
 #' @param addTitle A boolean, should a title be plotted
 #' @param features The features to plot
-#' @param resultsSingle Result of a call to \link{sbivarSingle}
+#' @param results Result of a call to \link{sbivar} (single-image) or to
+#' \link{fitLinModels} (multi-image)
 #' @param ... passed onto \link{fitGAM}
 #'
 #' @returns A ggplot object
@@ -78,7 +77,7 @@ plotGAMsTopResults = function(results, X, Y, Cx, Ey, topRank = 1,
     Cx = getSpatialCoords(X, Cx)
     X = getX(X, results$assayX)
     Ey = getSpatialCoords(Y, Ey)
-    Y = getX(Y, results$assayX)
+    Y = getX(Y, results$assayY)
     plotGAMs(X = X, Y = Y, features = topFeats, Cx = Cx, Ey = Ey,
                        multi = results$multi, ...)
 }

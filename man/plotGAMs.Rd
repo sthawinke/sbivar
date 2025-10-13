@@ -55,18 +55,13 @@ It only matters for the messages printed.}
 
 \item{...}{passed onto \link{fitGAM}}
 
-\item{results}{Results returned by \link{sbivarSingle}}
+\item{results}{Result of a call to \link{sbivar} (single-image) or to
+\link{fitLinModels} (multi-image)}
 
 \item{topRank}{An integer, the feature pair with the rank-th smallest p-value is plotted}
 
 \item{parameter}{The linear model parameter used to find the feature with the strongest effect.
 The default is the intercept, i.e. the overall effect.}
-
-\item{x, y}{outcome vectors}
-
-\item{newGrid}{The grid in which to evaluate the GAMs}
-
-\item{resultsSingle}{Result of a call to \link{sbivarSingle}}
 }
 \value{
 A ggplot object

@@ -11,3 +11,7 @@
 
 - Make the package more verbose, printing progress on fitting and
   testing
+
+# 0.1.4
+
+- Enforce x-y column names in sbivarMulti too

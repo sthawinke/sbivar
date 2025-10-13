@@ -28,6 +28,8 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
                 bpparam()$workers, " computing cores")
     }
     Xl = lapply(Xl, giveValidNames);Yl = lapply(Yl, giveValidNames)
+    Cxl = lapply(Cxl, tmpFun <- function(x) {colnames(x) = c("x", "y");x})
+    Eyl = lapply(Eyl, tmpFun)
     foo = checkInputMulti(Xl, Yl, Cxl, Eyl)
     jointCoordinates <- missing(Eyl)
     out = if(method == "GAMs"){

@@ -5,10 +5,12 @@
 #' for the outcome values. See details of \link{sbivarSingle}.
 #' @param n_points_grid The number of points in the new grid for the GAMs to be
 #' evaluated on.
+#' @param multi Flag to indicate this is part of a multi-image analysis.
+#' It only matters for the messages printed.
 #' @returns A named list of results
 #' @importFrom smoppix loadBalanceBplapply
 #' @importFrom BiocParallel bplapply
-wrapGAMs = function(X, Y, Cx, Ey, families, n_points_grid, verbose){
+wrapGAMs = function(X, Y, Cx, Ey, families, n_points_grid, verbose, multi = FALSE){
     if(verbose){
         message("Fitting GAMs for first modality (", ncol(X), " features)")
     }
@@ -19,8 +21,14 @@ wrapGAMs = function(X, Y, Cx, Ey, families, n_points_grid, verbose){
     gamsy = fitManyGAMs(mat = Y, coord = Ey, family = families[["Y"]], modality = "Y")
     ng = buildNewGrid(Cx = Cx, Ey = Ey, n_points_grid = n_points_grid)
     if(verbose){
-        message("Performing all ", ncol(X)*ncol(Y),
-                " pairwise tests on fitted GAMs ...")
+        numTests = ncol(X)*ncol(Y)
+        if(multi){
+            message("Estimating all ", numTests,
+                    " pairwise correlations on fitted GAMs ...")
+        } else {
+            message("Performing all ", numTests,
+                    " pairwise tests on fitted GAMs ...")
+            }
     }
     out = loadBalanceBplapply(selfName(names(gamsx)), function(featx){
         predx <- vcovPredGam(gamsx[[featx]], newdata = ng)

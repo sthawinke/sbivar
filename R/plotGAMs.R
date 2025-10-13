@@ -35,7 +35,7 @@
 plotGAMs = function(X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scaleMinusOne",
                     families = list("X" = gaussian(), "Y" = gaussian()),
                     addTitle = TRUE, n_points_grid = 6e2,
-                    multi = FALSE, ...){
+                    multi = is.list(X), ...){
     stopifnot(is.numeric(n_points_grid), all(vapply(families, FUN.VALUE = TRUE, is, "family")),
               is.character(features))
     features = make.names(features)

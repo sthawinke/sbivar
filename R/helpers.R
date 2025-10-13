@@ -188,6 +188,12 @@ splitSpatialExperiment = function(spe, sample_id){
 printIteration = function(current, all){
     message("Image ", which(all==current), " of ", length(all))
 }
+#' Extract data matrix
+#'
+#' @param X The matrix or SpatialExperiment object
+#' @param assay The name of the assay
+#'
+#' @returns A matrix
 getX = function(X, assay){
     if(inherits(X, "SpatialExperiment")){
         assayT(X, assay)
@@ -197,6 +203,12 @@ getX = function(X, assay){
         X
     }
 }
+#' Extract coordinate matrix
+#'
+#' @param X The matrix or SpatialExperiment object
+#' @param Cx The coordinate matrix
+#'
+#' @returns A coordinate matrix
 getSpatialCoords = function(X, Cx){
     if(inherits(X, "SpatialExperiment")){
         spatialCoords(X)

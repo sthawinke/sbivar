@@ -24,73 +24,63 @@
 #' @export
 #'
 #' @examples
-#' example(sbivar, "sbivar")
-#' plotGAMs(X[, 1], Y[, 1], Cx, Ey)
-#' plotGAMsFromMatrix(X, Y, features = c("X1", "Y1"), Cx = Cx, Ey = Ey)
+#' #Single image
+#' example(fitLinModels, "sbivar")
+#' plotGAMs(X, Y, Cx, Ey, features = c("X1", "Y3"))
 #' plotGAMsTopResults(resGAMs, X, Y, Cx = Cx, Ey = Ey)
+#' # Multi image
+#' plotGAMsTopResults(resMoran, Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
+#' Vicari$TranscriptCoords, Vicari$MetaboliteCoords)
 #' @import ggplot2
-#' @importFrom reshape2 melt
 #' @order 1
-plotGAMs = function(x, y, Cx, Ey, newGrid, offsets = list(), scaleFun = "scaleMinusOne",
+plotGAMs = function(X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scaleMinusOne",
                     families = list("X" = gaussian(), "Y" = gaussian()),
-                    addTitle = TRUE, n_points_grid = min(length(x), length(y)),
-                    features = c("x", "y"), ...){
-    stopifnot(is.numeric(n_points_grid), all(vapply(families, FUN.VALUE = TRUE, is, "family")))
-    colnames(Cx) = colnames(Ey) = c("x", "y")
+                    addTitle = TRUE, n_points_grid = 6e2,
+                    multi = FALSE, ...){
+    stopifnot(is.numeric(n_points_grid), all(vapply(families, FUN.VALUE = TRUE, is, "family")),
+              is.character(features))
+    features = make.names(features)
     scaleFun = get(as.character(scaleFun), mode = "function", getNamespace("sbivar"))
-    if(missing(newGrid))
-        newGrid = buildNewGrid(Cx = Cx, Ey = Ey, n_points_grid = n_points_grid)
-    modelx <- fitGAM(df = data.frame("value" = x, Cx), outcome = "value",
-                     family = families[["X"]], offset = offsets[["X"]], ...)
-    modely <- fitGAM(df = data.frame("value" = y, Ey), family = families[["Y"]],
-                     offset = offsets[["Y"]], outcome = "value", ...)
-    predx = vcovPredGam(modelx, newdata = newGrid)
-    predy = vcovPredGam(modely, newdata = newGrid)
-    corContr = (predx$pred-mean(predx$pred))*(predy$pred-mean(predy$pred))
-    corEst = sum(corContr)/((nrow(newGrid)-1)*sd(predx$pred)*sd(predy$pred))
-    dat = rbind(data.frame(newGrid, value = scaleFun(predx$pred), feature = "x"),
-                data.frame(newGrid, value = scaleFun(predy$pred), feature = "y"),
-                data.frame(newGrid, value = scaleFun(corContr), feature = "cor"))
-    gridMolt = melt(dat, id.vars = c("x", "y", "feature"), value.name = "Value")
-    gridMolt$feature = factor(gridMolt$feature, levels = c("x", "y", "cor"),
-                              labels = c(features[1], features[2], "Correlation"),
-                              ordered = TRUE)
-    ggplot(gridMolt, aes(x, y, fill = Value)) +
-        geom_raster() + coord_fixed() +
-        facet_grid( ~ feature) +
+    gamDf = if(multi){
+        foo = checkInputMulti(X, Y, Cx, Ey)
+        gamDfs = lapply(names(X), function(nam){
+            df = buildGamDf(X[[nam]], Y[[nam]], Cx[[nam]], Ey[[nam]],
+                            n_points_grid, families, features, scaleFun)$df
+            df$image = nam
+            df
+        })
+        Reduce(gamDfs, f = rbind)
+    } else {
+        foo = checkInputSingle(X, Y, Cx, Ey)
+        df = buildGamDf(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun)
+        corEst = df$corEst
+        df$df
+    }
+    ggplot(gamDf, aes(x, y, fill = Value)) +
+        geom_tile() + coord_fixed() +
+        facet_grid(if(multi) {image ~ feature} else  {~ feature}) +
         theme(axis.text.x = element_text(angle = 90)) +
         scale_fill_viridis_c(option = "H", name = "") +
         if(addTitle)
-            labs(title = paste("Spline surfaces, and contributions to correlation estimate", round(corEst, 3)))
-}
-#' @export
-#' @rdname plotGAMs
-#' @order 3
-plotGAMsFromMatrix = function(X, Y, features, Cx, Ey,
-                    families = list("X" = gaussian(), "Y" = gaussian()), ...){
-    if(families[["X"]]$family!="gaussian"){
-        X = X[idX <- (rowSums(X)>0),]
-        Cx = Cx[idX,]
-    }
-    if(families[["Y"]]$family!="gaussian"){
-        Y = Y[idY <- (rowSums(Y)>0),]
-        Ey = Ey[idY,]
-    }
-    X = giveValidNames(X);Y = giveValidNames(Y)
-    features = make.names(features)
-    offsets = list("X" = makeOffset(X, families[["X"]]),
-                   "Y" = makeOffset(Y, families[["Y"]]))
-    plotGAMs(x = X[, features[1]], y = Y[,features[2]], Cx = Cx, Ey = Ey,
-             families = families, offsets = offsets, features = features, ...)
+            labs(title = paste("Spline surfaces, and contributions to correlation estimate",
+                               if(!multi) round(corEst, 3)))
 }
 #' @export
 #' @rdname plotGAMs
 #' @order 2
 #' @inheritParams plotTopPair
-plotGAMsTopResults = function(resultsSingle, X, Y, Cx, Ey, topRank = 1, ...){
+plotGAMsTopResults = function(results, X, Y, Cx, Ey, topRank = 1,
+                              parameter = "Intercept", ...){
     stopifnot(is.numeric(topRank))
-    topFeats = sund(rownames(resultsSingle$result)[topRank])
-    plotGAMsFromMatrix(X = X, Y = Y, features = topFeats, Cx = Cx, Ey = Ey, ...)
+    topFeats = sund(rownames(
+        if(results$multi) {results$result[[parameter]]} else {results$result}
+        )[topRank])
+    Cx = getSpatialCoords(X, Cx)
+    X = getX(X, results$assayX)
+    Ey = getSpatialCoords(Y, Ey)
+    Y = getX(Y, results$assayX)
+    plotGAMs(X = X, Y = Y, features = topFeats, Cx = Cx, Ey = Ey,
+                       multi = results$multi, ...)
 }
 #' Make a list of offsets
 #'
@@ -103,4 +93,34 @@ makeOffset = function(X, family){
         switch(family$link, "inverse" = 1/libSizes, "log" = log(libSizes))
     }
     return(out)
+}
+#' @importFrom reshape2 melt
+buildGamDf = function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun, ...){
+    if(families[["X"]]$family!="gaussian"){
+        X = X[idX <- (rowSums(X)>0),]
+        Cx = Cx[idX,]
+    }
+    if(families[["Y"]]$family!="gaussian"){
+        Y = Y[idY <- (rowSums(Y)>0),]
+        Ey = Ey[idY,]
+    }
+    X = giveValidNames(X);Y = giveValidNames(Y)
+    colnames(Cx) = colnames(Ey) = c("x", "y")
+    newGrid = buildNewGrid(Cx = Cx, Ey = Ey, n_points_grid = n_points_grid)
+    modelx <- fitGAM(df = data.frame("value" = X[, features[1]], Cx), outcome = "value",
+                     family = families[["X"]], offset = makeOffset(X, families[["X"]]), ...)
+    modely <- fitGAM(df = data.frame("value" = Y[, features[2]], Ey), family = families[["Y"]],
+                     offset = makeOffset(Y, families[["Y"]]), outcome = "value", ...)
+    predx = vcovPredGam(modelx, newdata = newGrid)
+    predy = vcovPredGam(modely, newdata = newGrid)
+    corContr = (predx$pred-mean(predx$pred))*(predy$pred-mean(predy$pred))
+    corEst = sum(corContr)/((nrow(newGrid)-1)*sd(predx$pred)*sd(predy$pred))
+    dat = rbind(data.frame(newGrid, value = scaleFun(predx$pred), feature = "x"),
+                data.frame(newGrid, value = scaleFun(predy$pred), feature = "y"),
+                data.frame(newGrid, value = scaleFun(corContr), feature = "cor"))
+    gridMolt = melt(dat, id.vars = c("x", "y", "feature"), value.name = "Value")
+    gridMolt$feature = factor(gridMolt$feature, levels = c("x", "y", "cor"),
+                              labels = c(features[1], features[2], "Correlation"),
+                              ordered = TRUE)
+    return(list("df" = gridMolt, "corEst" = corEst))
 }

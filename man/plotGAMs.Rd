@@ -3,42 +3,40 @@
 \name{plotGAMs}
 \alias{plotGAMs}
 \alias{plotGAMsTopResults}
-\alias{plotGAMsFromMatrix}
 \title{Plot the fitted splines, and the correlation between them}
 \usage{
 plotGAMs(
-  x,
-  y,
+  X,
+  Y,
   Cx,
   Ey,
-  newGrid,
+  features,
   offsets = list(),
   scaleFun = "scaleMinusOne",
   families = list(X = gaussian(), Y = gaussian()),
   addTitle = TRUE,
-  n_points_grid = min(length(x), length(y)),
-  features = c("x", "y"),
+  n_points_grid = 600,
+  multi = FALSE,
   ...
 )
 
-plotGAMsTopResults(resultsSingle, X, Y, Cx, Ey, topRank = 1, ...)
-
-plotGAMsFromMatrix(
+plotGAMsTopResults(
+  results,
   X,
   Y,
-  features,
   Cx,
   Ey,
-  families = list(X = gaussian(), Y = gaussian()),
+  topRank = 1,
+  parameter = "Intercept",
   ...
 )
 }
 \arguments{
-\item{x, y}{outcome vectors}
+\item{X, Y}{Matrices of omics measurements}
 
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
-\item{newGrid}{The grid in which to evaluate the GAMs}
+\item{features}{The features to plot}
 
 \item{offsets}{List of length two with offsets}
 
@@ -52,15 +50,23 @@ for the outcome values. See details of \link{sbivarSingle}.}
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.}
 
-\item{features}{The features to plot}
+\item{multi}{Flag to indicate this is part of a multi-image analysis.
+It only matters for the messages printed.}
 
 \item{...}{passed onto \link{fitGAM}}
 
-\item{resultsSingle}{Result of a call to \link{sbivarSingle}}
-
-\item{X, Y}{Matrices of omics measurements}
+\item{results}{Results returned by \link{sbivarSingle}}
 
 \item{topRank}{An integer, the feature pair with the rank-th smallest p-value is plotted}
+
+\item{parameter}{The linear model parameter used to find the feature with the strongest effect.
+The default is the intercept, i.e. the overall effect.}
+
+\item{x, y}{outcome vectors}
+
+\item{newGrid}{The grid in which to evaluate the GAMs}
+
+\item{resultsSingle}{Result of a call to \link{sbivarSingle}}
 }
 \value{
 A ggplot object
@@ -78,8 +84,11 @@ Both spline surfaces are scaled to the [-1,1] range, the same as
 the correlation has naturally, for legibility.
 }
 \examples{
-example(sbivar, "sbivar")
-plotGAMs(X[, 1], Y[, 1], Cx, Ey)
-plotGAMsFromMatrix(X, Y, features = c("X1", "Y1"), Cx = Cx, Ey = Ey)
+#Single image
+example(fitLinModels, "sbivar")
+plotGAMs(X, Y, Cx, Ey, features = c("X1", "Y3"))
 plotGAMsTopResults(resGAMs, X, Y, Cx = Cx, Ey = Ey)
+# Multi image
+plotGAMsTopResults(resMoran, Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
+Vicari$TranscriptCoords, Vicari$MetaboliteCoords)
 }

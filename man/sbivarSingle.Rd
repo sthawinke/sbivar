@@ -46,7 +46,7 @@ A list with at least the following components
 Benjamini-Hochberg adjusted p-value ("pAdj"), sorted by increasing p-value.}
 \item{families}{As provided}
 \item{method}{As provided}
-\item{multiplicity}{"single", a flag for the type of analysis}
+\item{multi}{FALSE, a flag for the type of analysis}
 }
 \description{
 The tests can be applied to either disjoint or joint coordinate sets.

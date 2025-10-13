@@ -33,11 +33,11 @@
 #' Vicari$TranscriptCoords, Vicari$MetaboliteCoords, features = c("mt.Nd2", "X555.20713"))
 plotTopPair = function(results, ..., topRank = 1, parameter = "Intercept"){
     stopifnot(is.numeric(topRank))
-    if(results$multiplicity == "single"){
+    if(!results$multi){
         topFeats = sund(rownames(results$result)[topRank])
         plotPairSingle(features = topFeats, assayX = results$assayX,
                        assayY = results$assayY, ...)
-    } else if(results$multiplicity == "multi"){
+    } else if(results$multi){
         stopifnot(parameter %in% names(results$result))
         topFeats = sund(rownames(results$result[[parameter]])[topRank])
         plotPairMulti(features = topFeats, assayX = results$assayX,

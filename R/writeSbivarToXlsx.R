@@ -46,8 +46,7 @@ writeSbivarToXlsx = function(results, file, overwrite = FALSE, digits = 3,
         }
     }
     wb <- createWorkbook()
-    res = switch(results$multiplicity, "multi" = results$result,
-               "single" = list("Baseline" = results$result))
+    res = ifelse(results$multi,results$result, list("Baseline" = results$result))
     for(nam in names(res)){
         mat = res[[nam]]
         mat <- mat[!is.na(mat[, "pAdj"]), , drop = FALSE]

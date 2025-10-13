@@ -67,5 +67,5 @@ extractResultsMulti <- function(result, designDf, method = "BH") {
         c(list("Intercept" = intMat), fixedOut)
     }
     return(c(list("result" = out, "assayX" = result$assayX, "assayY" = result$assayY),
-             result[c("method", "families", "multiplicity")]))
+             result[c("method", "families", "multi")]))
 }

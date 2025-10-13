@@ -35,8 +35,8 @@ fitLinModels = function(result, designDf, Formula, verbose = TRUE, Control = lme
     check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
     check.conv.singular = .makeCC(action = "ignore", tol = formals(isSingular)$tol),
     check.conv.hess = .makeCC(action = "ignore", tol = 1e-06))){
-    stopifnot(all(c("estimates", "method", "multiplicity") %in% names(result)))
-    if(result$multiplicity == "single"){
+    stopifnot(all(c("estimates", "method", "multi") %in% names(result)))
+    if(!result$multi){
         stop("Fitting linear models only makes sense for multi-image analyses!")
     }
     measures = result$estimates
@@ -98,7 +98,7 @@ fitLinModels = function(result, designDf, Formula, verbose = TRUE, Control = lme
         return(out)
     })
     return(c(list("result" = models, "assayX" = result$assayX, "assayY" = result$assayY),
-             result[c("method", "families", "multiplicity")]))
+             result[c("method", "families", "multi")]))
 }
 #' Fit a linear model for an individual feature pair
 #'

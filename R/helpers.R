@@ -188,3 +188,21 @@ splitSpatialExperiment = function(spe, sample_id){
 printIteration = function(current, all){
     message("Image ", which(all==current), " of ", length(all))
 }
+getX = function(X, assay){
+    if(inherits(X, "SpatialExperiment")){
+        assayT(X, assay)
+    } else if(is.list(X)){
+        lapply(X, getX, assay = assay)
+    } else{
+        X
+    }
+}
+getSpatialCoords = function(X, Cx){
+    if(inherits(X, "SpatialExperiment")){
+        spatialCoords(X)
+    } else if(is.list(X)){
+        mapply(X, Cx, FUN = getSpatialCoords)
+    } else{
+        Cx
+    }
+}

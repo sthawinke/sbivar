@@ -25,7 +25,7 @@
 #' Benjamini-Hochberg adjusted p-value ("pAdj"), sorted by increasing p-value.}
 #' \item{families}{As provided}
 #' \item{method}{As provided}
-#' \item{multiplicity}{"single", a flag for the type of analysis}
+#' \item{multi}{FALSE, a flag for the type of analysis}
 #' @importFrom stats p.adjust
 #' @importFrom methods is
 #' @importFrom nlme corGaus lmeControl
@@ -102,6 +102,6 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs
     out = cbind(out, "pAdj" = p.adjust(out[, "pVal"], method = "BH"))
     result = out[order(out[, "pVal"]),]
     list("result" = result, "families" = families, "method" = method,
-         "multiplicity" = "single")
+         "multi" = FALSE)
 }
 

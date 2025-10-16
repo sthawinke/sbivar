@@ -48,18 +48,20 @@ test_that("Sbivar works on BioConductor objects SpatialExperiment and MultiAssay
     library(MultiAssayExperiment)
     n=8e1;m=1e2;p=4;k=3
     rna_counts <- matrix(rpois(n*p, lambda = 5), nrow = p, ncol = n)
-    colnames(rna_counts) <- paste0("rnaSpot", seq_len(n))
+    rownames(rna_counts) <- paste0("rnaSpot", seq_len(p))
+    colnames(rna_counts) <- paste0("rnaSample", seq_len(n))
     rna_coords <- cbind("x" = runif(n, 0, 1), "y" = runif(n, 0, 1))
-    spe_rna <- SpatialExperiment(assays = list("counts" = rna_counts),
+    spe_rna <- SpatialExperiment(assays = list("counts" = assay(rna_counts)),
                                  spatialCoords = rna_coords)
     # --- Protein data ---
     prot_counts <- matrix(rpois(m*k, lambda = 10), nrow = k, ncol = m)
-    colnames(prot_counts) <- paste0("protSpot", seq_len(m))
+    rownames(prot_counts) <- paste0("protSpot", seq_len(k))
+    colnames(prot_counts) <- paste0("protSample", seq_len(m))
     prot_coords <- cbind("x" = runif(m, 0, 1), "y" = runif(m, 0, 1))
-    spe_prot <- SpatialExperiment(assays = list("counts" = prot_counts),
+    spe_prot <- SpatialExperiment(assays = list("counts" = assay(prot_counts)),
                                   spatialCoords = prot_coords)
     # --- Combine into MultiAssayExperiment ---
-    mae <- MultiAssayExperiment(experiments = list(RNA = spe_rna, Protein = spe_prot))
+    mae <- MultiAssayExperiment(experiments = ExperimentList(RNA = spe_rna, Protein = spe_prot))
     expect_is(sbivar(mae, experimentX = "RNA", experimentY = "Protein", assayX = "counts",
              assayY = "counts", families = list("X" = mgcv::nb(), "Y" = mgcv::nb())), "list")
     #Provide separate SpatialExperiment objects

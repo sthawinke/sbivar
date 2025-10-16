@@ -70,12 +70,6 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs
     if(!identical(names(families), c("X", "Y"))){
         stop("Name families 'X' and 'Y' for unambiguous matching")
     }
-    if(is.null(colnames(X))){
-        colnames(X) = paste0("X", seq_len(p))
-    }
-    if(is.null(colnames(Y))){
-        colnames(Y) = paste0("Y", seq_len(k))
-    }
     if(!missing(gpParams)){
         if(!is.list(gpParams) || names(gpParams) != c("X", "Y") ||
            !all(vapply(gpParams, FUN.VALUE = TRUE, function(x){

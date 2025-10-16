@@ -27,6 +27,9 @@ checkInputSingle = function(X, Y, Cx, Ey){
             stop("Coordinate matrices must be of dimension 2!")
         }
     }
+    if(is.null(colnames(X)) || is.null(colnames(Y))){
+        stop("No feature names found! Make sure X and Y have column names!")
+    }
     if(findDoubleUnderScore(c(colnames(X), colnames(Y)))){
         stop("Double underscores found in feature names. Please change the names,
              as the double underscore is used in this package to separate feature pairs!")
@@ -65,6 +68,11 @@ checkInputMulti = function(Xl, Yl, Cxl, Eyl){
         if(!identical(names(Eyl), names(Xl))){
             stop("Eyl must be named identically to Xl, Yl and Cxl")
         }
+    }
+    if(any(vapply(names(Xl), FUN.VALUE = TRUE, function(nam){
+        is.null(colnames(Xl[[nam]])) || is.null(colnames(Yl[[nam]]))
+    }))){
+        stop("No feature names found! Make sure all elements of Xl and Yl have column names!")
     }
     if(findDoubleUnderScore(unlist(lapply(c(Xl, Yl), colnames)))){
         stop("Double underscores found in feature names. Please change the names,

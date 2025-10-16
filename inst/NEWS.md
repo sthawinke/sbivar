@@ -14,4 +14,8 @@
 
 # 0.1.4
 
-- Enforce x-y column names in sbivarMulti too
+- Enforce x-y column names for the coordinates in sbivarMulti too
+
+# 0.1.5
+
+- Be stricter on column names

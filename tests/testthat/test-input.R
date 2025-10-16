@@ -22,6 +22,8 @@ test_that("SbivarSingle throws errors for incorrect input", {
     expect_error(sbivar(X, Y, Cx[-1,], Ey, method = "GAMs"))
     expect_error(sbivar(X, Y, Cx, Ey, method = "GPs",
         corStruct = nlme::corExp(form = ~ x + y, nugget = TRUE, value = c(1, 0.25))))
+    Xnull = X;colnames(Xnull) = NULL
+    expect_error(sbiRes = sbivar(Xnull, Y, Cx, Ey, method = "GAMs"))
 
 })
 test_that("sbivarMulti works for correct input", {

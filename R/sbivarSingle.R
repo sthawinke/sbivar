@@ -9,7 +9,6 @@
 #' @param X,Y Matrices of omics measurements
 #' @param Cx,Ey Corresponding coordinate matrices of dimension two
 #' @param method A character string, indicating which method to apply
-#' @param mapToFinest Passed onto \link{wrapModTtest}
 #' @param gpParams Parameters of the Gaussian processes, see details
 #' @param GPmethod,Quants,numLscAlts,optControl,corStruct Passed onto \link{fitGP}
 #' @param n_points_grid,families Passed onto \link{wrapGAMs}
@@ -35,9 +34,9 @@
 #' with rownames "mean", "nugget", "range" and "sigma", and column names as in X and Y.
 #' This argument allows to pass parameters of the Gaussian processes estimated with other software
 #' to perform the score test.
-sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs"),
-                  n_points_grid = 6e2, mapToFinest = FALSE, families = list("X" = gaussian(), "Y" = gaussian()),
-                  GPmethod = c("REML", "ML"), verbose = TRUE,
+sbivarSingle = function(X, Y, Cx, Ey, method = c("MoransI", "GAMs", "Modified t-test", "GPs"),
+                  n_points_grid = 6e2, families = list("X" = gaussian(), "Y" = gaussian()),
+                  GPmethod = c("REML", "ML"), verbose = TRUE, wo = c("exp", "distance", "nn"), numNN = 8,
                   gpParams, Quants = c(0.005, 0.5), numLscAlts = 10,
                   optControl = lmeControl(opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
                                           niterEM = 1e3, msMaxEval = 1e3),
@@ -54,6 +53,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs
     X = giveValidNames(X);Y = giveValidNames(Y)
     method = match.arg(method)
     GPmethod = match.arg(GPmethod)
+    wo = match.arg(wo)
     foo = checkInputSingle(X, Y, Cx, Ey)
     if(missing(Ey)){
         #Run a joint analysis
@@ -88,7 +88,9 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs
         }
     }
     colnames(Cx) = colnames(Ey) = c("x", "y")
-    out = if(method == "GAMs"){
+    out = if(method=="MoransI"){
+        wrapMoransI(X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo)
+    } else if(method == "GAMs"){
         wrapGAMs(X = X, Y = Y, Cx = Cx, Ey = Ey, families = families,
                  n_points_grid = n_points_grid, verbose = verbose)
     } else if(method == "GPs"){
@@ -96,8 +98,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs
                 GPmethod = GPmethod, corStruct = corStruct, optControl = optControl,
                 numLscAlts = numLscAlts, verbose = verbose)
     } else if(method == "Modified t-test"){
-        wrapModTtest(X = X, Y = Y, Cx = Cx, Ey = Ey, mapToFinest = mapToFinest,
-                     jointCoordinates = jointCoordinates, verbose = verbose)
+        wrapModTtest(X = X, Y = Y, Cx = Cx, Ey = Ey, verbose = verbose)
     }
     out = cbind(out, "pAdj" = p.adjust(out[, "pVal"], method = "BH"))
     result = out[order(out[, "pVal"]),]

@@ -24,7 +24,7 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, ...
     Cx = Cx/MaxCoord;Ey = Ey/MaxCoord
     #Test statistic
     W = buildWeightMat(Cx, Ey, wo, eta = eta, numNN = numNN)
-    Ixy = (crossprod(X, W) %*% Y)/sqrt(prod(dim(W)-1)) #Normalize for matrix size
+    Ixy = (crossprod(X, W) %*% Y)/sqrt(prodFac <- prod(dim(W)-1)) #Normalize for matrix size
     #Variances
     variogramsX = matheronVariograms(X, Cx, width = width, cutoff = cutoff, ...)
     variogramsY = matheronVariograms(Y, Ey, width = width, cutoff = cutoff, ...)
@@ -43,14 +43,13 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, ...
     indepVar = tr(crossprod(W))#If negative variance, fall back on independence
     varIxy[varIxy<=0] = indepVar
     # P-values
-    IxyPvals = makePval(Ixy/sqrt(varIxy))
+    IxyPvals = makePval(Ixy/sqrt(varIxy/prodFac))
     #Maximum value
     maxIxy = svd(W, nu = 0, nv = 0)$d[1]
     #Reformat to long format
     out <- cbind("Ixy" = c(Ixy), "varIxy" = c(varIxy), "pVal" = c(IxyPvals))
     rownames(out) = makeNames(colnames(X), colnames(Y))
-    attr(out, "max") = maxIxy
-    return(out)
+    return(list("out" = out, "maxIxy" = maxIxy))
 }
 #' Estimate variograms using Matheron's binning estimator for many features at once
 #'
@@ -78,7 +77,7 @@ makeSigmaMatheron = function(variogram, distId, n){
     # Convert semivariance to covariance:
     cov_est <- 1 - variogram
     # Interpolate covariance for each distance using nearest distance class
-    CovMat <- matrix(cov_est[as.numeric(distId)], nrow = n, ncol = n)
+    CovMat <- matrix(cov_est[as.numeric(distId)], nrow = n, ncol = n) #sparseMatrix here?
     diag(CovMat) <- 1
     CovMat[is.na(CovMat)] = 0
     return(CovMat)

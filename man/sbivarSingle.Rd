@@ -9,7 +9,7 @@ sbivarSingle(
   Y,
   Cx,
   Ey,
-  method = c("MoransI", "GAMs", "Modified t-test", "GPs"),
+  method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
   n_points_grid = 600,
   families = list(X = gaussian(), Y = gaussian()),
   GPmethod = c("REML", "ML"),

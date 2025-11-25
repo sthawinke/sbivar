@@ -101,7 +101,7 @@ register(SerialParam())
 
 As example dataset, we use the one by @Vicari2024, which includes replicated measurements of spatial transcriptomics and metabolomics coprofiled on mouse brain sections. A subset of the data is available in the _sbivar_ package and can be loaded as:
 
-```{r}
+```{r datavicari}
 data(Vicari)
 names(Vicari)
 ```
@@ -120,7 +120,7 @@ The alignment seems successful, notice that some tissue areas are only covered b
 
 The Vicari data consist of six images which are best analysed jointly, but for didactical purposes we also analyse a single image here, the sample "V11L12-109_A1".
 
-```{r}
+```{r getsinglesample}
 singleSample = "V11L12-109_A1"
 singleStxCoords = Vicari$TranscriptCoords[[singleSample]]
 singleStx = Vicari$TranscriptOutcomes[[singleSample]]
@@ -128,43 +128,44 @@ singleMetCoords = Vicari$MetaboliteCoords[[singleSample]]
 singleMet = Vicari$MetaboliteOutcomes[[singleSample]]
 ```
 
-We analyse this single sample using generalized additive models (GAMs), with a negative binomial outcome distribution for the transcriptome data, and a gamma outcome distribution for the metabolome data. A log-link is used in both cases.
+We analyse this single sample using bivariate Moran's I:
 
-```{r}
+```{r testmoran}
+moransIRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, 
+                      method = "Moran's I")
+```
+
+Have a look at the results, which are sorted by increasing p-value:
+
+```{r headres}
+head(moransIRes$result)
+```
+
+Plot the most significantly spatially associated gene-metabolite pair `r gpMoran <- rownames(moransIRes$result)[1]`:
+
+```{r plottoppairgam, fig.height = 4.5}
+plotTopPair(moransIRes, X = singleStx, Y = singleMet, Cx = singleStxCoords, 
+            Ey = singleMetCoords)
+```
+
+We see a clear negative relationship.
+
+In addition, we employ generalized additive models (GAMs), with a negative binomial outcome distribution for the transcriptome data, and a gamma outcome distribution for the metabolome data. A log-link is used in both cases.
+
+```{r fitgam}
 FamiliesViari = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log"))
 gamRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, 
                       method = "GAMs",  families = FamiliesViari)
 ```
 
-Have a look at the results, which are sorted by increasing p-value:
+For GAMs, we can plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes$result[gpGam<- rownames(gamRes$result)[1], "corxy"], 3)`:
 
-```{r}
-head(gamRes$result)
-```
-
-Plot the most significantly spatially associated gene-metabolite pair `r gpGam <- rownames(gamRes$result)[1]`:
-
-```{r, fig.height = 4.5}
-plotTopPair(gamRes, X = singleStx, Y = singleMet, Cx = singleStxCoords, 
-            Ey = singleMetCoords)
-```
-
-We see a clear negative relationship. We can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes$result[gpGam, "corxy"], 3)`:
-
-```{r}
+```{r plotGAM}
 plotGAMsTopResults(gamRes, X = singleStx, Y = singleMet, Cx = singleStxCoords, 
                    Ey = singleMetCoords, families = FamiliesViari)
 ```
 
-Another available analysis is the modified t-test by @Clifford1989 after sample matching:
-
-```{r civModT}
-modTRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, 
-                      method = "Modified t-test")
-head(modTRes$result)
-```
-
-Finally, also Gaussian processes (GPs) can be applied to single images. Yet fitting GPs and calculating the score tests statistics can be computation and memory intensive! Hence the code is shown, but not run:
+Another available analysis for single images are Gaussian processes (GPs). Yet fitting GPs and calculating the score tests statistics can be computation and memory intensive! Hence the code is shown, but not run:
 
 ```{r gp, eval = FALSE}
 gpRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, 
@@ -175,7 +176,7 @@ head(gpRes$result)
 The analysis results can be written to an external spreadsheet using the following one-liner
 
 ```{r sbivarSingleOut, eval = FALSE}
-writeSbivarToXlsx(modTRes, file = "myfile.xlsx")
+writeSbivarToXlsx(gamRes, file = "myfile.xlsx")
 ```
 
 ## Multi-image analysis
@@ -332,7 +333,7 @@ And run the same analysis:
 ```{r singleSEanalysis, eval = FALSE}
 sbivarMultiSingleSE = sbivar(SEsingleStx, SEsingleMet, sample_id_x = "sample_id",
                              assayX = "transcripts", assayY = "metabolites", 
-                             method = "Correlation")
+                             method = "Moran's I")
 multiMoranLmmsSingleSE = fitLinModels(sbivarMultiSingleSE, designDf, 
                                       Formula = ~ (1|mouse))
 multiMoranLmmsResSingleSE = extractResultsMulti(multiMoranLmmsSingleSE, designDf)

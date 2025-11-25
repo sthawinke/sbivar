@@ -17,7 +17,7 @@
 #' @inheritParams sbivarSingle
 #' @importFrom BiocParallel bpparam
 sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
-                       method = c("GAMs", "Correlation", "Moran's I"), mapToFinest = FALSE,
+                       method = c("Moran's I", "GAMs", "Correlation"), mapToFinest = FALSE,
                         wo = c("exp", "distance", "nn"), numNN = 8, n_points_grid = 6e2, verbose = TRUE){
     method = match.arg(method)
     wo = match.arg(wo)

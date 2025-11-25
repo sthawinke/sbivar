@@ -10,7 +10,7 @@ sbivarMulti(
   Cxl,
   Eyl,
   families = list(X = gaussian(), Y = gaussian()),
-  method = c("GAMs", "Correlation", "Moran's I"),
+  method = c("Moran's I", "GAMs", "Correlation"),
   mapToFinest = FALSE,
   wo = c("exp", "distance", "nn"),
   numNN = 8,

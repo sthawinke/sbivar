@@ -4,18 +4,10 @@
 \alias{wrapModTtest}
 \title{Perform modified t-tests for all pairs, after performing nearest-neighbour matching if necessary}
 \usage{
-wrapModTtest(X, Y, Cx, Ey, mapToFinest, jointCoordinates, verbose)
+wrapModTtest(X, Y, Cx, verbose)
 }
 \arguments{
 \item{X, Y}{Matrices of omics measurements}
-
-\item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
-
-\item{mapToFinest}{A boolean, should the one-to-one mapping for modified t-test
-occur to the dataset with the best resolution, i.e. the one with the highest sample size?
-.}
-
-\item{jointCoordinates}{A boolean, are measurements on the same location?}
 
 \item{verbose}{Should info on type of analysis be printed?}
 }
@@ -23,7 +15,6 @@ occur to the dataset with the best resolution, i.e. the one with the highest sam
 A dataframe of results sorted by p-value, also containing effective sample size (ESS) and correlation estimate.
 }
 \description{
-If measurements are not on the same location, they are matched using nearest neighbour matching with the \link[RANN]{nn2} function.
 Then modified t-test is applied to all pairs, which tests for the significance
 of the Pearson correlation while accounting for spatial autocorrelation \insertCite{Clifford1989}{sbivar}.
 }

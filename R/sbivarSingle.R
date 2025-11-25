@@ -12,6 +12,8 @@
 #' @param gpParams Parameters of the Gaussian processes, see details
 #' @param GPmethod,Quants,numLscAlts,optControl,corStruct Passed onto \link{fitGP}
 #' @param n_points_grid,families Passed onto \link{wrapGAMs}
+#' @param wo,numNN,eta passed onto \link{buildWeightMat}
+#' @param width Width of the variogram estimation, passed onto \link[gstat]{variogram}
 #' @param verbose Should info on type of analysis be printed?
 #'
 #' @details Any normalization of the data should happen prior to calling this function.
@@ -35,16 +37,16 @@
 #' This argument allows to pass parameters of the Gaussian processes estimated with other software
 #' to perform the score test.
 sbivarSingle = function(X, Y, Cx, Ey, method = c("MoransI", "GAMs", "Modified t-test", "GPs"),
-                  n_points_grid = 6e2, families = list("X" = gaussian(), "Y" = gaussian()),
-                  GPmethod = c("REML", "ML"), verbose = TRUE, wo = c("exp", "distance", "nn"), numNN = 8,
-                  gpParams, Quants = c(0.005, 0.5), numLscAlts = 10,
-                  optControl = lmeControl(opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
-                                          niterEM = 1e3, msMaxEval = 1e3),
-                  corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25))){
-    stopifnot(is.numeric(n_points_grid), ncol(Cx) == 2, is.character(method),
+      n_points_grid = 6e2, families = list("X" = gaussian(), "Y" = gaussian()),
+      GPmethod = c("REML", "ML"), wo = c("exp", "distance", "nn"), numNN = 8,
+      gpParams, Quants = c(0.005, 0.5), numLscAlts = 10, width = cutoff/15, eta = 0.05, cutoff = sqrt(2)/3,
+      optControl = lmeControl(opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
+                              niterEM = 1e3, msMaxEval = 1e3),
+      corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25)), verbose = TRUE){
+    stopifnot(is.numeric(n_points_grid), ncol(Cx) == 2, is.character(method), is.numeric(numNN),
               all(vapply(families, FUN.VALUE = TRUE, is, "family")), is.list(optControl),
-             inherits(corStruct, "corStruct"),
-              inherits(corStruct, "corGaus"), length(Quants)==2, is.numeric(Quants), is.logical(verbose))
+             inherits(corStruct, "corStruct"), inherits(corStruct, "corGaus"),
+             length(Quants)==2, is.numeric(Quants), is.logical(verbose))
     if(verbose){
         message("Starting sbivar analysis of a single image on ",
         bpparam()$workers, " computing cores")
@@ -60,12 +62,9 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("MoransI", "GAMs", "Modified t-
         message("Only one coordinate matrix Cx supplied, and dimensions of X and Y do match.
              Performing an analysis with joint coordinate sets.")
         Ey = Cx
-        jointCoordinates = TRUE
-    } else if(identical(Cx, Ey)){
-        message("Identical coordinate matrices supplied, performing a joint analysis")
-        jointCoordinates = TRUE
-    } else {
-        jointCoordinates = FALSE
+    } else if(method=="Modified t-test"){
+       stop("Two coordinate matrices supplied, whereas the modified t-test requires only one.
+            If coordinates are shared, omit Ey. If coordinates are disjoint, considere using method='MoransI'.")
     }
     if(!identical(names(families), c("X", "Y"))){
         stop("Name families 'X' and 'Y' for unambiguous matching")
@@ -89,7 +88,8 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("MoransI", "GAMs", "Modified t-
     }
     colnames(Cx) = colnames(Ey) = c("x", "y")
     out = if(method=="MoransI"){
-        wrapMoransI(X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo)
+        wrapMoransI(X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo, numNN = numNN,
+                    eta = eta, width = width, verbose = verbose, cutoff = cutoff)
     } else if(method == "GAMs"){
         wrapGAMs(X = X, Y = Y, Cx = Cx, Ey = Ey, families = families,
                  n_points_grid = n_points_grid, verbose = verbose)
@@ -98,7 +98,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("MoransI", "GAMs", "Modified t-
                 GPmethod = GPmethod, corStruct = corStruct, optControl = optControl,
                 numLscAlts = numLscAlts, verbose = verbose)
     } else if(method == "Modified t-test"){
-        wrapModTtest(X = X, Y = Y, Cx = Cx, Ey = Ey, verbose = verbose)
+        wrapModTtest(X = X, Y = Y, Cx = Cx, verbose = verbose)
     }
     out = cbind(out, "pAdj" = p.adjust(out[, "pVal"], method = "BH"))
     result = out[order(out[, "pVal"]),]

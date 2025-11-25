@@ -9,18 +9,22 @@ sbivarSingle(
   Y,
   Cx,
   Ey,
-  method = c("GAMs", "Modified t-test", "GPs"),
+  method = c("MoransI", "GAMs", "Modified t-test", "GPs"),
   n_points_grid = 600,
-  mapToFinest = FALSE,
   families = list(X = gaussian(), Y = gaussian()),
   GPmethod = c("REML", "ML"),
-  verbose = TRUE,
+  wo = c("exp", "distance", "nn"),
+  numNN = 8,
   gpParams,
   Quants = c(0.005, 0.5),
   numLscAlts = 10,
+  width = cutoff/15,
+  eta = 0.05,
+  cutoff = sqrt(2)/3,
   optControl = lmeControl(opt = "optim", maxIter = 500, msMaxIter = 500, niterEM = 1000,
     msMaxEval = 1000),
-  corStruct = corGaus(form = ~x + y, nugget = TRUE, value = c(1, 0.25))
+  corStruct = corGaus(form = ~x + y, nugget = TRUE, value = c(1, 0.25)),
+  verbose = TRUE
 )
 }
 \arguments{
@@ -32,13 +36,15 @@ sbivarSingle(
 
 \item{n_points_grid, families}{Passed onto \link{wrapGAMs}}
 
-\item{mapToFinest}{Passed onto \link{wrapModTtest}}
-
 \item{GPmethod, Quants, numLscAlts, optControl, corStruct}{Passed onto \link{fitGP}}
 
-\item{verbose}{Should info on type of analysis be printed?}
+\item{wo, numNN, eta}{passed onto \link{buildWeightMat}}
 
 \item{gpParams}{Parameters of the Gaussian processes, see details}
+
+\item{width}{Width of the variogram estimation, passed onto \link[gstat]{variogram}}
+
+\item{verbose}{Should info on type of analysis be printed?}
 }
 \value{
 A list with at least the following components

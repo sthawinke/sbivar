@@ -4,12 +4,14 @@
 \alias{buildWeightMat}
 \title{Build a weight matrix for bivariate Moran's I}
 \usage{
-buildWeightMat(Cx, Ey, wo = c("distance", "nn"), numNN = 8)
+buildWeightMat(Cx, Ey, wo, eta, numNN)
 }
 \arguments{
 \item{Cx, Ey}{Two coordinate matrices}
 
 \item{wo}{The weighting option, either "nn" or "distance"}
+
+\item{eta}{parameter that controls the decay of the weights with distance, see details}
 
 \item{numNN}{An integer, the number of neighbours}
 }
@@ -19,4 +21,7 @@ A weight matrix
 \description{
 Build a weight matrix to be used in the calculation of the bivariate Moran's I
 statistic.
+}
+\details{
+For wo = "exp", the weight decays as exp(-d^2/eta) with d the distance between observations.
 }

@@ -11,10 +11,6 @@ wrapCorrelationsMulti(Xl, Yl, Cxl, Eyl, mapToFinest, jointCoordinates, verbose)
 
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
-\item{mapToFinest}{Passed onto \link{wrapModTtest}}
-
-\item{jointCoordinates}{A boolean, are measurements on the same location?}
-
 \item{verbose}{Should info on type of analysis be printed?}
 }
 \value{

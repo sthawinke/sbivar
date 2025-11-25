@@ -12,7 +12,7 @@ sbivarMulti(
   families = list(X = gaussian(), Y = gaussian()),
   method = c("GAMs", "Correlation", "Moran's I"),
   mapToFinest = FALSE,
-  wo = c("distance", "nn"),
+  wo = c("exp", "distance", "nn"),
   numNN = 8,
   n_points_grid = 600,
   verbose = TRUE
@@ -26,8 +26,6 @@ sbivarMulti(
 \item{families, n_points_grid}{Passed onto \link{wrapGAMsMulti}}
 
 \item{method}{A character string, indicating which method to apply}
-
-\item{mapToFinest}{Passed onto \link{wrapModTtest}}
 
 \item{wo, numNN}{Passed onto \link{buildWeightMat}}
 

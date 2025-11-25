@@ -17,3 +17,9 @@ output: github_document
 # 0.1.4
 
  - Enforce x-y column names for the coordinates in sbivarMulti too
+
+# 0.2.0
+
+ - Implement bivariate Moran's I for single images
+ - Disallow sample matching and correlation for disjoint coordinate sets
+ - Return maximum values for bivariate Moran's I

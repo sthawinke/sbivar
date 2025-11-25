@@ -53,7 +53,7 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, ...
 }
 #' Estimate variograms using Matheron's binning estimator for many features at once
 #'
-#' @importFrom gstat gstat variogram
+#' @importFrom gstat variogram
 #' @importFrom sp coordinates
 #' @importFrom stats as.formula
 #' @param cutoff,width passed onto \link[gstat]{variogram}
@@ -74,11 +74,18 @@ matheronVariograms <- function(X, Cx, width, cutoff) {
 #'
 #' @returns The autocovariance matrix
 makeSigmaMatheron = function(variogram, distId, n){
-    # Convert semivariance to covariance:
-    cov_est <- 1 - variogram
-    # Interpolate covariance for each distance using nearest distance class
-    CovMat <- matrix(cov_est[as.numeric(distId)], nrow = n, ncol = n) #sparseMatrix here?
+    CovMat <- matrix(1-variogram[distId], nrow = n, ncol = n) #sparseMatrix here?
     diag(CovMat) <- 1
     CovMat[is.na(CovMat)] = 0
+
+    id = which(!is.na(distId))
+    CovMat <- matrix(0, nrow = n, ncol = n) #sparseMatrix here?
+    diag(CovMat) <- 1
+    CovMat[id] = 1-variogram[distId[id]]
+
+    # CovMat <- diag(n) #sparseMatrix here?  #sparseMatrix( sparse = TRUE)
+    # id = which(!is.na(distId))
+    # # Convert semivariance to covariance:
+    # CovMat[id] = 1 - variogram[id]
     return(CovMat)
 }

@@ -220,3 +220,12 @@ getSpatialCoords = function(X, Cx){
         Cx
     }
 }
+#' Shift coordinates to baseline 0
+#'
+#' @param Coord coordinate matrix
+#' @return Shifted coordinate matrix
+moveCoords = function(Coord){
+    Coord[,1] = Coord[,1] - min(Coord[,1])
+    Coord[,2] = Coord[,2] - min(Coord[,2])
+    return(Coord)
+}

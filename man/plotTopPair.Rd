@@ -97,7 +97,7 @@ may be indicated to achieve clear plots (normalizationX = "log", see  \link{logN
 ### Single image
 example(sbivar, "sbivar")
 # Plot the feature pair with the most significant signal
-plotTopPair(resModtTest, X, Y, Cx, Ey)
+plotTopPair(resMoransI, X, Y, Cx, Ey)
 # Plot an arbitrary feature pair
 plotPairSingle(X, Y, Cx, Ey, features = c("X1", "Y1"))
 ### Multi image

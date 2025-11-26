@@ -58,6 +58,8 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, mod
 #' @importFrom gstat variogram vgm fit.variogram
 #' @importFrom sp coordinates
 #' @inheritParams sbivarSingle
+#' @param X Outcome matrix
+#' @param Cx Coordinate matrix
 matheronVariograms <- function(X, Cx, width, cutoff, model) {
     df = data.frame(x = Cx[,1], y = Cx[,2], z = X)
     sp::coordinates(df) <- ~x + y

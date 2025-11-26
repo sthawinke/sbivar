@@ -9,6 +9,8 @@ wrapModTtest(X, Y, Cx, verbose)
 \arguments{
 \item{X, Y}{Matrices of omics measurements}
 
+\item{Cx}{The shared coordinate matrix}
+
 \item{verbose}{Should info on type of analysis be printed?}
 }
 \value{

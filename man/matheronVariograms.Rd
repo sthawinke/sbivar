@@ -7,6 +7,10 @@
 matheronVariograms(X, Cx, width, cutoff, model)
 }
 \arguments{
+\item{X}{Outcome matrix}
+
+\item{Cx}{Coordinate matrix}
+
 \item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{variogram}}
 
 \item{model}{Variogram model, passed onto \link[gstat]{vgm}}

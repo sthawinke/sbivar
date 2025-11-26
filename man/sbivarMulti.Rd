@@ -27,6 +27,8 @@ sbivarMulti(
 
 \item{method}{A character string, indicating which method to apply}
 
+\item{eta}{parameter that controls the decay of the weights with distance, see details}
+
 \item{wo, numNN}{Passed onto \link{buildWeightMat}}
 
 \item{verbose}{Should info on type of analysis be printed?}

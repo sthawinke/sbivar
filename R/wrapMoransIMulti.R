@@ -4,6 +4,7 @@
 #' Observation matrices are scaled and centered prior to calculation
 #'
 #' @inheritParams sbivarMulti
+#' @inheritParams buildWeightMat
 #'
 #' @returns A list of named Moran's I vectors
 #' @seealso \link{buildWeightMat}

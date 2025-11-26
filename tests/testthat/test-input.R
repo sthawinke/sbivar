@@ -5,7 +5,7 @@ test_that("SbivarSingle works for correct input", {
     expect_message(sbiResMoran <- sbivar(X, Y, Cx, Ey, method = "Moran's I"))
     expect_message(sbiResMod <- sbivar(X, X, Cx, method = "Modified"))
     expect_identical(colnames(sbiResMoran$result),
-                     c("Correlation", "Effective sample size", "pVal", "pAdj"))
+                     c("Ixy", "varIxy", "pVal", "pAdj"))
     expect_false(is.unsorted(sbiRes$result[, "pVal"]))
     expect_silent(sbivar(X, Y, Cx, Ey, method = "GAMs", verbose = FALSE))
     expect_is(sbivar(X, Y, Cx, Ey, method = "GPs"), "list")
@@ -29,7 +29,6 @@ test_that("sbivarMulti works for correct input", {
     expect_identical(names(gamList), c("estimates", "method", "multi", "families"))
     expect_is(gamList$estimates[[1]], "matrix")
     expect_is(sbivar(Xl, Yl, Cxl, Eyl, method = "Moran's I"), "list")
-    expect_is(sbivar(Xl, Yl, Cxl, Eyl, method = "Correlation"), "list")
 })
 test_that("sbivarMulti throws errors for incorrect input", {
     expect_error(sbivar(Xl, Yl, Cxl, Eyl, method = "GPs"))

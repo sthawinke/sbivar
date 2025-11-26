@@ -15,6 +15,7 @@
 #' @seealso \link{fitLinModels}
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
 #' @inheritParams sbivarSingle
+#' @inheritParams buildWeightMat
 #' @importFrom BiocParallel bpparam
 sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
                        method = c("Moran's I", "GAMs", "Correlation"), eta = 0.025,

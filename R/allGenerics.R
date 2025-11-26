@@ -20,7 +20,6 @@
 #' colnames(Cx) = colnames(Ey) = c("x", "y")
 #' resMoransI = sbivar(X, Y, Cx, Ey, method = "Moran's I")
 #' resGAMs = sbivar(X, Y, Cx, Ey, method = "GAMs")
-#' resModtTest = sbivar(X, Y, Cx, Ey, method = "Modified")
 #' resModtTestJoint = sbivar(X, Y[seq_len(nrow(X)),], Cx, method = "Modified")
 #' # Single image analysis on synthetic data, converted to SpatialExperiment
 #' library(SpatialExperiment)

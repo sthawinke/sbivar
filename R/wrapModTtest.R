@@ -11,6 +11,7 @@
 #' @references
 #' \insertAllCited{}
 #' @importFrom Rdpack reprompt
+#' @param Cx The shared coordinate matrix
 wrapModTtest = function(X, Y, Cx, verbose){
     n = nrow(X);m = nrow(Y)
    featGrid = expand.grid("featX" = colnames(X), "featY" = colnames(Y))

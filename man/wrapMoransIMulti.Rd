@@ -13,6 +13,8 @@ wrapMoransIMulti(Xl, Yl, Cxl, Eyl, wo, numNN, eta, verbose)
 
 \item{wo, numNN}{Passed onto \link{buildWeightMat}}
 
+\item{eta}{parameter that controls the decay of the weights with distance, see details}
+
 \item{verbose}{Should info on type of analysis be printed?}
 }
 \value{

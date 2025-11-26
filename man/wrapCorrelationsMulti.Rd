@@ -4,12 +4,10 @@
 \alias{wrapCorrelationsMulti}
 \title{Find all cross-correlations for a list of matrices}
 \usage{
-wrapCorrelationsMulti(Xl, Yl, Cxl, Eyl, mapToFinest, jointCoordinates, verbose)
+wrapCorrelationsMulti(Xl, Yl, verbose)
 }
 \arguments{
 \item{Xl, Yl}{Lists of matrices of omics measurements}
-
-\item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
 \item{verbose}{Should info on type of analysis be printed?}
 }
@@ -18,8 +16,4 @@ A list of named correlation vectors
 }
 \description{
 Find all raw cross-correlations between lists of observations matrices from different modalities.
-Observations are first matched to nearest neighbours if necessary
-}
-\seealso{
-\link{matchCoords}
 }

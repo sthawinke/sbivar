@@ -2,7 +2,7 @@
 % Please edit documentation in R/wrapModTtest.R
 \name{wrapModTtest}
 \alias{wrapModTtest}
-\title{Perform modified t-tests for all pairs, after performing nearest-neighbour matching if necessary}
+\title{Perform modified t-tests for all pairs}
 \usage{
 wrapModTtest(X, Y, Cx, verbose)
 }

@@ -4,7 +4,7 @@
 \alias{wrapMoransIMulti}
 \title{Find all Moran's I statistics for a list of matrices}
 \usage{
-wrapMoransIMulti(Xl, Yl, Cxl, Eyl, wo, numNN, verbose)
+wrapMoransIMulti(Xl, Yl, Cxl, Eyl, wo, numNN, eta, verbose)
 }
 \arguments{
 \item{Xl, Yl}{Lists of matrices of omics measurements}

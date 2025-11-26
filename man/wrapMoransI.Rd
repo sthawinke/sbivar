@@ -13,6 +13,8 @@ wrapMoransI(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, model, ...)
 
 \item{wo, numNN, eta}{passed onto \link{buildWeightMat}}
 
+\item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{variogram}}
+
 \item{verbose}{Should info on type of analysis be printed?}
 
 \item{model}{Variogram model, passed onto \link[gstat]{vgm}}

@@ -2,23 +2,22 @@ context("Unit tests for input errors")
 test_that("SbivarSingle works for correct input", {
     sbiRes = sbivar(X, Y, Cx, Ey, method = "GAMs")
     expect_is(sbiRes, "list")
-    expect_message(sbiResMod <- sbivar(X, X, Cx, Cx, method = "Modified"))
-    expect_identical(colnames(sbiResMod$result),
+    expect_message(sbiResMoran <- sbivar(X, Y, Cx, Ey, method = "Moran's I"))
+    expect_message(sbiResMod <- sbivar(X, X, Cx, method = "Modified"))
+    expect_identical(colnames(sbiResMoran$result),
                      c("Correlation", "Effective sample size", "pVal", "pAdj"))
     expect_false(is.unsorted(sbiRes$result[, "pVal"]))
     expect_silent(sbivar(X, Y, Cx, Ey, method = "GAMs", verbose = FALSE))
     expect_is(sbivar(X, Y, Cx, Ey, method = "GPs"), "list")
 })
 test_that("SbivarSingle throws errors for incorrect input", {
-    expect_error(sbivar(X, Y, Cx, Ey, method = "Moran's I"))
+    expect_error(sbivar(X, Y, Cx, Ey, method = "Modified"))
     expect_error(sbivar(X, Y, Cx, method = "GAMs"))
     expect_error(sbivar(X, Y, Cx, Cx, method = "GAMs"))
     expect_error(sbivar(X, Y, Cx, Ey, method = "GAMs",
                               families = list(gaussian(), gaussian())))
     expect_error(sbivar(X, Y, Cx, Ey, method = "GAMs",
                               families = list("X" = gaussian(), "Y" = mean)))
-    expect_error(sbivar(X, Y, Cx, Y, method = "Modified"))
-    expect_error(sbivar(X, Y, X, Ey, method = "Modified"))
     expect_error(sbivar(X, Y, Cx[-1,], Ey, method = "GAMs"))
     expect_error(sbivar(X, Y, Cx, Ey, method = "GPs",
         corStruct = nlme::corExp(form = ~ x + y, nugget = TRUE, value = c(1, 0.25))))

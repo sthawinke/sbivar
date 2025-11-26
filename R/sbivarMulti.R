@@ -17,7 +17,7 @@
 #' @inheritParams sbivarSingle
 #' @importFrom BiocParallel bpparam
 sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
-                       method = c("Moran's I", "GAMs", "Correlation"), mapToFinest = FALSE,
+                       method = c("Moran's I", "GAMs", "Correlation"), eta = 0.025,
                         wo = c("exp", "distance", "nn"), numNN = 8, n_points_grid = 6e2, verbose = TRUE){
     method = match.arg(method)
     wo = match.arg(wo)
@@ -36,10 +36,9 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
         wrapGAMsMulti(Xl, Yl, Cxl, Eyl, families = families,
                  n_points_grid = n_points_grid, verbose = verbose)
     }  else if(method == "Correlation"){
-        wrapCorrelationsMulti(Xl, Yl, Cxl, Eyl, mapToFinest = mapToFinest,
-                              jointCoordinates = jointCoordinates, verbose = verbose)
+        wrapCorrelationsMulti(Xl, Yl, verbose = verbose)
     } else if (method == "Moran's I"){
-        wrapMoransIMulti(Xl, Yl, Cxl, Eyl, wo = wo, numNN = numNN, verbose = verbose)
+        wrapMoransIMulti(Xl, Yl, Cxl, Eyl, wo = wo, numNN = numNN, verbose = verbose, eta = eta)
     }
     return(list("estimates" = out, "method" = method, "multi" = TRUE,
                 "families" = families))

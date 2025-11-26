@@ -11,7 +11,7 @@ sbivarMulti(
   Eyl,
   families = list(X = gaussian(), Y = gaussian()),
   method = c("Moran's I", "GAMs", "Correlation"),
-  mapToFinest = FALSE,
+  eta = 0.025,
   wo = c("exp", "distance", "nn"),
   numNN = 8,
   n_points_grid = 600,

@@ -13,7 +13,7 @@
 #' @param GPmethod,Quants,numLscAlts,optControl,corStruct Passed onto \link{fitGP}
 #' @param n_points_grid,families Passed onto \link{wrapGAMs}
 #' @param wo,numNN,eta passed onto \link{buildWeightMat}
-#' @param cutoof,width Cutoff and width of the variogram estimation, passed onto \link[gstat]{variogram}
+#' @param cutoff,width Cutoff and width of the variogram estimation, passed onto \link[gstat]{variogram}
 #' @param model Variogram model, passed onto \link[gstat]{vgm}
 #' @param verbose Should info on type of analysis be printed?
 #'
@@ -40,7 +40,7 @@
 sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
       n_points_grid = 6e2, families = list("X" = gaussian(), "Y" = gaussian()),
       GPmethod = c("REML", "ML"), wo = c("exp", "distance", "nn"), numNN = 8, model = "Gau",
-      gpParams, Quants = c(0.005, 0.5), numLscAlts = 10, width = cutoff/15, eta = 0.05, cutoff = sqrt(2)/4,
+      gpParams, Quants = c(0.005, 0.5), numLscAlts = 10, width = cutoff/15, eta = 0.025, cutoff = sqrt(2)/3,
       optControl = lmeControl(opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
                               niterEM = 1e3, msMaxEval = 1e3),
       corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25)), verbose = TRUE){

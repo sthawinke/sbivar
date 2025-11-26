@@ -7,7 +7,9 @@
 matheronVariograms(X, Cx, width, cutoff, model)
 }
 \arguments{
-\item{cutoff, width}{passed onto \link[gstat]{variogram}}
+\item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{variogram}}
+
+\item{model}{Variogram model, passed onto \link[gstat]{vgm}}
 }
 \description{
 Estimate variograms using Matheron's binning estimator for many features at once

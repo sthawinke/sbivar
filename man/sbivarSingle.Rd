@@ -20,8 +20,8 @@ sbivarSingle(
   Quants = c(0.005, 0.5),
   numLscAlts = 10,
   width = cutoff/15,
-  eta = 0.05,
-  cutoff = sqrt(2)/4,
+  eta = 0.025,
+  cutoff = sqrt(2)/3,
   optControl = lmeControl(opt = "optim", maxIter = 500, msMaxIter = 500, niterEM = 1000,
     msMaxEval = 1000),
   corStruct = corGaus(form = ~x + y, nugget = TRUE, value = c(1, 0.25)),
@@ -45,9 +45,9 @@ sbivarSingle(
 
 \item{gpParams}{Parameters of the Gaussian processes, see details}
 
-\item{verbose}{Should info on type of analysis be printed?}
+\item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{variogram}}
 
-\item{cutoof, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{variogram}}
+\item{verbose}{Should info on type of analysis be printed?}
 }
 \value{
 A list with at least the following components

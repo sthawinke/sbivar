@@ -22,4 +22,4 @@ output: github_document
 
  - Implement bivariate Moran's I for single images
  - Disallow sample matching and correlation for disjoint coordinate sets
- - Return maximum values for bivariate Moran's I
+ - Scale by maximum values for bivariate Moran's I

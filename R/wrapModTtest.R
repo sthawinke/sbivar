@@ -1,4 +1,4 @@
-#' Perform modified t-tests for all pairs, after performing nearest-neighbour matching if necessary
+#' Perform modified t-tests for all pairs
 #'
 #' Then modified t-test is applied to all pairs, which tests for the significance
 #' of the Pearson correlation while accounting for spatial autocorrelation \insertCite{Clifford1989}{sbivar}.

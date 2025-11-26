@@ -37,7 +37,7 @@ if(.Platform$OS.type == "unix"){
     register(DoparParam(), default = TRUE)
 }
 #register(SerialParam()) # Switch on when mapping test coverage
-resModtTest = sbivar(X, Y, Cx, Ey, method = "Modified")
+resMoranTest = sbivar(X, Y, Cx, Ey, method = "Moran")
 resGAMsSingle = sbivar(X, Y, Cx, Ey, method = "GAM")
 estGAMs = sbivar(Xl, Yl, Cxl, Eyl, method = "GAMs")
 estMoran = sbivar(Xl, Yl, Cxl, Eyl, method = "Moran", wo = "nn")

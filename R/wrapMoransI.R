@@ -10,7 +10,7 @@
 #' @references
 #' \insertAllCited{}
 #' @importFrom Rdpack reprompt
-#' @importFrom stats dist var
+#' @importFrom stats dist
 #' @importFrom gstat variogramLine
 #'
 #' @details The Moran's I values and variances returned have been scaled by their maximum value,
@@ -57,8 +57,7 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, mod
 #'
 #' @importFrom gstat variogram vgm fit.variogram
 #' @importFrom sp coordinates
-#' @importFrom stats as.formula
-#' @param cutoff,width passed onto \link[gstat]{variogram}
+#' @inheritParams sbivarSingle
 matheronVariograms <- function(X, Cx, width, cutoff, model) {
     df = data.frame(x = Cx[,1], y = Cx[,2], z = X)
     sp::coordinates(df) <- ~x + y

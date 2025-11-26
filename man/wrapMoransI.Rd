@@ -4,7 +4,7 @@
 \alias{wrapMoransI}
 \title{Calculate ibivariate Moran's I between two modality matrix, with variance and p-value}
 \usage{
-wrapMoransI(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, ...)
+wrapMoransI(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, model, ...)
 }
 \arguments{
 \item{X, Y}{Matrices of omics measurements}
@@ -13,17 +13,22 @@ wrapMoransI(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, ...)
 
 \item{wo, numNN, eta}{passed onto \link{buildWeightMat}}
 
-\item{width}{Width of the variogram estimation, passed onto \link[gstat]{variogram}}
-
 \item{verbose}{Should info on type of analysis be printed?}
+
+\item{model}{Variogram model, passed onto \link[gstat]{vgm}}
 
 \item{...}{passed onto \link[gstat]{variogram}}
 }
 \value{
 A dataframe of results sorted by p-value, also containing the estimated Moran's I statistic and its variance.
+In addition, the maximum value of the Moran's I statistic
 }
 \description{
 The variance calculation requires estimation of the spatial autocorrelation structure of every feature separately
+}
+\details{
+The Moran's I values and variances returned have been scaled by their maximum value,
+the first singular vector of the weight matrix., already.
 }
 \references{
 \insertAllCited{}

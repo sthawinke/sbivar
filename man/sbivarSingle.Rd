@@ -15,12 +15,13 @@ sbivarSingle(
   GPmethod = c("REML", "ML"),
   wo = c("exp", "distance", "nn"),
   numNN = 8,
+  model = "Gau",
   gpParams,
   Quants = c(0.005, 0.5),
   numLscAlts = 10,
   width = cutoff/15,
   eta = 0.05,
-  cutoff = sqrt(2)/3,
+  cutoff = sqrt(2)/4,
   optControl = lmeControl(opt = "optim", maxIter = 500, msMaxIter = 500, niterEM = 1000,
     msMaxEval = 1000),
   corStruct = corGaus(form = ~x + y, nugget = TRUE, value = c(1, 0.25)),
@@ -40,11 +41,13 @@ sbivarSingle(
 
 \item{wo, numNN, eta}{passed onto \link{buildWeightMat}}
 
+\item{model}{Variogram model, passed onto \link[gstat]{vgm}}
+
 \item{gpParams}{Parameters of the Gaussian processes, see details}
 
-\item{width}{Width of the variogram estimation, passed onto \link[gstat]{variogram}}
-
 \item{verbose}{Should info on type of analysis be printed?}
+
+\item{cutoof, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{variogram}}
 }
 \value{
 A list with at least the following components

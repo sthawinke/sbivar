@@ -153,16 +153,16 @@ We see a clear negative relationship.
 In addition, we employ generalized additive models (GAMs), with a negative binomial outcome distribution for the transcriptome data, and a gamma outcome distribution for the metabolome data. A log-link is used in both cases.
 
 ```{r fitgam}
-FamiliesViari = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log"))
+FamiliesVicari = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log"))
 gamRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, 
-                      method = "GAMs",  families = FamiliesViari)
+                      method = "GAMs",  families = FamiliesVicari)
 ```
 
 For GAMs, we can plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes$result[gpGam<- rownames(gamRes$result)[1], "corxy"], 3)`:
 
 ```{r plotGAM}
 plotGAMsTopResults(gamRes, X = singleStx, Y = singleMet, Cx = singleStxCoords, 
-                   Ey = singleMetCoords, families = FamiliesViari)
+                   Ey = singleMetCoords, families = FamiliesVicari)
 ```
 
 Another available analysis for single images are Gaussian processes (GPs). Yet fitting GPs and calculating the score tests statistics can be computation and memory intensive! Hence the code is shown, but not run:
@@ -259,7 +259,7 @@ Next we call the _sbivar_ function with these as arguments, providing the names 
 
 ```{r SEanalysis}
 resSpatExp = sbivar(StxSE, MetSE, assayX = "transcripts", assayY = "metabolites", 
-                    families = FamiliesViari, method = "GAMs")
+                    families = FamiliesVicari, method = "GAMs")
 ```
 
 Plot the second most significant result, again providing the _SpatialExperiment_ objects
@@ -282,7 +282,7 @@ We run a the same analysis, now providing the experiment names on top of the ass
 ```{r analyseMAE, eval = FALSE}
 resMAE = sbivar(MAE, assayX = "transcripts", assayY = "metabolites", 
                 experimentX = "transcripts", experimentY = "metabolites", 
-                families = FamiliesViari, method = "GAMs")
+                families = FamiliesVicari, method = "GAMs")
 ```
 
 ### Multi-image

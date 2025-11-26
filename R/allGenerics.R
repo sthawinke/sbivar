@@ -18,7 +18,7 @@
 #' Cx = matrix(runif(n*2), n, 2)
 #' Ey = matrix(runif(m*2), m, 2)
 #' colnames(Cx) = colnames(Ey) = c("x", "y")
-#' resMoransI = sbivar(X, Y, Cx, Ey, method = "MoransI")
+#' resMoransI = sbivar(X, Y, Cx, Ey, method = "Moran's I")
 #' resGAMs = sbivar(X, Y, Cx, Ey, method = "GAMs")
 #' resModtTest = sbivar(X, Y, Cx, Ey, method = "Modified")
 #' resModtTestJoint = sbivar(X, Y[seq_len(nrow(X)),], Cx, method = "Modified")

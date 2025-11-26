@@ -4,7 +4,7 @@
 \alias{matheronVariograms}
 \title{Estimate variograms using Matheron's binning estimator for many features at once}
 \usage{
-matheronVariograms(X, Cx, width, cutoff)
+matheronVariograms(X, Cx, width, cutoff, model)
 }
 \arguments{
 \item{cutoff, width}{passed onto \link[gstat]{variogram}}

@@ -229,17 +229,3 @@ moveCoords = function(Coord){
     Coord[,2] = Coord[,2] - min(Coord[,2])
     return(Coord)
 }
-#' Find average distances of bins
-#'
-#' @param distMat The distance matrix
-#' @inheritParams wrapMoransI
-#'
-#' @returns A vector of indices
-#'
-#' @details tapply(distMat, bin_index, mean) Matches with the results from
-#' \link[gstat]{variogram}, but this result is not needed here.
-getAvDists = function(distMat, cutoff, width){
-    breaks <- seq(0, cutoff, by = width)
-    bin_index <- cut(distMat, breaks, include.lowest = FALSE, right = TRUE, labels = FALSE)
-    return(bin_index)
-}

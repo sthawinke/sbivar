@@ -103,7 +103,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
     }
     out = cbind(out, "pAdj" = p.adjust(out[, "pVal"], method = "BH"))
     result = out[order(out[, "pVal"]),]
-    list("result" = result, "families" = families, "method" = method,
-         "multi" = FALSE, "maxIxy" =  if(method=="Moran's I"){moranRes$maxIxy})
+    list("result" = result, "families" = if(method=="GAMS") families, "method" = method,
+         "multi" = FALSE, "maxIxy" =  if(method=="Moran's I") moranRes$maxIxy)
 }
 

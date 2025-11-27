@@ -31,10 +31,19 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, mod
     W = buildWeightMat(Cx, Ey, wo, eta = eta, numNN = numNN)
     Ixy = (crossprod(X, W) %*% Y)/sqrt(prodFac <- prod(dim(W)-1)) #Normalize for matrix size
     #Variances
+    if(verbose){
+        message("Fitting variograms for first modality (", ncol(X), " features)")
+    }
     variogramsX = matheronVariograms(X, Cx, width = width, cutoff = cutoff, model = model, ...)
+    if(verbose){
+        message("Fitting variograms for second modality (", ncol(Y), " features)")
+    }
     variogramsY = matheronVariograms(Y, Ey, width = width, cutoff = cutoff, model = model, ...)
     distX = as.matrix(stats::dist(Cx))
     distY = as.matrix(stats::dist(Ey))
+    if(verbose){
+        message("Calculating variances of bivariate Moran's I (", ncol(X)*ncol(Y), " feature pairs)")
+    }
     varIxy = t(simplify2array(loadBalanceBplapply(selfName(colnames(X)), function(featx){
         sigXw = crossprod(W, variogramLine(variogramsX[[featx]], dist_vector = distX, covariance = TRUE)) %*% W
         vapply(selfName(colnames(Y)), FUN.VALUE = double(1), function(featy){

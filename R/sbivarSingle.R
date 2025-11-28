@@ -60,8 +60,9 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
     foo = checkInputSingle(X, Y, Cx, Ey)
     if(missing(Ey)){
         #Run a joint analysis
-        message("Only one coordinate matrix Cx supplied, and dimensions of X and Y do match.
-             Performing an analysis with joint coordinate sets.")
+        if(verbose){
+            message("Only one coordinate matrix Cx supplied, and dimensions of X and Y do match.
+                 Performing an analysis with joint coordinate sets.")}
         Ey = Cx
     } else if(method=="Modified t-test"){
        stop("Two coordinate matrices supplied, whereas the modified t-test requires only one.

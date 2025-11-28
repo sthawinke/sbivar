@@ -70,7 +70,7 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, mod
 #' @param X Outcome matrix
 #' @param Cx Coordinate matrix
 matheronVariograms <- function(X, Cx, width, cutoff, model) {
-    df = data.frame(x = Cx[,1], y = Cx[,2], z = X)
+    df = data.frame(x = Cx[,1], y = Cx[,2])
     sp::coordinates(df) <- ~x + y
     # Compute empirical semivariogram using Matheron’s estimator
     variograms <- loadBalanceBplapply(selfName(colnames(X)), function(nm) {

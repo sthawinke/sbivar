@@ -12,6 +12,8 @@ sbivarMulti(
   families = list(X = gaussian(), Y = gaussian()),
   method = c("Moran's I", "GAMs", "Correlation"),
   eta = 0.025,
+  normX = c("none", "log"),
+  normY = c("none", "log"),
   wo = c("exp", "distance", "nn"),
   numNN = 8,
   n_points_grid = 600,

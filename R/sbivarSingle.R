@@ -79,6 +79,13 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
     if(is.null(colnames(Y))){
         colnames(Y) = paste0("Y", seq_len(k))
     }
+    if(is.null(rownames(X))){
+        rownames(X) = paste0("X", seq_len(n))
+    }
+    if(is.null(rownames(Y))){
+        rownames(Y) = paste0("Y", seq_len(m))
+    }
+    rownames(Cx) = rownames(X);rownames(Ey) = rownames(Y)
     if(!missing(gpParams)){
         if(!is.list(gpParams) || names(gpParams) != c("X", "Y") ||
            !all(vapply(gpParams, FUN.VALUE = TRUE, function(x){
@@ -90,14 +97,16 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
                  and colnames the same as matrices X and Y!")
         }
     }
+    if((normX == "log" || normY == "log") && method == "GAMs"){
+        warning("Normalizing data is not recommended for GAMs!
+                try accounting for non-normality through the 'families' argument.")
+    }
     colnames(Cx) = colnames(Ey) = c("x", "y")
-    if(method!= "GAMs"){ #If not GAMs, normalize
-        if(normX=="log"){
-            X = logNorm(X)
-        }
-        if(normY=="log"){
-            Y = logNorm(Y)
-        }
+    if(normX=="log"){
+       X = logNorm(X);Cx = Cx[rownames(X),]
+    }
+    if(normY=="log"){
+       Y = logNorm(Y);Ey = Ey[rownames(Y),]
     }
     out = if(method=="Moran's I"){
         (moranRes <- wrapMoransI(X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo, numNN = numNN,
@@ -116,6 +125,6 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
     result = out[order(out[, "pVal"]),]
     list("result" = result, "families" = if(method=="GAMs") families, "method" = method,
          "multi" = FALSE, "maxIxy" =  if(method=="Moran's I") moranRes$maxIxy,
-         "normX" = if(method!="GAMs") normX else "log", "normY" = if(method!="GAMs") normY else "log")
+         "normX" = normX, "normY" = normY)
 }
 

@@ -18,7 +18,8 @@
 #' @inheritParams buildWeightMat
 #' @importFrom BiocParallel bpparam
 sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
-                       method = c("Moran's I", "GAMs", "Correlation"), eta = 0.025,
+                       method = c("Moran's I", "GAMs", "Correlation"), eta = 0.025, normX = c("none", "log"),
+                       normY = c("none", "log"),
                         wo = c("exp", "distance", "nn"), numNN = 8, n_points_grid = 6e2, verbose = TRUE){
     method = match.arg(method)
     wo = match.arg(wo)
@@ -31,16 +32,16 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
     Xl = lapply(Xl, giveValidNames);Yl = lapply(Yl, giveValidNames)
     Cxl = lapply(Cxl, tmpFun <- function(x) {colnames(x) = c("x", "y");x})
     Eyl = lapply(Eyl, tmpFun)
+    normX = match.arg(normX);normY = match.arg(normY)
     foo = checkInputMulti(Xl, Yl, Cxl, Eyl)
-    if(method!= "GAMs"){ #If not GAMs, normalize
-        if(normX=="log"){
-            Xl = lapply(X, logNorm)
-        }
-        if(normY=="log"){
-            Yl = lapply(Yl, logNorm)
-        }
+    if(normX=="log"){
+        Xl = lapply(Xl, logNorm)
+        Cxl = lapply(seq_along(Cxl), function(i){Cxl[[i]][rownames(Xl[[i]]),]})
     }
-
+    if(normY=="log"){
+        Yl = lapply(Yl, logNorm)
+        Eyl = lapply(seq_along(Eyl), function(i){Eyl[[i]][rownames(Yl[[i]]),]})
+    }
     out = if(method == "GAMs"){
         wrapGAMsMulti(Xl, Yl, Cxl, Eyl, families = families,
                  n_points_grid = n_points_grid, verbose = verbose)
@@ -50,7 +51,6 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
         wrapMoransIMulti(Xl, Yl, Cxl, Eyl, wo = wo, numNN = numNN, verbose = verbose, eta = eta)
     }
     return(list("estimates" = out, "method" = method, "multi" = TRUE,
-                "families" = families, "normX" = if(method!="GAMs") normX else "log",
-                "normY" = if(method!="GAMs") normY else "log"))
+                "families" = families, "normX" = normX, "normY" = normY))
 }
 

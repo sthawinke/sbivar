@@ -165,7 +165,7 @@ plotTopPair(gamRes, X = singleStx, Y = singleMet, Cx = singleStxCoords,
             Ey = singleMetCoords, normX = "log", normY = "log")
 ```
 
-For GAMs, we can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes$result[gpGam<- rownames(gamRes$result)[1], "corxy"], 3)`:
+Another feature is found most significant by GAMs, likely because they smooth over the two holes in the spatial transcriptomics measurements (left plot), adding to the signal, whereas the holes do not contribute to the Moran's I. This can be an asset or a weakness of GAMs. For GAMs, we can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes$result[gpGam<- rownames(gamRes$result)[1], "corxy"], 3)`:
 
 ```{r plotGAM}
 plotGAMsTopResults(gamRes, X = singleStx, Y = singleMet, Cx = singleStxCoords, 

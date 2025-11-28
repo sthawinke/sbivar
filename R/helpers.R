@@ -34,15 +34,6 @@ scaleMinusOne = function(y, na.rm = TRUE){
 makeNames = function(featX, featY){
     make.names(apply(expand.grid(featX, featY), 1, paste, collapse = "__"))
 }
-#' Give a matrix valid names
-#'
-#' @param X the matrix
-#'
-#' @returns The same matrix, with potentially adapted column names
-giveValidNames = function(X){
-    colnames(X) = make.names(colnames(X))
-    return(X)
-}
 #' A wrapper for Matrix::bdiag maintaining names
 #'
 #' @param A,B Matrix to be used in \link[Matrix]{bdiag}
@@ -209,15 +200,18 @@ getX = function(X, assay){
 #'
 #' @returns A coordinate matrix
 getSpatialCoords = function(X, Cx){
-    if(inherits(X, "SpatialExperiment")){
+    out = if(inherits(X, "SpatialExperiment")){
         spatialCoords(X)
     } else if(is.list(X)){
         lapply(selfName(names(X)), function(i){
             getSpatialCoords(X[[i]], Cx[[i]])
         })
-    } else{
+    } else {
         Cx
     }
+    if(is.matrix(out))
+        rownames(out) = rownames(X)
+    out
 }
 #' Shift coordinates to baseline 0
 #'
@@ -246,8 +240,10 @@ addDimNames = function(mat, letter){
     if(is.null(rownames(mat))){
         rownames(mat) = paste0("Sample", seq_len(nrow(mat)))
     }
-    if(is.null(colnames(mat))){
-        colnames(mat) = paste0(letter, seq_len(nrow(mat)))
+    colnames(mat) = if(is.null(colnames(mat))){
+        paste0(letter, seq_len(nrow(mat)))
+    } else {
+        make.names(colnames(mat))
     }
-    giveValidNames(mat)
+    return(mat)
 }

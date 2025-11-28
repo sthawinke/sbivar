@@ -53,13 +53,11 @@ plotTopPair = function(results, ..., normX = results$normX, normY = results$norm
 #' @param theme the ggplot2 theme
 plotPairMulti = function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "log"),
                          normY = c("none", "log"), size = 1.25, assayX, assayY, theme = theme_bw()){
+    Xl =  lapply(getX(Xl, assayX), addDimNames, "X")
+    Yl = lapply(getX(Yl, assayY), addDimNames, "Y")
     Cxl = getSpatialCoords(Xl, Cxl)
-    Xl =  lapply(getX(Xl, assayX), giveValidNames)
     Eyl = getSpatialCoords(Yl, Eyl)
-    Yl = lapply(getX(Yl, assayY), giveValidNames)
     foo = checkInputMulti(Xl, Yl, Cxl, Eyl)
-    Cxl = lapply(seq_along(Cxl), function(i){Cxl[[i]][rownames(Xl[[i]]),]})
-    Eyl = lapply(seq_along(Eyl), function(i){Eyl[[i]][rownames(Yl[[i]]),]})
     features = make.names(features)
     stopifnot(length(features)==2)
     normX = match.arg(normX);normY = match.arg(normY)
@@ -100,16 +98,10 @@ plotPairSingle = function(X, Y, Cx, Ey, features, normX = c("none", "log"),
         Ey = spatialCoords(Y)
         Y = assayT(Y, assayY)
     }
-    X = giveValidNames(X);Y = giveValidNames(Y)
+    X = addDimNames(X, "X");Y = addDimNames(Y, "Y")
     features = make.names(features)
     foo = checkInputSingle(X, Y, Cx, Ey)
     normX = match.arg(normX);normY = match.arg(normY)
-    if(is.null(rownames(X))){
-        rownames(X) = paste0("X", seq_len(nrow(X)))
-    }
-    if(is.null(rownames(Y))){
-        rownames(Y) = givRowNames(Y)
-    }
     rownames(Cx) = rownames(X);rownames(Ey) = rownames(Y)
     X = getNormFun(normX)(X)
     Y = getNormFun(normY)(Y)

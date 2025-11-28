@@ -54,7 +54,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
         bpparam()$workers, " computing cores")
     }
     n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y)
-    X = giveValidNames(X);Y = giveValidNames(Y)
+    X = addDimNames(X, "X");Y = addDimNames(Y, "Y")
     method = match.arg(method)
     normX = match.arg(normX);normY = match.arg(normY)
     GPmethod = match.arg(GPmethod)
@@ -72,18 +72,6 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
     }
     if(!identical(names(families), c("X", "Y"))){
         stop("Name families 'X' and 'Y' for unambiguous matching")
-    }
-    if(is.null(colnames(X))){
-        colnames(X) = paste0("X", seq_len(p))
-    }
-    if(is.null(colnames(Y))){
-        colnames(Y) = paste0("Y", seq_len(k))
-    }
-    if(is.null(rownames(X))){
-        rownames(X) = paste0("X", seq_len(n))
-    }
-    if(is.null(rownames(Y))){
-        rownames(Y) = paste0("Y", seq_len(m))
     }
     rownames(Cx) = rownames(X);rownames(Ey) = rownames(Y)
     if(!missing(gpParams)){

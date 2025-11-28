@@ -236,3 +236,18 @@ moveCoords = function(Coord){
 getNormFun = function(norm){
     switch(norm, "none" = identity, "log" = logNorm)
 }
+#' Add dimnames to a matrix
+#'
+#' @param mat The matrix
+#' @param letter A letter to start the rownames
+#'
+#' @returns A matrix with rownames
+addDimNames = function(mat, letter){
+    if(is.null(rownames(mat))){
+        rownames(mat) = paste0("Sample", seq_len(nrow(mat)))
+    }
+    if(is.null(colnames(mat))){
+        colnames(mat) = paste0(letter, seq_len(nrow(mat)))
+    }
+    giveValidNames(mat)
+}

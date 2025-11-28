@@ -104,6 +104,12 @@ plotPairSingle = function(X, Y, Cx, Ey, features, normX = c("none", "log"),
     features = make.names(features)
     foo = checkInputSingle(X, Y, Cx, Ey)
     normX = match.arg(normX);normY = match.arg(normY)
+    if(is.null(rownames(X))){
+        rownames(X) = paste0("X", seq_len(nrow(X)))
+    }
+    if(is.null(rownames(Y))){
+        rownames(Y) = givRowNames(Y)
+    }
     rownames(Cx) = rownames(X);rownames(Ey) = rownames(Y)
     X = getNormFun(normX)(X)
     Y = getNormFun(normY)(Y)

@@ -29,7 +29,7 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
         message("Starting sbivar analysis of ", length(Xl), " images on ",
                 bpparam()$workers, " computing cores")
     }
-    Xl = lapply(Xl, giveValidNames);Yl = lapply(Yl, giveValidNames)
+    Xl = lapply(Xl, addDimNames);Yl = lapply(Yl, addDimNames)
     Cxl = lapply(Cxl, tmpFun <- function(x) {colnames(x) = c("x", "y");x})
     Eyl = lapply(Eyl, tmpFun)
     normX = match.arg(normX);normY = match.arg(normY)

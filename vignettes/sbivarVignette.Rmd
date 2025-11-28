@@ -14,7 +14,7 @@ vignette: >
 bibliography: ../inst/REFERENCES.bib 
 ---
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, eval = FALSE}
 htmltools::img(src = knitr::image_uri("../inst/Sbivar.png"),
                style = 'position:absolute; top:0; right:0; padding:8px;',
                alt = 'logo', width = "280px", heigth = "200px")
@@ -128,11 +128,11 @@ singleMetCoords = Vicari$MetaboliteCoords[[singleSample]]
 singleMet = Vicari$MetaboliteOutcomes[[singleSample]]
 ```
 
-We analyse this single sample using bivariate Moran's I:
+We analyse this single sample using bivariate Moran's I, choosing log-normalization (see _?logNorm) for both modalities:
 
 ```{r testmoran}
 moransIRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, 
-                      method = "Moran's I")
+                      method = "Moran's I", normX = "log", normY = "log")
 ```
 
 Have a look at the results, which are sorted by increasing p-value:
@@ -145,7 +145,7 @@ Plot the most significantly spatially associated gene-metabolite pair `r gpMoran
 
 ```{r plottoppairmoran, fig.height = 4.5}
 plotTopPair(moransIRes, X = singleStx, Y = singleMet, Cx = singleStxCoords, 
-            Ey = singleMetCoords)
+            Ey = singleMetCoords, normalizationX = "log", normalizationY = "log")
 ```
 
 We see a clear negative relationship.
@@ -162,7 +162,7 @@ Plot the most significant pair:
 
 ```{r plottoppairgam, fig.height = 4.5}
 plotTopPair(gamRes, X = singleStx, Y = singleMet, Cx = singleStxCoords, 
-            Ey = singleMetCoords)
+            Ey = singleMetCoords, normalizationX = "log", normalizationY = "log")
 ```
 
 For GAMs, we can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes$result[gpGam<- rownames(gamRes$result)[1], "corxy"], 3)`:

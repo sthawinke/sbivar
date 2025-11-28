@@ -13,7 +13,7 @@
 #' @order 1
 #' @export
 #' @details For sequence count data, such as transcriptomics, log-normalization
-#' may be indicated to achieve clear plots (normalizationX = "log", see  \link{logNorm}). The normalization used for plotting is
+#' may be indicated to achieve clear plots (normX = "log", see  \link{logNorm}). The normalization used for plotting is
 #'  not necessarily the same as the one used for the analysis.
 #' @examples
 #' ### Single image
@@ -29,27 +29,30 @@
 #' plotTopPair(resMoran, Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
 #' Vicari$TranscriptCoords, Vicari$MetaboliteCoords, parameter = "Intercept")
 #' # Plot an arbitrary feature pair
-#' plotPairMulti(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
+#' plotPairMulti(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes, normX = "log", normY = "log",
 #' Vicari$TranscriptCoords, Vicari$MetaboliteCoords, features = c("mt.Nd2", "X555.20713"))
 plotTopPair = function(results, ..., topRank = 1, parameter = "Intercept"){
     stopifnot(is.numeric(topRank))
     if(!results$multi){
         topFeats = sund(rownames(results$result)[topRank])
         plotPairSingle(features = topFeats, assayX = results$assayX,
-                       assayY = results$assayY, ...)
+                       assayY = results$assayY, normX = results$normX,
+                       normY = results$normY,...)
     } else {
         stopifnot(parameter %in% names(results$result))
         topFeats = sund(rownames(results$result[[parameter]])[topRank])
         plotPairMulti(features = topFeats, assayX = results$assayX,
-              assayY = results$assayY, ...)
+              assayY = results$assayY, normX = results$normX,
+              normY = results$normY, ...)
     }
 }
 #' @rdname plotTopPair
 #' @export
 #' @inheritParams plotPairSingle
 #' @order 3
-plotPairMulti = function(Xl, Yl, Cxl, Eyl, features, normalizationX = c("none", "log"),
-                         normalizationY = c("none", "log"), size = 1.25, assayX, assayY){
+#' @param theme the ggplot2 theme
+plotPairMulti = function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "log"),
+                         normY = c("none", "log"), size = 1.25, assayX, assayY, theme = theme_bw()){
     Cxl = getSpatialCoords(Xl, Cxl)
     Xl =  lapply(getX(Xl, assayX), giveValidNames)
     Eyl = getSpatialCoords(Yl, Eyl)
@@ -57,14 +60,12 @@ plotPairMulti = function(Xl, Yl, Cxl, Eyl, features, normalizationX = c("none", 
     foo = checkInputMulti(Xl, Yl, Cxl, Eyl)
     features = make.names(features)
     stopifnot(length(features)==2)
-    normalizationX = match.arg(normalizationX);normalizationY = match.arg(normalizationY)
-    normFunX = switch(normalizationX, "none" = identity, "log" = logNorm)
-    normFunY = switch(normalizationY, "none" = identity, "log" = logNorm)
-    theme_set(theme_bw())
+    normX = match.arg(normX);normY = match.arg(normY)
+    theme_set(theme)
     dfList = Reduce(f = rbind, lapply(names(Xl), function(nam){
         coordMat = rbind(Cxl[[nam]], Eyl[[nam]]);colnames(coordMat) = c("x", "y")
-        data.frame("outcome" = c(scaleHelpFun(Xl[[nam]], feat = features[1], normFun = normFunX),
-                                 scaleHelpFun(Yl[[nam]], feat = features[2], normFun = normFunY)),
+        data.frame("outcome" = c(scaleHelpFun(Xl[[nam]], feat = features[1], normFun = getNormFun(normX)),
+                                 scaleHelpFun(Yl[[nam]], feat = features[2], normFun = getNormFun(normY))),
                    "image" = nam, coordMat,
                    "feature" = rep(features, times = c(nrow(Xl[[nam]]), nrow(Yl[[nam]]))))
     }))
@@ -77,15 +78,15 @@ plotPairMulti = function(Xl, Yl, Cxl, Eyl, features, normalizationX = c("none", 
 #' @inheritParams sbivar
 #' @param results Results returned by \link{sbivarSingle}
 #' @param x,y Outcome vectors
-#' @param normalizationX,normalizationY Character strings, indicating what normalization is required
+#' @param normX,normY Character strings, indicating what normalization is required
 #' for X and Y matrices, respectively, before plotting, see details.
 #' @param size Point size
 #' @param features Feature vector of length 2 to be plotted
 #' @rdname plotTopPair
 #' @export
 #' @order 2
-plotPairSingle = function(X, Y, Cx, Ey, features, normalizationX = c("none", "log"),
-                          normalizationY = c("none", "log"), assayX, assayY, ...){
+plotPairSingle = function(X, Y, Cx, Ey, features, normX = c("none", "log"),
+                          normY = c("none", "log"), assayX, assayY, ...){
     stopifnot(length(features)==2)
     if(inherits(X, "SpatialExperiment")){
         Cx = spatialCoords(X)
@@ -98,11 +99,9 @@ plotPairSingle = function(X, Y, Cx, Ey, features, normalizationX = c("none", "lo
     X = giveValidNames(X);Y = giveValidNames(Y)
     features = make.names(features)
     foo = checkInputSingle(X, Y, Cx, Ey)
-    normalizationX = match.arg(normalizationX);normalizationY = match.arg(normalizationY)
-    normFunX = switch(normalizationX, "none" = identity, "log" = logNorm)
-    normFunY = switch(normalizationY, "none" = identity, "log" = logNorm)
-    plotPairSingleVectors(x = scaleHelpFun(feat = features[1], normFun = normFunX, X = X),
-                          y = scaleHelpFun(feat = features[2], normFun = normFunY, X = Y),
+    normX = match.arg(normX);normY = match.arg(normY)
+    plotPairSingleVectors(x = scaleHelpFun(feat = features[1], normFun = getNormFun(normX), X = X),
+                          y = scaleHelpFun(feat = features[2], normFun = getNormFun(normY), X = Y),
                           Cx = Cx, Ey = Ey, modalityNames = features, ...)
 }
 #' @rdname plotTopPair
@@ -111,8 +110,8 @@ plotPairSingle = function(X, Y, Cx, Ey, features, normalizationX = c("none", "lo
 #' plotPairSingle(), the feature names are used.
 #' @order 4
 plotPairSingleVectors = function(x, y, Cx, Ey, size = 1.25,
-                                 modalityNames = c("Modality X", "Modality Y"), ... ){
-    theme_set(theme_bw())
+                                 modalityNames = c("Modality X", "Modality Y"), theme = theme_bw(),... ){
+    theme_set(theme)
     stopifnot(length(x)==nrow(Cx), length(y)==nrow(Ey), ncol(Ey)==2, ncol(Cx)==2)
     coordMat = rbind(Cx, Ey);colnames(coordMat) = c("x", "y")
     plotDf = data.frame("outcome" = c(x, y), coordMat,

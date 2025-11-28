@@ -11,6 +11,8 @@ sbivarSingle(
   Ey,
   method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
   n_points_grid = 600,
+  normX = c("none", "log"),
+  normY = c("none", "log"),
   families = list(X = gaussian(), Y = gaussian()),
   GPmethod = c("REML", "ML"),
   wo = c("exp", "distance", "nn"),

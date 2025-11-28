@@ -32,7 +32,15 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
     Cxl = lapply(Cxl, tmpFun <- function(x) {colnames(x) = c("x", "y");x})
     Eyl = lapply(Eyl, tmpFun)
     foo = checkInputMulti(Xl, Yl, Cxl, Eyl)
-    jointCoordinates <- missing(Eyl)
+    if(method!= "GAMs"){ #If not GAMs, normalize
+        if(normX=="log"){
+            Xl = lapply(X, logNorm)
+        }
+        if(normY=="log"){
+            Yl = lapply(Yl, logNorm)
+        }
+    }
+
     out = if(method == "GAMs"){
         wrapGAMsMulti(Xl, Yl, Cxl, Eyl, families = families,
                  n_points_grid = n_points_grid, verbose = verbose)
@@ -42,6 +50,7 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
         wrapMoransIMulti(Xl, Yl, Cxl, Eyl, wo = wo, numNN = numNN, verbose = verbose, eta = eta)
     }
     return(list("estimates" = out, "method" = method, "multi" = TRUE,
-                "families" = families))
+                "families" = families, "normX" = if(method!="GAMs") normX else "log",
+                "normY" = if(method!="GAMs") normY else "log"))
 }
 

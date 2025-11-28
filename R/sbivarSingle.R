@@ -38,7 +38,8 @@
 #' This argument allows to pass parameters of the Gaussian processes estimated with other software
 #' to perform the score test.
 sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
-      n_points_grid = 6e2, families = list("X" = gaussian(), "Y" = gaussian()),
+      n_points_grid = 6e2, normX = c("none", "log"),
+      normY = c("none", "log"), families = list("X" = gaussian(), "Y" = gaussian()),
       GPmethod = c("REML", "ML"), wo = c("exp", "distance", "nn"), numNN = 8, model = "Gau",
       gpParams, Quants = c(0.005, 0.5), numLscAlts = 10, width = cutoff/15, eta = 0.025, cutoff = sqrt(2)/3,
       optControl = lmeControl(opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
@@ -55,6 +56,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
     n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y)
     X = giveValidNames(X);Y = giveValidNames(Y)
     method = match.arg(method)
+    normX = match.arg(normX);normY = match.arg(normY)
     GPmethod = match.arg(GPmethod)
     wo = match.arg(wo)
     foo = checkInputSingle(X, Y, Cx, Ey)
@@ -89,6 +91,14 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
         }
     }
     colnames(Cx) = colnames(Ey) = c("x", "y")
+    if(method!= "GAMs"){ #If not GAMs, normalize
+        if(normX=="log"){
+            X = logNorm(X)
+        }
+        if(normY=="log"){
+            Y = logNorm(Y)
+        }
+    }
     out = if(method=="Moran's I"){
         (moranRes <- wrapMoransI(X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo, numNN = numNN,
                     eta = eta, width = width, verbose = verbose, cutoff = cutoff, model = model))$out
@@ -104,7 +114,8 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
     }
     out = cbind(out, "pAdj" = p.adjust(out[, "pVal"], method = "BH"))
     result = out[order(out[, "pVal"]),]
-    list("result" = result, "families" = if(method=="GAMS") families, "method" = method,
-         "multi" = FALSE, "maxIxy" =  if(method=="Moran's I") moranRes$maxIxy)
+    list("result" = result, "families" = if(method=="GAMs") families, "method" = method,
+         "multi" = FALSE, "maxIxy" =  if(method=="Moran's I") moranRes$maxIxy,
+         "normX" = if(method!="GAMs") normX else "log", "normY" = if(method!="GAMs") normY else "log")
 }
 

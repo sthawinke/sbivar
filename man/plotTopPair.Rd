@@ -15,8 +15,8 @@ plotPairSingle(
   Cx,
   Ey,
   features,
-  normalizationX = c("none", "log"),
-  normalizationY = c("none", "log"),
+  normX = c("none", "log"),
+  normY = c("none", "log"),
   assayX,
   assayY,
   ...
@@ -28,11 +28,12 @@ plotPairMulti(
   Cxl,
   Eyl,
   features,
-  normalizationX = c("none", "log"),
-  normalizationY = c("none", "log"),
+  normX = c("none", "log"),
+  normY = c("none", "log"),
   size = 1.25,
   assayX,
-  assayY
+  assayY,
+  theme = theme_bw()
 )
 
 plotPairSingleVectors(
@@ -42,6 +43,7 @@ plotPairSingleVectors(
   Ey,
   size = 1.25,
   modalityNames = c("Modality X", "Modality Y"),
+  theme = theme_bw(),
   ...
 )
 }
@@ -63,7 +65,7 @@ The default is the intercept, i.e. the overall effect.}
 
 \item{features}{Feature vector of length 2 to be plotted}
 
-\item{normalizationX, normalizationY}{Character strings, indicating what normalization is required
+\item{normX, normY}{Character strings, indicating what normalization is required
 for X and Y matrices, respectively, before plotting, see details.}
 
 \item{assayX, assayY}{Assay names to be used in the analysis,
@@ -74,6 +76,8 @@ see \link[SummarizedExperiment]{assay}}
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
 \item{size}{Point size}
+
+\item{theme}{the ggplot2 theme}
 
 \item{x, y}{Outcome vectors}
 
@@ -90,7 +94,7 @@ for a single image or multiple images.
 }
 \details{
 For sequence count data, such as transcriptomics, log-normalization
-may be indicated to achieve clear plots (normalizationX = "log", see  \link{logNorm}). The normalization used for plotting is
+may be indicated to achieve clear plots (normX = "log", see  \link{logNorm}). The normalization used for plotting is
  not necessarily the same as the one used for the analysis.
 }
 \examples{
@@ -107,7 +111,7 @@ example(fitLinModels, "sbivar")
 plotTopPair(resMoran, Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
 Vicari$TranscriptCoords, Vicari$MetaboliteCoords, parameter = "Intercept")
 # Plot an arbitrary feature pair
-plotPairMulti(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
+plotPairMulti(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes, normX = "log", normY = "log",
 Vicari$TranscriptCoords, Vicari$MetaboliteCoords, features = c("mt.Nd2", "X555.20713"))
 }
 \seealso{

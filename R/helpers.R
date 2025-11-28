@@ -229,3 +229,11 @@ moveCoords = function(Coord){
     Coord[,2] = Coord[,2] - min(Coord[,2])
     return(Coord)
 }
+#' Return a normalization function based on a character string
+#'
+#' @param norm The character string
+#'
+#' @returns a normalization function
+getNormFun = function(norm){
+    switch(normY, "none" = identity, "log" = logNorm)
+}

@@ -28,6 +28,6 @@
 #' resModtGPs = sbivar(seX, seY, assayX = "transcripts", assayY = "metabolites", method = "GPs")
 #' #Multi-image analysis on Vicari data
 #' data(Vicari)
-#' VicariRes = sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
+#' VicariRes = sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes, normX = "log", normY = "log",
 #' Vicari$TranscriptCoords, Vicari$MetaboliteCoords, method = "Moran", wo = "distance")
 setGeneric("sbivar", function(X, ...) standardGeneric("sbivar"))

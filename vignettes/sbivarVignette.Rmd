@@ -145,7 +145,7 @@ Plot the most significantly spatially associated gene-metabolite pair `r gpMoran
 
 ```{r plottoppairmoran, fig.height = 4.5}
 plotTopPair(moransIRes, X = singleStx, Y = singleMet, Cx = singleStxCoords, 
-            Ey = singleMetCoords, normalizationX = "log", normalizationY = "log")
+            Ey = singleMetCoords)
 ```
 
 We see a clear negative relationship.
@@ -162,7 +162,7 @@ Plot the most significant pair:
 
 ```{r plottoppairgam, fig.height = 4.5}
 plotTopPair(gamRes, X = singleStx, Y = singleMet, Cx = singleStxCoords, 
-            Ey = singleMetCoords, normalizationX = "log", normalizationY = "log")
+            Ey = singleMetCoords, normX = "log", normY = "log")
 ```
 
 For GAMs, we can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes$result[gpGam<- rownames(gamRes$result)[1], "corxy"], 3)`:

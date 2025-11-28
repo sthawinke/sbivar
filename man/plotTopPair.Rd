@@ -7,7 +7,14 @@
 \alias{plotPairSingleVectors}
 \title{Plot a top feature pair from the analysis, or an arbitrary pair for a series of images}
 \usage{
-plotTopPair(results, ..., topRank = 1, parameter = "Intercept")
+plotTopPair(
+  results,
+  ...,
+  normX = results$normX,
+  normY = results$normY,
+  topRank = 1,
+  parameter = "Intercept"
+)
 
 plotPairSingle(
   X,
@@ -52,6 +59,9 @@ plotPairSingleVectors(
 
 \item{...}{passed onto lower level functions}
 
+\item{normX, normY}{Character strings, indicating what normalization is required
+for X and Y matrices, respectively, before plotting, see details.}
+
 \item{topRank}{An integer, the feature pair with the rank-th smallest p-value is plotted}
 
 \item{parameter}{The linear model parameter used to find the feature with the strongest effect.
@@ -64,9 +74,6 @@ The default is the intercept, i.e. the overall effect.}
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
 \item{features}{Feature vector of length 2 to be plotted}
-
-\item{normX, normY}{Character strings, indicating what normalization is required
-for X and Y matrices, respectively, before plotting, see details.}
 
 \item{assayX, assayY}{Assay names to be used in the analysis,
 see \link[SummarizedExperiment]{assay}}

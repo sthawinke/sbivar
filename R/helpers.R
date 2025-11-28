@@ -100,10 +100,9 @@ scaleMinusOne = function(y, na.rm = TRUE){
 #' @param normFun normalizing function
 #'
 #' @returns A vector of values
-scaleHelpFun = function(X, feat, normFun){
-    normFun = match.fun(normFun)
+scaleHelpFun = function(X, feat){
     if(feat %in% colnames(X)){
-        scaleZeroOne(normFun(X)[, feat])
+        scaleZeroOne(X[, feat])
     } else {
         rep(NA, nrow(X))
     }
@@ -235,5 +234,5 @@ moveCoords = function(Coord){
 #'
 #' @returns a normalization function
 getNormFun = function(norm){
-    switch(normY, "none" = identity, "log" = logNorm)
+    switch(norm, "none" = identity, "log" = logNorm)
 }

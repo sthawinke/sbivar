@@ -31,19 +31,19 @@
 #' # Plot an arbitrary feature pair
 #' plotPairMulti(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes, normX = "log", normY = "log",
 #' Vicari$TranscriptCoords, Vicari$MetaboliteCoords, features = c("mt.Nd2", "X555.20713"))
-plotTopPair = function(results, ..., topRank = 1, parameter = "Intercept"){
+plotTopPair = function(results, ..., normX = results$normX, normY = results$normY, topRank = 1, parameter = "Intercept"){
     stopifnot(is.numeric(topRank))
     if(!results$multi){
         topFeats = sund(rownames(results$result)[topRank])
         plotPairSingle(features = topFeats, assayX = results$assayX,
-                       assayY = results$assayY, normX = results$normX,
-                       normY = results$normY,...)
+                       assayY = results$assayY, normX = normX,
+                       normY = normY,...)
     } else {
         stopifnot(parameter %in% names(results$result))
         topFeats = sund(rownames(results$result[[parameter]])[topRank])
         plotPairMulti(features = topFeats, assayX = results$assayX,
-              assayY = results$assayY, normX = results$normX,
-              normY = results$normY, ...)
+              assayY = results$assayY, normX = normX,
+              normY = normY, ...)
     }
 }
 #' @rdname plotTopPair
@@ -58,14 +58,18 @@ plotPairMulti = function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "log"),
     Eyl = getSpatialCoords(Yl, Eyl)
     Yl = lapply(getX(Yl, assayY), giveValidNames)
     foo = checkInputMulti(Xl, Yl, Cxl, Eyl)
+    Cxl = lapply(seq_along(Cxl), function(i){Cxl[[i]][rownames(Xl[[i]]),]})
+    Eyl = lapply(seq_along(Eyl), function(i){Eyl[[i]][rownames(Yl[[i]]),]})
     features = make.names(features)
     stopifnot(length(features)==2)
     normX = match.arg(normX);normY = match.arg(normY)
     theme_set(theme)
+    nfx = getNormFun(normX);nfy = getNormFun(normY)
     dfList = Reduce(f = rbind, lapply(names(Xl), function(nam){
-        coordMat = rbind(Cxl[[nam]], Eyl[[nam]]);colnames(coordMat) = c("x", "y")
-        data.frame("outcome" = c(scaleHelpFun(Xl[[nam]], feat = features[1], normFun = getNormFun(normX)),
-                                 scaleHelpFun(Yl[[nam]], feat = features[2], normFun = getNormFun(normY))),
+        X = nfx(Xl[[nam]]);Y= nfy(Yl[[nam]])
+        coordMat = rbind(Cxl[[nam]][rownames(X),], Eyl[[nam]][rownames(Y),]);colnames(coordMat) = c("x", "y")
+        data.frame("outcome" = c(scaleHelpFun(X, feat = features[1]),
+                                 scaleHelpFun(Y, feat = features[2])),
                    "image" = nam, coordMat,
                    "feature" = rep(features, times = c(nrow(Xl[[nam]]), nrow(Yl[[nam]]))))
     }))
@@ -100,9 +104,12 @@ plotPairSingle = function(X, Y, Cx, Ey, features, normX = c("none", "log"),
     features = make.names(features)
     foo = checkInputSingle(X, Y, Cx, Ey)
     normX = match.arg(normX);normY = match.arg(normY)
-    plotPairSingleVectors(x = scaleHelpFun(feat = features[1], normFun = getNormFun(normX), X = X),
-                          y = scaleHelpFun(feat = features[2], normFun = getNormFun(normY), X = Y),
-                          Cx = Cx, Ey = Ey, modalityNames = features, ...)
+    rownames(Cx) = rownames(X);rownames(Ey) = rownames(Y)
+    X = getNormFun(normX)(X)
+    Y = getNormFun(normY)(Y)
+    plotPairSingleVectors(x = scaleHelpFun(feat = features[1], X),
+                          y = scaleHelpFun(feat = features[2], Y),
+                          Cx = Cx[rownames(X),], Ey = Ey[rownames(Y),], modalityNames = features, ...)
 }
 #' @rdname plotTopPair
 #' @param modalityNames Names to be given to the modalities,

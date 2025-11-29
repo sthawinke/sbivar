@@ -9,7 +9,7 @@ buildWeightMat(Cx, Ey, wo, eta, numNN)
 \arguments{
 \item{Cx, Ey}{Two coordinate matrices}
 
-\item{wo}{The weighting option, either "nn" or "distance"}
+\item{wo}{The weighting option, either "nn" or "exp"}
 
 \item{eta}{parameter that controls the decay of the weights with distance, see details}
 

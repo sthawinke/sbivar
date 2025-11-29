@@ -101,8 +101,8 @@ for a single image or multiple images.
 }
 \details{
 For sequence count data, such as transcriptomics, log-normalization
-may be indicated to achieve clear plots (normX = "log", see  \link{logNorm}). The normalization used for plotting is
- not necessarily the same as the one used for the analysis.
+may be indicated to achieve clear plots (normX = "log", see  \link{logNorm}).
+The normalization used for plotting is not necessarily the same as the one used for the analysis.
 }
 \examples{
 ### Single image
@@ -115,11 +115,13 @@ plotPairSingle(X, Y, Cx, Ey, features = c("X1", "Y1"))
 example(fitLinModels, "sbivar")
 # Plot the feature pair with the most significant signal for a certain parameter,
 #here the intercept (overall effect)
-plotTopPair(resMoran, Vicari$TranscriptOutcomes, normX = "log", normY = "log", Vicari$MetaboliteOutcomes,
-Vicari$TranscriptCoords, Vicari$MetaboliteCoords, parameter = "Intercept")
+plotTopPair(resMoran, Vicari$TranscriptOutcomes, normX = "log", normY = "log",
+Vicari$MetaboliteOutcomes, Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
+parameter = "Intercept")
 # Plot an arbitrary feature pair
-plotPairMulti(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes, normX = "log", normY = "log",
-Vicari$TranscriptCoords, Vicari$MetaboliteCoords, features = c("mt.Nd2", "X555.20713"))
+plotPairMulti(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
+Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
+normX = "log", normY = "log", features = c("mt.Nd2", "X555.20713"))
 }
 \seealso{
 \link{extractResultsMulti}, \link{fitLinModels}

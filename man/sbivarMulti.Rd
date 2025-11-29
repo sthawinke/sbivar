@@ -14,7 +14,7 @@ sbivarMulti(
   eta = 0.025,
   normX = c("none", "log"),
   normY = c("none", "log"),
-  wo = c("exp", "distance", "nn"),
+  wo = c("exp", "nn"),
   numNN = 8,
   n_points_grid = 600,
   verbose = TRUE

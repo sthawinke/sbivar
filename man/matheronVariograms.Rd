@@ -15,6 +15,9 @@ matheronVariograms(X, Cx, width, cutoff, model)
 
 \item{model}{Variogram model, passed onto \link[gstat]{vgm}}
 }
+\value{
+A list of variograms
+}
 \description{
 Estimate variograms using Matheron's binning estimator for many features at once
 }

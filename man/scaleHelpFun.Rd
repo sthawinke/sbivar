@@ -10,8 +10,6 @@ scaleHelpFun(X, feat)
 \item{X}{data matrix}
 
 \item{feat}{the feature name}
-
-\item{normFun}{normalizing function}
 }
 \value{
 A vector of values

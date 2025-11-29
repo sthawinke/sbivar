@@ -39,6 +39,8 @@ sbivarSingle(
 
 \item{n_points_grid, families}{Passed onto \link{wrapGAMs}}
 
+\item{normX, normY}{Character vectors indicating normalization, "log" means log-normalization of relative abundances}
+
 \item{GPmethod, Quants, numLscAlts, optControl, corStruct}{Passed onto \link{fitGP}}
 
 \item{wo, numNN, eta}{passed onto \link{buildWeightMat}}

@@ -88,7 +88,6 @@ scaleMinusOne = function(y, na.rm = TRUE){
 #' @details Returns vector of NA if feature not found, leading to grey in the plots
 #' @param X data matrix
 #' @param feat the feature name
-#' @param normFun normalizing function
 #'
 #' @returns A vector of values
 scaleHelpFun = function(X, feat){
@@ -241,7 +240,7 @@ addDimNames = function(mat, letter){
         rownames(mat) = paste0("Sample", seq_len(nrow(mat)))
     }
     colnames(mat) = if(is.null(colnames(mat))){
-        paste0(letter, seq_len(nrow(mat)))
+        paste0(letter, seq_len(ncol(mat)))
     } else {
         make.names(colnames(mat))
     }

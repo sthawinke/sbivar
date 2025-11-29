@@ -30,17 +30,17 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
                 bpparam()$workers, " computing cores")
     }
     Xl = lapply(Xl, addDimNames, "X");Yl = lapply(Yl, addDimNames, "Y")
-    Cxl = lapply(Cxl, tmpFun <- function(x) {colnames(x) = c("x", "y");x})
-    Eyl = lapply(Eyl, tmpFun)
+    Cxl = mapply(Cxl, Xl, SIMPLIFY = FALSE, FUN = tmpFun <- function(cx, x) {colnames(cx) = c("x", "y");rownames(cx) = rownames(x);cx})
+    Eyl = mapply(Eyl, Yl, SIMPLIFY = FALSE, FUN = tmpFun)
     normX = match.arg(normX);normY = match.arg(normY)
     foo = checkInputMulti(Xl, Yl, Cxl, Eyl)
     if(normX=="log"){
         Xl = lapply(Xl, logNorm)
-        Cxl = lapply(seq_along(Cxl), function(i){Cxl[[i]][rownames(Xl[[i]]),]})
+        Cxl = lapply(selfName(names(Cxl)), function(i){Cxl[[i]][rownames(Xl[[i]]),]})
     }
     if(normY=="log"){
         Yl = lapply(Yl, logNorm)
-        Eyl = lapply(seq_along(Eyl), function(i){Eyl[[i]][rownames(Yl[[i]]),]})
+        Eyl = lapply(selfName(names(Eyl)), function(i){Eyl[[i]][rownames(Yl[[i]]),]})
     }
     out = if(method == "GAMs"){
         wrapGAMsMulti(Xl, Yl, Cxl, Eyl, families = families,

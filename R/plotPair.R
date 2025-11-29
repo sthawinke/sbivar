@@ -26,7 +26,7 @@
 #' example(fitLinModels, "sbivar")
 #' # Plot the feature pair with the most significant signal for a certain parameter,
 #' #here the intercept (overall effect)
-#' plotTopPair(resMoran, Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
+#' plotTopPair(resMoran, Vicari$TranscriptOutcomes, normX = "log", normY = "log", Vicari$MetaboliteOutcomes,
 #' Vicari$TranscriptCoords, Vicari$MetaboliteCoords, parameter = "Intercept")
 #' # Plot an arbitrary feature pair
 #' plotPairMulti(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes, normX = "log", normY = "log",
@@ -69,7 +69,7 @@ plotPairMulti = function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "log"),
         data.frame("outcome" = c(scaleHelpFun(X, feat = features[1]),
                                  scaleHelpFun(Y, feat = features[2])),
                    "image" = nam, coordMat,
-                   "feature" = rep(features, times = c(nrow(Xl[[nam]]), nrow(Yl[[nam]]))))
+                   "feature" = rep(features, times = c(nrow(X), nrow(Y))))
     }))
     ggplot(data = dfList, aes(x = x, y = y, col = outcome)) +
         geom_point(size = size) + facet_grid(image~feature) +

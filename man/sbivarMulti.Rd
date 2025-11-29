@@ -31,6 +31,8 @@ sbivarMulti(
 
 \item{eta}{parameter that controls the decay of the weights with distance, see details}
 
+\item{normX, normY}{Character vectors indicating normalization, "log" means log-normalization of relative abundances}
+
 \item{wo, numNN}{Passed onto \link{buildWeightMat}}
 
 \item{verbose}{Should info on type of analysis be printed?}

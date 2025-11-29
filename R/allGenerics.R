@@ -25,9 +25,11 @@
 #' library(SpatialExperiment)
 #' seX = SpatialExperiment(assays = list("transcripts" = t(X)), spatialCoords = Cx)
 #' seY = SpatialExperiment(assays = list("metabolites" = t(Y)), spatialCoords = Ey)
-#' resModtGPs = sbivar(seX, seY, assayX = "transcripts", assayY = "metabolites", method = "GPs")
+#' resModtGPs = sbivar(seX, seY, assayX = "transcripts", assayY = "metabolites",
+#' method = "GPs")
 #' #Multi-image analysis on Vicari data
 #' data(Vicari)
-#' VicariRes = sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes, normX = "log", normY = "log",
-#' Vicari$TranscriptCoords, Vicari$MetaboliteCoords, method = "Moran", wo = "distance")
+#' VicariRes = sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
+#' Vicari$TranscriptCoords, Vicari$MetaboliteCoords, normX = "log", normY = "log",
+#' method = "Moran", wo = "distance")
 setGeneric("sbivar", function(X, ...) standardGeneric("sbivar"))

@@ -115,7 +115,7 @@ plotPairSingle(X, Y, Cx, Ey, features = c("X1", "Y1"))
 example(fitLinModels, "sbivar")
 # Plot the feature pair with the most significant signal for a certain parameter,
 #here the intercept (overall effect)
-plotTopPair(resMoran, Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
+plotTopPair(resMoran, Vicari$TranscriptOutcomes, normX = "log", normY = "log", Vicari$MetaboliteOutcomes,
 Vicari$TranscriptCoords, Vicari$MetaboliteCoords, parameter = "Intercept")
 # Plot an arbitrary feature pair
 plotPairMulti(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes, normX = "log", normY = "log",

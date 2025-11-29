@@ -16,6 +16,7 @@
 #' @param cutoff,width Cutoff and width of the variogram estimation, passed onto \link[gstat]{variogram}
 #' @param model Variogram model, passed onto \link[gstat]{vgm}
 #' @param verbose Should info on type of analysis be printed?
+#' @param normX,normY Character vectors indicating normalization, "log" means log-normalization of relative abundances
 #'
 #' @details Any normalization of the data should happen prior to calling this function.
 #' For instance, count data or metabolome data are best scaled to relative values and log-normalized prior to fitting GPs.

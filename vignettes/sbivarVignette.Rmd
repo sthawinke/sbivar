@@ -199,12 +199,12 @@ We see that the first three and the last three are replicates from different mic
 mouse = substr(names(Vicari$TranscriptOutcomes), 1, 10)
 ```
 
-For the multi-image case, we can also use bivariate Moran's I as measure of spatial association, with weights of the weight matrix decaying with distance:
+For the multi-image case, we can also use bivariate Moran's I as measure of spatial association, with a nearest-neighbour weighting scheme for illustration (if the required _RANN_ package is available:
 
 ```{r multiMoran}
 multiMoranRes = sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes, 
                             Vicari$TranscriptCoords, Vicari$MetaboliteCoords, 
-                            method = "Moran", wo = "distance")
+                            method = "Moran", wo = if(require(RANN)) "nn" else "Gauss")
 ```
 
 Next we plug the calculated Moran's I values into a linear model, with random effects for the individual mice:
@@ -305,7 +305,7 @@ MetSElist = lapply(selfName(names(Vicari$MetaboliteOutcomes)), function(nam){
                       spatialCoords = Vicari$MetaboliteCoords[[nam]])
 })
 multiMoranResSE = sbivar(X = StxSElist, Y = MetSElist, assayX = "transcripts", 
-                         assayY = "metabolites", method = "Moran", wo = "distance")
+                         assayY = "metabolites", method = "Moran", wo = "Gauss")
 multiMoranLmmsSE = fitLinModels(multiMoranResSE, designDf, Formula = ~ (1|mouse))
 multiMoranLmmsResSE = extractResultsMulti(multiMoranLmmsSE, designDf)
 head(multiMoranLmmsResSE$result$Intercept)

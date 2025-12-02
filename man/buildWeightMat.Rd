@@ -23,5 +23,5 @@ Build a weight matrix to be used in the calculation of the bivariate Moran's I
 statistic.
 }
 \details{
-For wo = "exp", the weight decays as exp(-d^2/eta) with d the distance between observations.
+For wo = "Gauss", the weight decays as exp(-d^2/eta) with d the distance between observations.
 }

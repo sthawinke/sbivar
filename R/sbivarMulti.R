@@ -20,7 +20,7 @@
 sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
                        method = c("Moran's I", "GAMs", "Correlation"), eta = 0.025, normX = c("none", "log"),
                        normY = c("none", "log"),
-                        wo = c("exp", "nn"), numNN = 8, n_points_grid = 6e2, verbose = TRUE){
+                        wo = c("Gauss", "nn"), numNN = 8, n_points_grid = 6e2, verbose = TRUE){
     method = match.arg(method)
     wo = match.arg(wo)
     stopifnot(is.numeric(numNN), is.numeric(n_points_grid), is.character(wo), is.logical(verbose),

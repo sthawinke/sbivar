@@ -15,7 +15,7 @@ sbivarSingle(
   normY = c("none", "log"),
   families = list(X = gaussian(), Y = gaussian()),
   GPmethod = c("REML", "ML"),
-  wo = c("exp", "nn"),
+  wo = c("Gauss", "nn"),
   numNN = 8,
   model = "Gau",
   gpParams,

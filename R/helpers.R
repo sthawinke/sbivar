@@ -221,6 +221,20 @@ moveCoords = function(Coord){
     Coord[,2] = Coord[,2] - min(Coord[,2])
     return(Coord)
 }
+#' Move two sets of coordinates to 0-1. without shifting them with respect to each other
+#'
+#' @param Cx,Ey Coordinate matrices
+#'
+#' @returns A list with the shifted and scaled coordinates
+moveTwoCoords = function(Cx, Ey){
+    #Bring coordinates to 0-1
+    minX = min(c(Cx[, "x"], Ey[, "x"]));minY = min(c(Cx[, "y"], Ey[, "y"]))
+    Cx[, "x"] = Cx[, "x"] - minX; Cx[, "y"] = Cx[, "y"] - minY
+    Ey[, "x"] = Ey[, "x"] - minX; Ey[, "y"] = Ey[, "y"] - minY
+    MaxCoord = max(c(Cx, Ey))
+    Cx = Cx/MaxCoord;Ey = Ey/MaxCoord
+    list("Cx" = Cx, "Ey" = Ey)
+}
 #' Return a normalization function based on a character string
 #'
 #' @param norm The character string

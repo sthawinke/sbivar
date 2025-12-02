@@ -21,12 +21,9 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, mod
     }
     #Scale outcomes
     X = scale(X);Y = scale(Y)
-    #Bring coordinates to 0-1
-    minX = min(c(Cx[, "x"], Ey[, "x"]));minY = min(c(Cx[, "y"], Ey[, "y"]))
-    Cx[, "x"] = Cx[, "x"] - minX; Cx[, "y"] = Cx[, "y"] - minY
-    Ey[, "x"] = Ey[, "x"] - minX; Ey[, "y"] = Ey[, "y"] - minY
-    MaxCoord = max(c(Cx, Ey))
-    Cx = Cx/MaxCoord;Ey = Ey/MaxCoord
+    #Move coordinates
+    movedCoords = moveTwoCoords(Cx, Ey)
+    Cx = movedCoords$Cx;Ey = movedCoords$Ey
     #Test statistic
     W = buildWeightMat(Cx, Ey, wo, eta = eta, numNN = numNN)
     Ixy = (crossprod(X, W) %*% Y)/sqrt(prodFac <- prod(dim(W)-1)) #Normalize for matrix size

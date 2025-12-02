@@ -12,16 +12,8 @@ wrapMoransIMulti = function(Xl, Yl, Cxl, Eyl, wo, numNN, eta, verbose){
     lapply(selfName(names(Xl)), function(nam){
         if(verbose)
             printIteration(nam, names(Xl))
-        #Bring coordinates to 0-1
-        minX = min(c(Cxl[[nam]][, "x"], Eyl[, "x"]))
-        minY = min(c(Cxl[[nam]][, "y"], Eyl[, "y"]))
-        Cxl[[nam]][, "x"] = Cxl[[nam]][, "x"] - minX
-        Cxl[[nam]][, "y"] = Cxl[[nam]][, "y"] - minY
-        Eyl[[nam]][, "x"] = Eyl[[nam]][, "x"] - minX
-        Eyl[[nam]][, "y"] = Eyl[[nam]][, "y"] - minY
-        MaxCoord = max(c(Cxl[[nam]], Eyl[[nam]]))
-        Cxl[[nam]] = Cxl[[nam]]/MaxCoord;Eyl[[nam]] = Eyl[[nam]]/MaxCoord
-        out = c(crossprod(scale(Xl[[nam]]), buildWeightMat(Cxl[[nam]], Eyl[[nam]],
+        movedCoords = moveTwoCoords(Cxl[[nam]], Eyl[[nam]])
+        out = c(crossprod(scale(Xl[[nam]]), buildWeightMat(movedCoords$Cx, movedCoords$Ey,
                 eta = eta, wo = wo, numNN = numNN)) %*% scale(Yl[[nam]]))
         names(out) = makeNames(colnames(Xl[[nam]]), colnames(Yl[[nam]]))
         return(out)

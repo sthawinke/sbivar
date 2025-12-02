@@ -13,23 +13,28 @@ setMethod("sbivar", "matrix", function(X, Y, Cx, Ey, ...) {
 #' @rdname sbivar
 #' @export
 #' @inheritParams sbivarMulti
-#' @importFrom SpatialExperiment spatialCoords
 setMethod("sbivar", "list", function(X, Y, Cx, Ey, assayX = NULL, assayY = NULL, ...) {
     if(!is.list(Y)){
         stop("Since X is a list, Y must be so too!")
     }
     if(all(vapply(X, FUN.VALUE = TRUE, inherits, "SpatialExperiment"))){
+        if(!requireNamespace("SpatialExperiment", quietly = TRUE)){
+            stop("SpatialExperiment package needs to be installed first!")
+        }
         if(is.null(assayX)){
             stop("Provide the name of the assay through the 'assayX' argument!")
         }
-        Cx = lapply(X, spatialCoords)
+        Cx = lapply(X, SpatialExperiment::spatialCoords)
         X = lapply(X, function(y) assayT(y, assayX))
     }
     if(all(vapply(Y, FUN.VALUE = TRUE, inherits, "SpatialExperiment"))){
+        if(!requireNamespace("SpatialExperiment", quietly = TRUE)){
+            stop("SpatialExperiment package needs to be installed first!")
+        }
         if(is.null(assayY)){
             stop("Provide the name of the assay through the 'assayY' argument!")
         }
-        Ey = lapply(Y, spatialCoords)
+        Ey = lapply(Y, SpatialExperiment::spatialCoords)
         Y = lapply(Y, function(y) assayT(y, assayY))
     }
     c(sbivarMulti(X, Y, Cx, Ey, ...), "assayX" = assayX, "assayY" = assayY)
@@ -40,15 +45,17 @@ setMethod("sbivar", "list", function(X, Y, Cx, Ey, assayX = NULL, assayY = NULL,
 #' included in the same SpatialExperiment objects X and Y. By default, they are assumed to be the same for both X and Y
 #' @rdname sbivar
 #' @export
-#' @importFrom SpatialExperiment spatialCoords
 setMethod("sbivar", "SpatialExperiment", function(X, Y, assayX, assayY, sample_id_x,
                                                   sample_id_y = sample_id_x, ...) {
+    if(!requireNamespace("SpatialExperiment", quietly = TRUE)){
+        stop("SpatialExperiment package needs to be installed first!")
+    }
     if(!inherits(Y, "SpatialExperiment")){
         stop("Since X is a SpatialExperiment object, Y must be so too!")
     }
     out = if(missing(sample_id_x)){
-        c(sbivar(assayT(X, assayX), assayT(Y, assayY), spatialCoords(X), spatialCoords(Y), ...),
-          "assayX" = assayX, "assayY" = assayY)
+        c(sbivar(assayT(X, assayX), assayT(Y, assayY), SpatialExperiment::spatialCoords(X),
+          SpatialExperiment::spatialCoords(Y), ...), "assayX" = assayX, "assayY" = assayY)
     } else {
         sbivar(splitSpatialExperiment(X, sample_id_x),
                splitSpatialExperiment(Y, sample_id_y), assayX = assayX, assayY = assayY,...)

@@ -31,5 +31,5 @@
 #' data(Vicari)
 #' VicariRes = sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
 #' Vicari$TranscriptCoords, Vicari$MetaboliteCoords, normX = "log", normY = "log",
-#' method = "Moran", wo = "distance")
+#' method = "Moran", wo = "Gauss")
 setGeneric("sbivar", function(X, ...) standardGeneric("sbivar"))

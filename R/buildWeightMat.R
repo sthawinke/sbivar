@@ -14,7 +14,7 @@
 #' For wo = "Gauss", the weight decays as exp(-d^2/eta) with d the distance between observations.
 buildWeightMat = function(Cx, Ey, wo, eta, numNN){
     if (wo == "nn"){
-        if(require(RANN)){
+        if(requireNamespace("RANN")){
             nnMatXY = RANN::nn2(Cx, Ey, k = numNN)$nn.idx
             nnMatYX = RANN::nn2(Ey, Cx, k = numNN)$nn.idx
             n = nrow(Cx); m = nrow(Ey)

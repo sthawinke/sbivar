@@ -11,10 +11,8 @@
 #' \insertAllCited{}
 #' @importFrom Rdpack reprompt
 #' @param Cx The shared coordinate matrix
+#' @importFrom SpatialPack modified.ttest
 wrapModTtest = function(X, Y, Cx, verbose){
-    if(!requireNamespace("SpatialPack")){
-        stop("Install the 'SpatialPack' package to apply modified t-test")
-    }
     n = nrow(X);m = nrow(Y)
    featGrid = expand.grid("featX" = colnames(X), "featY" = colnames(Y))
     if(verbose){

@@ -11,11 +11,10 @@
 #' \insertAllCited{}
 #' @importFrom Rdpack reprompt
 #' @importFrom stats dist
-#' @importFrom gstat variogramLine
 #'
 #' @details The Moran's I values and variances returned have been scaled by their maximum value,
 #' the first singular vector of the weight matrix., already.
-wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, model, ...){
+wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, ...){
     if(verbose){
         message("Performing tests on bivariate Moran's I for ", ncol(X)*ncol(Y), " feature pairs")
     }
@@ -31,11 +30,11 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, mod
     if(verbose){
         message("Fitting variograms for first modality (", ncol(X), " features) ...")
     }
-    variogramsX = matheronVariograms(X, Cx, width = width, cutoff = cutoff, model = model, ...)
+    variogramsX = matheronVariograms(X, Cx, width = width, cutoff = cutoff, ...)
     if(verbose){
         message("Fitting variograms for second modality (", ncol(Y), " features) ...")
     }
-    variogramsY = matheronVariograms(Y, Ey, width = width, cutoff = cutoff, model = model, ...)
+    variogramsY = matheronVariograms(Y, Ey, width = width, cutoff = cutoff, ...)
     distX = as.matrix(stats::dist(Cx))
     distY = as.matrix(stats::dist(Ey))
     if(verbose){
@@ -67,14 +66,15 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, mod
 #' @param X Outcome matrix
 #' @param Cx Coordinate matrix
 #' @return A list of variograms
-matheronVariograms <- function(X, Cx, width, cutoff, model) {
+#' @note Only the Gaussian variogram (model = "Gau") is implemented here
+matheronVariograms <- function(X, Cx, width, cutoff) {
     df = data.frame(x = Cx[,1], y = Cx[,2])
     sp::coordinates(df) <- ~x + y
     # Compute empirical semivariogram using Matheron’s estimator
     variograms <- loadBalanceBplapply(selfName(colnames(X)), function(nm) {
         df$z <- X[, nm]
         fvg = fit.variogram(variogram(z ~ 1, df, width = width, cutoff = cutoff),
-                      vgm(1, model = model), fit.sills = FALSE) #Fix partial sill at 1, includes nugget variance
+                      vgm(1, model = "Gau"), fit.sills = FALSE) #Fix partial sill at 1, includes nugget variance
         if(fvg$range<0){
             fvg$range = 1e-10 #Catch negative ranges
         }

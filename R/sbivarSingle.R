@@ -14,7 +14,6 @@
 #' @param n_points_grid,families Passed onto \link{wrapGAMs}
 #' @param wo,numNN,eta passed onto \link{buildWeightMat}
 #' @param cutoff,width Cutoff and width of the variogram estimation, passed onto \link[gstat]{variogram}
-#' @param model Variogram model, passed onto \link[gstat]{vgm}
 #' @param verbose Should info on type of analysis be printed?
 #' @param normX,normY Character vectors indicating normalization, "log" means log-normalization of relative abundances
 #'
@@ -41,7 +40,7 @@
 sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
       n_points_grid = 6e2, normX = c("none", "log"),
       normY = c("none", "log"), families = list("X" = gaussian(), "Y" = gaussian()),
-      GPmethod = c("REML", "ML"), wo = c("Gauss", "nn"), numNN = 8, model = "Gau",
+      GPmethod = c("REML", "ML"), wo = c("Gauss", "nn"), numNN = 8,
       gpParams, Quants = c(0.005, 0.5), numLscAlts = 10, width = cutoff/15, eta = 0.025, cutoff = sqrt(2)/3,
       optControl = lmeControl(opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
                               niterEM = 1e3, msMaxEval = 1e3),
@@ -99,7 +98,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
     }
     out = if(method=="Moran's I"){
         (moranRes <- wrapMoransI(X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo, numNN = numNN,
-                    eta = eta, width = width, verbose = verbose, cutoff = cutoff, model = model))$out
+                    eta = eta, width = width, verbose = verbose, cutoff = cutoff))$out
     } else if(method == "GAMs"){
         wrapGAMs(X = X, Y = Y, Cx = Cx, Ey = Ey, families = families,
                  n_points_grid = n_points_grid, verbose = verbose)

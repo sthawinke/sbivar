@@ -17,7 +17,6 @@ sbivarSingle(
   GPmethod = c("REML", "ML"),
   wo = c("Gauss", "nn"),
   numNN = 8,
-  model = "Gau",
   gpParams,
   Quants = c(0.005, 0.5),
   numLscAlts = 10,
@@ -44,8 +43,6 @@ sbivarSingle(
 \item{GPmethod, Quants, numLscAlts, optControl, corStruct}{Passed onto \link{fitGP}}
 
 \item{wo, numNN, eta}{passed onto \link{buildWeightMat}}
-
-\item{model}{Variogram model, passed onto \link[gstat]{vgm}}
 
 \item{gpParams}{Parameters of the Gaussian processes, see details}
 

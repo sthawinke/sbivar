@@ -93,11 +93,11 @@ plotPairSingle = function(X, Y, Cx, Ey, features, normX = c("none", "log"),
                           normY = c("none", "log"), assayX, assayY, ...){
     stopifnot(length(features)==2)
     if(inherits(X, "SpatialExperiment")){
-        Cx = spatialCoords(X)
+        Cx = SpatialExperiment::spatialCoords(X)
         X = assayT(X, assayX)
     }
     if(inherits(Y, "SpatialExperiment")){
-        Ey = spatialCoords(Y)
+        Ey = SpatialExperiment::spatialCoords(Y)
         Y = assayT(Y, assayY)
     }
     X = addDimNames(X, "X");Y = addDimNames(Y, "Y")

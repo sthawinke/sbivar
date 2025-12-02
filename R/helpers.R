@@ -200,7 +200,7 @@ getX = function(X, assay){
 #' @returns A coordinate matrix
 getSpatialCoords = function(X, Cx){
     out = if(inherits(X, "SpatialExperiment")){
-        spatialCoords(X)
+        SpatialExperiment::spatialCoords(X)
     } else if(is.list(X)){
         lapply(selfName(names(X)), function(i){
             getSpatialCoords(X[[i]], Cx[[i]])

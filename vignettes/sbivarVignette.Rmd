@@ -158,7 +158,7 @@ gamRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
                       method = "GAMs",  families = FamiliesVicari)
 ```
 
-Plot the most significant pair:
+Plot the most significant pair (log-transformed data are shown, the originall analysis is on raw data):
 
 ```{r plottoppairgam, fig.height = 4.5}
 plotTopPair(gamRes, X = singleStx, Y = singleMet, Cx = singleStxCoords, 
@@ -199,10 +199,10 @@ We see that the first three and the last three are replicates from different mic
 mouse = substr(names(Vicari$TranscriptOutcomes), 1, 10)
 ```
 
-For the multi-image case, we can also use bivariate Moran's I as measure of spatial association, with a nearest-neighbour weighting scheme for illustration (if the required _RANN_ package is available:
+For the multi-image case, we can also use bivariate Moran's I as measure of spatial association, with a nearest-neighbour weighting scheme for illustration (if the required _RANN_ package is available):
 
 ```{r multiMoran}
-multiMoranRes = sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes, 
+multiMoranRes = sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes, normX = "log", normY = "log",
                             Vicari$TranscriptCoords, Vicari$MetaboliteCoords, 
                             method = "Moran", wo = if(require(RANN)) "nn" else "Gauss")
 ```
@@ -261,11 +261,11 @@ Look at the first object:
 StxSE
 ```
 
-Next we call the _sbivar_ function with these as arguments, providing the names of the assays we want analysed:
+Next we call the _sbivar_ function with these as arguments, providing the names of the assays we want analysed. We set _verbose_ to FALSE to prevent printing output:
 
 ```{r SEanalysis}
 resSpatExp = sbivar(StxSE, MetSE, assayX = "transcripts", assayY = "metabolites", 
-                    families = FamiliesVicari, method = "GAMs")
+                    families = FamiliesVicari, method = "GAMs", verbose = FALSE)
 ```
 
 Plot the second most significant result, again providing the _SpatialExperiment_ objects
@@ -288,7 +288,7 @@ We run a the same analysis, now providing the experiment names on top of the ass
 ```{r analyseMAE, eval = FALSE}
 resMAE = sbivar(MAE, assayX = "transcripts", assayY = "metabolites", 
                 experimentX = "transcripts", experimentY = "metabolites", 
-                families = FamiliesVicari, method = "GAMs")
+                families = FamiliesVicari, method = "GAMs", normX = "log", normY = "log")
 ```
 
 ### Multi-image
@@ -304,7 +304,7 @@ MetSElist = lapply(selfName(names(Vicari$MetaboliteOutcomes)), function(nam){
     SpatialExperiment(assays = list("metabolites" = t(Vicari$MetaboliteOutcomes[[nam]])),
                       spatialCoords = Vicari$MetaboliteCoords[[nam]])
 })
-multiMoranResSE = sbivar(X = StxSElist, Y = MetSElist, assayX = "transcripts", 
+multiMoranResSE = sbivar(X = StxSElist, Y = MetSElist, assayX = "transcripts", verbose = FALSE,
                          assayY = "metabolites", method = "Moran", wo = "Gauss")
 multiMoranLmmsSE = fitLinModels(multiMoranResSE, designDf, Formula = ~ (1|mouse))
 multiMoranLmmsResSE = extractResultsMulti(multiMoranLmmsSE, designDf)
@@ -339,7 +339,7 @@ And run the same analysis:
 ```{r singleSEanalysis, eval = FALSE}
 sbivarMultiSingleSE = sbivar(SEsingleStx, SEsingleMet, sample_id_x = "sample_id",
                              assayX = "transcripts", assayY = "metabolites", 
-                             method = "Moran's I")
+                             method = "Moran's I", normX = "log", normY = "log")
 multiMoranLmmsSingleSE = fitLinModels(sbivarMultiSingleSE, designDf, 
                                       Formula = ~ (1|mouse))
 multiMoranLmmsResSingleSE = extractResultsMulti(multiMoranLmmsSingleSE, designDf)
@@ -384,7 +384,8 @@ Note that in this example, the samples of the two modalities have been pre-match
 
 ```{r speanalyse}
 if(reqadzk){
-    GodfreyRes = sbivar(speStx, speMet, assayX = "Stx", assayY = "msi")
+    GodfreyRes = sbivar(speStx, speMet, assayX = "Stx", assayY = "msi", 
+                        normX = "log", normY = "log", verbose = FALSE)
     plotTopPair(GodfreyRes, speStx, speMet)
 }
 ```

@@ -45,9 +45,9 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, mod
         message("Calculating variances of bivariate Moran's I (", ncol(X)*ncol(Y), " feature pairs) ...")
     }
     varIxy = t(simplify2array(loadBalanceBplapply(selfName(colnames(X)), function(featx){
-        sigXw = crossprod(W, variogramLine(variogramsX[[featx]], dist_vector = distX, covariance = TRUE)) %*% W
+        sigXw = crossprod(W, evalVariogram(variogramsX[[featx]], distX)) %*% W
         vapply(selfName(colnames(Y)), FUN.VALUE = double(1), function(featy){
-            realVar = tr(sigXw %*% variogramLine(variogramsY[[featy]], dist_vector = distY, covariance = TRUE))
+            realVar = tr(sigXw %*% evalVariogram(variogramsY[[featy]], distY))
             return(realVar)
         })
     })))
@@ -84,4 +84,13 @@ matheronVariograms <- function(X, Cx, width, cutoff, model) {
         return(fvg)
     })
     return(variograms)
+}
+#' Evaluate a Gaussian variogram on a distance matrix
+#'
+#' @param vg The variogram
+#' @param distMat The distance matrix
+#'
+#' @returns A covariance matrix
+evalVariogram = function(vg, distMat){
+    exp(-(distMat/vg$range)^2)
 }

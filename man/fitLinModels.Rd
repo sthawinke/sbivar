@@ -11,8 +11,8 @@ fitLinModels(
   Formula,
   verbose = TRUE,
   Control = lmerControl(check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
-    check.conv.singular = .makeCC(action = "ignore", tol = formals(isSingular)$tol),
-    check.conv.hess = .makeCC(action = "ignore", tol = 1e-06))
+    check.conv.singular = .makeCC(action = "ignore", tol = 1e-04), check.conv.hess =
+    .makeCC(action = "ignore", tol = 1e-06))
 )
 
 extractResultsMulti(result, designDf, method = "BH")

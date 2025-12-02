@@ -6,13 +6,15 @@
 #' @inheritParams sbivarSingle
 #'
 #' @returns A dataframe of results sorted by p-value, also containing effective sample size (ESS) and correlation estimate.
-#' @importFrom SpatialPack modified.ttest
 #' @seealso \link[SpatialPack]{modified.ttest}
 #' @references
 #' \insertAllCited{}
 #' @importFrom Rdpack reprompt
 #' @param Cx The shared coordinate matrix
 wrapModTtest = function(X, Y, Cx, verbose){
+    if(!requireNamespace("SpatialPack")){
+        stop("Install the 'SpatialPack' package to apply modified t-test")
+    }
     n = nrow(X);m = nrow(Y)
    featGrid = expand.grid("featX" = colnames(X), "featY" = colnames(Y))
     if(verbose){

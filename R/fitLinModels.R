@@ -33,7 +33,7 @@
 #' @order 1
 fitLinModels = function(result, designDf, Formula, verbose = TRUE, Control = lmerControl(
     check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
-    check.conv.singular = .makeCC(action = "ignore", tol = formals(isSingular)$tol),
+    check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
     check.conv.hess = .makeCC(action = "ignore", tol = 1e-06))){
     stopifnot(all(c("estimates", "method", "multi") %in% names(result)))
     if(!result$multi){

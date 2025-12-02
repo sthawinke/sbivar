@@ -93,7 +93,6 @@ makeOffset = function(X, family){
     }
     return(out)
 }
-#' @importFrom reshape2 melt
 buildGamDf = function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun, ...){
     if(families[["X"]]$family!="gaussian"){
         X = X[idX <- (rowSums(X)>0),]
@@ -114,12 +113,11 @@ buildGamDf = function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun,
     predy = vcovPredGam(modely, newdata = newGrid)
     corContr = (predx$pred-mean(predx$pred))*(predy$pred-mean(predy$pred))
     corEst = sum(corContr)/((nrow(newGrid)-1)*sd(predx$pred)*sd(predy$pred))
-    dat = rbind(data.frame(newGrid, value = scaleFun(predx$pred), feature = "x"),
-                data.frame(newGrid, value = scaleFun(predy$pred), feature = "y"),
-                data.frame(newGrid, value = scaleFun(corContr), feature = "cor"))
-    gridMolt = melt(dat, id.vars = c("x", "y", "feature"), value.name = "Value")
-    gridMolt$feature = factor(gridMolt$feature, levels = c("x", "y", "cor"),
+    dat = rbind(data.frame(newGrid, Value = scaleFun(predx$pred), feature = "x"),
+                data.frame(newGrid, Value = scaleFun(predy$pred), feature = "y"),
+                data.frame(newGrid, Value = scaleFun(corContr), feature = "cor"))
+    dat$feature = factor(dat$feature, levels = c("x", "y", "cor"),
                               labels = c(features[1], features[2], "Correlation"),
                               ordered = TRUE)
-    return(list("df" = gridMolt, "corEst" = corEst))
+    return(list("df" = dat, "corEst" = corEst))
 }

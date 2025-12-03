@@ -5,8 +5,6 @@
 #' @param numLscAlts Number of length scales to be tested for bivariate association
 #' @param Quants Most extreme quantiles of the distance distribution to take as length scales
 #' @returns A named list of results
-#' @importFrom smoppix loadBalanceBplapply
-#' @importFrom BiocParallel bplapply
 wrapGPs = function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
                    corStruct, optControl, verbose){
     if(missing(gpParams)){
@@ -33,15 +31,15 @@ wrapGPs = function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
         message("Performing all ", ncol(X)*ncol(Y),
                 " pairwise score tests on fitted GPs ...")
     }
-    out = loadBalanceBplapply(selfName(colnames(X)), function(featx){
+    out = vapply(selfName(colnames(X)), function(featx){
         sx = base::solve(buildSigmaGp(gpsx[, featx], distMat = distMat[idN, idN]))
         vapply(selfName(colnames(Y)), FUN.VALUE = double(2), function(featy){
             testGP(distMat = distMat, x = X[,featx], y = Y[,featy], altSigmas = altSigmas,
                    solXonly = gpsx[, featx], solYonly = gpsy[, featy])
         })
-    })
+    }, FUN.VALUE = matrix(0, nrow = 2, ncol = length(gamsy)))
     #Reformat to long format
-    t(matrix(unlist(out), 2, ncol(X)*ncol(Y),
+    t(matrix(c(out), 2, ncol(X)*ncol(Y),
              dimnames = list(c("pVal", "sign"),
     paste(rep(colnames(X), each = ncol(Y)), rep(colnames(Y), times = ncol(X)), sep = "__"))))
 }

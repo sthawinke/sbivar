@@ -8,8 +8,6 @@
 #' @param multi Flag to indicate this is part of a multi-image analysis.
 #' It only matters for the messages printed.
 #' @returns A named list of results
-#' @importFrom smoppix loadBalanceBplapply
-#' @importFrom BiocParallel bplapply
 wrapGAMs = function(X, Y, Cx, Ey, families, n_points_grid, verbose, multi = FALSE){
     if(verbose){
         message("Fitting GAMs for first modality (", ncol(X), " features)")
@@ -30,15 +28,15 @@ wrapGAMs = function(X, Y, Cx, Ey, families, n_points_grid, verbose, multi = FALS
                     " pairwise tests on fitted GAMs ...")
             }
     }
-    out = loadBalanceBplapply(selfName(names(gamsx)), function(featx){
+    out = vapply(selfName(names(gamsx)), function(featx){
         predx <- vcovPredGam(gamsx[[featx]], newdata = ng)
         vapply(selfName(names(gamsy)), FUN.VALUE = double(3), function(featy){
             testGAM(predx = predx, modely = gamsy[[featy]], modelx = gamsx[[featx]],
                     predy = vcovPredGam(gamsy[[featy]], newdata = ng))
         })
-    })
+    }, FUN.VALUE = matrix(0, nrow = 3, ncol = length(gamsy)))
     #Reformat to long format
-    t(matrix(unlist(out), 3, length(gamsx)*length(gamsy),
+    t(matrix(c(out), 3, length(gamsx)*length(gamsy),
              dimnames = list(c("corxy", "se.corxy", "pVal"),
               paste(rep(names(gamsx), each = length(gamsy)), rep(names(gamsy), times = length(gamsx)),
                     sep = "__"))))

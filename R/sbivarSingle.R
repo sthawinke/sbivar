@@ -108,7 +108,8 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
                 GPmethod = GPmethod, corStruct = corStruct, optControl = optControl,
                 numLscAlts = numLscAlts, verbose = verbose)
     } else if(method == "Modified t-test"){
-        wrapModTtest(X = X, Y = Y, Cx = Cx, verbose = verbose)
+        sharedNames = intersect(rownames(X), rownames(Y))
+        wrapModTtest(X[sharedNames,] = X, Y = Y[sharedNames,], Cx = Cx[sharedNames,], verbose = verbose)
     }
     out = cbind(out, "pAdj" = p.adjust(out[, "pVal"], method = "BH"))
     result = out[order(out[, "pVal"]),]

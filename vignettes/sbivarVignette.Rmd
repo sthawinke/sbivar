@@ -128,7 +128,7 @@ singleMetCoords = Vicari$MetaboliteCoords[[singleSample]]
 singleMet = Vicari$MetaboliteOutcomes[[singleSample]]
 ```
 
-We analyse this single sample using bivariate Moran's I, choosing log-normalization (see _?logNorm) for both modalities:
+We analyse this single sample using bivariate Moran's I, choosing log-normalization (see _?logNorm_) for both modalities:
 
 ```{r testmoran}
 moransIRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, 

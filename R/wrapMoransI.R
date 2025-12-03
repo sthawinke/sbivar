@@ -35,20 +35,20 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, ...
         message("Fitting variograms for second modality (", ncol(Y), " features) ...")
     }
     variogramsY = matheronVariograms(Y, Ey, width = width, cutoff = cutoff, ...)
-    distX = as.matrix(stats::dist(Cx))
-    distY = as.matrix(stats::dist(Ey))
+    distX = as.matrix(stats::dist(Cx));distY = as.matrix(stats::dist(Ey))
     if(verbose){
         message("Calculating variances of bivariate Moran's I (", ncol(X)*ncol(Y), " feature pairs) ...")
     }
     varIxy = t(simplify2array(loadBalanceBplapply(selfName(colnames(X)), function(featx){
-        sigXw = crossprod(W, evalVariogram(variogramsX[[featx]], distX)) %*% W
+        sigXw = t(crossprod(W, evalVariogram(variogramsX[[featx]], distX)) %*% W)
         vapply(selfName(colnames(Y)), FUN.VALUE = double(1), function(featy){
-            realVar = tr(sigXw %*% evalVariogram(variogramsY[[featy]], distY))
-            return(realVar)
+            sum(sigXw * evalVariogram(variogramsY[[featy]], distY))
+            #Fast, memory saving way to find the trace
         })
     })))
-    indepVar = tr(crossprod(W))#If negative variance, fall back on independence
-    varIxy[varIxy<=0] = indepVar
+    if(any(zeroId <- varIxy<=0)){
+        varIxy[zeroId] = tr(crossprod(W))#If negative variance, fall back on independence
+    }
     # P-values
     IxyPvals = makePval(Ixy/sqrt(varIxy/prodFac))
     #Maximum value

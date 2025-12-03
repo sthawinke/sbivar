@@ -37,7 +37,7 @@ wrapGPs = function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
             testGP(distMat = distMat, x = X[,featx], y = Y[,featy], altSigmas = altSigmas,
                    solXonly = gpsx[, featx], solYonly = gpsy[, featy])
         })
-    }, FUN.VALUE = matrix(0, nrow = 2, ncol = length(gamsy)))
+    }, FUN.VALUE = matrix(0, nrow = 2, ncol = ncol(Y)))
     #Reformat to long format
     t(matrix(c(out), 2, ncol(X)*ncol(Y),
              dimnames = list(c("pVal", "sign"),

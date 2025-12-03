@@ -4,7 +4,20 @@
 \alias{wrapMoransI}
 \title{Calculate ibivariate Moran's I between two modality matrix, with variance and p-value}
 \usage{
-wrapMoransI(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, ...)
+wrapMoransI(
+  X,
+  Y,
+  Cx,
+  Ey,
+  wo,
+  eta,
+  numNN,
+  cutoff,
+  width,
+  verbose,
+  findMaxW,
+  ...
+)
 }
 \arguments{
 \item{X, Y}{Matrices of omics measurements}
@@ -16,6 +29,8 @@ wrapMoransI(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, ...)
 \item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{variogram}}
 
 \item{verbose}{Should info on type of analysis be printed?}
+
+\item{findMaxW}{Is the maximum bivariate Moran's I needed?}
 
 \item{...}{passed onto \link[gstat]{variogram}}
 }

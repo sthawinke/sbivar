@@ -15,6 +15,7 @@
 #' @param wo,numNN,eta passed onto \link{buildWeightMat}
 #' @param cutoff,width Cutoff and width of the variogram estimation, passed onto \link[gstat]{variogram}
 #' @param verbose Should info on type of analysis be printed?
+#' @param findMaxW Is the maximum bivariate Moran's I needed?
 #' @param normX,normY Character vectors indicating normalization, "log" means log-normalization of relative abundances
 #'
 #' @details Any normalization of the data should happen prior to calling this function.
@@ -40,7 +41,7 @@
 sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
       n_points_grid = 6e2, normX = c("none", "log"),
       normY = c("none", "log"), families = list("X" = gaussian(), "Y" = gaussian()),
-      GPmethod = c("REML", "ML"), wo = c("Gauss", "nn"), numNN = 8,
+      GPmethod = c("REML", "ML"), wo = c("Gauss", "nn"), numNN = 8, findMaxW = FALSE,
       gpParams, Quants = c(0.005, 0.5), numLscAlts = 10, width = cutoff/15, eta = 0.025, cutoff = sqrt(2)/3,
       optControl = lmeControl(opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
                               niterEM = 1e3, msMaxEval = 1e3),
@@ -48,7 +49,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
     stopifnot(is.numeric(n_points_grid), ncol(Cx) == 2, is.character(method), is.numeric(numNN),
               all(vapply(families, FUN.VALUE = TRUE, is, "family")), is.list(optControl),
              inherits(corStruct, "corStruct"), inherits(corStruct, "corGaus"),
-             length(Quants)==2, is.numeric(Quants), is.logical(verbose))
+             length(Quants)==2, is.numeric(Quants), is.logical(verbose), is.logical(findMaxW))
     if(verbose){
         message("Starting sbivar analysis of a single image on ",
         bpparam()$workers, " computing cores")
@@ -98,7 +99,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
     }
     out = if(method=="Moran's I"){
         (moranRes <- wrapMoransI(X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo, numNN = numNN,
-                    eta = eta, width = width, verbose = verbose, cutoff = cutoff))$out
+         eta = eta, width = width, verbose = verbose, cutoff = cutoff, findMaxW = findMaxW))$out
     } else if(method == "GAMs"){
         wrapGAMs(X = X, Y = Y, Cx = Cx, Ey = Ey, families = families,
                  n_points_grid = n_points_grid, verbose = verbose)

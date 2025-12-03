@@ -14,7 +14,7 @@
 #'
 #' @details The Moran's I values and variances returned have been scaled by their maximum value,
 #' the first singular vector of the weight matrix., already.
-wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, ...){
+wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, findMaxW, ...){
     if(verbose){
         message("Performing tests on bivariate Moran's I for ", ncol(X)*ncol(Y), " feature pairs")
     }
@@ -51,8 +51,9 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, ...
     }
     # P-values
     IxyPvals = makePval(Ixy/sqrt(varIxy/prodFac))
-    #Maximum value
-    maxIxy = svd(W, nu = 0, nv = 0)$d[1]
+    #Maximum value, if needed
+    maxIxy = if(findMaxW)
+        svd(W, nu = 0, nv = 0)$d[1]
     #Reformat to long format
     out <- cbind("Ixy" = c(Ixy/maxIxy), "varIxy" = c(varIxy/maxIxy), "pVal" = c(IxyPvals))
     rownames(out) = makeNames(colnames(X), colnames(Y))

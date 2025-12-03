@@ -12,8 +12,8 @@
 #' @importFrom Rdpack reprompt
 #' @importFrom stats dist
 #'
-#' @details The Moran's I values and variances returned have been scaled by their maximum value,
-#' the first singular vector of the weight matrix., already.
+#' @details The maximum value of the bivariate Moran's I statistic is returned conditionally,
+#' as it is computation intensive and not always needed.
 wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, findMaxW, ...){
     if(verbose){
         message("Performing tests on bivariate Moran's I for ", ncol(X)*ncol(Y), " feature pairs")
@@ -39,23 +39,22 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, fin
     if(verbose){
         message("Calculating variances of bivariate Moran's I (", ncol(X)*ncol(Y), " feature pairs) ...")
     }
-    varIxy = t(simplify2array(loadBalanceBplapply(selfName(colnames(X)), function(featx){
+    varIxy = t(vapply(selfName(colnames(X)), FUN.VALUE = double(ncol(Y)), function(featx){
         sigXw = t(crossprod(W, evalVariogram(variogramsX[[featx]], distX)) %*% W)
         vapply(selfName(colnames(Y)), FUN.VALUE = double(1), function(featy){
             sum(sigXw * evalVariogram(variogramsY[[featy]], distY))
             #Fast, memory saving way to find the trace
         })
-    })))
-    if(any(zeroId <- varIxy<=0)){
+    }))
+    if(any(zeroId <- (varIxy<=0))){
         varIxy[zeroId] = tr(crossprod(W))#If negative variance, fall back on independence
     }
     # P-values
     IxyPvals = makePval(Ixy/sqrt(varIxy/prodFac))
     #Maximum value, if needed
-    maxIxy = if(findMaxW)
-        svd(W, nu = 0, nv = 0)$d[1]
+    maxIxy = if(findMaxW) svd(W, nu = 0, nv = 0)$d[1] else 1
     #Reformat to long format
-    out <- cbind("Ixy" = c(Ixy/maxIxy), "varIxy" = c(varIxy/maxIxy), "pVal" = c(IxyPvals))
+    out <- cbind("Ixy" = c(Ixy), "varIxy" = c(varIxy), "pVal" = c(IxyPvals))
     rownames(out) = makeNames(colnames(X), colnames(Y))
     return(list("out" = out, "maxIxy" = maxIxy))
 }
@@ -75,7 +74,7 @@ matheronVariograms <- function(X, Cx, width, cutoff) {
     variograms <- loadBalanceBplapply(selfName(colnames(X)), function(nm) {
         df$z <- X[, nm]
         fvg = fit.variogram(variogram(z ~ 1, df, width = width, cutoff = cutoff),
-                      vgm(1, model = "Gau"), fit.sills = FALSE) #Fix partial sill at 1, includes nugget variance
+                            vgm(1, model = "Gau"), fit.sills = FALSE) #Fix partial sill at 1, includes nugget variance
         if(fvg$range<0){
             fvg$range = 1e-10 #Catch negative ranges
         }
@@ -87,7 +86,6 @@ matheronVariograms <- function(X, Cx, width, cutoff) {
 #'
 #' @param vg The variogram
 #' @param distMat The distance matrix
-#'
 #' @returns A covariance matrix
 evalVariogram = function(vg, distMat){
     exp(-(distMat/vg$range)^2)

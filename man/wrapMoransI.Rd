@@ -42,8 +42,8 @@ In addition, the maximum value of the Moran's I statistic
 The variance calculation requires estimation of the spatial autocorrelation structure of every feature separately
 }
 \details{
-The Moran's I values and variances returned have been scaled by their maximum value,
-the first singular vector of the weight matrix., already.
+The maximum value of the bivariate Moran's I statistic is returned conditionally,
+as it is computation intensive and not always needed.
 }
 \references{
 \insertAllCited{}

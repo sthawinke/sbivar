@@ -68,15 +68,16 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, fin
 #' @return A list of variograms
 #' @note Only the Gaussian variogram (model = "Gau") is implemented here
 matheronVariograms <- function(X, Cx, width, cutoff) {
-    df = data.frame(x = Cx[,1], y = Cx[,2])
+    df = data.frame(Cx)
     sp::coordinates(df) <- ~x + y
     # Compute empirical semivariogram using Matheron’s estimator
     variograms <- loadBalanceBplapply(selfName(colnames(X)), function(nm) {
         df$z <- X[, nm]
         fvg = fit.variogram(variogram(z ~ 1, df, width = width, cutoff = cutoff),
-                            vgm(1, model = "Gau"), fit.sills = FALSE) #Fix partial sill at 1, includes nugget variance
-        if(fvg$range<0){
-            fvg$range = 1e-10 #Catch negative ranges
+                            vgm(psill = 0.8, model = "Gau", range = 0.2, nugget = 0.2))
+        #Fix partial sill at 1, include nugget variance
+        if(fvg[2,"range"]<0){
+            fvg[2,"range"] = 1e-10 #Catch negative ranges
         }
         return(fvg)
     })
@@ -88,5 +89,7 @@ matheronVariograms <- function(X, Cx, width, cutoff) {
 #' @param distMat The distance matrix
 #' @returns A covariance matrix
 evalVariogram = function(vg, distMat){
-    exp(-(distMat/vg$range)^2)
+    tmp = vg[2, "psill"]*exp(-(distMat/vg[2, "range"])^2)
+    diag(tmp) = diag(tmp) + vg[1, "psill"]
+    tmp
 }

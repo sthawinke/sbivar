@@ -52,7 +52,7 @@ sbivarSingle(
 
 \item{gpParams}{Parameters of the Gaussian processes, see details}
 
-\item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{gstat::vgm}}
+\item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}}
 
 \item{verbose}{Should info on type of analysis be printed?}
 }

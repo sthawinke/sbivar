@@ -13,7 +13,7 @@
 #' @param GPmethod,Quants,numLscAlts,optControl,corStruct Passed onto \link{fitGP}
 #' @param n_points_grid,families Passed onto \link{wrapGAMs}
 #' @param wo,numNN,eta passed onto \link{buildWeightMat}
-#' @param cutoff,width Cutoff and width of the variogram estimation, passed onto \link[gstat]{gstat::vgm}
+#' @param cutoff,width Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}
 #' @param verbose Should info on type of analysis be printed?
 #' @param findMaxW Is the maximum bivariate Moran's I needed?
 #' @param pseudoCount A pseudocount added prior to log-normalization to avoid taking the log of zero

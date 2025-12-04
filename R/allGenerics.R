@@ -30,6 +30,6 @@
 #' #Multi-image analysis on Vicari data
 #' data(Vicari)
 #' VicariRes = sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
-#' Vicari$TranscriptCoords, Vicari$MetaboliteCoords, normX = "log", normY = "log",
+#' Vicari$TranscriptCoords, Vicari$MetaboliteCoords, normX = "rel", normY = "rel",
 #' method = "Moran", wo = "Gauss")
 setGeneric("sbivar", function(X, ...) standardGeneric("sbivar"))

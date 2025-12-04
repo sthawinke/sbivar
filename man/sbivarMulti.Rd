@@ -12,7 +12,7 @@ sbivarMulti(
   families = list(X = gaussian(), Y = gaussian()),
   method = c("Moran's I", "GAMs", "Correlation"),
   eta = 0.025,
-  normX = c("none", "log"),
+  normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
   pseudoCount = 1e-08,
   wo = c("Gauss", "nn"),

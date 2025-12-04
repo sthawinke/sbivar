@@ -162,7 +162,7 @@ Plot the most significant pair (log-transformed data are shown, the originall an
 
 ```{r plottoppairgam, fig.height = 4.5}
 plotTopPair(gamRes, X = singleStx, Y = singleMet, Cx = singleStxCoords, 
-            Ey = singleMetCoords, normX = "log", normY = "log")
+            Ey = singleMetCoords, normX = "rel", normY = "rel")
 ```
 
 Another feature is found most significant by GAMs, likely because they smooth over the two holes in the spatial transcriptomics measurements (left plot), adding to the signal, whereas the holes do not contribute to the Moran's I. This can be an asset or a weakness of GAMs. For GAMs, we can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes$result[gpGam<- rownames(gamRes$result)[1], "corxy"], 3)`:
@@ -202,7 +202,7 @@ mouse = substr(names(Vicari$TranscriptOutcomes), 1, 10)
 For the multi-image case, we can also use bivariate Moran's I as measure of spatial association, with a nearest-neighbour weighting scheme for illustration (if the required _RANN_ package is available):
 
 ```{r multiMoran}
-multiMoranRes = sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes, normX = "log", normY = "log",
+multiMoranRes = sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes, normX = "rel", normY = "rel",
                             Vicari$TranscriptCoords, Vicari$MetaboliteCoords, 
                             method = "Moran", wo = if(require(RANN)) "nn" else "Gauss")
 ```
@@ -288,7 +288,7 @@ We run a the same analysis, now providing the experiment names on top of the ass
 ```{r analyseMAE, eval = FALSE}
 resMAE = sbivar(MAE, assayX = "transcripts", assayY = "metabolites", 
                 experimentX = "transcripts", experimentY = "metabolites", 
-                families = FamiliesVicari, method = "GAMs", normX = "log", normY = "log")
+                families = FamiliesVicari, method = "GAMs", normX = "rel", normY = "rel")
 ```
 
 ### Multi-image
@@ -339,7 +339,7 @@ And run the same analysis:
 ```{r singleSEanalysis, eval = FALSE}
 sbivarMultiSingleSE = sbivar(SEsingleStx, SEsingleMet, sample_id_x = "sample_id",
                              assayX = "transcripts", assayY = "metabolites", 
-                             method = "Moran's I", normX = "log", normY = "log")
+                             method = "Moran's I", normX = "rel", normY = "rel")
 multiMoranLmmsSingleSE = fitLinModels(sbivarMultiSingleSE, designDf, 
                                       Formula = ~ (1|mouse))
 multiMoranLmmsResSingleSE = extractResultsMulti(multiMoranLmmsSingleSE, designDf)
@@ -385,7 +385,7 @@ Note that in this example, the samples of the two modalities have been pre-match
 ```{r speanalyse}
 if(reqadzk){
     GodfreyRes = sbivar(speStx, speMet, assayX = "Stx", assayY = "msi", 
-                        normX = "log", normY = "log", verbose = FALSE)
+                        normX = "rel", normY = "rel", verbose = FALSE)
     plotTopPair(GodfreyRes, speStx, speMet)
 }
 ```

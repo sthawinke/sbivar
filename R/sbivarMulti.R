@@ -18,13 +18,13 @@
 #' @inheritParams buildWeightMat
 #' @importFrom BiocParallel bpparam
 sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
-                       method = c("Moran's I", "GAMs", "Correlation"), eta = 0.025, normX = c("none", "log"),
+                       method = c("Moran's I", "GAMs", "Correlation"), eta = 0.025, normX = c("none", "rel", "log"),
                        normY = c("none", "rel", "log"), pseudoCount = 1e-8,
                         wo = c("Gauss", "nn"), numNN = 8, n_points_grid = 6e2, verbose = TRUE){
-    method = match.arg(method)
-    wo = match.arg(wo)
-    stopifnot(is.numeric(numNN), is.numeric(n_points_grid), is.character(wo), is.logical(verbose),
-              is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family")))
+    method = match.arg(method);wo = match.arg(wo)
+    normX = match.arg(normX);normY = match.arg(normY)
+    stopifnot(is.numeric(numNN), is.numeric(n_points_grid), is.logical(verbose),
+             is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family")))
     if(verbose){
         message("Starting sbivar analysis of ", length(Xl), " images on ",
                 bpparam()$workers, " computing cores")
@@ -32,7 +32,6 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
     Xl = lapply(Xl, addDimNames, "X");Yl = lapply(Yl, addDimNames, "Y")
     Cxl = mapply(Cxl, Xl, SIMPLIFY = FALSE, FUN = tmpFun <- function(cx, x) {colnames(cx) = c("x", "y");rownames(cx) = rownames(x);cx})
     Eyl = mapply(Eyl, Yl, SIMPLIFY = FALSE, FUN = tmpFun)
-    normX = match.arg(normX);normY = match.arg(normY)
     foo = checkInputMulti(Xl, Yl, Cxl, Eyl)
     if(normX=="log"){
         Xl = lapply(Xl, normMat, normX, pseudoCount)

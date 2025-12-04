@@ -110,11 +110,14 @@ scaleHelpFun = function(X, feat){
 #' @examples
 #' mat = matrix(rpois(2000, lambda = 3), 40, 50)
 #' nMat = normMat(mat, norm = "rel")
-normMat = function(x, norm, pseudoCount =1e-8){
-    stopifnot(is.matrix(x), all(x>=0))
+normMat = function(x, norm, pseudoCount = 1e-8){
+    stopifnot(is.matrix(x))
     if(norm == "none"){
         out = x
     } else {
+        if(any(x<0)){
+            warning("Normalization '", norm, "'is not recommended for real valued data!")
+        }
         x = x[rowSums(x)>0,,drop = FALSE]
         dn = dimnames(x)
         out = if(norm == "rel"){

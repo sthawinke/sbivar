@@ -132,7 +132,7 @@ We analyse this single sample using bivariate Moran's I, choosing log-normalizat
 
 ```{r testmoran}
 moransIRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, 
-                      method = "Moran's I", normX = "log", normY = "log")
+                      method = "Moran's I", normX = "rel", normY = "rel")
 ```
 
 Have a look at the results, which are sorted by increasing p-value:

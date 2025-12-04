@@ -97,23 +97,33 @@ scaleHelpFun = function(X, feat){
         rep(NA, nrow(X))
     }
 }
-#' Log normalize a data matrix
+#' Normalize a data matrix
 #'
-#' Normalize to relative expression, add pseudocount and log-normalize
+#' Normalize to relative expression, and potentially add pseudocount and log-normalize
 #' @param x The matrix
-#' @param pseudoCount A pseudocount added to avoid taking the log of zero
-#'
-#' @returns A log-normalized matrix
+#' @param norm A character string, either "none", "log" or "rel"
+#' @details norm = "none" is pass-through, norm = "rel" divides by sample sums,
+#' "log" adds a pseudocount, divides by sample sums and log-normalizes
+#' @returns A normalized matrix
 #' @export
+#' @inheritParams sbivarSingle
 #' @examples
 #' mat = matrix(rpois(2000, lambda = 3), 40, 50)
-#' lnMat = logNorm(mat)
-logNorm = function(x, pseudoCount = 1e-8){
+#' nMat = normMat(mat, norm = "rel")
+normMat = function(x, norm, pseudoCount =1e-8){
     stopifnot(is.matrix(x), all(x>=0))
-    x = x[rowSums(x)>0,,drop = FALSE]
-    dn = dimnames(x)
-    out = log((as.matrix(x)+pseudoCount)/rowSums(x))
-    dimnames(out) = dn
+    if(norm == "none"){
+        out = x
+    } else {
+        x = x[rowSums(x)>0,,drop = FALSE]
+        dn = dimnames(x)
+        out = if(norm == "rel"){
+            x/rowSums(x)
+        } else if(norm =="log"){
+            log((x+pseudoCount)/rowSums(x))
+        }
+        dimnames(out) = dn
+    }
     return(out)
 }
 #' Split a string
@@ -234,14 +244,6 @@ moveTwoCoords = function(Cx, Ey){
     MaxCoord = max(c(Cx, Ey))
     Cx = Cx/MaxCoord;Ey = Ey/MaxCoord
     list("Cx" = Cx, "Ey" = Ey)
-}
-#' Return a normalization function based on a character string
-#'
-#' @param norm The character string
-#'
-#' @returns a normalization function
-getNormFun = function(norm){
-    switch(norm, "none" = identity, "log" = logNorm)
 }
 #' Add dimnames to a matrix
 #'

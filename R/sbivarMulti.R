@@ -19,7 +19,7 @@
 #' @importFrom BiocParallel bpparam
 sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
                        method = c("Moran's I", "GAMs", "Correlation"), eta = 0.025, normX = c("none", "log"),
-                       normY = c("none", "log"),
+                       normY = c("none", "rel", "log"), pseudoCount = 1e-8,
                         wo = c("Gauss", "nn"), numNN = 8, n_points_grid = 6e2, verbose = TRUE){
     method = match.arg(method)
     wo = match.arg(wo)
@@ -35,11 +35,11 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
     normX = match.arg(normX);normY = match.arg(normY)
     foo = checkInputMulti(Xl, Yl, Cxl, Eyl)
     if(normX=="log"){
-        Xl = lapply(Xl, logNorm)
+        Xl = lapply(Xl, normMat, normX, pseudoCount)
         Cxl = lapply(selfName(names(Cxl)), function(i){Cxl[[i]][rownames(Xl[[i]]),]})
     }
     if(normY=="log"){
-        Yl = lapply(Yl, logNorm)
+        Yl = lapply(Yl, normMat, normY, pseudoCount)
         Eyl = lapply(selfName(names(Eyl)), function(i){Eyl[[i]][rownames(Yl[[i]]),]})
     }
     out = if(method == "GAMs"){
@@ -48,7 +48,8 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
     }  else if(method == "Correlation"){
         wrapCorrelationsMulti(Xl, Yl, verbose = verbose)
     } else if (method == "Moran's I"){
-        wrapMoransIMulti(Xl, Yl, Cxl, Eyl, wo = wo, numNN = numNN, verbose = verbose, eta = eta)
+        wrapMoransIMulti(Xl, Yl, Cxl, Eyl, wo = wo, numNN = numNN,
+                         verbose = verbose, eta = eta)
     }
     return(list("estimates" = out, "method" = method, "multi" = TRUE,
                 "families" = families, "normX" = normX, "normY" = normY))

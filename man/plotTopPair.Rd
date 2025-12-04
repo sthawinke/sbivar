@@ -22,8 +22,8 @@ plotPairSingle(
   Cx,
   Ey,
   features,
-  normX = c("none", "log"),
-  normY = c("none", "log"),
+  normX = c("none", "rel", "log"),
+  normY = c("none", "rel", "log"),
   assayX,
   assayY,
   ...
@@ -35,8 +35,8 @@ plotPairMulti(
   Cxl,
   Eyl,
   features,
-  normX = c("none", "log"),
-  normY = c("none", "log"),
+  normX = c("none", "rel", "log"),
+  normY = c("none", "rel", "log"),
   size = 1.25,
   assayX,
   assayY,
@@ -100,8 +100,8 @@ Plot a chosen feature pair, or the highest ranking feature pair,
 for a single image or multiple images.
 }
 \details{
-For sequence count data, such as transcriptomics, log-normalization
-may be indicated to achieve clear plots (normX = "log", see  \link{logNorm}).
+For sequence count data, such as transcriptomics, normalization
+may be indicated to achieve clear plots (normX = "rel" or "log", see  \link{normMat}).
 The normalization used for plotting is not necessarily the same as the one used for the analysis.
 }
 \examples{

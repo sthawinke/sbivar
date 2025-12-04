@@ -68,14 +68,14 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, fin
 #' @return A list of variograms
 #' @note Only the Gaussian variogram (model = "Gau") is implemented here
 matheronVariograms <- function(X, Cx, width, cutoff) {
-    df = data.frame(Cx)
+    df <- data.frame(Cx)
     sp::coordinates(df) <- ~x + y
     # Compute empirical semivariogram using Matheron’s estimator
     variograms <- loadBalanceBplapply(selfName(colnames(X)), function(nm) {
         df$z <- X[, nm]
         fvg = fit.variogram(variogram(z ~ 1, df, width = width, cutoff = cutoff),
-                            vgm(psill = 0.8, model = "Gau", range = 0.2, nugget = 0.2))
-        #Fix partial sill at 1, include nugget variance
+                            vgm(0.8, model = "Gau", nugget = 0.2), fit.sills = TRUE)
+        #Include nugget variance
         if(fvg[2,"range"]<0){
             fvg[2,"range"] = 1e-10 #Catch negative ranges
         }

@@ -12,8 +12,8 @@
 #' @return A ggplot object
 #' @order 1
 #' @export
-#' @details For sequence count data, such as transcriptomics, log-normalization
-#' may be indicated to achieve clear plots (normX = "log", see  \link{logNorm}).
+#' @details For sequence count data, such as transcriptomics, normalization
+#' may be indicated to achieve clear plots (normX = "rel" or "log", see  \link{normMat}).
 #' The normalization used for plotting is not necessarily the same as the one used for the analysis.
 #' @examples
 #' ### Single image
@@ -33,7 +33,8 @@
 #' plotPairMulti(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
 #' Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
 #' normX = "log", normY = "log", features = c("mt.Nd2", "X555.20713"))
-plotTopPair = function(results, ..., normX = results$normX, normY = results$normY, topRank = 1, parameter = "Intercept"){
+plotTopPair = function(results, ..., normX = results$normX, normY = results$normY,
+                       topRank = 1, parameter = "Intercept"){
     stopifnot(is.numeric(topRank))
     if(!results$multi){
         topFeats = sund(rownames(results$result)[topRank])
@@ -53,8 +54,8 @@ plotTopPair = function(results, ..., normX = results$normX, normY = results$norm
 #' @inheritParams plotPairSingle
 #' @order 3
 #' @param theme the ggplot2 theme
-plotPairMulti = function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "log"),
-                         normY = c("none", "log"), size = 1.25, assayX, assayY, theme = theme_bw()){
+plotPairMulti = function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "log"),
+                         normY = c("none", "rel", "log"), size = 1.25, assayX, assayY, theme = theme_bw()){
     Xl =  lapply(getX(Xl, assayX), addDimNames, "X")
     Yl = lapply(getX(Yl, assayY), addDimNames, "Y")
     Cxl = getSpatialCoords(Xl, Cxl)
@@ -64,9 +65,8 @@ plotPairMulti = function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "log"),
     stopifnot(length(features)==2)
     normX = match.arg(normX);normY = match.arg(normY)
     theme_set(theme)
-    nfx = getNormFun(normX);nfy = getNormFun(normY)
     dfList = Reduce(f = rbind, lapply(names(Xl), function(nam){
-        X = nfx(Xl[[nam]]);Y= nfy(Yl[[nam]])
+        X = normMat(Xl[[nam]], normX);Y= normMat(Yl[[nam]], normY)
         coordMat = rbind(Cxl[[nam]][rownames(X),], Eyl[[nam]][rownames(Y),]);colnames(coordMat) = c("x", "y")
         data.frame("outcome" = c(scaleHelpFun(X, feat = features[1]),
                                  scaleHelpFun(Y, feat = features[2])),
@@ -89,8 +89,8 @@ plotPairMulti = function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "log"),
 #' @rdname plotTopPair
 #' @export
 #' @order 2
-plotPairSingle = function(X, Y, Cx, Ey, features, normX = c("none", "log"),
-                          normY = c("none", "log"), assayX, assayY, ...){
+plotPairSingle = function(X, Y, Cx, Ey, features, normX = c("none", "rel", "log"),
+                          normY = c("none", "rel", "log"), assayX, assayY, ...){
     stopifnot(length(features)==2)
     if(inherits(X, "SpatialExperiment")){
         Cx = SpatialExperiment::spatialCoords(X)
@@ -105,8 +105,8 @@ plotPairSingle = function(X, Y, Cx, Ey, features, normX = c("none", "log"),
     foo = checkInputSingle(X, Y, Cx, Ey)
     normX = match.arg(normX);normY = match.arg(normY)
     rownames(Cx) = rownames(X);rownames(Ey) = rownames(Y)
-    X = getNormFun(normX)(X)
-    Y = getNormFun(normY)(Y)
+    X = normMat(X, normX)
+    Y = normMat(Y, normY)
     plotPairSingleVectors(x = scaleHelpFun(feat = features[1], X),
                           y = scaleHelpFun(feat = features[2], Y),
                           Cx = Cx[rownames(X),], Ey = Ey[rownames(Y),], modalityNames = features, ...)

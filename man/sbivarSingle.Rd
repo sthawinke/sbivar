@@ -11,13 +11,14 @@ sbivarSingle(
   Ey,
   method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
   n_points_grid = 600,
-  normX = c("none", "log"),
-  normY = c("none", "log"),
+  normX = c("none", "rel", "log"),
+  normY = c("none", "rel", "log"),
+  findMaxW = FALSE,
+  pseudoCount = 1e-08,
   families = list(X = gaussian(), Y = gaussian()),
   GPmethod = c("REML", "ML"),
   wo = c("Gauss", "nn"),
   numNN = 8,
-  findMaxW = FALSE,
   gpParams,
   Quants = c(0.005, 0.5),
   numLscAlts = 10,
@@ -41,11 +42,13 @@ sbivarSingle(
 
 \item{normX, normY}{Character vectors indicating normalization, "log" means log-normalization of relative abundances}
 
+\item{findMaxW}{Is the maximum bivariate Moran's I needed?}
+
+\item{pseudoCount}{A pseudocount added prior to log-normalization to avoid taking the log of zero}
+
 \item{GPmethod, Quants, numLscAlts, optControl, corStruct}{Passed onto \link{fitGP}}
 
 \item{wo, numNN, eta}{passed onto \link{buildWeightMat}}
-
-\item{findMaxW}{Is the maximum bivariate Moran's I needed?}
 
 \item{gpParams}{Parameters of the Gaussian processes, see details}
 

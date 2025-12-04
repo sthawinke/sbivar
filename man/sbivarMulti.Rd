@@ -13,7 +13,8 @@ sbivarMulti(
   method = c("Moran's I", "GAMs", "Correlation"),
   eta = 0.025,
   normX = c("none", "log"),
-  normY = c("none", "log"),
+  normY = c("none", "rel", "log"),
+  pseudoCount = 1e-08,
   wo = c("Gauss", "nn"),
   numNN = 8,
   n_points_grid = 600,
@@ -32,6 +33,8 @@ sbivarMulti(
 \item{eta}{parameter that controls the decay of the weights with distance, see details}
 
 \item{normX, normY}{Character vectors indicating normalization, "log" means log-normalization of relative abundances}
+
+\item{pseudoCount}{A pseudocount added prior to log-normalization to avoid taking the log of zero}
 
 \item{wo, numNN}{Passed onto \link{buildWeightMat}}
 

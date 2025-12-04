@@ -16,6 +16,7 @@
 #' @param cutoff,width Cutoff and width of the variogram estimation, passed onto \link[gstat]{variogram}
 #' @param verbose Should info on type of analysis be printed?
 #' @param findMaxW Is the maximum bivariate Moran's I needed?
+#' @param pseudoCount A pseudocount added prior to log-normalization to avoid taking the log of zero
 #' @param normX,normY Character vectors indicating normalization, "log" means log-normalization of relative abundances
 #'
 #' @details Any normalization of the data should happen prior to calling this function.
@@ -39,9 +40,9 @@
 #' This argument allows to pass parameters of the Gaussian processes estimated with other software
 #' to perform the score test.
 sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
-      n_points_grid = 6e2, normX = c("none", "log"),
-      normY = c("none", "log"), families = list("X" = gaussian(), "Y" = gaussian()),
-      GPmethod = c("REML", "ML"), wo = c("Gauss", "nn"), numNN = 8, findMaxW = FALSE,
+      n_points_grid = 6e2, normX = c("none", "rel", "log"),
+      normY = c("none", "rel", "log"), findMaxW = FALSE, pseudoCount = 1e-8, families = list("X" = gaussian(), "Y" = gaussian()),
+      GPmethod = c("REML", "ML"), wo = c("Gauss", "nn"), numNN = 8,
       gpParams, Quants = c(0.005, 0.5), numLscAlts = 10, width = cutoff/15, eta = 0.025, cutoff = sqrt(2)/3,
       optControl = lmeControl(opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
                               niterEM = 1e3, msMaxEval = 1e3),
@@ -91,12 +92,8 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
                 try accounting for non-normality through the 'families' argument.")
     }
     colnames(Cx) = colnames(Ey) = c("x", "y")
-    if(normX=="log"){
-       X = logNorm(X);Cx = Cx[rownames(X),]
-    }
-    if(normY=="log"){
-       Y = logNorm(Y);Ey = Ey[rownames(Y),]
-    }
+    X = normMat(X, normX, pseudoCount);Cx = Cx[rownames(X),]
+    Y = normMat(Y, normY, pseudoCount);Ey = Ey[rownames(Y),]
     out = if(method=="Moran's I"){
         (moranRes <- wrapMoransI(X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo, numNN = numNN,
          eta = eta, width = width, verbose = verbose, cutoff = cutoff, findMaxW = findMaxW))$out

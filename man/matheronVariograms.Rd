@@ -11,7 +11,7 @@ matheronVariograms(X, Cx, width, cutoff)
 
 \item{Cx}{Coordinate matrix}
 
-\item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{variogram}}
+\item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{gstat::vgm}}
 }
 \value{
 A list of variograms

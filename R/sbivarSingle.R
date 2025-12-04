@@ -13,7 +13,7 @@
 #' @param GPmethod,Quants,numLscAlts,optControl,corStruct Passed onto \link{fitGP}
 #' @param n_points_grid,families Passed onto \link{wrapGAMs}
 #' @param wo,numNN,eta passed onto \link{buildWeightMat}
-#' @param cutoff,width Cutoff and width of the variogram estimation, passed onto \link[gstat]{variogram}
+#' @param cutoff,width Cutoff and width of the variogram estimation, passed onto \link[gstat]{gstat::vgm}
 #' @param verbose Should info on type of analysis be printed?
 #' @param findMaxW Is the maximum bivariate Moran's I needed?
 #' @param pseudoCount A pseudocount added prior to log-normalization to avoid taking the log of zero
@@ -41,9 +41,10 @@
 #' to perform the score test.
 sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
       n_points_grid = 6e2, normX = c("none", "rel", "log"),
-      normY = c("none", "rel", "log"), findMaxW = FALSE, pseudoCount = 1e-8, families = list("X" = gaussian(), "Y" = gaussian()),
+      normY = c("none", "rel", "log"), findMaxW = FALSE, pseudoCount = 1e-8,
+      families = list("X" = gaussian(), "Y" = gaussian()),
       GPmethod = c("REML", "ML"), wo = c("Gauss", "nn"), numNN = 8,
-      gpParams, Quants = c(0.005, 0.5), numLscAlts = 10, width = cutoff/15, eta = 0.025, cutoff = sqrt(2)/3,
+      gpParams, Quants = c(0.005, 0.5), numLscAlts = 10, width = cutoff/40, eta = 0.025, cutoff = 0.5,
       optControl = lmeControl(opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
                               niterEM = 1e3, msMaxEval = 1e3),
       corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25)), verbose = TRUE){

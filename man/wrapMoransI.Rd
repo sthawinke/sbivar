@@ -26,7 +26,7 @@ wrapMoransI(
 
 \item{wo, numNN, eta}{passed onto \link{buildWeightMat}}
 
-\item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{variogram}}
+\item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{gstat::vgm}}
 
 \item{verbose}{Should info on type of analysis be printed?}
 

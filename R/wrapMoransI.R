@@ -41,9 +41,12 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, fin
     }
     varIxy = t(vapply(selfName(colnames(X)), FUN.VALUE = double(ncol(Y)), function(featx){
         sigXw = t(crossprod(W, evalVariogram(variogramsX[[featx]], distX)) %*% W)
+        svx = sum(variogramsX[[featx]][, "psill"])
         vapply(selfName(colnames(Y)), FUN.VALUE = double(1), function(featy){
-            sum(sigXw * evalVariogram(variogramsY[[featy]], distY))
+            sum(sigXw * evalVariogram(variogramsY[[featy]], distY))/
+                (svx*sum(variogramsY[[featy]][, "psill"]))
             #Fast, memory saving way to find the trace
+            #The scaling by variance at the end ensures variances of 1, and is much faster than cov2cor
         })
     }))
     if(any(zeroId <- (varIxy<=0))){
@@ -74,11 +77,15 @@ matheronVariograms <- function(X, Cx, width, cutoff) {
     variograms <- loadBalanceBplapply(selfName(colnames(X)), function(nm) {
         df$z <- X[, nm]
         fvg = fit.variogram(variogram(z ~ 1, df, width = width, cutoff = cutoff),
-                            vgm(0.8, model = "Gau", nugget = 0.2), fit.sills = TRUE)
+                            #vgm(1, model = "Gau", range = 3), fit.sills = FALSE)
+                            vgm(0.8, model = "Gau", nugget = 0.2, range = 10), fit.sills = TRUE)
         #Include nugget variance
         if(fvg[2,"range"]<0){
             fvg[2,"range"] = 1e-10 #Catch negative ranges
         }
+        # if(fvg[["range"]]<0){
+        #     fvg[["range"]] = 1e-10 #Catch negative ranges
+        # }
         return(fvg)
     })
     return(variograms)
@@ -89,7 +96,8 @@ matheronVariograms <- function(X, Cx, width, cutoff) {
 #' @param distMat The distance matrix
 #' @returns A covariance matrix
 evalVariogram = function(vg, distMat){
+    #exp(-(distMat/vg[["range"]])^2)
     tmp = vg[2, "psill"]*exp(-(distMat/vg[2, "range"])^2)
     diag(tmp) = diag(tmp) + vg[1, "psill"]
-    tmp
+    return(tmp) #Scale to variance 1
 }

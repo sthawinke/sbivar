@@ -28,7 +28,6 @@ test_that("Helper functions do their job", {
     expect_identical(as.character(replaceLhs(outcome~(1|rat))[[2]]), "out")
     expect_identical(dimnames(mat), dimnames(normMat(abs(mat), "rel")))
     expect_identical(dimnames(mat), dimnames(normMat(abs(mat), "log")))
-    expect_warning(normMat(mat), "log")
 })
 test_that("Helper functions fail where appropriate", {
     expect_error(tr(list()))

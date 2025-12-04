@@ -22,9 +22,9 @@ sbivarSingle(
   gpParams,
   Quants = c(0.005, 0.5),
   numLscAlts = 10,
-  width = cutoff/15,
+  width = cutoff/40,
   eta = 0.025,
-  cutoff = sqrt(2)/3,
+  cutoff = 0.5,
   optControl = lmeControl(opt = "optim", maxIter = 500, msMaxIter = 500, niterEM = 1000,
     msMaxEval = 1000),
   corStruct = corGaus(form = ~x + y, nugget = TRUE, value = c(1, 0.25)),
@@ -52,7 +52,7 @@ sbivarSingle(
 
 \item{gpParams}{Parameters of the Gaussian processes, see details}
 
-\item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{variogram}}
+\item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{gstat::vgm}}
 
 \item{verbose}{Should info on type of analysis be printed?}
 }

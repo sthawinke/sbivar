@@ -22,4 +22,6 @@ exploreWeights = function(etas, dists = seq(0, 0.1, length.out = 1e3), palette =
     foo = lapply(seq_along(etas), function(i){
         lines(dists, exp(-dists^2/etas[i]), col = Pal[i])
     })
+    legend("topright", legend = signif(etas, 3), lty =1, col = Pal[seq_along(etas)],
+            title = "Decay parameter")
 }

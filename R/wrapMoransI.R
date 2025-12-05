@@ -49,7 +49,7 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, fi
         message("Calculating variances of bivariate Moran's I (", p*k, " feature pairs) ...")
     }
     #Loops are meant to minimize the number of variogram evaluations
-    varIxy = vapply(selfName(colnames(X)), FUN.VALUE = matrix(0, length(etas), p), function(featx){
+    varIxy = vapply(selfName(colnames(X)), FUN.VALUE = matrix(0, length(etas), k), function(featx){
         #Variances
         vgx = evalVariogram(variogramsX[[featx]], distX)
         svx = sum(variogramsX[[featx]][, "psill"])

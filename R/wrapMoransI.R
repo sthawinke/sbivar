@@ -80,7 +80,8 @@ matheronVariograms <- function(X, Cx, width, cutoff, variogramModels) {
         df$z <- X[, nm]
         vg = variogram(z ~ 1, df, width = width, cutoff = cutoff)
         fvgs = lapply(variogramModels, function(vv){
-            fit.variogram(vg, vgm(model = vv, nugget = NA)) #Include nugget variance
+            fit.variogram(vg, vgm(model = vv, nugget = NA, psill = 1),
+                          fit.sills = c(TRUE, FALSE)) #Include nugget variance
         })
         fvg = fvgs[[which.min(vapply(fvgs, FUN.VALUE = double(1), attr, "SSErr"))]]
         if(fvg[2,"range"]<0){

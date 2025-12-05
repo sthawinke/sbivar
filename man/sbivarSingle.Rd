@@ -24,7 +24,7 @@ sbivarSingle(
   Quants = c(0.005, 0.5),
   numLscAlts = 10,
   width = cutoff/15,
-  eta = 0.025,
+  eta = 0.00015,
   cutoff = sqrt(2)/3,
   optControl = lmeControl(opt = "optim", maxIter = 500, msMaxIter = 500, niterEM = 1000,
     msMaxEval = 1000),

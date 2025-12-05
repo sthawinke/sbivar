@@ -36,7 +36,7 @@ wrapMoransI(
 \item{findMaxW}{Is the maximum bivariate Moran's I needed?}
 
 \item{variogramModels}{A character string, indicating the variogram model passed onto \link[gstat]{vgm}.
-Currently, only "Sph", "Exp" and "Lin" are implemented.}
+Currently, only "Exp" and "Lin" are implemented for computational reasons.}
 
 \item{...}{passed onto \link[gstat]{variogram}}
 }

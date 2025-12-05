@@ -20,7 +20,7 @@
 #' @param pseudoCount A pseudocount added prior to log-normalization to avoid taking the log of zero
 #' @param normX,normY Character vectors indicating normalization, "log" means log-normalization of relative abundances
 #' @param variogramModels A character string, indicating the variogram model passed onto \link[gstat]{vgm}.
-#' Currently, only "Sph", "Exp" and "Lin" are implemented.
+#' Currently, only "Exp" and "Lin" are implemented for computational reasons.
 #'
 #' @details Any normalization of the data should happen prior to calling this function.
 #' For instance, count data or metabolome data are best scaled to relative values and log-normalized prior to fitting GPs.
@@ -45,7 +45,7 @@
 #' This argument allows to pass parameters of the Gaussian processes estimated with other software
 #' to perform the score test.
 sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
-      n_points_grid = 6e2, normX = c("none", "rel", "log"), variogramModels = c("Sph", "Exp", "Lin"),
+      n_points_grid = 6e2, normX = c("none", "rel", "log"), variogramModels = c("Exp", "Lin"),
       normY = c("none", "rel", "log"), findMaxW = FALSE, pseudoCount = 1e-8,
       families = list("X" = gaussian(), "Y" = gaussian()),
       GPmethod = c("REML", "ML"), wo = c("Gauss", "nn"), numNN = 8,
@@ -55,13 +55,12 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
       corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25)), verbose = TRUE){
     stopifnot(is.numeric(n_points_grid), ncol(Cx) == 2, is.numeric(numNN),
               all(vapply(families, FUN.VALUE = TRUE, is, "family")), is.list(optControl),
-             inherits(corStruct, "corStruct"), inherits(corStruct, "corGaus"), is,numeric(etas),
+             inherits(corStruct, "corStruct"), inherits(corStruct, "corGaus"), is.numeric(etas),
              length(Quants)==2, is.numeric(Quants), is.logical(verbose), is.logical(findMaxW))
     if(verbose){
         message("Starting sbivar analysis of a single image on ",
         bpparam()$workers, " computing cores")
     }
-    n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y)
     X = addDimNames(X, "X");Y = addDimNames(Y, "Y")
     method = match.arg(method);variogramModels = match.arg(variogramModels, several.ok = TRUE)
     normX = match.arg(normX);normY = match.arg(normY)

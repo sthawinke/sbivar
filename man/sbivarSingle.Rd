@@ -12,7 +12,7 @@ sbivarSingle(
   method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
   n_points_grid = 600,
   normX = c("none", "rel", "log"),
-  variogramModels = c("Sph", "Exp", "Lin"),
+  variogramModels = c("Exp", "Lin"),
   normY = c("none", "rel", "log"),
   findMaxW = FALSE,
   pseudoCount = 1e-08,
@@ -44,7 +44,7 @@ sbivarSingle(
 \item{normX, normY}{Character vectors indicating normalization, "log" means log-normalization of relative abundances}
 
 \item{variogramModels}{A character string, indicating the variogram model passed onto \link[gstat]{vgm}.
-Currently, only "Sph", "Exp" and "Lin" are implemented.}
+Currently, only "Exp" and "Lin" are implemented for computational reasons.}
 
 \item{findMaxW}{Is the maximum bivariate Moran's I needed?}
 

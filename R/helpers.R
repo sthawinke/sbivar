@@ -14,8 +14,8 @@ makePval = function(z){
     tmp = pnorm(z, lower.tail = TRUE)
     tmp[z>0] = pnorm(z[z>0], lower.tail = FALSE)
     out = 2*unname(tmp)
-    if(is.matrix(z)){
-        out = matrix(out, nrow(z), ncol(z), dimnames = dimnames(z))
+    if(is.array(z)){
+        dimnames(out) = dimnames(z)
     }
     return(out)
 }

@@ -59,6 +59,7 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, fi
         vapply(selfName(colnames(Y)), FUN.VALUE = double(length(etas)), function(featy){
             vgy = evalVariogram(variogramsY[[featy]], distY)
             colSums(sigXws*c(vgy), dims = 2)/(svx*sum(variogramsY[[featy]][, "psill"]))
+            #Check .colSums here
             #Fast, memory saving way to find the trace
             #The scaling by variance at the end ensures variances of 1, and is much faster than cov2cor
         })
@@ -71,18 +72,18 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, fi
     }
     # P-values
     IxyPvals = makePval(Ixys/sqrt(varIxy/prodFac))
-    #Maximum values, if needed
-    maxIxy = if(findMaxW) {
-        vapply(seq_along(etas), FUN.VALUE = double(1), function(i) {
-            svd(Ws[,,i], nu = 0, nv = 0)$d[1]
-        })
-    }
     #CCT correction
     cctPvals = apply(IxyPvals, c(1,2), CCT)
     #Reformat to long format
     out <- cbind(matrix(c(Ixys), ncol = 3, dimnames = list(NULL, paste0("Ixy_",etas))),
                         "pVal" = c(cctPvals))
     rownames(out) = makeNames(colnames(X), colnames(Y))
+    #Maximum values, if needed
+    maxIxy = if(findMaxW) {
+        vapply(seq_along(etas), FUN.VALUE = double(1), function(i) {
+            svd(Ws[,,i], nu = 0, nv = 0)$d[1]
+        })
+    }
     return(list("out" = out, "etas" = etas, "maxIxy" = maxIxy))
 }
 #' Estimate variograms using Matheron's binning estimator for many features at once

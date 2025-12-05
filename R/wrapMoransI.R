@@ -100,6 +100,7 @@ evalVariogram = function(vg, distMat){
     #tmp = vg[2, "psill"]*exp(-(distMat/vg[2, "range"])^2)
     #Spherical
     tmp = vg[2, "psill"]*(1-1.5*(distMat/vg[2, "range"])+0.5*(distMat/vg[2, "range"])^3)
+    tmp[distMat > vg[2, "range"]] = 0
     diag(tmp) = diag(tmp) + vg[1, "psill"]
     return(tmp) #Scale to variance 1
 }

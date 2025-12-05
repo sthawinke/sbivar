@@ -77,15 +77,11 @@ matheronVariograms <- function(X, Cx, width, cutoff) {
     variograms <- loadBalanceBplapply(selfName(colnames(X)), function(nm) {
         df$z <- X[, nm]
         fvg = fit.variogram(variogram(z ~ 1, df, width = width, cutoff = cutoff),
-                            #vgm(1, model = "Gau", range = 3), fit.sills = FALSE)
-                            vgm(model = "Sph", nugget = NA))
+                            vgm(model = c("Sph", "Gau", "Exp"), nugget = NA))
         #Include nugget variance
         if(fvg[2,"range"]<0){
             fvg[2,"range"] = 1e-10 #Catch negative ranges
         }
-        # if(fvg[["range"]]<0){
-        #     fvg[["range"]] = 1e-10 #Catch negative ranges
-        # }
         return(fvg)
     })
     return(variograms)
@@ -96,11 +92,15 @@ matheronVariograms <- function(X, Cx, width, cutoff) {
 #' @param distMat The distance matrix
 #' @returns A covariance matrix
 evalVariogram = function(vg, distMat){
-    #Exponential
-    #tmp = vg[2, "psill"]*exp(-(distMat/vg[2, "range"])^2)
-    #Spherical
-    tmp = vg[2, "psill"]*(1-1.5*(distMat/vg[2, "range"])+0.5*(distMat/vg[2, "range"])^3)
-    tmp[distMat > vg[2, "range"]] = 0
-    diag(tmp) = diag(tmp) + vg[1, "psill"]
-    return(tmp) #Scale to variance 1
+    covMat = if(vg[2, "model"] == "Gau"){
+        vg[2, "psill"]*exp(-(distMat/vg[2, "range"])^2)
+    } else if(vg[2, "model"] == "Sph"){
+        tmp = vg[2, "psill"]*(1-1.5*(distMat/vg[2, "range"])+0.5*(distMat/vg[2, "range"])^3)
+        tmp[distMat > vg[2, "range"]] = 0
+        tmp
+    } else if(vg[2, "model"] == "Exp"){
+        vg[2, "psill"]*exp(-distMat/vg[2, "range"])
+    }
+    diag(covMat) = diag(covMat) + vg[1, "psill"]
+    return(covMat) #Scale to variance 1
 }

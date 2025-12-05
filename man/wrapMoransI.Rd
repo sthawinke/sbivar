@@ -10,7 +10,7 @@ wrapMoransI(
   Cx,
   Ey,
   wo,
-  eta,
+  etas,
   numNN,
   cutoff,
   width,
@@ -25,7 +25,9 @@ wrapMoransI(
 
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
-\item{wo, numNN, eta}{passed onto \link{buildWeightMat}}
+\item{wo, numNN}{passed onto \link{buildWeightMat}}
+
+\item{etas}{A vector of decay parameters for the weight function, see details}
 
 \item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}}
 

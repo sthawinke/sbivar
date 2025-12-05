@@ -13,7 +13,11 @@ makePval = function(z){
     z[is.na(z)] = 0
     tmp = pnorm(z, lower.tail = TRUE)
     tmp[z>0] = pnorm(z[z>0], lower.tail = FALSE)
-    2*unname(tmp)
+    out = 2*unname(tmp)
+    if(is.matrix(z)){
+        out = matrix(out, nrow(z), ncol(z), dimnames = dimnames(z))
+    }
+    return(out)
 }
 #' Scale to [0,1] range
 #' @param y The vector to be scaled

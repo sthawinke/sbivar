@@ -12,7 +12,8 @@
 #' @return A weight matrix
 #' @details
 #' For wo = "Gauss", the weight decays as exp(-d^2/eta) with d the distance between observations.
-buildWeightMat = function(Cx, Ey, wo, eta, numNN){
+buildWeightMat = function(Cx, Ey, wo, eta, numNN,
+                          distMat = spatstat.geom::crossdist(Cx[, 1], Cx[, 2], Ey[, 1], Ey[, 2])){
     if (wo == "nn"){
         if(requireNamespace("RANN")){
             nnMatXY = RANN::nn2(Cx, Ey, k = numNN)$nn.idx
@@ -23,7 +24,6 @@ buildWeightMat = function(Cx, Ey, wo, eta, numNN){
                               j = c(nnMatYX, rep(seq_len(m), each = numNN))))
         } else stop("Install 'RANN' package for nearest neighbour weighting matrices")
     } else if (wo == "Gauss"){
-        distMat = spatstat.geom::crossdist(Cx[, 1], Cx[, 2], Ey[, 1], Ey[, 2])
         wm = exp(-distMat^2/eta)
     }
     return(wm/sum(wm))

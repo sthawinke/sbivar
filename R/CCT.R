@@ -17,12 +17,7 @@
 #' \emph{The American Journal of Human Genetics}, \emph{104}(3), 410-421.
 #' (\href{https://doi.org/10.1016/j.ajhg.2019.01.002}{pub})
 #' @importFrom stats pcauchy
-CCT <- function(pvals, weights=NULL){
-    #### check if all p-values are between 0 and 1
-    if(any(pvals<0) || any(pvals>1)){
-        stop("All p-values must be between 0 and 1!")
-    }
-
+CCT <- function(pvals, weights = rep(1/length(pvals),length(pvals))){
     #### check if there are p-values that are either exactly 0 or 1.
     is.zero <- any(pvals==0)
     is.one <- any(pvals==1)
@@ -35,16 +30,6 @@ CCT <- function(pvals, weights=NULL){
         warning("There are p-values that are exactly 1!")
         return(1)
     }
-    #### check the validity of weights (default: equal weights) and standardize them.
-    if(is.null(weights)){
-        weights <- rep(1/length(pvals),length(pvals))
-    }else if(length(weights)!=length(pvals)){
-        stop("The length of weights should be the same as that of the p-values!")
-    }else if(any(weights < 0)){
-        stop("All the weights must be positive!")
-    }else{
-        weights <- weights/sum(weights)
-    }
     #### check if there are very small non-zero p-values
     is.small <- (pvals < 1e-16)
     if (!any(is.small)){
@@ -53,12 +38,11 @@ CCT <- function(pvals, weights=NULL){
         cct.stat <- sum((weights[is.small]/pvals[is.small])/pi)
         cct.stat <- cct.stat + sum(weights[!is.small]*tan((0.5-pvals[!is.small])*pi))
     }
-
     #### check if the test statistic is very large.
-    if(cct.stat > 1e+15){
-        pval <- (1/cct.stat)/pi
-    }else{
-        pval <- pcauchy(cct.stat, lower.tail = FALSE)
+    pval <-  if(cct.stat > 1e+15){
+        (1/cct.stat)/pi
+    } else {
+        pcauchy(cct.stat, lower.tail = FALSE)
     }
     return(pval)
 }

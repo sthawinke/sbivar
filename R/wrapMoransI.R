@@ -14,19 +14,17 @@
 #'
 #' @details The maximum value of the bivariate Moran's I statistic is returned conditionally,
 #' as it is computation intensive and not always needed.
-wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, findMaxW, variogramModels, ...){
+wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, findMaxW, variogramModels, ...){
     if(verbose){
         message("Performing tests on bivariate Moran's I for ", ncol(X)*ncol(Y), " feature pairs")
     }
     #Scale outcomes
     X = scale(X);Y = scale(Y)
+    n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(y)
     #Move coordinates
     movedCoords = moveTwoCoords(Cx, Ey)
     Cx = movedCoords$Cx;Ey = movedCoords$Ey
-    #Test statistic
-    W = buildWeightMat(Cx, Ey, wo, eta = eta, numNN = numNN)
-    Ixy = (crossprod(X, W) %*% Y)/sqrt(prodFac <- prod(dim(W)-1)) #Normalize for matrix size
-    #Variances
+    #Estimate spatial autocorrelation
     if(verbose){
         message("Fitting variograms for first modality (", ncol(X), " features) ...")
     }
@@ -38,15 +36,33 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, fin
     variogramsY = matheronVariograms(Y, Ey, width = width, cutoff = cutoff,
                                      variogramModels = variogramModels, ...)
     distX = as.matrix(stats::dist(Cx));distY = as.matrix(stats::dist(Ey))
+    distXY = spatstat.geom::crossdist(Cx[, 1], Cx[, 2], Ey[, 1], Ey[, 2])
+    prodFac <- (n-1)*(m-1)
+    #Weight matrices and test statistics
+    Ws = vapply(etas, FUN.VALUE = matrix(NA, n, m), function(eta) {
+        buildWeightMat(wo = wo, eta = eta, numNN = numNN, distMat = distXY)
+    })
+    Ixys = vapply(seq_along(etas), FUN.VALUE = matrix(NA, p, k), function(i) {
+        (crossprod(X, Ws[,,i]) %*% Y)/sqrt(prodFac) #Normalize for matrix size
+    })
     if(verbose){
-        message("Calculating variances of bivariate Moran's I (", ncol(X)*ncol(Y), " feature pairs) ...")
+        message("Calculating variances of bivariate Moran's I (", p*k, " feature pairs) ...")
     }
-    varIxy = t(vapply(selfName(colnames(X)), FUN.VALUE = double(ncol(Y)), function(featx){
-        sigXw = t(crossprod(W, evalVariogram(variogramsX[[featx]], distX)) %*% W)
+    varIxy = t(vapply(selfName(colnames(X)), FUN.VALUE = double(k), function(featx){
+        #Variances
+        vgx = evalVariogram(variogramsX[[featx]], distX)
         svx = sum(variogramsX[[featx]][, "psill"])
-        vapply(selfName(colnames(Y)), FUN.VALUE = double(1), function(featy){
-            sum(sigXw * evalVariogram(variogramsY[[featy]], distY))/
-                (svx*sum(variogramsY[[featy]][, "psill"]))
+        sigXws = vapply(seq_along(etas), FUN.VALUE = matrix(NA, m, m), function(i) {
+            t(crossprod(Ws[,,i], vgx) %*% Ws[,,i])
+        })
+        #Try arrayMatProd
+        vapply(selfName(colnames(Y)), FUN.VALUE = double(length(etas)), function(featy){
+            vgy = evalVariogram(variogramsY[[featy]], distY)
+            Fac = (svx*sum(variogramsY[[featy]][, "psill"]))
+            vapply(seq_along(etas), FUN.VALUE = double(1), function(i) {
+                sum(sigXws[,,i] * vgy)/Fac
+            })
+            #Try rowSums(sigXws*vgy)/Fac)
             #Fast, memory saving way to find the trace
             #The scaling by variance at the end ensures variances of 1, and is much faster than cov2cor
         })
@@ -55,13 +71,19 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, fin
         varIxy[zeroId] = tr(crossprod(W))#If negative variance, fall back on independence
     }
     # P-values
-    IxyPvals = makePval(Ixy/sqrt(varIxy/prodFac))
-    #Maximum value, if needed
-    maxIxy = if(findMaxW) svd(W, nu = 0, nv = 0)$d[1] else 1
+    IxyPvals = makePval(Ixys/sqrt(varIxy/prodFac))
+    #Maximum values, if needed
+    maxIxy = if(findMaxW) {
+        vapply(seq_along(etas), FUN.VALUE = double(1), function(i) {
+            svd(Ws[,,i], nu = 0, nv = 0)$d[1]
+        })
+    }
+    #CCT correction
+    cctPvals = apply(IxyPvals, c(1,2), CCT)
     #Reformat to long format
-    out <- cbind("Ixy" = c(Ixy), "varIxy" = c(varIxy), "pVal" = c(IxyPvals))
+    out <- cbind("Ixy" = c(Ixys), "varIxy" = c(varIxy), "pVal" = c(IxyPvals))
     rownames(out) = makeNames(colnames(X), colnames(Y))
-    return(list("out" = out, "maxIxy" = maxIxy))
+    return(list("out" = out, "etas" = etas, "maxIxy" = maxIxy))
 }
 #' Estimate variograms using Matheron's binning estimator for many features at once
 #'

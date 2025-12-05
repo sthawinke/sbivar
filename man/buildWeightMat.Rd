@@ -4,7 +4,14 @@
 \alias{buildWeightMat}
 \title{Build a weight matrix for bivariate Moran's I}
 \usage{
-buildWeightMat(Cx, Ey, wo, eta, numNN)
+buildWeightMat(
+  Cx,
+  Ey,
+  wo,
+  eta,
+  numNN,
+  distMat = spatstat.geom::crossdist(Cx[, 1], Cx[, 2], Ey[, 1], Ey[, 2])
+)
 }
 \arguments{
 \item{Cx, Ey}{Two coordinate matrices}

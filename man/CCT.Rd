@@ -4,7 +4,7 @@
 \alias{CCT}
 \title{An analytical p-value combination method using the Cauchy distribution.}
 \usage{
-CCT(pvals, weights = NULL)
+CCT(pvals, weights = rep(1/length(pvals), length(pvals)))
 }
 \arguments{
 \item{pvals}{a numeric vector of p-values, where each of the element is

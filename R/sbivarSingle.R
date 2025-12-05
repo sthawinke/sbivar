@@ -12,7 +12,8 @@
 #' @param gpParams Parameters of the Gaussian processes, see details
 #' @param GPmethod,Quants,numLscAlts,optControl,corStruct Passed onto \link{fitGP}
 #' @param n_points_grid,families Passed onto \link{wrapGAMs}
-#' @param wo,numNN,eta passed onto \link{buildWeightMat}
+#' @param wo,numNN passed onto \link{buildWeightMat}
+#' @param etas A vector of decay parameters for the weight function, see details
 #' @param cutoff,width Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}
 #' @param verbose Should info on type of analysis be printed?
 #' @param findMaxW Is the maximum bivariate Moran's I needed?
@@ -25,6 +26,8 @@
 #' For instance, count data or metabolome data are best scaled to relative values and log-normalized prior to fitting GPs.
 #' For GAMs, usually no normalization is needed, as the non-gaussianity is taken care of by
 #' the outcome distribution, offset and link functions. Currently, identity, inverse and log-link are implemented.
+#' If multiple decay parameters eta are supplied (etas is a vector), tests are performed for all weight matrices
+#' and the resulting p-values combined using the Cauchy combination rule.
 #'
 #' @returns A list with at least the following components
 #' \item{result}{A matrix which contains at least a p-values ("pVal") and a
@@ -46,13 +49,13 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
       normY = c("none", "rel", "log"), findMaxW = FALSE, pseudoCount = 1e-8,
       families = list("X" = gaussian(), "Y" = gaussian()),
       GPmethod = c("REML", "ML"), wo = c("Gauss", "nn"), numNN = 8,
-      gpParams, Quants = c(0.005, 0.5), numLscAlts = 10, width = cutoff/15, eta = 0.00015, cutoff = sqrt(2)/3,
+      gpParams, Quants = c(0.005, 0.5), numLscAlts = 10, width = cutoff/15, etas = 5*10^c(-6, -5, -4), cutoff = sqrt(2)/3,
       optControl = lmeControl(opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
                               niterEM = 1e3, msMaxEval = 1e3),
       corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25)), verbose = TRUE){
     stopifnot(is.numeric(n_points_grid), ncol(Cx) == 2, is.numeric(numNN),
               all(vapply(families, FUN.VALUE = TRUE, is, "family")), is.list(optControl),
-             inherits(corStruct, "corStruct"), inherits(corStruct, "corGaus"),
+             inherits(corStruct, "corStruct"), inherits(corStruct, "corGaus"), is,numeric(etas),
              length(Quants)==2, is.numeric(Quants), is.logical(verbose), is.logical(findMaxW))
     if(verbose){
         message("Starting sbivar analysis of a single image on ",
@@ -99,7 +102,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
     Y = normMat(Y, normY, pseudoCount);Ey = Ey[rownames(Y),]
     out = if(method=="Moran's I"){
         (moranRes <- wrapMoransI(X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo, numNN = numNN, variogramModels = variogramModels,
-         eta = eta, width = width, verbose = verbose, cutoff = cutoff, findMaxW = findMaxW))$out
+         etas = selfName(etas), width = width, verbose = verbose, cutoff = cutoff, findMaxW = findMaxW))$out
     } else if(method == "GAMs"){
         wrapGAMs(X = X, Y = Y, Cx = Cx, Ey = Ey, families = families,
                  n_points_grid = n_points_grid, verbose = verbose)

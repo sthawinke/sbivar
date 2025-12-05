@@ -24,7 +24,7 @@ sbivarSingle(
   Quants = c(0.005, 0.5),
   numLscAlts = 10,
   width = cutoff/15,
-  eta = 0.00015,
+  etas = 5 * 10^c(-6, -5, -4),
   cutoff = sqrt(2)/3,
   optControl = lmeControl(opt = "optim", maxIter = 500, msMaxIter = 500, niterEM = 1000,
     msMaxEval = 1000),
@@ -52,9 +52,11 @@ Currently, only "Sph", "Exp" and "Lin" are implemented.}
 
 \item{GPmethod, Quants, numLscAlts, optControl, corStruct}{Passed onto \link{fitGP}}
 
-\item{wo, numNN, eta}{passed onto \link{buildWeightMat}}
+\item{wo, numNN}{passed onto \link{buildWeightMat}}
 
 \item{gpParams}{Parameters of the Gaussian processes, see details}
+
+\item{etas}{A vector of decay parameters for the weight function, see details}
 
 \item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}}
 
@@ -80,6 +82,8 @@ Any normalization of the data should happen prior to calling this function.
 For instance, count data or metabolome data are best scaled to relative values and log-normalized prior to fitting GPs.
 For GAMs, usually no normalization is needed, as the non-gaussianity is taken care of by
 the outcome distribution, offset and link functions. Currently, identity, inverse and log-link are implemented.
+If multiple decay parameters eta are supplied (etas is a vector), tests are performed for all weight matrices
+and the resulting p-values combined using the Cauchy combination rule.
 
 gpParams must be a list of length 2 with names 'X' and 'Y', consisting of matrices
 with rownames "mean", "nugget", "range" and "sigma", and column names as in X and Y.

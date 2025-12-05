@@ -14,7 +14,7 @@ matheronVariograms(X, Cx, width, cutoff, variogramModels)
 \item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}}
 
 \item{variogramModels}{A character string, indicating the variogram model passed onto \link[gstat]{vgm}.
-Currently, only "Sph", "Gau", "Exp" and "Lin" are implemented.}
+Currently, only "Sph", "Exp" and "Lin" are implemented.}
 }
 \value{
 A list of variograms

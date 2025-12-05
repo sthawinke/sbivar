@@ -19,7 +19,7 @@
 #' @param pseudoCount A pseudocount added prior to log-normalization to avoid taking the log of zero
 #' @param normX,normY Character vectors indicating normalization, "log" means log-normalization of relative abundances
 #' @param variogramModels A character string, indicating the variogram model passed onto \link[gstat]{vgm}.
-#' Currently, only "Sph", "Gau", "Exp" and "Lin" are implemented.
+#' Currently, only "Sph", "Exp" and "Lin" are implemented.
 #'
 #' @details Any normalization of the data should happen prior to calling this function.
 #' For instance, count data or metabolome data are best scaled to relative values and log-normalized prior to fitting GPs.
@@ -42,7 +42,7 @@
 #' This argument allows to pass parameters of the Gaussian processes estimated with other software
 #' to perform the score test.
 sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
-      n_points_grid = 6e2, normX = c("none", "rel", "log"), variogramModels = c("Sph", "Gau", "Exp", "Lin"),
+      n_points_grid = 6e2, normX = c("none", "rel", "log"), variogramModels = c("Sph", "Exp", "Lin"),
       normY = c("none", "rel", "log"), findMaxW = FALSE, pseudoCount = 1e-8,
       families = list("X" = gaussian(), "Y" = gaussian()),
       GPmethod = c("REML", "ML"), wo = c("Gauss", "nn"), numNN = 8,

@@ -78,7 +78,7 @@ matheronVariograms <- function(X, Cx, width, cutoff) {
         df$z <- X[, nm]
         fvg = fit.variogram(variogram(z ~ 1, df, width = width, cutoff = cutoff),
                             #vgm(1, model = "Gau", range = 3), fit.sills = FALSE)
-                            vgm(0.8, model = "Gau", nugget = 0.2, range = 10), fit.sills = TRUE)
+                            vgm(model = "Sph", nugget = NA))
         #Include nugget variance
         if(fvg[2,"range"]<0){
             fvg[2,"range"] = 1e-10 #Catch negative ranges
@@ -96,8 +96,10 @@ matheronVariograms <- function(X, Cx, width, cutoff) {
 #' @param distMat The distance matrix
 #' @returns A covariance matrix
 evalVariogram = function(vg, distMat){
-    #exp(-(distMat/vg[["range"]])^2)
-    tmp = vg[2, "psill"]*exp(-(distMat/vg[2, "range"])^2)
+    #Exponential
+    #tmp = vg[2, "psill"]*exp(-(distMat/vg[2, "range"])^2)
+    #Spherical
+    tmp = vg[2, "psill"]*(1-1.5*(distMat/vg[2, "range"])+0.5*(distMat/vg[2, "range"])^3)
     diag(tmp) = diag(tmp) + vg[1, "psill"]
     return(tmp) #Scale to variance 1
 }

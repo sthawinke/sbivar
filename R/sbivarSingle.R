@@ -18,6 +18,8 @@
 #' @param findMaxW Is the maximum bivariate Moran's I needed?
 #' @param pseudoCount A pseudocount added prior to log-normalization to avoid taking the log of zero
 #' @param normX,normY Character vectors indicating normalization, "log" means log-normalization of relative abundances
+#' @param variogramModels A character string, indicating the variogram model passed onto \link[gstat]{vgm}.
+#' Currently, only "Sph", "Gau", "Exp" and "Lin" are implemented.
 #'
 #' @details Any normalization of the data should happen prior to calling this function.
 #' For instance, count data or metabolome data are best scaled to relative values and log-normalized prior to fitting GPs.
@@ -40,11 +42,11 @@
 #' This argument allows to pass parameters of the Gaussian processes estimated with other software
 #' to perform the score test.
 sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
-      n_points_grid = 6e2, normX = c("none", "rel", "log"),
+      n_points_grid = 6e2, normX = c("none", "rel", "log"), variogramModels = c("Sph", "Gau", "Exp", "Lin"),
       normY = c("none", "rel", "log"), findMaxW = FALSE, pseudoCount = 1e-8,
       families = list("X" = gaussian(), "Y" = gaussian()),
       GPmethod = c("REML", "ML"), wo = c("Gauss", "nn"), numNN = 8,
-      gpParams, Quants = c(0.005, 0.5), numLscAlts = 10, width = cutoff/30, eta = 0.025, cutoff = 0.5,
+      gpParams, Quants = c(0.005, 0.5), numLscAlts = 10, width = cutoff/15, eta = 0.025, cutoff = sqrt(2)/3,
       optControl = lmeControl(opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
                               niterEM = 1e3, msMaxEval = 1e3),
       corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25)), verbose = TRUE){
@@ -58,7 +60,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
     }
     n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y)
     X = addDimNames(X, "X");Y = addDimNames(Y, "Y")
-    method = match.arg(method)
+    method = match.arg(method);variogramModels = match.arg(variogramModels, several.ok = TRUE)
     normX = match.arg(normX);normY = match.arg(normY)
     GPmethod = match.arg(GPmethod)
     wo = match.arg(wo)
@@ -96,7 +98,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
     X = normMat(X, normX, pseudoCount);Cx = Cx[rownames(X),]
     Y = normMat(Y, normY, pseudoCount);Ey = Ey[rownames(Y),]
     out = if(method=="Moran's I"){
-        (moranRes <- wrapMoransI(X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo, numNN = numNN,
+        (moranRes <- wrapMoransI(X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo, numNN = numNN, variogramModels = variogramModels,
          eta = eta, width = width, verbose = verbose, cutoff = cutoff, findMaxW = findMaxW))$out
     } else if(method == "GAMs"){
         wrapGAMs(X = X, Y = Y, Cx = Cx, Ey = Ey, families = families,

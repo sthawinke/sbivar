@@ -16,6 +16,7 @@ wrapMoransI(
   width,
   verbose,
   findMaxW,
+  variogramModels,
   ...
 )
 }
@@ -31,6 +32,9 @@ wrapMoransI(
 \item{verbose}{Should info on type of analysis be printed?}
 
 \item{findMaxW}{Is the maximum bivariate Moran's I needed?}
+
+\item{variogramModels}{A character string, indicating the variogram model passed onto \link[gstat]{vgm}.
+Currently, only "Sph", "Gau", "Exp" and "Lin" are implemented.}
 
 \item{...}{passed onto \link[gstat]{variogram}}
 }

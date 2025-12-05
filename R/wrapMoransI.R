@@ -14,7 +14,7 @@
 #'
 #' @details The maximum value of the bivariate Moran's I statistic is returned conditionally,
 #' as it is computation intensive and not always needed.
-wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, findMaxW, ...){
+wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, findMaxW, variogramModels, ...){
     if(verbose){
         message("Performing tests on bivariate Moran's I for ", ncol(X)*ncol(Y), " feature pairs")
     }
@@ -30,11 +30,13 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, fin
     if(verbose){
         message("Fitting variograms for first modality (", ncol(X), " features) ...")
     }
-    variogramsX = matheronVariograms(X, Cx, width = width, cutoff = cutoff, ...)
+    variogramsX = matheronVariograms(X, Cx, width = width, cutoff = cutoff,
+                                     variogramModels = variogramModels,  ...)
     if(verbose){
         message("Fitting variograms for second modality (", ncol(Y), " features) ...")
     }
-    variogramsY = matheronVariograms(Y, Ey, width = width, cutoff = cutoff, ...)
+    variogramsY = matheronVariograms(Y, Ey, width = width, cutoff = cutoff,
+                                     variogramModels = variogramModels, ...)
     distX = as.matrix(stats::dist(Cx));distY = as.matrix(stats::dist(Ey))
     if(verbose){
         message("Calculating variances of bivariate Moran's I (", ncol(X)*ncol(Y), " feature pairs) ...")
@@ -69,16 +71,18 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, eta, numNN, cutoff, width, verbose, fin
 #' @param X Outcome matrix
 #' @param Cx Coordinate matrix
 #' @return A list of variograms
-#' @note Only the Gaussian variogram (model = "Gau") is implemented here
-matheronVariograms <- function(X, Cx, width, cutoff) {
+#' @details The best fitting variogram model, measured by the squared error, will be used.
+matheronVariograms <- function(X, Cx, width, cutoff, variogramModels) {
     df <- data.frame(Cx)
     sp::coordinates(df) <- ~x + y
     # Compute empirical semivariogram using Matheron’s estimator
     variograms <- loadBalanceBplapply(selfName(colnames(X)), function(nm) {
         df$z <- X[, nm]
-        fvg = fit.variogram(variogram(z ~ 1, df, width = width, cutoff = cutoff),
-                            vgm(model = c("Sph", "Gau", "Exp"), nugget = NA))
-        #Include nugget variance
+        vg = variogram(z ~ 1, df, width = width, cutoff = cutoff)
+        fvgs = lapply(variogramModels, function(vv){
+            fit.variogram(vg, vgm(model = vv, nugget = NA)) #Include nugget variance
+        })
+        fvg = fvgs[[which.min(vapply(fvgs, FUN.VALUE = double(1), attr, "SSErr"))]]
         if(fvg[2,"range"]<0){
             fvg[2,"range"] = 1e-10 #Catch negative ranges
         }
@@ -92,15 +96,20 @@ matheronVariograms <- function(X, Cx, width, cutoff) {
 #' @param distMat The distance matrix
 #' @returns A covariance matrix
 evalVariogram = function(vg, distMat){
-    covMat = if(vg[2, "model"] == "Gau"){
-        vg[2, "psill"]*exp(-(distMat/vg[2, "range"])^2)
+    covMat = vg[2, "psill"]*if(vg[2, "model"] == "Gau"){
+        exp(-(distMat/vg[2, "range"])^2)
     } else if(vg[2, "model"] == "Sph"){
-        tmp = vg[2, "psill"]*(1-1.5*(distMat/vg[2, "range"])+0.5*(distMat/vg[2, "range"])^3)
+        dvg = distMat/vg[2, "range"]
+        tmp =(1-1.5*dvg+0.5*dvg^3)
         tmp[distMat > vg[2, "range"]] = 0
         tmp
     } else if(vg[2, "model"] == "Exp"){
-        vg[2, "psill"]*exp(-distMat/vg[2, "range"])
+        exp(-distMat/vg[2, "range"])
+    } else if(vg[2, "model"] == "Lin"){
+        tmp = 1-distMat/vg[2, "range"]
+        tmp[distMat > vg[2, "range"]] = 0
+        tmp
     }
     diag(covMat) = diag(covMat) + vg[1, "psill"]
-    return(covMat) #Scale to variance 1
+    return(covMat)
 }

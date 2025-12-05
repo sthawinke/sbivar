@@ -4,7 +4,7 @@
 \alias{matheronVariograms}
 \title{Estimate variograms using Matheron's binning estimator for many features at once}
 \usage{
-matheronVariograms(X, Cx, width, cutoff)
+matheronVariograms(X, Cx, width, cutoff, variogramModels)
 }
 \arguments{
 \item{X}{Outcome matrix}
@@ -12,6 +12,9 @@ matheronVariograms(X, Cx, width, cutoff)
 \item{Cx}{Coordinate matrix}
 
 \item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}}
+
+\item{variogramModels}{A character string, indicating the variogram model passed onto \link[gstat]{vgm}.
+Currently, only "Sph", "Gau", "Exp" and "Lin" are implemented.}
 }
 \value{
 A list of variograms
@@ -19,6 +22,6 @@ A list of variograms
 \description{
 Estimate variograms using Matheron's binning estimator for many features at once
 }
-\note{
-Only the Gaussian variogram (model = "Gau") is implemented here
+\details{
+The best fitting variogram model, measured by the squared error, will be used.
 }

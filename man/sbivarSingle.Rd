@@ -12,6 +12,7 @@ sbivarSingle(
   method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
   n_points_grid = 600,
   normX = c("none", "rel", "log"),
+  variogramModels = c("Sph", "Gau", "Exp", "Lin"),
   normY = c("none", "rel", "log"),
   findMaxW = FALSE,
   pseudoCount = 1e-08,
@@ -22,9 +23,9 @@ sbivarSingle(
   gpParams,
   Quants = c(0.005, 0.5),
   numLscAlts = 10,
-  width = cutoff/30,
+  width = cutoff/15,
   eta = 0.025,
-  cutoff = 0.5,
+  cutoff = sqrt(2)/3,
   optControl = lmeControl(opt = "optim", maxIter = 500, msMaxIter = 500, niterEM = 1000,
     msMaxEval = 1000),
   corStruct = corGaus(form = ~x + y, nugget = TRUE, value = c(1, 0.25)),
@@ -41,6 +42,9 @@ sbivarSingle(
 \item{n_points_grid, families}{Passed onto \link{wrapGAMs}}
 
 \item{normX, normY}{Character vectors indicating normalization, "log" means log-normalization of relative abundances}
+
+\item{variogramModels}{A character string, indicating the variogram model passed onto \link[gstat]{vgm}.
+Currently, only "Sph", "Gau", "Exp" and "Lin" are implemented.}
 
 \item{findMaxW}{Is the maximum bivariate Moran's I needed?}
 

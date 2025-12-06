@@ -12,6 +12,7 @@
 #' @examples
 #' exploreWeights(10^c(-5, -4, -3))
 #' @importFrom grDevices palette
+#' @importFrom graphics legend lines
 exploreWeights = function(etas, dists = seq(0, 0.1, length.out = 1e3), palette = "paired"){
     stopifnot(all(dists<=sqrt(2)), all(etas>0))
     Pal = palette("paired")

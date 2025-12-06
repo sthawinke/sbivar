@@ -21,6 +21,8 @@ buildWeightMat(
 \item{eta}{parameter that controls the decay of the weights with distance, see details}
 
 \item{numNN}{An integer, the number of neighbours}
+
+\item{distMat}{The distance matrix}
 }
 \value{
 A weight matrix

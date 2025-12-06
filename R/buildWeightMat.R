@@ -7,6 +7,7 @@
 #' @param wo The weighting option, either "nn" or "exp"
 #' @param numNN An integer, the number of neighbours
 #' @param eta parameter that controls the decay of the weights with distance, see details
+#' @param distMat The distance matrix
 #' @importFrom Matrix sparseMatrix
 #' @importFrom spatstat.geom crossdist
 #' @return A weight matrix

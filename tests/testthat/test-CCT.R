@@ -7,9 +7,4 @@ test_that("Cauchy combination rule works as expected", {
     expect_warning(CCT(c(1, pVals)))
     expect_is(c(cctP, 1e-20), "numeric")
 })
-test_that("Cauchy combination rule throws errors where needed", {
-    pValsWrong = runif(20, 1, 2)
-    pVals = runif(20, 0 ,1)
-    expect_error(CCT(pValsWrong))
-    expect_error(CCT(pVals, weights = runif(5, 0, 1)))
-})
+

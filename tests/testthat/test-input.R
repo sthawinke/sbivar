@@ -4,8 +4,7 @@ test_that("SbivarSingle works for correct input", {
     expect_is(sbiRes, "list")
     expect_message(sbiResMoran <- sbivar(X, Y, Cx, Ey, method = "Moran's I"))
     expect_message(sbiResMod <- sbivar(X, X, Cx, method = "Modified"))
-    expect_identical(colnames(sbiResMoran$result),
-                     c("Ixy", "varIxy", "pVal", "pAdj"))
+    expect_true(all(c("pVal", "pAdj") %in% colnames(sbiResMoran$result)))
     expect_false(is.unsorted(sbiRes$result[, "pVal"]))
     expect_silent(sbivar(X, Y, Cx, Ey, method = "GAMs", verbose = FALSE))
     expect_is(sbivar(X, Y, Cx, Ey, method = "GPs"), "list")

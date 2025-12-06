@@ -59,7 +59,6 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, fi
         vapply(selfName(colnames(Y)), FUN.VALUE = double(length(etas)), function(featy){
             vgy = evalVariogram(variogramsY[[featy]], distY)
             colSums(sigXws*c(vgy), dims = 2)/(svx*sum(variogramsY[[featy]][, "psill"]))
-            #Check .colSums here
             #Fast, memory saving way to find the trace
             #The scaling by variance at the end ensures variances of 1, and is much faster than cov2cor
         })

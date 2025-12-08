@@ -51,6 +51,8 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, fi
     #Variances
     ncs = m^2 #For colSums
     varIxy = vapply(selfName(colnames(X)), FUN.VALUE = matrix(0, e, k), function(featx){
+        if(verbose)
+            printProgress(featx, colnames(X))
         vgx = evalVariogram(variogramsX[[featx]], distX)
         sigXws = vapply(seq_along(etas), FUN.VALUE = matrix(0, m, m), function(i) {
             crossprod(Ws[,,i], vgx) %*% Ws[,,i]

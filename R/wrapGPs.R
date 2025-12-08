@@ -28,10 +28,12 @@ wrapGPs = function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
     altSigmas = buildAltSigmas(distMat, numLscAlts = numLscAlts, Quants = Quants,
                                idN = idN, idM = idM)
     if(verbose){
-        message("Performing all ", ncol(X)*ncol(Y),
+        message("Performing all ", numTests <- ncol(X)*ncol(Y),
                 " pairwise score tests on fitted GPs ...")
     }
     out = vapply(selfName(colnames(X)), function(featx){
+        if(verbose)
+            printProgress(featx, colnames(X))
         sx = base::solve(buildSigmaGp(gpsx[, featx], distMat = distMat[idN, idN]))
         vapply(selfName(colnames(Y)), FUN.VALUE = double(2), function(featy){
             testGP(distMat = distMat, x = X[,featx], y = Y[,featy], altSigmas = altSigmas,

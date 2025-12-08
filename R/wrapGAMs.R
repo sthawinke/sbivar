@@ -29,6 +29,8 @@ wrapGAMs = function(X, Y, Cx, Ey, families, n_points_grid, verbose, multi = FALS
             }
     }
     out = vapply(selfName(names(gamsx)), function(featx){
+        if(verbose)
+            printProgress(featx, colnames(X))
         predx <- vcovPredGam(gamsx[[featx]], newdata = ng)
         vapply(selfName(names(gamsy)), FUN.VALUE = double(3), function(featy){
             testGAM(predx = predx, modely = gamsy[[featy]], modelx = gamsx[[featx]],

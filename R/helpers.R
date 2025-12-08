@@ -269,3 +269,14 @@ addDimNames = function(mat, letter){
     }
     return(mat)
 }
+#' Print feature progress
+#'
+#' @param feat The current feature
+#' @param allFeats Vector of all features
+
+#' @returns Prints progress message to output
+printProgress = function(feat, allFeats){
+    if(!is.na(id <- match(feat, allFeats[round(seq(length(allFeats)/10, length(allFeats), by = length(allFeats)/10))]))){
+        message(round(100*id/length(allFeats)), "% of tests completed")
+    }
+}

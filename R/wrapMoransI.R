@@ -49,6 +49,7 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, fi
         message("Calculating variances of bivariate Moran's I (", p*k, " feature pairs) ...")
     }
     ncs = p^2#From colSums
+    yVariograms = simplify2array(loadBalanceBplapply(variogramsY, function(y) evalVariogram(y, distY)))
     #Loops are meant to minimize the number of variogram evaluations
     varIxy = vapply(selfName(colnames(X)), FUN.VALUE = matrix(0, e, k), function(featx){
         #Variances
@@ -58,9 +59,9 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, fi
             crossprod(Ws[,,i], vgx) %*% Ws[,,i]
         })
         vapply(selfName(colnames(Y)), FUN.VALUE = double(e), function(featy){
-            vgy = evalVariogram(variogramsY[[featy]], distY)
+            #vgy = evalVariogram(variogramsY[[featy]], distY)
             #colSums(sigXws*c(vgy), dims = 2)/(svx*sum(variogramsY[[featy]][, "psill"]))
-            .Internal(colSums(sigXws*c(vgy), ncs, e, FALSE))/(svx*sum(variogramsY[[featy]][, "psill"]))
+            .Internal(colSums(sigXws*c(yVariograms[,,featy]), ncs, e, FALSE))/(svx*sum(variogramsY[[featy]][, "psill"]))
             #Fast, memory saving way to find the trace
             #The scaling by variance at the end ensures variances of 1, and is much faster than cov2cor
         })

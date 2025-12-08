@@ -32,13 +32,14 @@ wrapGPs = function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
                 " pairwise score tests on fitted GPs ...")
     }
     out = vapply(selfName(colnames(X)), function(featx){
-        if(verbose)
-            printProgress(featx, colnames(X))
         sx = base::solve(buildSigmaGp(gpsx[, featx], distMat = distMat[idN, idN]))
-        vapply(selfName(colnames(Y)), FUN.VALUE = double(2), function(featy){
+        out = vapply(selfName(colnames(Y)), FUN.VALUE = double(2), function(featy){
             testGP(distMat = distMat, x = X[,featx], y = Y[,featy], altSigmas = altSigmas,
                    solXonly = gpsx[, featx], solYonly = gpsy[, featy])
         })
+        if(verbose)
+            printProgress(featx, colnames(X))
+        return(out)
     }, FUN.VALUE = matrix(0, nrow = 2, ncol = ncol(Y)))
     #Reformat to long format
     t(matrix(c(out), 2, ncol(X)*ncol(Y),

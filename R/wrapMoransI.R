@@ -51,16 +51,17 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, fi
     #Variances
     ncs = m^2 #For colSums
     varIxy = vapply(selfName(colnames(X)), FUN.VALUE = matrix(0, e, k), function(featx){
-        if(verbose)
-            printProgress(featx, colnames(X))
         vgx = evalVariogram(variogramsX[[featx]], distX)
         sigXws = vapply(seq_along(etas), FUN.VALUE = matrix(0, m, m), function(i) {
             crossprod(Ws[,,i], vgx) %*% Ws[,,i]
         })
-        vapply(selfName(colnames(Y)), FUN.VALUE = double(e), function(featy){
+        out = vapply(selfName(colnames(Y)), FUN.VALUE = double(e), function(featy){
             .colSums(sigXws*c(evalVariogram(variogramsY[[featy]], distY)), ncs, e)
             #Fast, memory saving way to find the trace
         })
+        if(verbose)
+            printProgress(featx, colnames(X))
+        return(out)
     })
     varIxy = aperm(varIxy, perm = 3:1) #Rearrange
     for(i in seq_along(etas)){

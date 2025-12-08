@@ -276,7 +276,10 @@ addDimNames = function(mat, letter){
 
 #' @returns Prints progress message to output
 printProgress = function(feat, allFeats){
-    if(!is.na(id <- match(feat, allFeats[round(seq(length(allFeats)/10, length(allFeats), by = length(allFeats)/10))]))){
-        message(round(100*id/length(allFeats)), "% of tests completed")
+    if(allFeats>10){
+        keyFeats = allFeats[round(seq(length(allFeats)/10, length(allFeats), by = length(allFeats)/10))]
+        if(!is.na(id <- match(feat, keyFeats))){
+            message(round(100*id/length(keyFeats)), "% of tests completed")
+        }
     }
 }

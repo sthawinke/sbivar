@@ -158,7 +158,7 @@ gamRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
                       method = "GAMs",  families = FamiliesVicari)
 ```
 
-Plot the most significant pair (log-transformed data are shown, the originall analysis is on raw data):
+Plot the most significant pair (log-transformed data are shown, the original analysis is on raw data):
 
 ```{r plottoppairgam, fig.height = 4.5}
 plotTopPair(gamRes, X = singleStx, Y = singleMet, Cx = singleStxCoords, 

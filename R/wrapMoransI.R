@@ -15,7 +15,7 @@
 #' @details The maximum value of the bivariate Moran's I statistic is returned conditionally,
 #' as it is computation intensive and not always needed.
 wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, findMaxW, variogramModels, ...){
-    n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y)
+    n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y);e=length(etas)
     if(verbose){
         message("Performing tests on bivariate Moran's I for ", p*k, " feature pairs")
     }
@@ -48,17 +48,19 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, fi
     if(verbose){
         message("Calculating variances of bivariate Moran's I (", p*k, " feature pairs) ...")
     }
+    ncs = p^2#From colSums
     #Loops are meant to minimize the number of variogram evaluations
-    varIxy = vapply(selfName(colnames(X)), FUN.VALUE = matrix(0, length(etas), k), function(featx){
+    varIxy = vapply(selfName(colnames(X)), FUN.VALUE = matrix(0, e, k), function(featx){
         #Variances
         vgx = evalVariogram(variogramsX[[featx]], distX)
         svx = sum(variogramsX[[featx]][, "psill"])
         sigXws = vapply(seq_along(etas), FUN.VALUE = matrix(0, m, m), function(i) {
             crossprod(Ws[,,i], vgx) %*% Ws[,,i]
         })
-        vapply(selfName(colnames(Y)), FUN.VALUE = double(length(etas)), function(featy){
+        vapply(selfName(colnames(Y)), FUN.VALUE = double(e), function(featy){
             vgy = evalVariogram(variogramsY[[featy]], distY)
-            colSums(sigXws*c(vgy), dims = 2)/(svx*sum(variogramsY[[featy]][, "psill"]))
+            #colSums(sigXws*c(vgy), dims = 2)/(svx*sum(variogramsY[[featy]][, "psill"]))
+            .Internal(colSums(sigXws*c(vgy), ncs, e, FALSE))/(svx*sum(variogramsY[[featy]][, "psill"]))
             #Fast, memory saving way to find the trace
             #The scaling by variance at the end ensures variances of 1, and is much faster than cov2cor
         })

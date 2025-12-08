@@ -28,12 +28,12 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, fi
     if(verbose){
         message("Fitting variograms for first modality (", p, " features) ...")
     }
-    variogramsX = matheronVariograms(X, data.frame(Cx), width = width, cutoff = cutoff,
+    variogramsX = matheronVariograms(X, Cx, width = width, cutoff = cutoff,
                                      variogramModels = variogramModels,  ...)
     if(verbose){
         message("Fitting variograms for second modality (", k, " features) ...")
     }
-    variogramsY = matheronVariograms(Y, data.frame(Ey), width = width, cutoff = cutoff,
+    variogramsY = matheronVariograms(Y, Ey, width = width, cutoff = cutoff,
             variogramModels = variogramModels, ...)
     distXY = spatstat.geom::crossdist(Cx[, 1], Cx[, 2], Ey[, 1], Ey[, 2])
     distX = as.matrix(stats::dist(Cx));distY = as.matrix(stats::dist(Ey))
@@ -93,6 +93,7 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, fi
 #' @return An array of evaluated variograms
 #' @details The best fitting variogram model, measured by the squared error, will be used.
 matheronVariograms <- function(X, Cx, width, cutoff, variogramModels) {
+    Cx = data.frame(Cx)
     sp::coordinates(Cx) <- ~x + y
     # Compute empirical semivariogram using Matheron’s estimator
     variograms <- loadBalanceBplapply(selfName(colnames(X)), function(nm) {

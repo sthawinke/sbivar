@@ -2,7 +2,7 @@
 % Please edit documentation in R/wrapMoransI.R
 \name{evalVariogram}
 \alias{evalVariogram}
-\title{Evaluate a Gaussian variogram on a distance matrix}
+\title{Evaluate a variogram on a distance matrix}
 \usage{
 evalVariogram(vg, distMat)
 }
@@ -15,5 +15,5 @@ evalVariogram(vg, distMat)
 A covariance matrix
 }
 \description{
-Evaluate a Gaussian variogram on a distance matrix
+Evaluate a variogram on a distance matrix
 }

@@ -148,7 +148,7 @@ plotTopPair(moransIRes, X = singleStx, Y = singleMet, Cx = singleStxCoords,
             Ey = singleMetCoords)
 ```
 
-We see a clear negative relationship.
+We see a clear positive relationship.
 
 In addition, we employ generalized additive models (GAMs), with a negative binomial outcome distribution for the transcriptome data, and a gamma outcome distribution for the metabolome data. A log-link is used in both cases.
 

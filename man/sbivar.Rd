@@ -64,7 +64,7 @@ method = "GPs")
 data(Vicari)
 VicariRes = sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
 Vicari$TranscriptCoords, Vicari$MetaboliteCoords, normX = "rel", normY = "rel",
-method = "Moran", wo = "Gauss")
+method = "Moran")
 }
 \seealso{
 \link{sbivarSingle}, \link{sbivarMulti}

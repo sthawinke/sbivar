@@ -2,9 +2,9 @@
 % Please edit documentation in R/wrapMoransI.R
 \name{matheronVariograms}
 \alias{matheronVariograms}
-\title{Estimate variograms using Matheron's binning estimator for many features at once}
+\title{Estimate variograms using Matheron's binning estimator for many features at once, and evaluate}
 \usage{
-matheronVariograms(X, Cx, width, cutoff, variogramModels)
+matheronVariograms(X, Cx, width, cutoff, variogramModels, vectorize = FALSE)
 }
 \arguments{
 \item{X}{Outcome matrix}
@@ -15,12 +15,14 @@ matheronVariograms(X, Cx, width, cutoff, variogramModels)
 
 \item{variogramModels}{A character string, indicating the variogram model passed onto \link[gstat]{vgm}.
 Currently, only "Exp" and "Lin" are implemented for computational reasons.}
+
+\item{vectorize}{Should the covariance matrix be flattened to a vector?}
 }
 \value{
 An array of evaluated variograms
 }
 \description{
-Estimate variograms using Matheron's binning estimator for many features at once
+Estimate variograms using Matheron's binning estimator for many features at once, and evaluate
 }
 \details{
 The best fitting variogram model, measured by the squared error, will be used.

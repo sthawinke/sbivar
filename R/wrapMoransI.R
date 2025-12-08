@@ -28,14 +28,15 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, fi
     if(verbose){
         message("Fitting variograms for first modality (", p, " features) ...")
     }
-    variogramsX = matheronVariograms(X, Cx, width = width, cutoff = cutoff,
+    variogramsX = matheronVariograms(X, data.frame(Cx), width = width, cutoff = cutoff,
                                      variogramModels = variogramModels,  ...)
     if(verbose){
         message("Fitting variograms for second modality (", k, " features) ...")
     }
-    variogramsY = matheronVariograms(Y, Ey, width = width, cutoff = cutoff,
-            variogramModels = variogramModels, vectorize = TRUE, ...)
+    variogramsY = matheronVariograms(Y, data.frame(Ey), width = width, cutoff = cutoff,
+            variogramModels = variogramModels, ...)
     distXY = spatstat.geom::crossdist(Cx[, 1], Cx[, 2], Ey[, 1], Ey[, 2])
+    distX = as.matrix(stats::dist(Cx));distY = as.matrix(stats::dist(Ey))
     prodFac <- (n-1)*(m-1)
     #Weight matrices and test statistics
     Ws = vapply(etas, FUN.VALUE = matrix(0, n, m), function(eta) {
@@ -47,14 +48,15 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, fi
     if(verbose){
         message("Calculating variances of bivariate Moran's I (", p*k, " feature pairs) ...")
     }
-    ncs = m^2#For colSums
+    #Variances
+    ncs = m^2 #For colSums
     varIxy = vapply(selfName(colnames(X)), FUN.VALUE = matrix(0, e, k), function(featx){
-        #Variances
+        vgx = evalVariogram(variogramsX[[featx]], distX)
         sigXws = vapply(seq_along(etas), FUN.VALUE = matrix(0, m, m), function(i) {
-            crossprod(Ws[,,i], variogramsX[,,featx]) %*% Ws[,,i]
+            crossprod(Ws[,,i], vgx) %*% Ws[,,i]
         })
         vapply(selfName(colnames(Y)), FUN.VALUE = double(e), function(featy){
-            .colSums(sigXws*variogramsY[,featy], ncs, e)
+            .colSums(sigXws*c(evalVariogram(variogramsY[[featy]], distY)), ncs, e)
             #Fast, memory saving way to find the trace
         })
     })
@@ -88,17 +90,14 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, fi
 #' @inheritParams sbivarSingle
 #' @param X Outcome matrix
 #' @param Cx Coordinate matrix
-#' @param vectorize Should the covariance matrix be flattened to a vector?
 #' @return An array of evaluated variograms
 #' @details The best fitting variogram model, measured by the squared error, will be used.
-matheronVariograms <- function(X, Cx, width, cutoff, variogramModels, vectorize = FALSE) {
-    df <- data.frame(Cx)
-    sp::coordinates(df) <- ~x + y
-    distMat = as.matrix(stats::dist(Cx))
+matheronVariograms <- function(X, Cx, width, cutoff, variogramModels) {
+    sp::coordinates(Cx) <- ~x + y
     # Compute empirical semivariogram using Matheron’s estimator
-    variograms <- simplify2array(loadBalanceBplapply(selfName(colnames(X)), function(nm) {
-        df$z <- X[, nm]
-        vg = variogram(z ~ 1, df, width = width, cutoff = cutoff)
+    variograms <- loadBalanceBplapply(selfName(colnames(X)), function(nm) {
+        Cx$z <- X[, nm]
+        vg = variogram(z ~ 1, Cx, width = width, cutoff = cutoff)
         fvgs = lapply(variogramModels, function(vv){
             fit.variogram(vg, vgm(model = vv, nugget = NA)) #Include nugget variance
         })
@@ -107,12 +106,11 @@ matheronVariograms <- function(X, Cx, width, cutoff, variogramModels, vectorize 
             fvg[2,"range"] = 1e-10 #Catch negative ranges
         }
         fvg[,"psill"] = fvg[,"psill"]/sum(fvg[,"psill"]) #Normalize to variance 1
-        ev = evalVariogram(fvg, distMat)
-        return(if(vectorize) c(ev) else ev)
-    }))
+        return(fvg[, c("psill", "model", "range")])
+    })
     return(variograms)
 }
-#' Evaluate a Gaussian variogram on a distance matrix
+#' Evaluate a variogram on a distance matrix
 #'
 #' @param vg The variogram
 #' @param distMat The distance matrix

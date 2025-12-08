@@ -4,7 +4,7 @@
 \alias{matheronVariograms}
 \title{Estimate variograms using Matheron's binning estimator for many features at once, and evaluate}
 \usage{
-matheronVariograms(X, Cx, width, cutoff, variogramModels, vectorize = FALSE)
+matheronVariograms(X, Cx, width, cutoff, variogramModels)
 }
 \arguments{
 \item{X}{Outcome matrix}
@@ -15,8 +15,6 @@ matheronVariograms(X, Cx, width, cutoff, variogramModels, vectorize = FALSE)
 
 \item{variogramModels}{A character string, indicating the variogram model passed onto \link[gstat]{vgm}.
 Currently, only "Exp" and "Lin" are implemented for computational reasons.}
-
-\item{vectorize}{Should the covariance matrix be flattened to a vector?}
 }
 \value{
 An array of evaluated variograms

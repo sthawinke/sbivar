@@ -5,7 +5,7 @@
 setMethod("sbivar", "matrix", function(X, Y, Cx, Ey, ...) {
     if(!is.matrix(Y) || !is.matrix(Cx) || !(missing(Ey) || is.matrix(Ey))){
         stop("Since X is a matrix or dataframe, Y, Cx and Ey must be so too!",
-             if(is.data.frame(Y) || is.data.frame(Cx) || is.data.frame(Ey)){
+             if(is.data.frame(Y) || is.data.frame(Cx) || (!(missing(Ey) && is.data.frame(Ey)))){
                  "\nTry converting data frames with as.matrix()"})
     }
     sbivarSingle(X, Y, Cx, Ey, ...)

@@ -45,14 +45,15 @@
 #' This argument allows to pass parameters of the Gaussian processes estimated with other software
 #' to perform the score test.
 sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
-      n_points_grid = 6e2, normX = c("none", "rel", "log"), variogramModels = c("Exp", "Lin"),
-      normY = c("none", "rel", "log"), findMaxW = FALSE, pseudoCount = 1e-8,
-      families = list("X" = gaussian(), "Y" = gaussian()),
-      GPmethod = c("REML", "ML"), wo = c("Gauss", "nn"), numNN = 8,
-      gpParams, Quants = c(0.005, 0.5), numLscAlts = 10, width = cutoff/15, etas = 5*10^c(-6, -5, -4), cutoff = sqrt(2)/3,
+      n_points_grid = 6e2, normX = c("none", "rel", "log"), etas = 2*10^c(-7, -6, -5, -4),
+      normY = c("none", "rel", "log"), findMaxW = FALSE,
+      families = list("X" = gaussian(), "Y" = gaussian()), verbose = TRUE,
+      variogramModels = c("Exp", "Lin"), width = cutoff/15, cutoff = sqrt(2)/3,
+      wo = c("Gauss", "nn"), numNN = 8, pseudoCount = 1e-8,
+      GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 10,
       optControl = lmeControl(opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
                               niterEM = 1e3, msMaxEval = 1e3),
-      corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25)), verbose = TRUE){
+      corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25))){
     stopifnot(is.numeric(n_points_grid), ncol(Cx) == 2, is.numeric(numNN),
               all(vapply(families, FUN.VALUE = TRUE, is, "family")), is.list(optControl),
              inherits(corStruct, "corStruct"), inherits(corStruct, "corGaus"), is.numeric(etas),

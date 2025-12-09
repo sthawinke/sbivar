@@ -10,26 +10,26 @@ sbivarSingle(
   Cx,
   Ey,
   method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
-  n_points_grid = 600,
   normX = c("none", "rel", "log"),
-  variogramModels = c("Exp", "Lin"),
   normY = c("none", "rel", "log"),
+  etas = 2 * 10^c(-7, -6, -5, -4),
   findMaxW = FALSE,
-  pseudoCount = 1e-08,
   families = list(X = gaussian(), Y = gaussian()),
-  GPmethod = c("REML", "ML"),
+  n_points_grid = 600,
+  verbose = TRUE,
+  variogramModels = c("Exp", "Lin"),
+  width = cutoff/15,
+  cutoff = sqrt(2)/3,
   wo = c("Gauss", "nn"),
-  numNN = 8,
+  numNN = c(4, 8),
+  pseudoCount = 1e-08,
+  GPmethod = c("REML", "ML"),
   gpParams,
   Quants = c(0.005, 0.5),
   numLscAlts = 10,
-  width = cutoff/15,
-  etas = 2 * 10^c(-7, -6, -5, -4),
-  cutoff = sqrt(2)/3,
   optControl = lmeControl(opt = "optim", maxIter = 500, msMaxIter = 500, niterEM = 1000,
     msMaxEval = 1000),
-  corStruct = corGaus(form = ~x + y, nugget = TRUE, value = c(1, 0.25)),
-  verbose = TRUE
+  corStruct = corGaus(form = ~x + y, nugget = TRUE, value = c(1, 0.25))
 )
 }
 \arguments{
@@ -39,28 +39,28 @@ sbivarSingle(
 
 \item{method}{A character string, indicating which method to apply}
 
+\item{normX, normY}{Character vectors indicating normalization, "log" means log-normalization of relative abundances}
+
+\item{etas}{A vector of decay parameters for the weight function, see details}
+
+\item{findMaxW}{Is the maximum bivariate Moran's I needed?}
+
 \item{n_points_grid, families}{Passed onto \link{wrapGAMs}}
 
-\item{normX, normY}{Character vectors indicating normalization, "log" means log-normalization of relative abundances}
+\item{verbose}{Should info on type of analysis be printed?}
 
 \item{variogramModels}{A character string, indicating the variogram model passed onto \link[gstat]{vgm}.
 Currently, only "Exp" and "Lin" are implemented for computational reasons.}
 
-\item{findMaxW}{Is the maximum bivariate Moran's I needed?}
+\item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}}
+
+\item{wo, numNN}{passed onto \link{buildWeightMat}}
 
 \item{pseudoCount}{A pseudocount added prior to log-normalization to avoid taking the log of zero}
 
 \item{GPmethod, Quants, numLscAlts, optControl, corStruct}{Passed onto \link{fitGP}}
 
-\item{wo, numNN}{passed onto \link{buildWeightMat}}
-
 \item{gpParams}{Parameters of the Gaussian processes, see details}
-
-\item{etas}{A vector of decay parameters for the weight function, see details}
-
-\item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}}
-
-\item{verbose}{Should info on type of analysis be printed?}
 }
 \value{
 A list with at least the following components

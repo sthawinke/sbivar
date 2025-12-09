@@ -45,11 +45,11 @@
 #' This argument allows to pass parameters of the Gaussian processes estimated with other software
 #' to perform the score test.
 sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
-      normX = c("none", "rel", "log"), etas = 2*10^c(-7, -6, -5, -4),
-      normY = c("none", "rel", "log"), findMaxW = FALSE,
+      normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
+      etas = 2*10^c(-7, -6, -5, -4), findMaxW = FALSE,
       families = list("X" = gaussian(), "Y" = gaussian()), n_points_grid = 6e2, verbose = TRUE,
       variogramModels = c("Exp", "Lin"), width = cutoff/15, cutoff = sqrt(2)/3,
-      wo = c("Gauss", "nn"), numNN = 8, pseudoCount = 1e-8,
+      wo = c("Gauss", "nn"), numNN = c(4, 8), pseudoCount = 1e-8,
       GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 10,
       optControl = lmeControl(opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
                               niterEM = 1e3, msMaxEval = 1e3),

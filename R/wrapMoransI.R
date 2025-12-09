@@ -15,7 +15,8 @@
 #' @details The maximum value of the bivariate Moran's I statistic is returned conditionally,
 #' as it is computation intensive and not always needed.
 wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, findMaxW, variogramModels, ...){
-    n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y);e=length(etas)
+    n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y);
+    numWs = switch(wo, "Gauss" = length(etas), "nn"=  length(numNN))
     if(verbose){
         message("Performing tests on bivariate Moran's I for ", p*k, " feature pairs")
     }
@@ -35,14 +36,13 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, fi
     }
     variogramsY = matheronVariograms(Y, Ey, width = width, cutoff = cutoff,
             variogramModels = variogramModels, ...)
-    distXY = spatstat.geom::crossdist(Cx[, 1], Cx[, 2], Ey[, 1], Ey[, 2])
     distX = as.matrix(stats::dist(Cx));distY = as.matrix(stats::dist(Ey))
     prodFac <- (n-1)*(m-1)
     #Weight matrices and test statistics
-    Ws = vapply(etas, FUN.VALUE = matrix(0, n, m), function(eta) {
-        buildWeightMat(wo = wo, eta = eta, numNN = numNN, distMat = distXY)
+    Ws = vapply(switch(wo, "Gauss" = etas, "nn" = numNN), FUN.VALUE = matrix(0, n, m), function(iter) {
+        buildWeightMat(Cx = Cx, Ey = Ey, wo = wo, eta = iter, numNN = iter)
     })
-    Ixys = vapply(seq_along(etas), FUN.VALUE = matrix(0, p, k), function(i) {
+    Ixys = vapply(seq_len(numWs), FUN.VALUE = matrix(0, p, k), function(i) {
         (crossprod(X, Ws[,,i]) %*% Y)/sqrt(prodFac) #Normalize for matrix size
     })
     if(verbose){
@@ -50,13 +50,13 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, fi
     }
     #Variances
     ncs = m^2 #For colSums
-    varIxy = vapply(selfName(colnames(X)), FUN.VALUE = matrix(0, e, k), function(featx){
+    varIxy = vapply(selfName(colnames(X)), FUN.VALUE = matrix(0, numWs, k), function(featx){
         vgx = evalVariogram(variogramsX[[featx]], distX)
-        sigXws = vapply(seq_along(etas), FUN.VALUE = matrix(0, m, m), function(i) {
+        sigXws = vapply(seq_len(numWs), FUN.VALUE = matrix(0, m, m), function(i) {
             crossprod(Ws[,,i], vgx) %*% Ws[,,i]
         })
-        out = vapply(selfName(colnames(Y)), FUN.VALUE = double(e), function(featy){
-            .colSums(sigXws*c(evalVariogram(variogramsY[[featy]], distY)), ncs, e)
+        out = vapply(selfName(colnames(Y)), FUN.VALUE = double(numWs), function(featy){
+            .colSums(sigXws*c(evalVariogram(variogramsY[[featy]], distY)), ncs, numWs)
             #Fast, memory saving way to find the trace
         })
         if(verbose)
@@ -64,7 +64,7 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, fi
         return(out)
     })
     varIxy = aperm(varIxy, perm = 3:1) #Rearrange
-    for(i in seq_along(etas)){
+    for(i in seq_len(numWs)){
         if(any(zeroId <- (varIxy[,,i]<=0))){
             varIxy[,,i][zeroId] = tr(crossprod(Ws[,,i]))
             #If negative variance, fall back on independence
@@ -75,16 +75,17 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, fi
     #CCT correction
     cctPvals = apply(IxyPvals, c(1,2), CCT)
     #Reformat to long format
-    out <- cbind(matrix(c(Ixys), ncol = e, dimnames = list(NULL, paste0("Ixy_", etas))),
-                        "pVal" = c(cctPvals))
+    out <- cbind(matrix(c(Ixys), ncol = numWs, dimnames = list(NULL, paste0("Ixy_",
+                switch(wo, "Gauss" = etas, "nn" = numNN)))), "pVal" = c(cctPvals))
     rownames(out) = makeNames(colnames(X), colnames(Y))
     #Maximum values, if needed
     maxIxy = if(findMaxW) {
-        vapply(seq_along(etas), FUN.VALUE = double(1), function(i) {
+        vapply(seq_len(numWs), FUN.VALUE = double(1), function(i) {
             svd(Ws[,,i], nu = 0, nv = 0)$d[1]
         })
     }
-    return(list("out" = out, "etas" = etas, "maxIxy" = maxIxy))
+    return(list("out" = out, "etas" = if(wo=="Gauss") etas, "maxIxy" = maxIxy,
+                "numNN" = if(wo=="nn") numNN))
 }
 #' Estimate variograms using Matheron's binning estimator for many features at once, and evaluate
 #'

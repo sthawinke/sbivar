@@ -54,7 +54,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
       optControl = lmeControl(opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
                               niterEM = 1e3, msMaxEval = 1e3),
       corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25))){
-    stopifnot(is.numeric(n_points_grid), ncol(Cx) == 2, is.numeric(numNN),
+    stopifnot(is.numeric(n_points_grid), ncol(Cx) == 2, is.numeric(numNN), all(numNN>0),
               all(vapply(families, FUN.VALUE = TRUE, is, "family")), is.list(optControl),
              inherits(corStruct, "corStruct"), inherits(corStruct, "corGaus"), is.numeric(etas),
              length(Quants)==2, is.numeric(Quants), is.logical(verbose), is.logical(findMaxW))

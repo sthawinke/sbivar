@@ -16,7 +16,6 @@
 #' as it is computation intensive and not always needed.
 wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, findMaxW, variogramModels, ...){
     n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y);
-    numWs = switch(wo, "Gauss" = length(etas), "nn"=  length(numNN))
     if(verbose){
         message("Performing tests on bivariate Moran's I for ", p*k, " feature pairs")
     }
@@ -42,6 +41,12 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, fi
     Ws = vapply(switch(wo, "Gauss" = etas, "nn" = numNN), FUN.VALUE = matrix(0, n, m), function(iter) {
         buildWeightMat(Cx = Cx, Ey = Ey, wo = wo, eta = iter, numNN = iter)
     })
+    Ws = Ws[,,idW <- (colSums(Ws, dims = 2)>0), drop = FALSE]
+    numWs = dim(Ws)[3]
+    if(any(!idW) && wo=="Gauss"){
+        warning("Eta values ", etas[!idW], " yielded zero weight matrices and have been dropped!")
+        etas = etas[idW]
+    }
     Ixys = vapply(seq_len(numWs), FUN.VALUE = matrix(0, p, k), function(i) {
         (crossprod(X, Ws[,,i]) %*% Y)/sqrt(prodFac) #Normalize for matrix size
     })

@@ -75,7 +75,7 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, fi
     #CCT correction
     cctPvals = apply(IxyPvals, c(1,2), CCT)
     #Reformat to long format
-    out <- cbind(matrix(c(Ixys), ncol = 3, dimnames = list(NULL, paste0("Ixy_", etas))),
+    out <- cbind(matrix(c(Ixys), ncol = e, dimnames = list(NULL, paste0("Ixy_", etas))),
                         "pVal" = c(cctPvals))
     rownames(out) = makeNames(colnames(X), colnames(Y))
     #Maximum values, if needed

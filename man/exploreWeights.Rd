@@ -13,7 +13,7 @@ exploreWeights(
 \arguments{
 \item{etas}{A vector of positive decay parameters}
 
-\item{dists}{A set of distances, smaller than the square root of 2 since all coordinates are scaled to the unit square}
+\item{dists}{A set of distances, smaller than the square root of 2 since all coordinates are scaled to the unit square.}
 
 \item{palette}{The colour palette}
 }
@@ -21,7 +21,8 @@ exploreWeights(
 Plots the weighting functions
 }
 \description{
-The weighting functions resulting from different choices of decay parameters eta are visualized in a lineplot
+The weighting functions for calculating bivariate Moran's I resulting from
+different choices of decay parameters eta are visualized in a lineplot.
 }
 \examples{
 exploreWeights(10^c(-5, -4, -3))

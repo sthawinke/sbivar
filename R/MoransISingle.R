@@ -38,6 +38,9 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, 
     distX = as.matrix(stats::dist(Cx));distY = as.matrix(stats::dist(Ey))
     prodFac <- (n-1)*(m-1)
     #Weight matrices and test statistics
+    if(verbose){
+        message("Calculating bivariate Moran's I statistics(", p*k, " feature pairs) ...")
+    }
     Ws = vapply(switch(wo, "Gauss" = etas, "nn" = numNN), FUN.VALUE = matrix(0, n, m), function(iter) {
         buildWeightMat(Cx = Cx, Ey = Ey, wo = wo, eta = iter, numNN = iter)
     })
@@ -51,7 +54,7 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, 
         (crossprod(X, Ws[,,i]) %*% Y)/sqrt(prodFac) #Normalize for matrix size
     })
     if(verbose){
-        message("Calculating variances of bivariate Moran's I (", p*k, " feature pairs) ...")
+        message("Calculating variances of bivariate Moran's I statistics ...")
     }
     #Variances
     ncs = m^2 #For colSums
@@ -99,7 +102,7 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, 
 #' @inheritParams sbivarSingle
 #' @param X Outcome matrix
 #' @param Cx Coordinate matrix
-#' @return An array of evaluated variograms
+#' @return A list of evaluated variograms
 #' @details The best fitting variogram model, measured by the squared error, will be used.
 matheronVariograms <- function(X, Cx, width, cutoff, variogramModels) {
     Cx = data.frame(Cx)

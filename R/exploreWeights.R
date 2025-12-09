@@ -1,9 +1,10 @@
 #' Visualize different weighting functions
 #' @description
-#' The weighting functions resulting from different choices of decay parameters eta are visualized in a lineplot
+#' The weighting functions for calculating bivariate Moran's I resulting from
+#' different choices of decay parameters eta are visualized in a lineplot.
 #'
 #' @param etas A vector of positive decay parameters
-#' @param dists A set of distances, smaller than the square root of 2 since all coordinates are scaled to the unit square
+#' @param dists A set of distances, smaller than the square root of 2 since all coordinates are scaled to the unit square.
 #' @param palette The colour palette
 #'
 #' @returns Plots the weighting functions

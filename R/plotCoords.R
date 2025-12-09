@@ -3,11 +3,11 @@
 #' Plot the coordinates of two modalities onto the same coordinate framework, in two different colours.
 #' This is a useful check of the alignment and overlap.
 #' @details plotCoordsMulti() is a wrapper for plotCoords for lists of coordinates,
-#' and requires the user to set par(mar = ) appropriately, so all plots are shown.
+#' and requires the user to set par(mar = ) appropriately, such that all plots are shown.
 #'
 #' @inheritParams sbivarSingle
 #' @param cex Expansion factor
-#' @param pch,pchY Point shapes for x and y
+#' @param pchX,pchY Point shapes for x and y
 #' @param ... passed onto plot()
 #'
 #' @returns Plots to the plotting device
@@ -23,9 +23,9 @@
 #' })
 #' par(mfrow=c(1,1))
 #' @importFrom graphics points
-plotCoords = function(Cx, Ey, pch = 1, pchY = 3, cex = 0.8, ...){
+plotCoords = function(Cx, Ey, pchX = 1, pchY = 3, cex = 0.8, ...){
     plot(x = as.matrix(Cx), xlim = range(c(Cx[,1], Ey[,1])), ylim = range(c(Cx[,2], Ey[,2])),
-         asp = 1, pch = pch, cex = cex, xlab = "x", ylab = "y", ...)
+         asp = 1, pch = pchX, cex = cex, xlab = "x", ylab = "y", ...)
     points(as.matrix(Ey), col = "blue", pch = pchY, cex = cex)
 }
 #' @inheritParams sbivarMulti

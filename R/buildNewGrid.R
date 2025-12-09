@@ -1,14 +1,12 @@
-#' Build a new grid given two coordinate matrices
+#' Build a new grid covering the convex hull around two coordinate matrices
 #'
 #' Given two coordinate matrices, concave hulls are found around them. The intersection
 #' between these two hulls is found, and in that area an evenly spaced, discrete
-#' grid is constructed.
-#'
-#' This function is mainly used to create a grid on which fitted GAMs can be
+#' grid is constructed. This function is mainly used to create a grid on which two fitted GAMs can be
 #' evaluated to calculate correlations.
 #'
 #' @param Cx,Ey The coordinate matrices
-#' @param n_points_grid an integer, the number of points desired for the new grid
+#' @param n_points_grid An integer, the number of points desired for the new grid
 #' @details The new grid will contain approximately the number of new points requested,
 #' depending on the size of the concave hull
 #' @returns A data frame of two columns with all points of the grid,

@@ -17,7 +17,7 @@ matheronVariograms(X, Cx, width, cutoff, variogramModels)
 Currently, only "Exp" and "Lin" are implemented for computational reasons.}
 }
 \value{
-An array of evaluated variograms
+A list of evaluated variograms
 }
 \description{
 Estimate variograms using Matheron's binning estimator for many features at once, and evaluate

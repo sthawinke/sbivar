@@ -2,10 +2,10 @@
 #'
 #' Spawns a three-panel plot with the splines fitted for the two variables, plus a visualization
 #' of regions with positive and negative correlations between those splines.
-#' The splines are refitted using \link{fitGAM}, so no gam-objects can be provided.
+#' The splines are refitted using \link{fitGAM}, so no GAM-objects can be provided.
 #' plotGAMsFromMatrix() takes entire outcome matrices X and Y as argument,
 #' to be able to account for offsets in refitting the GAMs.
-#' plotGAMsTopResults() plots the feature with the smallest p-value in resultsSingle.
+#' plotGAMsTopResults() plots the feature with the smallest p-value in the 'results' object.
 #'
 #' @note Both spline surfaces are scaled to the [-1,1] range, the same as
 #' the correlation has naturally, for legibility.

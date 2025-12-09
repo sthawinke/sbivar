@@ -103,11 +103,11 @@ scaleHelpFun = function(X, feat){
 }
 #' Normalize a data matrix
 #'
-#' Normalize to relative expression, and potentially add pseudocount and log-normalize
+#' Normalize to relative expression, and potentially add pseudocount and log-normalize.
 #' @param x The matrix
 #' @param norm A character string, either "none", "log" or "rel"
 #' @details norm = "none" is pass-through, norm = "rel" divides by sample sums,
-#' "log" adds a pseudocount, divides by sample sums and log-normalizes
+#' "log" adds a pseudocount, divides by sample sums and log-normalizes.
 #' @returns A normalized matrix
 #' @export
 #' @inheritParams sbivarSingle

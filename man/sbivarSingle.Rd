@@ -26,7 +26,7 @@ sbivarSingle(
   GPmethod = c("REML", "ML"),
   gpParams,
   Quants = c(0.005, 0.5),
-  numLscAlts = 10,
+  numLscAlts = 5,
   optControl = lmeControl(opt = "optim", maxIter = 500, msMaxIter = 500, niterEM = 1000,
     msMaxEval = 1000),
   corStruct = corGaus(form = ~x + y, nugget = TRUE, value = c(1, 0.25))
@@ -45,7 +45,7 @@ sbivarSingle(
 
 \item{findMaxW}{Is the maximum bivariate Moran's I needed?}
 
-\item{n_points_grid, families}{Passed onto \link{wrapGAMs}}
+\item{n_points_grid, families}{Passed onto \link{GAMsSingle}}
 
 \item{verbose}{Should info on type of analysis be printed?}
 

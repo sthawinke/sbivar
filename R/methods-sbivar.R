@@ -3,7 +3,7 @@
 #' @inheritParams sbivarSingle
 #' @param Y Matrix or SpatialExperiment object of second modality
 setMethod("sbivar", "matrix", function(X, Y, Cx, Ey, ...) {
-    if(!is.matrix(Y) || !is.matrix(Cx) || !(missing(Ey) || is.matrix(Ey))){
+    if(!is.matrix(Y) || !is.matrix(Cx) || (!missing(Ey) && !is.matrix(Ey))){
         stop("Since X is a matrix or dataframe, Y, Cx and Ey must be so too!",
              if(is.data.frame(Y) || is.data.frame(Cx) || (!missing(Ey) && is.data.frame(Ey))){
                  "\nTry converting data frames with as.matrix()"})

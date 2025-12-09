@@ -26,7 +26,7 @@ sbivarMulti(
 
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
-\item{families, n_points_grid}{Passed onto \link{wrapGAMsMulti}}
+\item{families, n_points_grid}{Passed onto \link{GAMsMulti}}
 
 \item{method}{A character string, indicating which method to apply}
 

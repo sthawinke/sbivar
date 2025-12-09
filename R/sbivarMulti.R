@@ -6,7 +6,7 @@
 #' @param Xl,Yl Lists of matrices of omics measurements
 #' @param Cxl,Eyl Lists of corresponding coordinate matrices of dimension two
 #' @param method A character string, indicating which method to apply
-#' @param families,n_points_grid Passed onto \link{wrapGAMsMulti}
+#' @param families,n_points_grid Passed onto \link{GAMsMulti}
 #' @param wo,numNN Passed onto \link{buildWeightMat}
 #' @returns A list containing
 #' \item{estimates}{The estimated measures of association}

@@ -11,7 +11,7 @@ GAMsMulti(Xl, Yl, Cxl, Eyl, families, n_points_grid, verbose)
 
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
-\item{families, n_points_grid}{See \link{wrapGAMs}}
+\item{families, n_points_grid}{See \link{GAMsSingle}}
 
 \item{verbose}{Should info on type of analysis be printed?}
 }

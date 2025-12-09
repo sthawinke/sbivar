@@ -11,7 +11,7 @@
 #' @param method A character string, indicating which method to apply
 #' @param gpParams Parameters of the Gaussian processes, see details
 #' @param GPmethod,Quants,numLscAlts,optControl,corStruct Passed onto \link{fitGP}
-#' @param n_points_grid,families Passed onto \link{wrapGAMs}
+#' @param n_points_grid,families Passed onto \link{GAMsSingle}
 #' @param wo,numNN passed onto \link{buildWeightMat}
 #' @param etas A vector of decay parameters for the weight function, see details
 #' @param cutoff,width Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}
@@ -50,7 +50,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
       families = list("X" = gaussian(), "Y" = gaussian()), n_points_grid = 6e2, verbose = TRUE,
       variogramModels = c("Exp", "Lin"), width = cutoff/15, cutoff = sqrt(2)/3,
       wo = c("Gauss", "nn"), numNN = c(4, 8), pseudoCount = 1e-8,
-      GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 10,
+      GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 5,
       optControl = lmeControl(opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
                               niterEM = 1e3, msMaxEval = 1e3),
       corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25))){

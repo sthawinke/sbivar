@@ -12,7 +12,7 @@
 #' @importFrom Rdpack reprompt
 #' @param Cx The shared coordinate matrix
 #' @importFrom SpatialPack modified.ttest
-wrapModTtest = function(X, Y, Cx, verbose){
+ModTtestSingle = function(X, Y, Cx, verbose){
    featGrid = expand.grid("featX" = colnames(X), "featY" = colnames(Y))
     if(verbose){
         message("Performing ", nrow(featGrid), " modified t-tests")

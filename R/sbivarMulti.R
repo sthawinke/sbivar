@@ -42,12 +42,12 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
         Eyl = lapply(selfName(names(Eyl)), function(i){Eyl[[i]][rownames(Yl[[i]]),]})
     }
     out = if(method == "GAMs"){
-        wrapGAMsMulti(Xl, Yl, Cxl, Eyl, families = families,
+        GAMsMulti(Xl, Yl, Cxl, Eyl, families = families,
                  n_points_grid = n_points_grid, verbose = verbose)
     }  else if(method == "Correlation"){
-        wrapCorrelationsMulti(Xl, Yl, verbose = verbose)
+        CorrelationsMulti(Xl, Yl, verbose = verbose)
     } else if (method == "Moran's I"){
-        wrapMoransIMulti(Xl, Yl, Cxl, Eyl, wo = wo, numNN = numNN,
+        MoransIMulti(Xl, Yl, Cxl, Eyl, wo = wo, numNN = numNN,
                          verbose = verbose, eta = eta)
     }
     return(list("estimates" = out, "method" = method, "multi" = TRUE,

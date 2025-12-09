@@ -101,18 +101,18 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
     X = normMat(X, normX, pseudoCount);Cx = Cx[rownames(X),]
     Y = normMat(Y, normY, pseudoCount);Ey = Ey[rownames(Y),]
     out = if(method=="Moran's I"){
-        (moranRes <- wrapMoransI(X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo, numNN = numNN, variogramModels = variogramModels,
+        (moranRes <- MoransISingle(X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo, numNN = numNN, variogramModels = variogramModels,
          etas = selfName(etas), width = width, verbose = verbose, cutoff = cutoff, findMaxW = findMaxW))$out
     } else if(method == "GAMs"){
-        wrapGAMs(X = X, Y = Y, Cx = Cx, Ey = Ey, families = families,
+        GAMsSingle(X = X, Y = Y, Cx = Cx, Ey = Ey, families = families,
                  n_points_grid = n_points_grid, verbose = verbose)
     } else if(method == "GPs"){
-        wrapGPs(X = X, Y = Y, Cx = Cx, Ey = Ey, gpParams = gpParams, Quants = Quants,
+        GPsSingle(X = X, Y = Y, Cx = Cx, Ey = Ey, gpParams = gpParams, Quants = Quants,
                 GPmethod = GPmethod, corStruct = corStruct, optControl = optControl,
                 numLscAlts = numLscAlts, verbose = verbose)
     } else if(method == "Modified t-test"){
         sharedNames = intersect(rownames(X), rownames(Y))
-        wrapModTtest(X = X[sharedNames,], Y = Y[sharedNames,],
+        ModTtestSingle(X = X[sharedNames,], Y = Y[sharedNames,],
                      Cx = Cx[sharedNames,], verbose = verbose)
     }
     out = cbind(out, "pAdj" = p.adjust(out[, "pVal"], method = "BH"))

@@ -14,7 +14,7 @@
 #'
 #' @details The maximum value of the bivariate Moran's I statistic is returned conditionally,
 #' as it is computation intensive and not always needed.
-wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, findMaxW, variogramModels, ...){
+MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, findMaxW, variogramModels, ...){
     n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y);
     if(verbose){
         message("Performing tests on bivariate Moran's I for ", p*k, " feature pairs")
@@ -59,11 +59,11 @@ wrapMoransI = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, fi
         vgx = evalVariogram(variogramsX[[featx]], distX)
         sigXws = vapply(seq_len(numWs), FUN.VALUE = matrix(0, m, m), function(i) {
             crossprod(Ws[,,i], vgx) %*% Ws[,,i]
-        })
-        out = vapply(selfName(colnames(Y)), FUN.VALUE = double(numWs), function(featy){
+        }) #BLAS may use multithreading here
+        out = simplify2array(loadBalanceBplapply(selfName(colnames(Y)), function(featy){
             .colSums(sigXws*c(evalVariogram(variogramsY[[featy]], distY)), ncs, numWs)
             #Fast, memory saving way to find the trace
-        })
+        }))
         if(verbose)
             printProgress(featx, colnames(X))
         return(out)

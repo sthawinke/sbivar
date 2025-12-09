@@ -8,7 +8,7 @@
 #' @param multi Flag to indicate this is part of a multi-image analysis.
 #' It only matters for the messages printed.
 #' @returns A named list of results
-wrapGAMs = function(X, Y, Cx, Ey, families, n_points_grid, verbose, multi = FALSE){
+GAMsSingle = function(X, Y, Cx, Ey, families, n_points_grid, verbose, multi = FALSE){
     if(verbose){
         message("Fitting GAMs for first modality (", ncol(X), " features)")
     }

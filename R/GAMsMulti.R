@@ -4,7 +4,7 @@
 #' @inheritParams sbivarMulti
 #'
 #' @returns A list named like Xl, containing all results
-wrapGAMsMulti = function(Xl, Yl, Cxl, Eyl, families, n_points_grid, verbose){
+GAMsMulti = function(Xl, Yl, Cxl, Eyl, families, n_points_grid, verbose){
     lapply(selfName(names(Xl)), function(nam){
         if(verbose)
             printIteration(nam, names(Xl))

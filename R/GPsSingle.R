@@ -5,7 +5,7 @@
 #' @param numLscAlts Number of length scales to be tested for bivariate association
 #' @param Quants Most extreme quantiles of the distance distribution to take as length scales
 #' @returns A named list of results
-wrapGPs = function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
+GPsSingle = function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
                    corStruct, optControl, verbose){
     if(missing(gpParams)){
         if(verbose){

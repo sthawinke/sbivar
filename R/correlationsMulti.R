@@ -7,7 +7,7 @@
 #'
 #' @returns A list of named correlation vectors
 #' @importFrom stats cor
-wrapCorrelationsMulti = function(Xl, Yl, verbose){
+correlationsMulti = function(Xl, Yl, verbose){
     lapply(selfName(names(Xl)), function(nam){
         if(verbose)
             printIteration(nam, names(Xl))

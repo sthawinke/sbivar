@@ -109,15 +109,16 @@ matheronVariograms <- function(X, Cx, width, cutoff, variogramModels) {
         Cx$z <- X[, nm]
         vg = variogram(z ~ 1, Cx, width = width, cutoff = cutoff)
         fvgs = lapply(variogramModels, function(vv){
-            fit.variogram(vg, vgm(model = vv, nugget = NA)) #Include nugget variance
+            try(fit.variogram(vg, vgm(model = vv, nugget = NA)), silent = TRUE) #Include nugget variance
         })
+        fvgs = fvgs[vapply(fvgs, FUN.VALUE = TRUE, is, "variogramModel")]
         fvg = fvgs[[which.min(vapply(fvgs, FUN.VALUE = double(1), attr, "SSErr"))]]
         if(fvg[2,"range"]<0){
             fvg[2,"range"] = 1e-10 #Catch negative ranges
             fvg[2,"psill"] = 0
         }
         fvg[,"psill"] = fvg[,"psill"]/sum(fvg[,"psill"]) #Normalize to variance 1
-        return(data.frame(fvg[, c("model", "psill", "range")]))
+        return(fvg)
     })
     return(variograms)
 }

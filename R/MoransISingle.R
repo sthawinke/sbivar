@@ -17,7 +17,7 @@
 MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, findMaxW, variogramModels, ...){
     n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y);
     if(verbose){
-        message("Performing tests on bivariate Moran's I for ", p*k, " feature pairs")
+        message("Testing significance of bivariate Moran's I for ", p*k, " feature pairs")
     }
     #Scale outcomes
     X = scale(X);Y = scale(Y)
@@ -114,9 +114,10 @@ matheronVariograms <- function(X, Cx, width, cutoff, variogramModels) {
         fvg = fvgs[[which.min(vapply(fvgs, FUN.VALUE = double(1), attr, "SSErr"))]]
         if(fvg[2,"range"]<0){
             fvg[2,"range"] = 1e-10 #Catch negative ranges
+            fvg[2,"psill"] = 0
         }
         fvg[,"psill"] = fvg[,"psill"]/sum(fvg[,"psill"]) #Normalize to variance 1
-        return(fvg[, c("psill", "model", "range")])
+        return(data.frame(fvg[, c("model", "psill", "range")]))
     })
     return(variograms)
 }

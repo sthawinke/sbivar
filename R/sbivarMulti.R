@@ -45,7 +45,7 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
         GAMsMulti(Xl, Yl, Cxl, Eyl, families = families,
                  n_points_grid = n_points_grid, verbose = verbose)
     }  else if(method == "Correlation"){
-        CorrelationsMulti(Xl, Yl, verbose = verbose)
+        correlationsMulti(Xl, Yl, verbose = verbose)
     } else if (method == "Moran's I"){
         MoransIMulti(Xl, Yl, Cxl, Eyl, wo = wo, numNN = numNN,
                          verbose = verbose, eta = eta)

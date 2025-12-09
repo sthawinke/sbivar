@@ -12,7 +12,7 @@ sbivarSingle(
   method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
   normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
-  etas = 2 * 10^c(-7, -6, -5, -4),
+  etas = 2 * 10^c(-6, -5, -4, -3),
   findMaxW = FALSE,
   families = list(X = gaussian(), Y = gaussian()),
   n_points_grid = 600,

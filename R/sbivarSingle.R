@@ -46,7 +46,7 @@
 #' to perform the score test.
 sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
       normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
-      etas = 2*10^c(-7, -6, -5, -4), findMaxW = FALSE,
+      etas = 2*10^c(-6, -5, -4, -3), findMaxW = FALSE,
       families = list("X" = gaussian(), "Y" = gaussian()), n_points_grid = 6e2, verbose = TRUE,
       variogramModels = c("Exp", "Lin"), width = cutoff/15, cutoff = sqrt(2)/3,
       wo = c("Gauss", "nn"), numNN = c(4, 8), pseudoCount = 1e-8,

@@ -9,12 +9,12 @@ GPsSingle = function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
                    corStruct, optControl, verbose){
     if(missing(gpParams)){
         if(verbose){
-            message("Fitting GPs for first modality (", ncol(X), " features)")
+            message("Fitting GPs for first modality (", ncol(X), " features) ...")
         }
         gpsx = fitManyGPs(mat = X, coord = Cx, GPmethod = GPmethod,
                           corStruct = corStruct, optControl = optControl)
         if(verbose){
-            message("Fitting GPs for second modality (", ncol(Y), " features)")
+            message("Fitting GPs for second modality (", ncol(Y), " features) ...")
         }
         gpsy = fitManyGPs(mat = Y, coord = Ey, GPmethod = GPmethod,
                           corStruct = corStruct, optControl = optControl)

@@ -10,11 +10,11 @@
 #' @returns A named list of results
 GAMsSingle = function(X, Y, Cx, Ey, families, n_points_grid, verbose, multi = FALSE){
     if(verbose){
-        message("Fitting GAMs for first modality (", ncol(X), " features)")
+        message("Fitting GAMs for first modality (", ncol(X), " features) ...")
     }
     gamsx = fitManyGAMs(mat = X, coord = Cx, family = families[["X"]], modality = "X")
     if(verbose){
-        message("Fitting GAMs for second modality (", ncol(Y), " features)")
+        message("Fitting GAMs for second modality (", ncol(Y), " features) ...")
     }
     gamsy = fitManyGAMs(mat = Y, coord = Ey, family = families[["Y"]], modality = "Y")
     ng = buildNewGrid(Cx = Cx, Ey = Ey, n_points_grid = n_points_grid)

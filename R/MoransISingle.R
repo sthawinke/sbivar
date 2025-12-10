@@ -37,7 +37,6 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, 
             variogramModels = variogramModels, ...)
     distX = as.matrix(stats::dist(Cx));distY = as.matrix(stats::dist(Ey))
     prodFac <- (n-1)*(m-1)
-    #Weight matrices and test statistics
     if(verbose){
         message("Calculating bivariate Moran's I statistics ...")
     }
@@ -67,6 +66,10 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, 
             .colSums(sigXws*c(evalVariogram(variogramsY[[featy]], distY)), ncs, numWs)
             #Fast, memory saving way to find the trace
         }))
+        # out = vapply(selfName(colnames(Y)), FUN.VALUE = double(numWs), function(featy){
+        #     .colSums(sigXws*c(evalVariogram(variogramsY[[featy]], distY)), ncs, numWs)
+        #     #Fast, memory saving way to find the trace
+        # })
         if(verbose)
             printProgress(featx, colnames(X))
         return(out)

@@ -39,7 +39,7 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, 
     prodFac <- (n-1)*(m-1)
     #Weight matrices and test statistics
     if(verbose){
-        message("Calculating bivariate Moran's I statistics(", p*k, " feature pairs) ...")
+        message("Calculating bivariate Moran's I statistics ...")
     }
     Ws = vapply(switch(wo, "Gauss" = etas, "nn" = numNN), FUN.VALUE = matrix(0, n, m), function(iter) {
         buildWeightMat(Cx = Cx, Ey = Ey, wo = wo, eta = iter, numNN = iter)

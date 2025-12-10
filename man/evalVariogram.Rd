@@ -10,6 +10,8 @@ evalVariogram(vg, distMat)
 \item{vg}{The variogram}
 
 \item{distMat}{The distance matrix}
+
+\item{asVector}{a boolean, return result as vector?}
 }
 \value{
 A covariance matrix

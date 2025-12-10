@@ -59,17 +59,13 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, 
     ncs = m^2 #For colSums
     varIxy = vapply(selfName(colnames(X)), FUN.VALUE = matrix(0, numWs, k), function(featx){
         vgx = evalVariogram(variogramsX[[featx]], distX)
-        sigXws = vapply(seq_len(numWs), FUN.VALUE = matrix(0, m, m), function(i) {
+        sigXws <- vapply(seq_len(numWs), FUN.VALUE = matrix(0, m, m), function(i) {
             crossprod(Ws[,,i], vgx) %*% Ws[,,i]
         }) #BLAS may use multithreading here
-        out = simplify2array(loadBalanceBplapply(selfName(colnames(Y)), function(featy){
+        out = vapply(selfName(colnames(Y)), FUN.VALUE = double(numWs), function(featy){
             .colSums(sigXws*c(evalVariogram(variogramsY[[featy]], distY)), ncs, numWs)
             #Fast, memory saving way to find the trace
-        }))
-        # out = vapply(selfName(colnames(Y)), FUN.VALUE = double(numWs), function(featy){
-        #     .colSums(sigXws*c(evalVariogram(variogramsY[[featy]], distY)), ncs, numWs)
-        #     #Fast, memory saving way to find the trace
-        # })
+        })
         if(verbose)
             printProgress(featx, colnames(X))
         return(out)
@@ -132,16 +128,10 @@ matheronVariograms <- function(X, Cx, width, cutoff, variogramModels) {
 #'
 #' @param vg The variogram
 #' @param distMat The distance matrix
+#' @param asVector a boolean, return result as vector?
 #' @returns A covariance matrix
 evalVariogram = function(vg, distMat){
-    covMat = vg[2, "psill"]*if(vg[2, "model"] == "Gau"){
-        exp(-(distMat/vg[2, "range"])^2)
-    } else if(vg[2, "model"] == "Sph"){
-        dvg = distMat/vg[2, "range"]
-        tmp =(1-1.5*dvg+0.5*dvg^3)
-        tmp[distMat > vg[2, "range"]] = 0
-        tmp
-    } else if(vg[2, "model"] == "Exp"){
+    covMat = vg[2, "psill"]*if(vg[2, "model"] == "Exp"){
         exp(-distMat/vg[2, "range"])
     } else if(vg[2, "model"] == "Lin"){
         tmp = 1-distMat/vg[2, "range"]

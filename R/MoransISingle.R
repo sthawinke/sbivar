@@ -35,7 +35,7 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, 
     }
     variogramsY = matheronVariograms(Y, Ey, width = width, cutoff = cutoff,
             variogramModels = variogramModels, ...)
-    distX = as.matrix(stats::dist(Cx));distY = as.matrix(stats::dist(Ey))
+    distX = as.vector(stats::dist(Cx));distY = as.vector(stats::dist(Ey))
     prodFac <- (n-1)*(m-1)
     if(verbose){
         message("Calculating bivariate Moran's I statistics ...")
@@ -50,20 +50,25 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, 
         etas = etas[idW]
     }
     Ixys = vapply(seq_len(numWs), FUN.VALUE = matrix(0, p, k), function(i) {
-        (crossprod(X, Ws[,,i]) %*% Y)/sqrt(prodFac) #Normalize for matrix size
+        crossprod(X, Ws[,,i] %*% Y)/sqrt(prodFac) #Normalize for matrix size
     })
     if(verbose){
         message("Calculating variances of bivariate Moran's I statistics ...")
     }
     #Variances
     ncs = m^2 #For colSums
+    diagMatX = diag(n);ltriX = lower.tri(diagMatX)
+    diagMatY = diag(m);ltriY = lower.tri(diagMatY)
     varIxy = vapply(selfName(colnames(X)), FUN.VALUE = matrix(0, numWs, k), function(featx){
-        vgx = evalVariogram(variogramsX[[featx]], distX)
-        sigXws <- vapply(seq_len(numWs), FUN.VALUE = matrix(0, m, m), function(i) {
-            crossprod(Ws[,,i], vgx) %*% Ws[,,i]
+        diagMatX[ltriX] = evalVariogram(variogramsX[[featx]], distX)
+        diagMatX = forceSymmetric(diagMatX, uplo = "L")
+        sigXws <- vapply(seq_len(numWs), FUN.VALUE = diag(m), function(i) {
+            as.matrix(crossprod(Ws[,,i], diagMatX %*% Ws[,,i]))
         }) #BLAS may use multithreading here
         out = vapply(selfName(colnames(Y)), FUN.VALUE = double(numWs), function(featy){
-            .colSums(sigXws*c(evalVariogram(variogramsY[[featy]], distY)), ncs, numWs)
+            diagMatY[ltriY] = evalVariogram(variogramsY[[featy]], distY)
+            diagMatY = forceSymmetric(diagMatY, uplo = "L")
+            .colSums(diagMatY@x*sigXws, ncs, numWs)
             #Fast, memory saving way to find the trace
         })
         if(verbose)
@@ -134,10 +139,12 @@ evalVariogram = function(vg, distMat){
     covMat = vg[2, "psill"]*if(vg[2, "model"] == "Exp"){
         exp(-distMat/vg[2, "range"])
     } else if(vg[2, "model"] == "Lin"){
-        tmp = 1-distMat/vg[2, "range"]
-        tmp[distMat > vg[2, "range"]] = 0
+        tmp = numeric(length(distMat))
+        id = distMat < vg[2, "range"]
+        tmp[id] = 1-distMat[id]/vg[2, "range"]
         tmp
     }
-    diag(covMat) = diag(covMat) + vg[1, "psill"]
     return(covMat)
 }
+
+

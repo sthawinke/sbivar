@@ -26,7 +26,7 @@ CCT <- function(pvals){
     if (!any(is.small)){
         cct.stat <- mean(tan((0.5-pvals)*pi))
     }else{
-        cct.stat <- sum(pi/pvals[is.small])
+        cct.stat <- sum(1/(pi*pvals[is.small]))
         cct.stat <- (cct.stat + sum(tan((0.5-pvals[!is.small])*pi)))/length(pvals)
     }
     #### check if the test statistic is very large.

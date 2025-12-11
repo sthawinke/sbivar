@@ -72,10 +72,10 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, 
             sigXws0[[i]][ltriY]
         })
         sdiags = vapply(sigXws0, FUN.VALUE = double(1), tr)
-        out = vapply(selfName(colnames(Y)), FUN.VALUE = double(numWs), function(featy){
+        out = sdiags + 2*vapply(selfName(colnames(Y)), FUN.VALUE = double(numWs), function(featy){
             vgy = evalVariogram(variogramsY[[featy]], distY)
             .colSums(sigXws*vgy, mm2, numWs)
-        }) + sdiags
+        }) #Diagonal plus two times lower diagonal
         if(verbose)
             printProgress(featx, colnames(X))
         return(out)

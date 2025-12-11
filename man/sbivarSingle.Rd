@@ -23,6 +23,7 @@ sbivarSingle(
   wo = c("Gauss", "nn"),
   numNN = c(4, 8),
   pseudoCount = 1e-08,
+  returnVarsMoransI = FALSE,
   GPmethod = c("REML", "ML"),
   gpParams,
   Quants = c(0.005, 0.5),
@@ -57,6 +58,8 @@ Currently, only "Exp" and "Lin" are implemented for computational reasons.}
 \item{wo, numNN}{passed onto \link{buildWeightMat}}
 
 \item{pseudoCount}{A pseudocount added prior to log-normalization to avoid taking the log of zero}
+
+\item{returnVarsMoransI}{A boolean, are variances of Moran's I to be returned?}
 
 \item{GPmethod, Quants, numLscAlts, optControl, corStruct}{Passed onto \link{fitGP}}
 

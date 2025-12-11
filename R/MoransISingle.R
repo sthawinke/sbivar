@@ -17,7 +17,7 @@
 #' and their p-value combined using the Cauchy combination rule by \insertCite{Liu2020}{sbivar}.
 #'The maximum value of the bivariate Moran's I statistics are returned conditionally,
 #' as it is computation intensive and not always needed.
-MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, findMaxW, variogramModels, ...){
+MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, findMaxW, variogramModels, returnVarsMoransI, ...){
     n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y);
     if(verbose){
         message("Testing significance of bivariate Moran's I for ", p*k, " feature pairs")
@@ -87,13 +87,20 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, 
             #If negative variance, fall back on independence
         }
     }
+    #Correct for matrix size
+    varIxy = varIxy/prodFac
     # P-values
-    IxyPvals = makePval(Ixys/sqrt(varIxy/prodFac))
+    IxyPvals = makePval(Ixys/sqrt(varIxy))
     #CCT correction
     cctPvals = apply(IxyPvals, c(1,2), CCT)
     #Reformat to long format
-    out <- cbind(matrix(c(Ixys), ncol = numWs, dimnames = list(NULL, paste0("Ixy_",
-                switch(wo, "Gauss" = etas, "nn" = numNN)))), "pVal" = c(cctPvals))
+    out <- matrix(c(Ixys), ncol = numWs, dimnames = list(NULL, paste0("Ixy_",
+                switch(wo, "Gauss" = etas, "nn" = numNN))))
+    if(returnVarsMoransI){
+      out = cbind(out, matrix(c(varIxy), ncol = numWs, dimnames = list(NULL, paste0("var(Ixy)_",
+              switch(wo, "Gauss" = etas, "nn" = numNN)))))
+    }
+    out = cbind(out, "pVal" = c(cctPvals))
     rownames(out) = makeNames(colnames(X), colnames(Y))
     #Maximum values, if needed
     maxIxy = if(findMaxW) {

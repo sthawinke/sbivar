@@ -59,9 +59,9 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, 
         message("Calculating variances of bivariate Moran's I statistics ...")
     }
     #Variances
-    mm2 = m*(m-1)/2#ncs = m^2 #For colSums
+    mm2 = m*(m-1)/2 #For colSums
     diagMatX = diag(n);ltriX = which(lower.tri(diagMatX))
-    diagMatY = diag(m);ltriY = which(lower.tri(diagMatY))
+    ltriY = which(lower.tri(diag(m)))
     varIxy = vapply(selfName(colnames(X)), FUN.VALUE = matrix(0, numWs, k), function(featx){
         diagMatX[ltriX] = evalVariogram(variogramsX[[featx]], distX)
         diagMatX = forceSymmetric(diagMatX, uplo = "L")
@@ -74,8 +74,8 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, 
         sdiags = vapply(sigXws0, FUN.VALUE = double(1), tr)
         out = sdiags + 2*vapply(selfName(colnames(Y)), FUN.VALUE = double(numWs), function(featy){
             vgy = evalVariogram(variogramsY[[featy]], distY)
-            .colSums(sigXws*vgy, mm2, numWs)
-        }) #Diagonal plus two times lower diagonal
+            .colSums(sigXws*vgy, mm2, numWs) #Fast tr(W^t Sigma_x W Sigma_y)
+        }) #Diagonal plus two times lower diagonal, exploiting symmetry
         if(verbose)
             printProgress(featx, colnames(X))
         return(out)

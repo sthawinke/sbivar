@@ -30,7 +30,7 @@ testGP = function(x, y, Cx, Ey, altSigmas, distMat, solXonly, solYonly, sx){
     if(missing(sx))
         sx <- base::solve(buildSigmaGp(solXonly, distMat =  distMat[idN, idN]))
     invW <- as.matrix(bdiag(sx, base::solve(buildSigmaGp(solYonly, distMat = distMat[idM, idM]))))
-    P = invW - (invW %*% regMat %*% solve(crossprod(regMat, invW) %*% regMat, crossprod(regMat,  invW)))
+    P = invW - (invW %*% regMat %*% solve(crossprod(regMat, invW %*% regMat), crossprod(regMat,  invW)))
     #Need derivatives for the efficient information
     derivList = list("X" = abind("sigmaX" = arrayDeriv(solXonly, distMat[idN, idN], what = "sigma"),
                                  "rangeX" = arrayDeriv(solXonly, distMat[idN, idN], what = "range"),

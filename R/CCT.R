@@ -1,23 +1,14 @@
 #' An analytical p-value combination method using the Cauchy distribution.
 #'
-#' The \code{CCT} function takes in a numeric vector of p-values, a numeric
-#' vector of non-negative weights, and return the aggregated p-value using Cauchy combination rule
-#' The code was taken from the xihaoli/STAAR github repo, and adapted
+#' The \code{CCT} function takes in a numeric vector of p-values,
+#' and returns the aggregated p-value using Cauchy combination rule
+#' The code was taken from the xihaoli/STAAR github repo, and adapted.
 #' @param pvals a numeric vector of p-values, where each of the element is
 #' between 0 to 1, to be combined.
-#' @param weights a numeric vector of non-negative weights. If \code{NULL}, the
-#' equal weights are assumed.
 #' @return The aggregated p-value
-#' @references Liu, Y., & Xie, J. (2020). Cauchy combination test: a powerful test
-#' with analytic p-value calculation under arbitrary dependency structures.
-#' \emph{Journal of the American Statistical Association}, \emph{115}(529), 393-402.
-#' (\href{https://doi.org/10.1080/01621459.2018.1554485}{pub})
-#' @references Liu, Y., et al. (2019). Acat: A fast and powerful p value combination
-#' method for rare-variant analysis in sequencing studies.
-#' \emph{The American Journal of Human Genetics}, \emph{104}(3), 410-421.
-#' (\href{https://doi.org/10.1016/j.ajhg.2019.01.002}{pub})
+#' \insertAllCited{}
 #' @importFrom stats pcauchy
-CCT <- function(pvals, weights = rep(1/length(pvals),length(pvals))){
+CCT <- function(pvals){
     #### check if there are p-values that are either exactly 0 or 1.
     is.zero <- any(pvals==0)
     is.one <- any(pvals==1)
@@ -33,10 +24,10 @@ CCT <- function(pvals, weights = rep(1/length(pvals),length(pvals))){
     #### check if there are very small non-zero p-values
     is.small <- (pvals < 1e-16)
     if (!any(is.small)){
-        cct.stat <- sum(weights*tan((0.5-pvals)*pi))
+        cct.stat <- mean(tan((0.5-pvals)*pi))
     }else{
-        cct.stat <- sum((weights[is.small]/pvals[is.small])/pi)
-        cct.stat <- cct.stat + sum(weights[!is.small]*tan((0.5-pvals[!is.small])*pi))
+        cct.stat <- sum(pi/pvals[is.small])
+        cct.stat <- (cct.stat + sum(tan((0.5-pvals[!is.small])*pi)))/length(pvals)
     }
     #### check if the test statistic is very large.
     pval <-  if(cct.stat > 1e+15){

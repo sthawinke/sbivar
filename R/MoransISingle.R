@@ -14,7 +14,7 @@
 #' @importFrom Matrix forceSymmetric
 #'
 #' @details By default, a number of range parameters and corresponding weight matrices are screened for spatial association,
-#' and their p-value combined using the Cauchy combination rule by \insertCite{Liu202}{sbivar}.
+#' and their p-value combined using the Cauchy combination rule by \insertCite{Liu2020}{sbivar}.
 #'The maximum value of the bivariate Moran's I statistics are returned conditionally,
 #' as it is computation intensive and not always needed.
 MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, findMaxW, variogramModels, ...){
@@ -134,19 +134,18 @@ matheronVariograms <- function(X, Cx, width, cutoff, variogramModels) {
     })
     return(variograms)
 }
-#' Evaluate a variogram on a distance matrix
+#' Evaluate a variogram on a set of covariances
 #'
 #' @param vg The variogram
-#' @param distMat The distance matrix
-#' @param asVector a boolean, return result as vector?
-#' @returns A covariance matrix
-evalVariogram = function(vg, distMat){
+#' @param distVec A vector of distances
+#' @returns A vector of covariances
+evalVariogram = function(vg, distVec){
     covMat = vg[2, "psill"]*if(vg[2, "model"] == "Exp"){
-        exp(-distMat/vg[2, "range"])
+        exp(-distVec/vg[2, "range"])
     } else if(vg[2, "model"] == "Lin"){
-        tmp = numeric(length(distMat))
-        id = distMat < vg[2, "range"]
-        tmp[id] = 1-distMat[id]/vg[2, "range"]
+        tmp = numeric(length(distVec))
+        id = distVec < vg[2, "range"]
+        tmp[id] = 1-distVec[id]/vg[2, "range"]
         tmp
     }
     return(covMat)

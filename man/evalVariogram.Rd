@@ -2,20 +2,18 @@
 % Please edit documentation in R/MoransISingle.R
 \name{evalVariogram}
 \alias{evalVariogram}
-\title{Evaluate a variogram on a distance matrix}
+\title{Evaluate a variogram on a set of covariances}
 \usage{
-evalVariogram(vg, distMat)
+evalVariogram(vg, distVec)
 }
 \arguments{
 \item{vg}{The variogram}
 
-\item{distMat}{The distance matrix}
-
-\item{asVector}{a boolean, return result as vector?}
+\item{distVec}{A vector of distances}
 }
 \value{
-A covariance matrix
+A vector of covariances
 }
 \description{
-Evaluate a variogram on a distance matrix
+Evaluate a variogram on a set of covariances
 }

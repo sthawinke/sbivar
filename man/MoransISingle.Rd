@@ -49,7 +49,7 @@ The variance calculation requires estimation of the spatial autocorrelation stru
 }
 \details{
 By default, a number of range parameters and corresponding weight matrices are screened for spatial association,
-and their p-value combined using the Cauchy combination rule by \insertCite{Liu202}{sbivar}.
+and their p-value combined using the Cauchy combination rule by \insertCite{Liu2020}{sbivar}.
 The maximum value of the bivariate Moran's I statistics are returned conditionally,
 as it is computation intensive and not always needed.
 }

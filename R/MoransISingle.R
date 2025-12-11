@@ -1,4 +1,4 @@
-#' Calculate ibivariate Moran's I between two modality matrix, with variance and p-value
+#' Calculate bivariate Moran's I between two modality matrix, with variance and p-value
 #'
 #' The variance calculation requires estimation of the spatial autocorrelation structure of every feature separately
 #'
@@ -11,8 +11,11 @@
 #' \insertAllCited{}
 #' @importFrom Rdpack reprompt
 #' @importFrom stats dist
+#' @importFrom Matrix forceSymmetric
 #'
-#' @details The maximum value of the bivariate Moran's I statistic is returned conditionally,
+#' @details By default, a number of range parameters and corresponding weight matrices are screened for spatial association,
+#' and their p-value combined using the Cauchy combination rule by \insertCite{Liu202}{sbivar}.
+#'The maximum value of the bivariate Moran's I statistics are returned conditionally,
 #' as it is computation intensive and not always needed.
 MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, findMaxW, variogramModels, ...){
     n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y);

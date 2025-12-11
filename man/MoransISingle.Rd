@@ -2,7 +2,7 @@
 % Please edit documentation in R/MoransISingle.R
 \name{MoransISingle}
 \alias{MoransISingle}
-\title{Calculate ibivariate Moran's I between two modality matrix, with variance and p-value}
+\title{Calculate bivariate Moran's I between two modality matrix, with variance and p-value}
 \usage{
 MoransISingle(
   X,
@@ -48,7 +48,9 @@ In addition, the maximum value of the Moran's I statistic
 The variance calculation requires estimation of the spatial autocorrelation structure of every feature separately
 }
 \details{
-The maximum value of the bivariate Moran's I statistic is returned conditionally,
+By default, a number of range parameters and corresponding weight matrices are screened for spatial association,
+and their p-value combined using the Cauchy combination rule by \insertCite{Liu202}{sbivar}.
+The maximum value of the bivariate Moran's I statistics are returned conditionally,
 as it is computation intensive and not always needed.
 }
 \references{

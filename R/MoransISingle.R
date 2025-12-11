@@ -56,21 +56,23 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, 
         message("Calculating variances of bivariate Moran's I statistics ...")
     }
     #Variances
-    ncs = m^2 #For colSums
-    diagMatX = diag(n);ltriX = lower.tri(diagMatX)
-    diagMatY = diag(m);ltriY = lower.tri(diagMatY)
+    mm2 = m*(m-1)/2#ncs = m^2 #For colSums
+    diagMatX = diag(n);ltriX = which(lower.tri(diagMatX))
+    diagMatY = diag(m);ltriY = which(lower.tri(diagMatY))
     varIxy = vapply(selfName(colnames(X)), FUN.VALUE = matrix(0, numWs, k), function(featx){
         diagMatX[ltriX] = evalVariogram(variogramsX[[featx]], distX)
         diagMatX = forceSymmetric(diagMatX, uplo = "L")
-        sigXws <- vapply(seq_len(numWs), FUN.VALUE = diag(m), function(i) {
-            as.matrix(crossprod(Ws[,,i], diagMatX %*% Ws[,,i]))
+        sigXws0 <- lapply(seq_len(numWs), function(i) {
+            crossprod(Ws[,,i], diagMatX %*% Ws[,,i])
         }) #BLAS may use multithreading here
-        out = vapply(selfName(colnames(Y)), FUN.VALUE = double(numWs), function(featy){
-            diagMatY[ltriY] = evalVariogram(variogramsY[[featy]], distY)
-            diagMatY = forceSymmetric(diagMatY, uplo = "L")
-            .colSums(diagMatY@x*sigXws, ncs, numWs)
-            #Fast, memory saving way to find the trace
+        sigXws <- vapply(seq_len(numWs), FUN.VALUE = double(mm2), function(i) {
+            sigXws0[[i]][ltriY]
         })
+        sdiags = vapply(sigXws0, FUN.VALUE = double(1), tr)
+        out = vapply(selfName(colnames(Y)), FUN.VALUE = double(numWs), function(featy){
+            vgy = evalVariogram(variogramsY[[featy]], distY)
+            .colSums(sigXws*vgy, mm2, numWs)
+        }) + sdiags
         if(verbose)
             printProgress(featx, colnames(X))
         return(out)

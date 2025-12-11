@@ -57,6 +57,7 @@ bdiagn = function(A, B){
 #'
 #' @returns A trace or vector of traces
 #' @importFrom methods is
+#' @importFrom Matrix diag
 tr = function(x, dim = c(1,2)) {
     if(is.matrix(x) || is(x, "Matrix")){
         sum(diag(x))

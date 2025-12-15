@@ -9,6 +9,8 @@
 #' @param designDf A design dataframe
 #' @param Formula A formula for the linear model to be fitted, can contain random effects.
 #' @param Control A control list for lmerTest::lmer
+#' @param inverseWeigh A boolean, should estimates be inverse weighed by variance for GAMs and Moran's I?
+#' @param scaleByMax A boolean, should Moran's I be scaled by maximum values before plugging into the linear model
 #' @param verbose Should a message with number of linear models and cores be printed?
 #' @returns For fitLinModels(), a list of linear models
 #' @export
@@ -31,7 +33,7 @@
 #' @importFrom BiocParallel bplapply bpparam
 #' @seealso \link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}, \link[stats]{p.adjust}
 #' @order 1
-fitLinModels = function(result, designDf, Formula, verbose = TRUE, Control = lmerControl(
+fitLinModels = function(result, designDf, Formula, verbose = TRUE, inverseWeigh = TRUE, scaleByMax = TRUE, Control = lmerControl(
     check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
     check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
     check.conv.hess = .makeCC(action = "ignore", tol = 1e-06))){
@@ -42,20 +44,20 @@ fitLinModels = function(result, designDf, Formula, verbose = TRUE, Control = lme
     measures = result$estimates
     stopifnot(length(measures)==nrow(designDf), is.data.frame(designDf),
               is.character(Formula) || is(Formula, "formula"))
-    withWeights <- (result$method %in% c("GAMs"))#, "Correlation"
-    namesFun = if(withWeights) rownames else names
+    inverseWeigh <- (result$method %in% c("GAMs"))#, "Correlation"
+    namesFun = if(inverseWeigh) rownames else names
     Features = selfName(unique(unlist(lapply(measures, namesFun)))) # All feature pairs present
     #Prepare matrices of outcomes and weights
     outMat = matrix(0, nrow = nrow(designDf), ncol = length(Features),
                     dimnames = list(names(measures), Features))
-    if(withWeights){
+    if(inverseWeigh){
         weightsMat = outMat
         for(i in names(measures)){
             weightsMat[i,namesFun(measures[[i]])] = 1/measures[[i]][, "se"]^2
         }
     }
     for(i in names(measures)){
-        outMat[i,namesFun(measures[[i]])] = if(withWeights) measures[[i]][, "est"] else measures[[i]]
+        outMat[i,namesFun(measures[[i]])] = if(inverseWeigh) measures[[i]][, "est"] else measures[[i]]
     }
     #Prepare design matrices for linear model fitting
     Formula = replaceLhs(formula(Formula))
@@ -92,7 +94,7 @@ fitLinModels = function(result, designDf, Formula, verbose = TRUE, Control = lme
             }
             fitLinModel(ff = ff, y = baseDf[id, "out"], Terms = terms(Formula),
                         modMat = modMat[id,,drop = FALSE],
-                        weights = if(withWeights) weightsMat[id, feat]/sum(weightsMat[id, feat]),
+                        weights = if(inverseWeigh) weightsMat[id, feat]/sum(weightsMat[id, feat]),
                         Control = Control, MM = MM, Assign = Assign)
         }
         return(out)

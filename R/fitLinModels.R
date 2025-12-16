@@ -37,15 +37,15 @@ fitLinModels = function(result, designDf, Formula, verbose = TRUE, inverseWeigh 
     check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
     check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
     check.conv.hess = .makeCC(action = "ignore", tol = 1e-06))){
-    stopifnot(all(c("estimates", "method", "multi") %in% names(result)))
+    stopifnot(all(c("estimates", "method", "multi") %in% names(result)),
+              is.logical(inverseWeigh), is.logical(scaleByMax))
     if(!result$multi){
         stop("Fitting linear models only makes sense for multi-image analyses!")
     }
     measures = result$estimates
     stopifnot(length(measures)==nrow(designDf), is.data.frame(designDf),
               is.character(Formula) || is(Formula, "formula"))
-    inverseWeigh <- (result$method %in% c("GAMs"))#, "Correlation"
-    namesFun = if(inverseWeigh) rownames else names
+    namesFun = switch(result$method, "Correlation" = names, rownames)
     Features = selfName(unique(unlist(lapply(measures, namesFun)))) # All feature pairs present
     #Prepare matrices of outcomes and weights
     outMat = matrix(0, nrow = nrow(designDf), ncol = length(Features),

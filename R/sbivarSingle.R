@@ -70,6 +70,10 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
     wo = match.arg(wo)
     foo = checkInputSingle(X, Y, Cx, Ey)
     if(missing(Ey)){
+        if(nrow(X)!=nrow(Y)){
+            stop("Only one coordinate matrix supplied, but sample size of X and Y do not match!
+                 Please supply the 'Ey' argument and consider 'Moran's I' as method.")
+        }
         #Run a joint analysis
         if(verbose){
             message("Only one coordinate matrix Cx supplied, and dimensions of X and Y do match.

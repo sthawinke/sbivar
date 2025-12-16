@@ -27,20 +27,31 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
     stopifnot(is.numeric(numNN), all(numNN>0), is.numeric(etas), is.numeric(n_points_grid), is.logical(verbose),
              is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family")))
     Xl = lapply(Xl, addDimNames, "X");Yl = lapply(Yl, addDimNames, "Y")
-    Cxl = mapply(Cxl, Xl, SIMPLIFY = FALSE, FUN = tmpFun <- function(cx, x) {
-        colnames(cx) = c("x", "y");rownames(cx) = rownames(x);cx
+    foo = checkInputMulti(Xl, Yl, Cxl, Eyl, checkCoords = ccs <- (method!="Correlation"))
+    if(ccs){
+        Cxl = mapply(Cxl, Xl, SIMPLIFY = FALSE, FUN = tmpFun <- function(cx, x) {
+            colnames(cx) = c("x", "y");rownames(cx) = rownames(x);cx
         })
-    Eyl = mapply(Eyl, Yl, SIMPLIFY = FALSE, FUN = tmpFun)
-    foo = checkInputMulti(Xl, Yl, Cxl, Eyl)
+        Eyl = mapply(Eyl, Yl, SIMPLIFY = FALSE, FUN = tmpFun)
+        if(verbose){
+            message("Only one coordinate matrix list Cxl supplied, and dimensions of X and Y do match.
+                 Performing an analysis with joint coordinate sets.")
+            }
+    } else if(!missing(Cxl) || !missing(Eyl)){
+        warning("Correlation analysis will ignore coordinate matrices provided.
+                Consider providing another 'method' argument for a full spatial analysis")
+    }
     if(verbose){
         message("Starting sbivar analysis of ", length(Xl), " images on ",
                 bpparam()$workers, " computing cores")
     }
     #Normalization
     Xl = lapply(Xl, normMat, normX, pseudoCount)
-    Cxl = lapply(selfName(names(Cxl)), function(i){Cxl[[i]][rownames(Xl[[i]]),]})
     Yl = lapply(Yl, normMat, normY, pseudoCount)
-    Eyl = lapply(selfName(names(Eyl)), function(i){Eyl[[i]][rownames(Yl[[i]]),]})
+    if(ccs){
+        Cxl = lapply(selfName(names(Cxl)), function(i){Cxl[[i]][rownames(Xl[[i]]),]})
+        Eyl = lapply(selfName(names(Eyl)), function(i){Eyl[[i]][rownames(Yl[[i]]),]})
+    }
     out = if (method == "Moran's I"){
         MoransIMulti(Xl, Yl, Cxl, Eyl, wo = wo, numNN = numNN, verbose = verbose,
               eta = eta, variogramModels = variogramModels, width = width, cutoff = cutoff)

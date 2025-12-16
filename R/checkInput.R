@@ -32,27 +32,31 @@ checkInputSingle = function(X, Y, Cx, Ey){
              as the double underscore is used in this package to separate feature pairs!")
     }
 }
-checkInputMulti = function(Xl, Yl, Cxl, Eyl){
+checkInputMulti = function(Xl, Yl, Cxl, Eyl, checkCoords){
     if(length(Xl)==1){
         stop("Lists of length1 not allowed, please convert to matrix!")
     }
-    if(length(Xl)!=length(Cxl)){
-        stop("Length of outcome matrices Xl and their coordinates Cxl do not match!")
-    }
-    if(!all(vapply(Xl, nrow, FUN.VALUE = 0) == vapply(Cxl, nrow, FUN.VALUE = 0))){
-        stop("Sample size of matrices Xl and their coordinates Cxl do not match!")
-    }
-    if(is.null(names(Xl)) || is.null(names(Yl)) || is.null(names(Cxl))){
-        stop("Xl, Yl and Cxl must be named lists")
-    }
-    if(!identical(names(Xl), names(Yl)) || !identical(names(Yl), names(Cxl))){
-        stop("All names of Xl, Yl and Cxl must be identical")
+    if(findDoubleUnderScore(unlist(lapply(c(Xl, Yl), colnames)))){
+        stop("Double underscores found in feature names. Please change the names,
+             as the double underscore is used in this package to separate feature pairs!")
     }
     if(missing(Eyl)){
         if(!all(vapply(Xl, FUN.VALUE = 0L, nrow) == vapply(Yl, FUN.VALUE = 0L, nrow))){
             stop("If Eyl is not supplied, all elements of Xl and Yl must have the number of samples!")
         }
-    } else {
+    } else if(checkCoords){
+        if(length(Xl)!=length(Cxl)){
+            stop("Length of outcome matrices Xl and their coordinates Cxl do not match!")
+        }
+        if(!all(vapply(Xl, nrow, FUN.VALUE = 0) == vapply(Cxl, nrow, FUN.VALUE = 0))){
+            stop("Sample size of matrices Xl and their coordinates Cxl do not match!")
+        }
+        if(is.null(names(Xl)) || is.null(names(Yl)) || is.null(names(Cxl))){
+            stop("Xl, Yl and Cxl must be named lists")
+        }
+        if(!identical(names(Xl), names(Yl)) || !identical(names(Yl), names(Cxl))){
+            stop("All names of Xl, Yl and Cxl must be identical")
+        }
         if(length(Yl)!=length(Eyl)){
             stop("Length of outcome matrices Yl and their coordinates Eyl do not match!")
         }
@@ -66,9 +70,4 @@ checkInputMulti = function(Xl, Yl, Cxl, Eyl){
             stop("Eyl must be named identically to Xl, Yl and Cxl")
         }
     }
-    if(findDoubleUnderScore(unlist(lapply(c(Xl, Yl), colnames)))){
-        stop("Double underscores found in feature names. Please change the names,
-             as the double underscore is used in this package to separate feature pairs!")
-    }
-
 }

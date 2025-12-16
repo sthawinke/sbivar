@@ -47,9 +47,12 @@ fitLinModels = function(result, designDf, Formula, verbose = TRUE, inverseWeigh 
               is.character(Formula) || is(Formula, "formula"))
     namesFun = switch(result$method, "Correlation" = names, rownames)
     Features = selfName(unique(unlist(lapply(measures, namesFun)))) # All feature pairs present
-    #Prepare matrices of outcomes and weights
-    outMat = matrix(0, nrow = nrow(designDf), ncol = length(Features),
-                    dimnames = list(names(measures), Features))
+    if(moran <- result$method == "Moran's I"){
+        iter = switch(result$wo, "Gauss" = result$etas, "nn" = result$numNN)
+    }
+    #Prepare arrays of outcomes and weights
+    outMat = array(0, dim = c(nrow(designDf), ncol = length(Features), if(moran) length(iter) else 1),
+                    dimnames = list(names(measures), Features, if(moran) iter else 1))
     if(inverseWeigh){
         weightsMat = outMat
         for(i in names(measures)){

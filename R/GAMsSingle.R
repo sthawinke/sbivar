@@ -5,10 +5,9 @@
 #' for the outcome values. See details of \link{sbivarSingle}.
 #' @param n_points_grid The number of points in the new grid for the GAMs to be
 #' evaluated on.
-#' @param multi Flag to indicate this is part of a multi-image analysis.
 #' It only matters for the messages printed.
 #' @returns A named list of results
-GAMsSingle = function(X, Y, Cx, Ey, families, n_points_grid, verbose, multi = FALSE){
+GAMsSingle = function(X, Y, Cx, Ey, families, n_points_grid, verbose){
     if(verbose){
         message("Fitting GAMs for first modality (", ncol(X), " features) ...")
     }
@@ -20,13 +19,7 @@ GAMsSingle = function(X, Y, Cx, Ey, families, n_points_grid, verbose, multi = FA
     ng = buildNewGrid(Cx = Cx, Ey = Ey, n_points_grid = n_points_grid)
     if(verbose){
         numTests = ncol(X)*ncol(Y)
-        if(multi){
-            message("Estimating all ", numTests,
-                    " pairwise correlations on fitted GAMs ...")
-        } else {
-            message("Performing all ", numTests,
-                    " pairwise tests on fitted GAMs ...")
-            }
+        message("Performing all ", numTests, " pairwise tests on fitted GAMs ...")
     }
     out = vapply(selfName(names(gamsx)), function(featx){
         predx <- vcovPredGam(gamsx[[featx]], newdata = ng)

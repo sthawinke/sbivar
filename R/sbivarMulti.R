@@ -32,11 +32,12 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
         Cxl = mapply(Cxl, Xl, SIMPLIFY = FALSE, FUN = tmpFun <- function(cx, x) {
             colnames(cx) = c("x", "y");rownames(cx) = rownames(x);cx
         })
-        Eyl = mapply(Eyl, Yl, SIMPLIFY = FALSE, FUN = tmpFun)
-        if(verbose){
+        if(missing(Eyl)){
             message("Only one coordinate matrix list Cxl supplied, and dimensions of X and Y do match.
                  Performing an analysis with joint coordinate sets.")
-            }
+            Eyl = Cxl
+        }
+        Eyl = mapply(Eyl, Yl, SIMPLIFY = FALSE, FUN = tmpFun)
     } else if(!missing(Cxl) || !missing(Eyl)){
         warning("Correlation analysis will ignore coordinate matrices provided.
                 Consider providing another 'method' argument for a full spatial analysis")

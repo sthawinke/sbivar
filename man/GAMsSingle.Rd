@@ -4,7 +4,7 @@
 \alias{GAMsSingle}
 \title{Wrapper function to fit GAMs and test for all possible combinations}
 \usage{
-GAMsSingle(X, Y, Cx, Ey, families, n_points_grid, verbose, multi = FALSE)
+GAMsSingle(X, Y, Cx, Ey, families, n_points_grid, verbose)
 }
 \arguments{
 \item{X, Y}{Matrices of omics measurements}
@@ -15,12 +15,10 @@ GAMsSingle(X, Y, Cx, Ey, families, n_points_grid, verbose, multi = FALSE)
 for the outcome values. See details of \link{sbivarSingle}.}
 
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
-evaluated on.}
+evaluated on.
+It only matters for the messages printed.}
 
 \item{verbose}{Should info on type of analysis be printed?}
-
-\item{multi}{Flag to indicate this is part of a multi-image analysis.
-It only matters for the messages printed.}
 }
 \value{
 A named list of results

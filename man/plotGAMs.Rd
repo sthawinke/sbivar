@@ -48,9 +48,7 @@ for the outcome values. See details of \link{sbivarSingle}.}
 \item{addTitle}{A boolean, should a title be plotted}
 
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
-evaluated on.}
-
-\item{multi}{Flag to indicate this is part of a multi-image analysis.
+evaluated on.
 It only matters for the messages printed.}
 
 \item{...}{passed onto \link{fitGAM}}

@@ -34,17 +34,20 @@ checkInputSingle = function(X, Y, Cx, Ey){
 }
 checkInputMulti = function(Xl, Yl, Cxl, Eyl, checkCoords){
     if(length(Xl)==1){
-        stop("Lists of length1 not allowed, please convert to matrix!")
+        stop("Lists of length 1 not allowed, please convert to matrix!")
     }
     if(findDoubleUnderScore(unlist(lapply(c(Xl, Yl), colnames)))){
         stop("Double underscores found in feature names. Please change the names,
              as the double underscore is used in this package to separate feature pairs!")
     }
-    if(missing(Eyl)){
-        if(!all(vapply(Xl, FUN.VALUE = 0L, nrow) == vapply(Yl, FUN.VALUE = 0L, nrow))){
+    if(!all(vapply(Xl, FUN.VALUE = 0L, nrow) == vapply(Yl, FUN.VALUE = 0L, nrow))){
+        if(missing(Eyl)){
             stop("If Eyl is not supplied, all elements of Xl and Yl must have the number of samples!")
+        } else if(!checkCoords){
+            stop("For Pearson correlation analysis, all elements of Xl and Yl must have the number of samples!")
         }
-    } else if(checkCoords){
+    }
+    if(checkCoords){
         if(length(Xl)!=length(Cxl)){
             stop("Length of outcome matrices Xl and their coordinates Cxl do not match!")
         }

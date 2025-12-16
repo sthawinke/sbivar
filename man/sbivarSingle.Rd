@@ -12,7 +12,7 @@ sbivarSingle(
   method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
   normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
-  etas = 2 * 10^c(-6, -5, -4, -3),
+  etas = c(2e-06, 6e-05, 0.002),
   findMaxW = FALSE,
   families = list(X = gaussian(), Y = gaussian()),
   n_points_grid = 600,
@@ -23,7 +23,7 @@ sbivarSingle(
   wo = c("Gauss", "nn"),
   numNN = c(4, 8, 24),
   pseudoCount = 1e-08,
-  returnVarsMoransI = FALSE,
+  returnSEsMoransI = FALSE,
   GPmethod = c("REML", "ML"),
   gpParams,
   Quants = c(0.005, 0.5),
@@ -59,7 +59,7 @@ Currently, only "Exp" and "Lin" are implemented for computational reasons.}
 
 \item{pseudoCount}{A pseudocount added prior to log-normalization to avoid taking the log of zero}
 
-\item{returnVarsMoransI}{A boolean, are variances of Moran's I to be returned?}
+\item{returnSEsMoransI}{A boolean, are standard errors of Moran's I to be returned?}
 
 \item{GPmethod, Quants, numLscAlts, optControl, corStruct}{Passed onto \link{fitGP}}
 

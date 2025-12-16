@@ -17,7 +17,7 @@ MoransISingle(
   verbose,
   findMaxW,
   variogramModels,
-  returnVarsMoransI,
+  returnSEsMoransI,
   ...
 )
 }
@@ -39,7 +39,7 @@ MoransISingle(
 \item{variogramModels}{A character string, indicating the variogram model passed onto \link[gstat]{vgm}.
 Currently, only "Exp" and "Lin" are implemented for computational reasons.}
 
-\item{returnVarsMoransI}{A boolean, are variances of Moran's I to be returned?}
+\item{returnSEsMoransI}{A boolean, are standard errors of Moran's I to be returned?}
 
 \item{...}{passed onto \link[gstat]{variogram}}
 }

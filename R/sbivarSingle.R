@@ -21,7 +21,7 @@
 #' @param normX,normY Character vectors indicating normalization, "log" means log-normalization of relative abundances
 #' @param variogramModels A character string, indicating the variogram model passed onto \link[gstat]{vgm}.
 #' Currently, only "Exp" and "Lin" are implemented for computational reasons.
-#' @param returnVarsMoransI A boolean, are variances of Moran's I to be returned?
+#' @param returnSEsMoransI A boolean, are standard errors of Moran's I to be returned?
 #'
 #' @details Any normalization of the data should happen prior to calling this function.
 #' For instance, count data or metabolome data are best scaled to relative values and log-normalized prior to fitting GPs.
@@ -47,10 +47,10 @@
 #' to perform the score test.
 sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
       normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
-      etas = 2*10^c(-6, -5, -4, -3), findMaxW = FALSE,
+      etas = c(2e-6, 6e-5, 2e-3), findMaxW = FALSE,
       families = list("X" = gaussian(), "Y" = gaussian()), n_points_grid = 6e2, verbose = TRUE,
       variogramModels = c("Exp", "Lin"), width = cutoff/15, cutoff = sqrt(2)/3,
-      wo = c("Gauss", "nn"), numNN = c(4, 8, 24), pseudoCount = 1e-8, returnVarsMoransI = FALSE,
+      wo = c("Gauss", "nn"), numNN = c(4, 8, 24), pseudoCount = 1e-8, returnSEsMoransI = FALSE,
       GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 5,
       optControl = lmeControl(opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
                               niterEM = 1e3, msMaxEval = 1e3),
@@ -108,7 +108,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
     out = if(method=="Moran's I"){
         (moranRes <- MoransISingle(X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo, numNN = numNN,
             variogramModels = variogramModels, etas = selfName(etas), width = width,
-            returnVarsMoransI = returnVarsMoransI, verbose = verbose, cutoff = cutoff, findMaxW = findMaxW))$out
+            returnSEsMoransI = returnSEsMoransI, verbose = verbose, cutoff = cutoff, findMaxW = findMaxW))$out
     } else if(method == "GAMs"){
         GAMsSingle(X = X, Y = Y, Cx = Cx, Ey = Ey, families = families,
                  n_points_grid = n_points_grid, verbose = verbose)
@@ -123,8 +123,12 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
     }
     out = cbind(out, "pAdj" = p.adjust(out[, "pVal"], method = "BH"))
     result = out[order(out[, "pVal"]),]
-    list("result" = result, "families" = if(method=="GAMs") families, "method" = method,
-         "multi" = FALSE, "maxIxy" = if(method=="Moran's I") moranRes$maxIxy,
-         "normX" = normX, "normY" = normY)
+    lis = list("result" = result, "method" = method,
+         "multi" = FALSE, "normX" = normX, "normY" = normY)
+    if(method=="Moran's I")
+        lis$maxIxy = moranRes$maxIxy
+    if(method=="GAMs")
+        lis$families = families
+    return(lis)
 }
 

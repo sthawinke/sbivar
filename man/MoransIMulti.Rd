@@ -16,12 +16,12 @@ MoransIMulti(Xl, Yl, Cxl, Eyl, verbose, ...)
 \item{...}{passed onto \link{MoransISingle}}
 }
 \value{
-A list of named Moran's I vectors
+A list of Moran's I estimates, standard errors and maximum values
 }
 \description{
-Find all raw Moran's I values between lists of observations matrices from different modalities.
-Observation matrices are scaled and centered prior to calculation
+Find all Moran's I values for lists of observations matrices from different modalities,
+by caling the \link{MoransISingle} function.
 }
 \seealso{
-\link{buildWeightMat}
+\link{MoransISingle}
 }

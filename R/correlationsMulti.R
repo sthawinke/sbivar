@@ -13,6 +13,6 @@ correlationsMulti = function(Xl, Yl, verbose){
             printIteration(nam, names(Xl))
         out = c(cor(Xl[[nam]], Yl[[nam]]))
         names(out) = makeNames(colnames(Xl[[nam]]), colnames(Yl[[nam]]))
-        return(out)
+        return(list("res" = out))
     })
 }

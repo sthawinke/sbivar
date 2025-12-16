@@ -11,7 +11,7 @@ sbivarMulti(
   Eyl,
   families = list(X = gaussian(), Y = gaussian()),
   method = c("Moran's I", "GAMs", "Correlation"),
-  etas = 2 * 10^c(-6, -5, -4, -3),
+  etas = c(2e-06, 6e-05, 0.002),
   normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
   variogramModels = c("Exp", "Lin"),

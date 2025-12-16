@@ -20,7 +20,7 @@
 #' @note No multithreading is implemented for the variance calculation, as the matrix calculations involved
 #' may use inherent multithreading with OpenBLAS.
 MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose,
-                         findMaxW, variogramModels, returnVarsMoransI, ...){
+                         findMaxW, variogramModels, returnSEsMoransI, ...){
     n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y);
     if(verbose){
         message("Testing significance of bivariate Moran's I for ", p*k, " feature pairs")
@@ -46,7 +46,8 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose,
     if(verbose){
         message("Calculating bivariate Moran's I statistics ...")
     }
-    Ws = vapply(switch(wo, "Gauss" = etas, "nn" = numNN), FUN.VALUE = matrix(0, n, m), function(iter) {
+    wParams = selfName(switch(wo, "Gauss" = etas, "nn" = numNN))
+    Ws = vapply(wParams, FUN.VALUE = matrix(0, n, m), function(iter) {
         buildWeightMat(Cx = Cx, Ey = Ey, wo = wo, eta = iter, numNN = iter)
     })
     Ws = Ws[,,idW <- (colSums(Ws, dims = 2)>0), drop = FALSE]
@@ -56,8 +57,8 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose,
         etas = etas[idW]
     }
     Ixys = vapply(seq_len(numWs), FUN.VALUE = matrix(0, p, k), function(i) {
-        crossprod(X, Ws[,,i] %*% Y)/sqrt(prodFac) #Normalize for matrix size
-    })
+        crossprod(X, Ws[,,i] %*% Y)#Normalize for matrix size
+    })/sqrt(prodFac)
     if(verbose){
         message("Calculating variances of bivariate Moran's I statistics ...")
     }
@@ -93,26 +94,27 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose,
     #Correct for matrix size
     varIxy = varIxy/prodFac
     # P-values
-    IxyPvals = makePval(Ixys/sqrt(varIxy))
+    IxyPvals = makePval(Ixys/(seIxy <- sqrt(varIxy)))
     #CCT correction
     cctPvals = apply(IxyPvals, c(1,2), CCT)
     #Reformat to long format
-    out <- matrix(c(Ixys), ncol = numWs, dimnames = list(NULL, paste0("Ixy_",
-                switch(wo, "Gauss" = etas, "nn" = numNN))))
-    if(returnVarsMoransI){
-      out = cbind(out, matrix(c(varIxy), ncol = numWs, dimnames = list(NULL, paste0("var(Ixy)_",
-              switch(wo, "Gauss" = etas, "nn" = numNN)))))
+    out <- matrix(c(Ixys), ncol = numWs, dimnames = list(NULL, paste0("Ixy_", wParams)))
+    if(returnSEsMoransI){
+      out = cbind(out, matrix(c(seIxy), ncol = numWs,
+                    dimnames = list(NULL, paste0("SE(Ixy)_", wParams))))
     }
     out = cbind(out, "pVal" = c(cctPvals))
     rownames(out) = makeNames(colnames(X), colnames(Y))
     #Maximum values, if needed
     maxIxy = if(findMaxW) {
-        vapply(seq_len(numWs), FUN.VALUE = double(1), function(i) {
+        tmp = vapply(seq_len(numWs), FUN.VALUE = double(1), function(i) {
             svd(Ws[,,i], nu = 0, nv = 0)$d[1]
         })
+        names(tmp) = wParams
+        tmp
     }
-    return(list("out" = out, "wo" = wo, "etas" = if(wo=="Gauss") etas, "maxIxy" = maxIxy,
-                "numNN" = if(wo=="nn") numNN))
+    return(list("res" = out, "wo" = wo, "etas" = if(wo=="Gauss") wParams,
+                "maxIxy" = maxIxy, "numNN" = if(wo=="nn") wParams))
 }
 #' Estimate variograms using Matheron's binning estimator for many features at once, and evaluate
 #'

@@ -18,7 +18,7 @@
 #' @inheritParams buildWeightMat
 #' @importFrom BiocParallel bpparam
 sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
-                       method = c("Moran's I", "GAMs", "Correlation"), etas = 2*10^c(-6, -5, -4, -3),
+                       method = c("Moran's I", "GAMs", "Correlation"), etas = c(2e-6, 6e-5, 2e-3),
                        normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
                        variogramModels = c("Exp", "Lin"), width = cutoff/15, cutoff = sqrt(2)/3,
                        pseudoCount = 1e-8, wo = c("Gauss", "nn"), numNN = c(4, 8, 24), n_points_grid = 6e2, verbose = TRUE){
@@ -62,7 +62,17 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
     }  else if(method == "Correlation"){
         correlationsMulti(Xl, Yl, verbose = verbose)
     }
-    return(list("estimates" = out, "method" = method, "multi" = TRUE,
-                "families" = if(method=="GAMs") families, "normX" = normX, "normY" = normY))
+    out = list("estimates" = out, "method" = method, "multi" = TRUE,
+                "normX" = normX, "normY" = normY)
+    if(method=="GAMs"){
+        out$families = families
+    } else if(method == "Moran's I"){
+        out$wo = wo
+        if(wo == "Gauss")
+            out$etas = etas
+        else if(wo == "nn")
+            out$numNN = numNN
+    }
+    return(out)
 }
 

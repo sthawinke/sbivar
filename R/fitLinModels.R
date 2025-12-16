@@ -33,7 +33,8 @@
 #' @importFrom BiocParallel bplapply bpparam
 #' @seealso \link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}, \link[stats]{p.adjust}
 #' @order 1
-fitLinModels = function(result, designDf, Formula, verbose = TRUE, inverseWeigh = TRUE, scaleByMax = TRUE, Control = lmerControl(
+fitLinModels = function(result, designDf, Formula, verbose = TRUE, inverseWeigh = TRUE, scaleByMax = TRUE,
+    Control = lmerControl(
     check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
     check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
     check.conv.hess = .makeCC(action = "ignore", tol = 1e-06))){
@@ -46,21 +47,23 @@ fitLinModels = function(result, designDf, Formula, verbose = TRUE, inverseWeigh 
     stopifnot(length(measures)==nrow(designDf), is.data.frame(designDf),
               is.character(Formula) || is(Formula, "formula"))
     namesFun = switch(result$method, "Correlation" = names, rownames)
-    Features = selfName(unique(unlist(lapply(measures, namesFun)))) # All feature pairs present
-    if(moran <- result$method == "Moran's I"){
-        iter = switch(result$wo, "Gauss" = result$etas, "nn" = result$numNN)
-    }
+    Features = selfName(unique(unlist(lapply(measures, function(x) namesFun(x$res))))) # All feature pairs present
+    iter = if(moran <- result$method == "Moran's I"){
+        selfName(switch(result$wo, "Gauss" = result$etas, "nn" = result$numNN))
+    } else 1
     #Prepare arrays of outcomes and weights
-    outMat = array(0, dim = c(nrow(designDf), ncol = length(Features), if(moran) length(iter) else 1),
-                    dimnames = list(names(measures), Features, if(moran) iter else 1))
+    outArr = array(0, dim = c(nrow(designDf), length(Features), length(iter)),
+                    dimnames = list(names(measures), Features, iter))
     if(inverseWeigh){
-        weightsMat = outMat
-        for(i in names(measures)){
-            weightsMat[i,namesFun(measures[[i]])] = 1/measures[[i]][, "se"]^2
-        }
+        weightsArr = outArr
     }
     for(i in names(measures)){
-        outMat[i,namesFun(measures[[i]])] = if(inverseWeigh) measures[[i]][, "est"] else measures[[i]]
+        outArr[i,namesFun(measures[[i]]$res), ] = if(inverseWeigh) measures[[i]]$res[, seq_along(iter)] else measures[[i]]$res
+        if(scaleByMax && (result$method == "Moran's I")){
+            outArr[i,namesFun(measures[[i]]$res),] = t(t(outArr[i,namesFun(measures[[i]]$res),])/measures[[i]]$maxIxy)
+        }
+        if(inverseWeigh)
+            weightsArr[i,namesFun(measures[[i]]$res), ] = 1/measures[[i]]$res[, seq_along(iter) + length(iter)]^2
     }
     #Prepare design matrices for linear model fitting
     Formula = replaceLhs(formula(Formula))
@@ -86,24 +89,26 @@ fitLinModels = function(result, designDf, Formula, verbose = TRUE, inverseWeigh 
         message("Fitting ", length(Features), if(MM) " mixed" else " fixed",
                 " effects models on ", bpparam()$workers, " cores")
     models <- loadBalanceBplapply(Features, function(feat) {
-        baseDf$out = outMat[, feat]
-        out <- if (sum(id <- !is.na(baseDf$out)) < 3) {
-            NULL
-        } else {
-            if(MM){
-                ff$fr <- ff$fr[id,, drop = FALSE];ff$X <- ff$X[id,, drop = FALSE]
-                attr(ff$X, "assign") <- Assign
-                ff$reTrms$Zt <- ff$reTrms$Zt[, id, drop = FALSE]
+        out = lapply(seq_along(iter), function(it){
+            baseDf$out = outArr[, feat, it]
+            out <- if (sum(id <- !is.na(baseDf$out)) < 3) {
+                NULL
+            } else {
+                if(MM){
+                    ff$fr <- ff$fr[id,, drop = FALSE];ff$X <- ff$X[id,, drop = FALSE]
+                    attr(ff$X, "assign") <- Assign
+                    ff$reTrms$Zt <- ff$reTrms$Zt[, id, drop = FALSE]
+                }
+                fitLinModel(ff = ff, y = baseDf[id, "out"], Terms = terms(Formula),
+                            modMat = modMat[id,,drop = FALSE],
+                            weights = if(inverseWeigh) weightsArr[id, feat, it]/sum(weightsArr[id, feat, it]),
+                            Control = Control, MM = MM, Assign = Assign)
             }
-            fitLinModel(ff = ff, y = baseDf[id, "out"], Terms = terms(Formula),
-                        modMat = modMat[id,,drop = FALSE],
-                        weights = if(inverseWeigh) weightsMat[id, feat]/sum(weightsMat[id, feat]),
-                        Control = Control, MM = MM, Assign = Assign)
-        }
+        })
+        names(out) = names(iter)
         return(out)
     })
-    return(c(list("result" = models, "assayX" = result$assayX, "assayY" = result$assayY),
-             result[c("method", "families", "multi")]))
+    return(c(list("result" = models, "iter" = iter, result[intersect(names(methods), c("method", "families", "wo", "multi", "assayX", "assayY"))])))
 }
 #' Fit a linear model for an individual feature pair
 #'
@@ -116,7 +121,7 @@ fitLinModels = function(result, designDf, Formula, verbose = TRUE, inverseWeigh 
 #' @inheritParams fitLinModels
 #' @return A fitted model
 #'
-#' @details The code is based on smoppix:::fitSingleLmmModel, but may diverge
+#' @details The code is based on \link[smoppix]{fitSingleLmmModel}, but may diverge
 #'
 #' @returns A fitted lmer or lm model
 #' @importFrom lme4 mkLmerDevfun optimizeLmer mkMerMod

@@ -108,7 +108,7 @@ scaleHelpFun = function(X, feat){
 #' @param x The matrix
 #' @param norm A character string, either "none", "log" or "rel"
 #' @details norm = "none" is pass-through, norm = "rel" divides by sample sums,
-#' "log" adds a pseudocount, divides by sample sums and log-normalizes.
+#' "log" adds a pseudocount, divides by sample sums and log-normalizes. At the end, dimnames are added.
 #' @returns A normalized matrix
 #' @export
 #' @inheritParams sbivarSingle

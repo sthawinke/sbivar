@@ -8,10 +8,9 @@ GAMsMulti = function(Xl, Yl, Cxl, Eyl, families, n_points_grid, verbose){
     lapply(selfName(names(Xl)), function(nam){
         if(verbose)
             printIteration(nam, names(Xl))
-        out <- GAMsSingle(Xl[[nam]], Yl[[nam]], Cxl[[nam]], Eyl[[nam]],
+        out = GAMsSingle(Xl[[nam]], Yl[[nam]], Cxl[[nam]], Eyl[[nam]],
                  families = families, n_points_grid = n_points_grid,
                  verbose = verbose, multi = TRUE)
-        colnames(out)[seq_len(2)] = c("est", "se")
-        return(out[,c("est", "se")])
+        return(out[,c("corxy", "se.corxy")])
     })
 }

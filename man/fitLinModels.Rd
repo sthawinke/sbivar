@@ -10,6 +10,8 @@ fitLinModels(
   designDf,
   Formula,
   verbose = TRUE,
+  inverseWeigh = TRUE,
+  scaleByMax = TRUE,
   Control = lmerControl(check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
     check.conv.singular = .makeCC(action = "ignore", tol = 1e-04), check.conv.hess =
     .makeCC(action = "ignore", tol = 1e-06))
@@ -26,6 +28,10 @@ from a call to the \link{sbivar} function with multiple images}
 \item{Formula}{A formula for the linear model to be fitted, can contain random effects.}
 
 \item{verbose}{Should a message with number of linear models and cores be printed?}
+
+\item{inverseWeigh}{A boolean, should estimates be inverse weighed by variance for GAMs and Moran's I?}
+
+\item{scaleByMax}{A boolean, should Moran's I be scaled by maximum values before plugging into the linear model}
 
 \item{Control}{A control list for lmerTest::lmer}
 

@@ -11,7 +11,7 @@ sbivarMulti(
   Eyl,
   families = list(X = gaussian(), Y = gaussian()),
   method = c("Moran's I", "GAMs", "Correlation"),
-  eta = 0.025,
+  etas = 2 * 10^c(-6, -5, -4, -3),
   normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
   pseudoCount = 1e-08,
@@ -30,7 +30,7 @@ sbivarMulti(
 
 \item{method}{A character string, indicating which method to apply}
 
-\item{eta}{parameter that controls the decay of the weights with distance, see details}
+\item{etas}{A vector of decay parameters for the weight function, see details}
 
 \item{normX, normY}{Character vectors indicating normalization, "log" means log-normalization of relative abundances}
 

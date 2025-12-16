@@ -17,7 +17,8 @@
 #' and their p-value combined using the Cauchy combination rule by \insertCite{Liu2020}{sbivar}.
 #'The maximum value of the bivariate Moran's I statistics are returned conditionally,
 #' as it is computation intensive and not always needed.
-MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose, findMaxW, variogramModels, returnVarsMoransI, ...){
+MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose,
+                         findMaxW, variogramModels, returnVarsMoransI, ...){
     n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y);
     if(verbose){
         message("Testing significance of bivariate Moran's I for ", p*k, " feature pairs")

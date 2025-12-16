@@ -5,22 +5,15 @@
 #'
 #' @inheritParams sbivarMulti
 #' @inheritParams buildWeightMat
+#' @param ... passed onto \link{MoransISingle}
 #'
 #' @returns A list of named Moran's I vectors
 #' @seealso \link{buildWeightMat}
-MoransIMulti = function(Xl, Yl, Cxl, Eyl, wo, numNN, eta, verbose){
-
+MoransIMulti = function(Xl, Yl, Cxl, Eyl, verbose, ...){
     lapply(selfName(names(Xl)), function(nam){
         if(verbose)
             printIteration(nam, names(Xl))
-        movedCoords = moveTwoCoords(Cxl[[nam]], Eyl[[nam]])
-        #Move coordsshifting up
-        vapply(seq_len(numWs), FUN.VALUE = matrix(0, p, k), function(i) {
-            crossprod(X, Ws[,,i] %*% Y)/sqrt(prodFac) #Normalize for matrix size
-        })
-        out = c(crossprod(scale(Xl[[nam]]), buildWeightMat(movedCoords$Cx, movedCoords$Ey,
-                eta = eta, wo = wo, numNN = numNN) %*% scale(Yl[[nam]])))
-        names(out) = makeNames(colnames(Xl[[nam]]), colnames(Yl[[nam]]))
-        return(out)
+        MoransISingle(X = Xl[nam], y = Yl[[nam]], Cx = Cxl[[nam]], Ey = Eyl[[nam]],
+              verbose = FALSE, findMaxW = TRUE, returnVarsMoransI = TRUE, ...)
     })
 }

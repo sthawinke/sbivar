@@ -4,18 +4,16 @@
 \alias{MoransIMulti}
 \title{Find all Moran's I statistics for a list of matrices}
 \usage{
-MoransIMulti(Xl, Yl, Cxl, Eyl, wo, numNN, eta, verbose)
+MoransIMulti(Xl, Yl, Cxl, Eyl, verbose, ...)
 }
 \arguments{
 \item{Xl, Yl}{Lists of matrices of omics measurements}
 
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
-\item{wo, numNN}{Passed onto \link{buildWeightMat}}
-
-\item{eta}{parameter that controls the decay of the weights with distance, see details}
-
 \item{verbose}{Should info on type of analysis be printed?}
+
+\item{...}{passed onto \link{MoransISingle}}
 }
 \value{
 A list of named Moran's I vectors

@@ -6,7 +6,7 @@
 #' @param ... passed onto \link[gstat]{variogram}
 #'
 #' @returns A dataframe of results sorted by p-value, also containing the estimated Moran's I statistic and its variance.
-#' In addition, the maximum value of the Moran's I statistic
+#' In addition, the maximum value of the Moran's I statistic, and the parameters of the weight matrix
 #' @references
 #' \insertAllCited{}
 #' @importFrom Rdpack reprompt
@@ -17,6 +17,8 @@
 #' and their p-value combined using the Cauchy combination rule by \insertCite{Liu2020}{sbivar}.
 #'The maximum value of the bivariate Moran's I statistics are returned conditionally,
 #' as it is computation intensive and not always needed.
+#' @note No multithreading is implemented for the variance calculation, as the matrix calculations involved
+#' may use inherent multithreading with OpenBLAS.
 MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose,
                          findMaxW, variogramModels, returnVarsMoransI, ...){
     n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y);
@@ -109,7 +111,7 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose,
             svd(Ws[,,i], nu = 0, nv = 0)$d[1]
         })
     }
-    return(list("out" = out, "etas" = if(wo=="Gauss") etas, "maxIxy" = maxIxy,
+    return(list("out" = out, "wo" = wo, "etas" = if(wo=="Gauss") etas, "maxIxy" = maxIxy,
                 "numNN" = if(wo=="nn") numNN))
 }
 #' Estimate variograms using Matheron's binning estimator for many features at once, and evaluate

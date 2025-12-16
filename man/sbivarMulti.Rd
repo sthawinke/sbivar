@@ -14,9 +14,12 @@ sbivarMulti(
   etas = 2 * 10^c(-6, -5, -4, -3),
   normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
+  variogramModels = c("Exp", "Lin"),
+  width = cutoff/15,
+  cutoff = sqrt(2)/3,
   pseudoCount = 1e-08,
   wo = c("Gauss", "nn"),
-  numNN = 8,
+  numNN = c(4, 8, 24),
   n_points_grid = 600,
   verbose = TRUE
 )
@@ -33,6 +36,11 @@ sbivarMulti(
 \item{etas}{A vector of decay parameters for the weight function, see details}
 
 \item{normX, normY}{Character vectors indicating normalization, "log" means log-normalization of relative abundances}
+
+\item{variogramModels}{A character string, indicating the variogram model passed onto \link[gstat]{vgm}.
+Currently, only "Exp" and "Lin" are implemented for computational reasons.}
+
+\item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}}
 
 \item{pseudoCount}{A pseudocount added prior to log-normalization to avoid taking the log of zero}
 

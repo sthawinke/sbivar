@@ -13,7 +13,7 @@ MoransIMulti = function(Xl, Yl, Cxl, Eyl, verbose, ...){
     lapply(selfName(names(Xl)), function(nam){
         if(verbose)
             printIteration(nam, names(Xl))
-        MoransISingle(X = Xl[nam], y = Yl[[nam]], Cx = Cxl[[nam]], Ey = Eyl[[nam]],
+        MoransISingle(X = Xl[[nam]], Y = Yl[[nam]], Cx = Cxl[[nam]], Ey = Eyl[[nam]],
               verbose = FALSE, findMaxW = TRUE, returnVarsMoransI = TRUE, ...)
     })
 }

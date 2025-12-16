@@ -45,7 +45,7 @@ Currently, only "Exp" and "Lin" are implemented for computational reasons.}
 }
 \value{
 A dataframe of results sorted by p-value, also containing the estimated Moran's I statistic and its variance.
-In addition, the maximum value of the Moran's I statistic
+In addition, the maximum value of the Moran's I statistic, and the parameters of the weight matrix
 }
 \description{
 The variance calculation requires estimation of the spatial autocorrelation structure of every feature separately
@@ -55,6 +55,10 @@ By default, a number of range parameters and corresponding weight matrices are s
 and their p-value combined using the Cauchy combination rule by \insertCite{Liu2020}{sbivar}.
 The maximum value of the bivariate Moran's I statistics are returned conditionally,
 as it is computation intensive and not always needed.
+}
+\note{
+No multithreading is implemented for the variance calculation, as the matrix calculations involved
+may use inherent multithreading with OpenBLAS.
 }
 \references{
 \insertAllCited{}

@@ -20,10 +20,11 @@
 sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
                        method = c("Moran's I", "GAMs", "Correlation"), etas = 2*10^c(-6, -5, -4, -3),
                        normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
-                       pseudoCount = 1e-8, wo = c("Gauss", "nn"), numNN = 8, n_points_grid = 6e2, verbose = TRUE){
+                       variogramModels = c("Exp", "Lin"), width = cutoff/15, cutoff = sqrt(2)/3,
+                       pseudoCount = 1e-8, wo = c("Gauss", "nn"), numNN = c(4, 8, 24), n_points_grid = 6e2, verbose = TRUE){
     method = match.arg(method);wo = match.arg(wo)
     normX = match.arg(normX);normY = match.arg(normY)
-    stopifnot(is.numeric(numNN), is.numeric(n_points_grid), is.logical(verbose),
+    stopifnot(is.numeric(numNN), all(numNN>0), is.numeric(etas), is.numeric(n_points_grid), is.logical(verbose),
              is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family")))
     Xl = lapply(Xl, addDimNames, "X");Yl = lapply(Yl, addDimNames, "Y")
     Cxl = mapply(Cxl, Xl, SIMPLIFY = FALSE, FUN = tmpFun <- function(cx, x) {
@@ -41,8 +42,8 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
     Yl = lapply(Yl, normMat, normY, pseudoCount)
     Eyl = lapply(selfName(names(Eyl)), function(i){Eyl[[i]][rownames(Yl[[i]]),]})
     out = if (method == "Moran's I"){
-        MoransIMulti(Xl, Yl, Cxl, Eyl, wo = wo, numNN = numNN,
-                     verbose = verbose, eta = eta)
+        MoransIMulti(Xl, Yl, Cxl, Eyl, wo = wo, numNN = numNN, verbose = verbose,
+              eta = eta, variogramModels = variogramModels, width = width, cutoff = cutoff)
     } else if(method == "GAMs"){
         GAMsMulti(Xl, Yl, Cxl, Eyl, families = families,
                  n_points_grid = n_points_grid, verbose = verbose)
@@ -50,6 +51,6 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
         correlationsMulti(Xl, Yl, verbose = verbose)
     }
     return(list("estimates" = out, "method" = method, "multi" = TRUE,
-                "families" = families, "normX" = normX, "normY" = normY))
+                "families" = if(method=="GAMs") families, "normX" = normX, "normY" = normY))
 }
 

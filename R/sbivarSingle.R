@@ -50,7 +50,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
       etas = 2*10^c(-6, -5, -4, -3), findMaxW = FALSE,
       families = list("X" = gaussian(), "Y" = gaussian()), n_points_grid = 6e2, verbose = TRUE,
       variogramModels = c("Exp", "Lin"), width = cutoff/15, cutoff = sqrt(2)/3,
-      wo = c("Gauss", "nn"), numNN = c(4, 8), pseudoCount = 1e-8, returnVarsMoransI = FALSE,
+      wo = c("Gauss", "nn"), numNN = c(4, 8, 24), pseudoCount = 1e-8, returnVarsMoransI = FALSE,
       GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 5,
       optControl = lmeControl(opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
                               niterEM = 1e3, msMaxEval = 1e3),
@@ -120,7 +120,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
     out = cbind(out, "pAdj" = p.adjust(out[, "pVal"], method = "BH"))
     result = out[order(out[, "pVal"]),]
     list("result" = result, "families" = if(method=="GAMs") families, "method" = method,
-         "multi" = FALSE, "maxIxy" =  if(method=="Moran's I") moranRes$maxIxy,
+         "multi" = FALSE, "maxIxy" = if(method=="Moran's I") moranRes$maxIxy,
          "normX" = normX, "normY" = normY)
 }
 

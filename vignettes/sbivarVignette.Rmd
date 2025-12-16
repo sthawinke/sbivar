@@ -199,7 +199,7 @@ We see that the first three and the last three are replicates from different mic
 mouse = substr(names(Vicari$TranscriptOutcomes), 1, 10)
 ```
 
-For the multi-image case, we can also use bivariate Moran's I as measure of spatial association, with a nearest-neighbour weighting scheme for illustration (if the required _RANN_ package is available):
+For the multi-image case, we can also use bivariate Moran's I as measure of spatial association, with a nearest-neighbour (nn) weighting scheme for illustration (if the required _RANN_ package is available):
 
 ```{r multiMoran}
 multiMoranRes = sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes, normX = "rel", normY = "rel",

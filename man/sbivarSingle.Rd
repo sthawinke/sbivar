@@ -21,7 +21,7 @@ sbivarSingle(
   width = cutoff/15,
   cutoff = sqrt(2)/3,
   wo = c("Gauss", "nn"),
-  numNN = c(4, 8),
+  numNN = c(4, 8, 24),
   pseudoCount = 1e-08,
   returnVarsMoransI = FALSE,
   GPmethod = c("REML", "ML"),

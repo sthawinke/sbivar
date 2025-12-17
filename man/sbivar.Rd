@@ -60,11 +60,11 @@ seX = SpatialExperiment(assays = list("transcripts" = t(X)), spatialCoords = Cx)
 seY = SpatialExperiment(assays = list("metabolites" = t(Y)), spatialCoords = Ey)
 resModtGPs = sbivar(seX, seY, assayX = "transcripts", assayY = "metabolites",
 method = "GPs")
-#Multi-image analysis on Vicari data
+#Multi-image analysis on Vicari data, using GAMs
 data(Vicari)
 VicariRes = sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
 Vicari$TranscriptCoords, Vicari$MetaboliteCoords, normX = "rel", normY = "rel",
-method = "Moran")
+method = "GAM")
 }
 \seealso{
 \link{sbivarSingle}, \link{sbivarMulti}

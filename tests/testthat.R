@@ -41,8 +41,10 @@ resMoranTest = sbivar(X, Y, Cx, Ey, method = "Moran")
 resGAMsSingle = sbivar(X, Y, Cx, Ey, method = "GAM")
 estGAMs = sbivar(Xl, Yl, Cxl, Eyl, method = "GAMs")
 estMoran = sbivar(Xl, Yl, Cxl, Eyl, method = "Moran", wo = "nn")
-multiFitGams = fitLinModels(estGAMs, design = toyDesign, Formula = out ~ covariate + cofactor + (1|group))
-multiFitMoran = fitLinModels(estMoran, design = toyDesign, Formula = out ~ covariate + cofactor)
+multiFitGams = fitLinModels(estGAMs, design = toyDesign,
+                            Formula = out ~ covariate + cofactor + (1|group))
+multiFitMoran = fitLinModels(estMoran, design = toyDesign,
+                             Formula = out ~ covariate + cofactor)
 #Extract the results
 resGAMsMulti = extractResultsMulti(multiFitGams, design = toyDesign)
 test_check("sbivar")

@@ -51,6 +51,8 @@ for the outcome values. See details of \link{sbivarSingle}.}
 evaluated on.
 It only matters for the messages printed.}
 
+\item{multi}{Should multiple images be plotted?}
+
 \item{...}{passed onto \link{fitGAM}}
 
 \item{results}{Result of a call to \link{sbivar} (single-image) or to

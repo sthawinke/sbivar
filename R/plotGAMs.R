@@ -17,6 +17,7 @@
 #' @param features The features to plot
 #' @param results Result of a call to \link{sbivar} (single-image) or to
 #' \link{fitLinModels} (multi-image)
+#' @param multi Should multiple images be plotted?
 #' @param ... passed onto \link{fitGAM}
 #'
 #' @returns A ggplot object

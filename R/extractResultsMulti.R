@@ -77,7 +77,7 @@ extractResultsMulti <- function(result, designDf, method = "BH") {
                 })
             } else {
                 intRes = ints[1,]
-                fixRes = lapply(fixedOut, function(x) x[[1]])
+                fixRes = lapply(fixedOut, function(x) x[1,])
             }
             c(list("Intercept" = intRes), fixRes)
         }

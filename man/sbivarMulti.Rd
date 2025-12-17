@@ -11,6 +11,8 @@ sbivarMulti(
   Eyl,
   families = list(X = gaussian(), Y = gaussian()),
   method = c("Moran's I", "GAMs", "Correlation"),
+  wo = c("Gauss", "nn"),
+  numNN = c(4, 8, 24),
   etas = c(2e-06, 6e-05, 0.002),
   normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
@@ -19,8 +21,6 @@ sbivarMulti(
   width = cutoff/15,
   cutoff = sqrt(2)/3,
   pseudoCount = 1e-08,
-  wo = c("Gauss", "nn"),
-  numNN = c(4, 8, 24),
   n_points_grid = 600,
   verbose = TRUE
 )
@@ -34,6 +34,8 @@ sbivarMulti(
 
 \item{method}{A character string, indicating which method to apply}
 
+\item{wo, numNN}{Passed onto \link{buildWeightMat}}
+
 \item{etas}{A vector of decay parameters for the weight function, see details}
 
 \item{normX, normY}{Character vectors indicating normalization, "log" means log-normalization of relative abundances}
@@ -46,8 +48,6 @@ Currently, only "Exp" and "Lin" are implemented for computational reasons.}
 \item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}}
 
 \item{pseudoCount}{A pseudocount added prior to log-normalization to avoid taking the log of zero}
-
-\item{wo, numNN}{Passed onto \link{buildWeightMat}}
 
 \item{verbose}{Should info on type of analysis be printed?}
 }

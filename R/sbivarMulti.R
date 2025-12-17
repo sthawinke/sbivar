@@ -18,10 +18,11 @@
 #' @inheritParams buildWeightMat
 #' @importFrom BiocParallel bpparam
 sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
-                       method = c("Moran's I", "GAMs", "Correlation"), etas = c(2e-6, 6e-5, 2e-3),
+                       method = c("Moran's I", "GAMs", "Correlation"), wo = c("Gauss", "nn"),
+                       numNN = c(4, 8, 24), etas = c(2e-6, 6e-5, 2e-3),
                        normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), returnSEsMoransI = TRUE,
                        variogramModels = c("Exp", "Lin"), width = cutoff/15, cutoff = sqrt(2)/3,
-                       pseudoCount = 1e-8, wo = c("Gauss", "nn"), numNN = c(4, 8, 24), n_points_grid = 6e2, verbose = TRUE){
+                       pseudoCount = 1e-8,  n_points_grid = 6e2, verbose = TRUE){
     method = match.arg(method);wo = match.arg(wo)
     normX = match.arg(normX);normY = match.arg(normY)
     stopifnot(is.numeric(numNN), all(numNN>0), is.numeric(etas), is.numeric(n_points_grid), is.logical(verbose),
@@ -55,7 +56,7 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
     }
     out = if (method == "Moran's I"){
         MoransIMulti(Xl, Yl, Cxl, Eyl, wo = wo, numNN = numNN, verbose = verbose, returnSEsMoransI = returnSEsMoransI,
-              eta = eta, variogramModels = variogramModels, width = width, cutoff = cutoff)
+              etas = etas, variogramModels = variogramModels, width = width, cutoff = cutoff)
     } else if(method == "GAMs"){
         GAMsMulti(Xl, Yl, Cxl, Eyl, families = families,
                  n_points_grid = n_points_grid, verbose = verbose)

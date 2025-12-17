@@ -52,13 +52,13 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose,
     })
     Ws = Ws[,,idW <- (colSums(Ws, dims = 2)>0), drop = FALSE]
     numWs = dim(Ws)[3]
-    if(any(!idW) && wo=="Gauss"){
+    if(any(!idW) && (wo=="Gauss")){
         warning("Eta values ", etas[!idW], " yielded zero weight matrices and have been dropped!")
         etas = etas[idW]
     }
     Ixys = vapply(seq_len(numWs), FUN.VALUE = matrix(0, p, k), function(i) {
-        crossprod(X, Ws[,,i] %*% Y)#Normalize for matrix size
-    })/sqrt(prodFac)
+        crossprod(X, Ws[,,i] %*% Y)
+    })/sqrt(prodFac)#Normalize for matrix size
     if(verbose){
         message("Calculating variances of bivariate Moran's I statistics ...")
     }
@@ -87,7 +87,7 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose,
     varIxy = aperm(varIxy, perm = 3:1) #Rearrange
     for(i in seq_len(numWs)){
         if(any(zeroId <- (varIxy[,,i]<=0))){
-            varIxy[,,i][zeroId] = tr(crossprod(Ws[,,i]))
+            varIxy[,,i][zeroId] = sum(Ws[,,i]^2) #tr(W^tW)
             #If negative variance, fall back on independence
         }
     }

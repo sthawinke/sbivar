@@ -110,7 +110,7 @@ fitLinModels = function(result, designDf, Formula, verbose = TRUE, inverseWeigh 
             }
         })
     })
-    return(c(list("result" = models, "iter" = iter),
+    return(c(list("result" = models),
              result[intersect(names(result), c("method", "families", "wo", "multi", "assayX", "assayY", "wParams"))]))
 }
 #' Fit a linear model for an individual feature pair

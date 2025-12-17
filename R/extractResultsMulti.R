@@ -11,7 +11,8 @@
 #' @order 2
 extractResultsMulti <- function(result, designDf, method = "BH") {
     categoricalVars = getDiscreteVars(designDf)
-    wParChar = switch(result$wo, "Gauss" = "eta_", "nn" = "numNN_")
+    if(result$method=="Moran's I")
+        wParChar = switch(result$wo, "Gauss" = "eta_", "nn" = "numNN_")
     outout = loadBalanceBplapply(selfName(names(result$result)), function(nm){
         res = result$result[[nm]]
         if(result$method=="Moran's I")

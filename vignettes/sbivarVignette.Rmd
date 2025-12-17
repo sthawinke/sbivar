@@ -258,7 +258,7 @@ MetSE = SpatialExperiment(assays = list("metabolites" = t(singleMet)),
 
 Look at the first object:
 
-```{r}
+```{r lookatStxSE}
 StxSE
 ```
 
@@ -305,7 +305,7 @@ MetSElist = lapply(selfName(names(Vicari$MetaboliteOutcomes)), function(nam){
     SpatialExperiment(assays = list("metabolites" = t(Vicari$MetaboliteOutcomes[[nam]])),
                       spatialCoords = Vicari$MetaboliteCoords[[nam]])
 })
-multiMoranResSE = sbivar(X = StxSElist, Y = MetSElist, assayX = "transcripts", verbose = FALSE,
+multiMoranResSE = sbivar(X = StxSElist, Y = MetSElist, assayX = "transcripts", 
                          assayY = "metabolites", method = "GAM")
 multiMoranLmmsSE = fitLinModels(multiMoranResSE, designDf, Formula = ~ (1|mouse))
 multiMoranLmmsResSE = extractResultsMulti(multiMoranLmmsSE, designDf)
@@ -338,7 +338,7 @@ And run the same analysis:
 ```{r singleSEanalysis, eval = FALSE}
 sbivarMultiSingleSE = sbivar(SEsingleStx, SEsingleMet, sample_id_x = "sample_id",
                              assayX = "transcripts", assayY = "metabolites", 
-                             method = "Moran's I", normX = "rel", normY = "rel")
+                             method = "GAMs", normX = "rel", normY = "rel")
 multiMoranLmmsSingleSE = fitLinModels(sbivarMultiSingleSE, designDf, 
                                       Formula = ~ (1|mouse))
 multiMoranLmmsResSingleSE = extractResultsMulti(multiMoranLmmsSingleSE, designDf)

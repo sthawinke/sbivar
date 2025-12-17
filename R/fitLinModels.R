@@ -43,17 +43,21 @@ fitLinModels = function(result, designDf, Formula, verbose = TRUE, inverseWeigh 
     if(!result$multi){
         stop("Fitting linear models only makes sense for multi-image analyses!")
     }
+    if(inverseWeigh && (result$method == "Moran's I") && !result$returnSEsMoransI){
+        stop("Inverse weiginh only possible if the variances of Moran's I are included!
+             Rerun sbivar() with estimateSEsMoransI=TRUE.")
+    }
     measures = result$estimates
     stopifnot(length(measures)==nrow(designDf), is.data.frame(designDf),
               is.character(Formula) || is(Formula, "formula"))
     namesFun = switch(result$method, "Correlation" = names, rownames)
     Features = selfName(unique(unlist(lapply(measures, function(x) namesFun(x$res))))) # All feature pairs present
-    iter = if(moran <- result$method == "Moran's I"){
-        selfName(switch(result$wo, "Gauss" = result$etas, "nn" = result$numNN))
-    } else 1
+    iter = selfName(if(moran <- result$method == "Moran's I"){
+        result$wParams
+    } else 1)
     #Prepare arrays of outcomes and weights
     outArr = array(0, dim = c(nrow(designDf), length(Features), length(iter)),
-                    dimnames = list(names(measures), Features, iter))
+                    dimnames = list(names(measures), Features, names(iter)))
     if(inverseWeigh){
         weightsArr = outArr
     }
@@ -89,7 +93,7 @@ fitLinModels = function(result, designDf, Formula, verbose = TRUE, inverseWeigh 
         message("Fitting ", length(Features), if(MM) " mixed" else " fixed",
                 " effects models on ", bpparam()$workers, " cores")
     models <- loadBalanceBplapply(Features, function(feat) {
-        out = lapply(seq_along(iter), function(it){
+        lapply(selfName(names(iter)), function(it){
             baseDf$out = outArr[, feat, it]
             out <- if (sum(id <- !is.na(baseDf$out)) < 3) {
                 NULL
@@ -105,10 +109,9 @@ fitLinModels = function(result, designDf, Formula, verbose = TRUE, inverseWeigh 
                             Control = Control, MM = MM, Assign = Assign)
             }
         })
-        names(out) = names(iter)
-        return(out)
     })
-    return(c(list("result" = models, "iter" = iter, result[intersect(names(methods), c("method", "families", "wo", "multi", "assayX", "assayY"))])))
+    return(c(list("result" = models, "iter" = iter),
+             result[intersect(names(result), c("method", "families", "wo", "multi", "assayX", "assayY", "wParams"))]))
 }
 #' Fit a linear model for an individual feature pair
 #'

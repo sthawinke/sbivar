@@ -32,7 +32,7 @@ checkInputSingle = function(X, Y, Cx, Ey){
              as the double underscore is used in this package to separate feature pairs!")
     }
 }
-checkInputMulti = function(Xl, Yl, Cxl, Eyl, checkCoords){
+checkInputMulti = function(Xl, Yl, Cxl, Eyl, checkCoords = TRUE){
     if(length(Xl)==1){
         stop("Lists of length 1 not allowed, please convert to matrix!")
     }

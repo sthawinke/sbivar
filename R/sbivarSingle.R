@@ -108,7 +108,7 @@ sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified 
     out = if(method=="Moran's I"){
         (moranRes <- MoransISingle(X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo, numNN = numNN,
             variogramModels = variogramModels, etas = selfName(etas), width = width,
-            returnSEsMoransI = returnSEsMoransI, verbose = verbose, cutoff = cutoff, findMaxW = findMaxW))$out
+            returnSEsMoransI = returnSEsMoransI, verbose = verbose, cutoff = cutoff, findMaxW = findMaxW))$res
     } else if(method == "GAMs"){
         GAMsSingle(X = X, Y = Y, Cx = Cx, Ey = Ey, families = families,
                  n_points_grid = n_points_grid, verbose = verbose)

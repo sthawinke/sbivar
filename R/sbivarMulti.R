@@ -19,7 +19,7 @@
 #' @importFrom BiocParallel bpparam
 sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
                        method = c("Moran's I", "GAMs", "Correlation"), etas = c(2e-6, 6e-5, 2e-3),
-                       normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
+                       normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), returnSEsMoransI = TRUE,
                        variogramModels = c("Exp", "Lin"), width = cutoff/15, cutoff = sqrt(2)/3,
                        pseudoCount = 1e-8, wo = c("Gauss", "nn"), numNN = c(4, 8, 24), n_points_grid = 6e2, verbose = TRUE){
     method = match.arg(method);wo = match.arg(wo)
@@ -54,7 +54,7 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
         Eyl = lapply(selfName(names(Eyl)), function(i){Eyl[[i]][rownames(Yl[[i]]),]})
     }
     out = if (method == "Moran's I"){
-        MoransIMulti(Xl, Yl, Cxl, Eyl, wo = wo, numNN = numNN, verbose = verbose,
+        MoransIMulti(Xl, Yl, Cxl, Eyl, wo = wo, numNN = numNN, verbose = verbose, returnSEsMoransI = returnSEsMoransI,
               eta = eta, variogramModels = variogramModels, width = width, cutoff = cutoff)
     } else if(method == "GAMs"){
         GAMsMulti(Xl, Yl, Cxl, Eyl, families = families,
@@ -68,10 +68,8 @@ sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" =
         out$families = families
     } else if(method == "Moran's I"){
         out$wo = wo
-        if(wo == "Gauss")
-            out$etas = etas
-        else if(wo == "nn")
-            out$numNN = numNN
+        out$wParams = selfName(switch(wo, "Gauss" = etas, "nn" = numNN))
+        out$returnSEsMoransI = returnSEsMoransI
     }
     return(out)
 }

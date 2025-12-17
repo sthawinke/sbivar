@@ -202,6 +202,7 @@ mouse = substr(names(Vicari$TranscriptOutcomes), 1, 10)
 For the multi-image case, we can also use bivariate Moran's I as measure of spatial association, with a nearest-neighbour (nn) weighting scheme for illustration (if the required _RANN_ package is available):
 
 ```{r multiMoran}
+Vicari = lapply(Vicari, function(x) lapply(x, function(y) y[1:200, ]))
 multiMoranRes = sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes, normX = "rel", normY = "rel",
                             Vicari$TranscriptCoords, Vicari$MetaboliteCoords, 
                             method = "Moran", wo = if(require(RANN)) "nn" else "Gauss")
@@ -210,8 +211,8 @@ multiMoranRes = sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes, nor
 Next we plug the calculated Moran's I values into a linear model, with random effects for the individual mice:
 
 ```{r multiLmms}
-designDf = data.frame("mouse" = mouse)
-multiMoranLmms = fitLinModels(multiMoranRes, designDf, Formula = ~ (1|mouse))
+designDf = data.frame("mouse" = mouse, fac = c(1,2,1,2,1,2))
+multiMoranLmms = fitLinModels(multiMoranRes, designDf, Formula = ~ fac + (1|mouse))
 ```
 
 Extract the results and show the results for the intercept, i.e. the overall effect

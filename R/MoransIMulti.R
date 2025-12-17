@@ -9,11 +9,11 @@
 #'
 #' @returns A list of Moran's I estimates, standard errors and maximum values
 #' @seealso \link{MoransISingle}
-MoransIMulti = function(Xl, Yl, Cxl, Eyl, verbose, ...){
+MoransIMulti = function(Xl, Yl, Cxl, Eyl, returnSEsMoransI, verbose, ...){
     lapply(selfName(names(Xl)), function(nam){
         if(verbose)
             printIteration(nam, names(Xl))
         MoransISingle(X = Xl[[nam]], Y = Yl[[nam]], Cx = Cxl[[nam]], Ey = Eyl[[nam]],
-              verbose = FALSE, findMaxW = TRUE, returnSEsMoransI = TRUE, ...)[c("res", "maxIxy")]
+              verbose = FALSE, findMaxW = TRUE, returnSEsMoransI = returnSEsMoransI, ...)[c("res", "maxIxy")]
     })
 }

@@ -107,11 +107,9 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose,
     rownames(out) = makeNames(colnames(X), colnames(Y))
     #Maximum values, if needed
     maxIxy = if(findMaxW) {
-        tmp = vapply(seq_len(numWs), FUN.VALUE = double(1), function(i) {
+        vapply(selfName(names(wParams)), FUN.VALUE = double(1), function(i) {
             svd(Ws[,,i], nu = 0, nv = 0)$d[1]
         })
-        names(tmp) = wParams
-        tmp
     }
     return(list("res" = out, "wo" = wo, "etas" = if(wo=="Gauss") wParams,
                 "maxIxy" = maxIxy, "numNN" = if(wo=="nn") wParams))

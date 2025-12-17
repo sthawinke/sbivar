@@ -14,6 +14,7 @@ sbivarMulti(
   etas = c(2e-06, 6e-05, 0.002),
   normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
+  returnSEsMoransI = TRUE,
   variogramModels = c("Exp", "Lin"),
   width = cutoff/15,
   cutoff = sqrt(2)/3,
@@ -36,6 +37,8 @@ sbivarMulti(
 \item{etas}{A vector of decay parameters for the weight function, see details}
 
 \item{normX, normY}{Character vectors indicating normalization, "log" means log-normalization of relative abundances}
+
+\item{returnSEsMoransI}{A boolean, are standard errors of Moran's I to be returned?}
 
 \item{variogramModels}{A character string, indicating the variogram model passed onto \link[gstat]{vgm}.
 Currently, only "Exp" and "Lin" are implemented for computational reasons.}

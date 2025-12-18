@@ -14,9 +14,8 @@
 #' @importFrom SpatialPack modified.ttest
 ModTtestSingle = function(X, Y, Cx, verbose){
    featGrid = expand.grid("featX" = colnames(X), "featY" = colnames(Y))
-    if(verbose){
+    if(verbose)
         message("Performing ", nrow(featGrid), " modified t-tests")
-    }
     out = simplify2array(loadBalanceBplapply(seq_len(nrow(featGrid)), function(i){
         unlist(modified.ttest(X[, featGrid[i, "featX"]], Y[, featGrid[i, "featY"]],
                        Cx)[c("corr", "ESS", "p.value")])

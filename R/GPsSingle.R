@@ -8,14 +8,12 @@
 GPsSingle = function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
                    corStruct, optControl, verbose){
     if(missing(gpParams)){
-        if(verbose){
+        if(verbose)
             message("Fitting GPs for first modality (", ncol(X), " features) ...")
-        }
         gpsx = fitManyGPs(mat = X, coord = Cx, GPmethod = GPmethod,
                           corStruct = corStruct, optControl = optControl)
-        if(verbose){
+        if(verbose)
             message("Fitting GPs for second modality (", ncol(Y), " features) ...")
-        }
         gpsy = fitManyGPs(mat = Y, coord = Ey, GPmethod = GPmethod,
                           corStruct = corStruct, optControl = optControl)
     } else {
@@ -27,17 +25,16 @@ GPsSingle = function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
     idN = seq_len(n);idM = n+seq_len(m) #Indices for x and y
     altSigmas = buildAltSigmas(distMat, numLscAlts = numLscAlts, Quants = Quants,
                                idN = idN, idM = idM)
-    if(verbose){
+    if(verbose)
         message("Performing all ", numTests <- ncol(X)*ncol(Y),
                 " pairwise score tests on fitted GPs ...")
-    }
     out = vapply(selfName(colnames(X)), function(featx){
         sx = base::solve(buildSigmaGp(gpsx[, featx], distMat = distMat[idN, idN]))
         out = vapply(selfName(colnames(Y)), FUN.VALUE = double(2), function(featy){
             testGP(distMat = distMat, x = X[,featx], y = Y[,featy], altSigmas = altSigmas,
                    solXonly = gpsx[, featx], solYonly = gpsy[, featy])
         })
-        printProgress(featx, colnames(X))
+        printProgress(featx, colnames(X), verbose)
         return(out)
     }, FUN.VALUE = matrix(0, nrow = 2, ncol = ncol(Y)))
     #Reformat to long format

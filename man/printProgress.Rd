@@ -4,12 +4,14 @@
 \alias{printProgress}
 \title{Print feature progress}
 \usage{
-printProgress(feat, allFeats)
+printProgress(feat, allFeats, verbose)
 }
 \arguments{
 \item{feat}{The current feature}
 
 \item{allFeats}{Vector of all features}
+
+\item{verbose}{Boolean, should output be printed?}
 }
 \value{
 Prints progress message to output

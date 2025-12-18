@@ -27,10 +27,6 @@
 #' # Single result
 #' writeSbivarToXlsx(resGAMs, file = "tmpFile", sigLevel = 1)
 #' file.remove("tmpFile.xlsx")
-#' #Multiple results
-#' example(fitLinModels, "sbivar")
-#' writeSbivarToXlsx(resGAMsMulti, file = "tmpFile", sigLevel = 1)
-#' file.remove("tmpFile.xlsx")
 writeSbivarToXlsx = function(results, file, overwrite = FALSE, digits = 3,
                              sigLevel = 0.05){
     stopifnot(is.logical(overwrite), is.character(file), is.numeric(digits),

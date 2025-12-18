@@ -22,30 +22,26 @@
 MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose,
                          findMaxW, variogramModels, returnSEsMoransI, ...){
     n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y);
-    if(verbose){
+    if(verbose)
         message("Testing significance of bivariate Moran's I for ", p*k, " feature pairs")
-    }
     #Scale outcomes
     X = scale(X);Y = scale(Y)
     #Move coordinates
     movedCoords = moveTwoCoords(Cx, Ey)
     Cx = movedCoords$Cx;Ey = movedCoords$Ey
     #Estimate spatial autocorrelation
-    if(verbose){
+    if(verbose)
         message("Fitting variograms for first modality (", p, " features) ...")
-    }
     variogramsX = matheronVariograms(X, Cx, width = width, cutoff = cutoff,
                                      variogramModels = variogramModels,  ...)
-    if(verbose){
+    if(verbose)
         message("Fitting variograms for second modality (", k, " features) ...")
-    }
     variogramsY = matheronVariograms(Y, Ey, width = width, cutoff = cutoff,
             variogramModels = variogramModels, ...)
     distX = as.vector(stats::dist(Cx));distY = as.vector(stats::dist(Ey))
     prodFac <- (n-1)*(m-1)
-    if(verbose){
+    if(verbose)
         message("Calculating bivariate Moran's I statistics ...")
-    }
     wParams = selfName(switch(wo, "Gauss" = etas, "nn" = numNN))
     Ws = vapply(wParams, FUN.VALUE = matrix(0, n, m), function(iter) {
         buildWeightMat(Cx = Cx, Ey = Ey, wo = wo, eta = iter, numNN = iter)
@@ -59,9 +55,8 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose,
     Ixys = vapply(seq_len(numWs), FUN.VALUE = matrix(0, p, k), function(i) {
         crossprod(X, Ws[,,i] %*% Y)
     })/sqrt(prodFac)#Normalize for matrix size
-    if(verbose){
+    if(verbose)
         message("Calculating variances of bivariate Moran's I statistics ...")
-    }
     #Variances
     mm2 = m*(m-1)/2 #For colSums
     diagMatX = diag(n);ltriX = which(lower.tri(diagMatX))
@@ -75,24 +70,21 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose,
         sigXws <- vapply(seq_len(numWs), FUN.VALUE = double(mm2), function(i) {
             sigXws0[[i]][ltriY]
         })
-        sdiags = vapply(sigXws0, FUN.VALUE = double(1), tr)
-        out = sdiags + 2*vapply(selfName(colnames(Y)), FUN.VALUE = double(numWs), function(featy){
+        out = 2*vapply(selfName(colnames(Y)), FUN.VALUE = double(numWs), function(featy){
             vgy = evalVariogram(variogramsY[[featy]], distY)
             .colSums(sigXws*vgy, mm2, numWs) #Fast tr(W^t Sigma_x W Sigma_y)
-        }) #Diagonal plus two times lower diagonal, exploiting symmetry
-        if(verbose)
-            printProgress(featx, colnames(X))
+        }) + vapply(sigXws0, FUN.VALUE = double(1), tr)
+        #Diagonal plus two times lower diagonal, exploiting symmetry
+        printProgress(featx, colnames(X), verbose)
         return(out)
     })
     varIxy = aperm(varIxy, perm = 3:1) #Rearrange
-    for(i in seq_len(numWs)){
+    for(i in seq_len(numWs)){#If negative variance, fall back on independence
         if(any(zeroId <- (varIxy[,,i]<=0))){
             varIxy[,,i][zeroId] = sum(Ws[,,i]^2) #tr(W^tW)
-            #If negative variance, fall back on independence
         }
     }
-    #Correct for matrix size
-    varIxy = varIxy/prodFac
+    varIxy = varIxy/prodFac #Correct for matrix size
     # P-values
     IxyPvals = makePval(Ixys/(seIxy <- sqrt(varIxy)))
     #CCT correction

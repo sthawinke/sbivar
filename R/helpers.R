@@ -274,10 +274,11 @@ addDimNames = function(mat, letter){
 #'
 #' @param feat The current feature
 #' @param allFeats Vector of all features
+#' @param verbose Boolean, should output be printed?
 
 #' @returns Prints progress message to output
-printProgress = function(feat, allFeats){
-    if((la <- length(allFeats))>=10){
+printProgress = function(feat, allFeats, verbose){
+    if(verbose && (la <- length(allFeats))>=10){
         keyFeats = allFeats[round(la*seq(0.1, 1, by = 0.1))]
         if(!is.na(id <- match(feat, keyFeats))){
             message(round(10*id), "% of tests completed")

@@ -27,8 +27,7 @@ GAMsSingle = function(X, Y, Cx, Ey, families, n_points_grid, verbose){
             testGAM(predx = predx, modely = gamsy[[featy]], modelx = gamsx[[featx]],
                     predy = vcovPredGam(gamsy[[featy]], newdata = ng))
         })
-        if(verbose)
-            printProgress(featx, colnames(X))
+        printProgress(featx, colnames(X), verbose)
         return(out)
     }, FUN.VALUE = matrix(0, nrow = 3, ncol = length(gamsy)))
     #Reformat to long format

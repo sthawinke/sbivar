@@ -69,7 +69,7 @@ testGP = function(x, y, Cx, Ey, altSigmas, distMat, solXonly, solYonly, sx){
         pchisq(as.vector(Usigma/kappaEst), df = nu, lower.tail = FALSE)
     })
     #Cauchy combination rule
-    ps = apply(pVals, 2, function(p) CCT(p[!is.na(p)]))
+    ps = apply(pVals, 2, CCT)
     idMin = which.min(ps)
     c("pVal" = min(2*ps[idMin], 1), "sign" = if(idMin==1) 1 else -1)
     #two one-sided tests, multiply p-value by 2 to get two-sided test

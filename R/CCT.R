@@ -9,6 +9,8 @@
 #' \insertAllCited{}
 #' @importFrom stats pcauchy
 CCT <- function(pvals){
+    if(all(is.na(pvals)))
+        return(NA)
     #### check if there are p-values that are either exactly 0 or 1.
     is.zero <- any(pvals==0)
     is.one <- any(pvals==1)

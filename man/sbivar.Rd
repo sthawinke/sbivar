@@ -45,7 +45,7 @@ Depending on the input, the workhorse functions \link{sbivarSingle}
 }
 \examples{
 # Single image analysis on synthetic data
-n=7e1;m=9e1;p=3;k=4
+n=7e1;m=8e1;p=3;k=2
 X = matrix(rnorm(n*p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
 Y = matrix(rnorm(m*k), m, k, dimnames = list(NULL, paste0("Y", seq_len(k))))
 Cx = matrix(runif(n*2), n, 2)

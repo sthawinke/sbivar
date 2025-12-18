@@ -25,8 +25,8 @@ test_that("SbivarSingle throws errors for incorrect input", {
 test_that("sbivarMulti works for correct input", {
     gamList <- sbivar(Xl, Yl, Cxl, Eyl, method = "GAMs")
     expect_is(gamList, "list")
-    expect_identical(names(gamList), c("estimates", "method", "multi", "families", "normX", "normY"))
-    expect_is(gamList$estimates[[1]], "matrix")
+    expect_identical(names(gamList), c("estimates", "method", "multi", "normX", "normY", "families"))
+    expect_is(gamList$estimates[[1]]$res, "matrix")
     expect_is(sbivar(Xl, Yl, Cxl, Eyl, method = "Moran's I"), "list")
 })
 test_that("sbivarMulti throws errors for incorrect input", {

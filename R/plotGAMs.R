@@ -11,13 +11,14 @@
 #' the correlation has naturally, for legibility.
 #'
 #' @inheritParams GAMsSingle
+#' @param X,Y Matrices of omics measurements, or lists thereof
+#' @param Cx,Ey Corresponding coordinate matrices of dimension two, or lists thereof
 #' @param offsets List of length two with offsets
 #' @param scaleFun The scaling function to be applied before plotting
 #' @param addTitle A boolean, should a title be plotted
 #' @param features The features to plot
 #' @param results Result of a call to \link{sbivar} (single-image) or to
 #' \link{fitLinModels} (multi-image)
-#' @param multi Should multiple images be plotted?
 #' @param ... passed onto \link{fitGAM}
 #'
 #' @returns A ggplot object
@@ -26,22 +27,21 @@
 #' @examples
 #' #Single image
 #' example(fitLinModels, "sbivar")
-#' plotGAMs(X, Y, Cx, Ey, features = c("X1", "Y3"))
+#' plotGAMs(X, Y, Cx, Ey, features = c("X1", "Y2"))
 #' plotGAMsTopResults(resGAMs, X, Y, Cx = Cx, Ey = Ey)
 #' # Multi image
-#' plotGAMsTopResults(resMoran, Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
+#' plotGAMsTopResults(resGAMsMulti, Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
 #' Vicari$TranscriptCoords, Vicari$MetaboliteCoords)
 #' @import ggplot2
 #' @order 1
 plotGAMs = function(X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scaleMinusOne",
                     families = list("X" = gaussian(), "Y" = gaussian()),
-                    addTitle = TRUE, n_points_grid = 6e2,
-                    multi = is.list(X), ...){
+                    addTitle = TRUE, n_points_grid = 6e2, ...){
     stopifnot(is.numeric(n_points_grid), all(vapply(families, FUN.VALUE = TRUE, is, "family")),
               is.character(features))
     features = make.names(features)
     scaleFun = get(as.character(scaleFun), mode = "function", getNamespace("sbivar"))
-    gamDf = if(multi){
+    gamDf = if(multi <- is.list(X)){
         foo = checkInputMulti(X, Y, Cx, Ey)
         gamDfs = lapply(names(X), function(nam){
             df = buildGamDf(X[[nam]], Y[[nam]], Cx[[nam]], Ey[[nam]],

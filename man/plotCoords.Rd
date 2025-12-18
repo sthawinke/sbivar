@@ -32,8 +32,8 @@ plotCoordsMulti() is a wrapper for plotCoords for lists of coordinates,
 and requires the user to set par(mar = ) appropriately, such that all plots are shown.
 }
 \examples{
-example(sbivar, "sbivar")
-plotCoords(Cx, Ey)
+data(Vicari)
+plotCoords(Vicari$TranscriptCoords[[1]], Vicari$MetaboliteCoords[[1]])
 #For multiple coordinates
 par(mfrow = c(2,3))
 foo = lapply(names(Vicari$TranscriptCoords), function(nam){

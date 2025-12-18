@@ -16,7 +16,6 @@ plotGAMs(
   families = list(X = gaussian(), Y = gaussian()),
   addTitle = TRUE,
   n_points_grid = 600,
-  multi = is.list(X),
   ...
 )
 
@@ -32,9 +31,9 @@ plotGAMsTopResults(
 )
 }
 \arguments{
-\item{X, Y}{Matrices of omics measurements}
+\item{X, Y}{Matrices of omics measurements, or lists thereof}
 
-\item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
+\item{Cx, Ey}{Corresponding coordinate matrices of dimension two, or lists thereof}
 
 \item{features}{The features to plot}
 
@@ -50,8 +49,6 @@ for the outcome values. See details of \link{sbivarSingle}.}
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.
 It only matters for the messages printed.}
-
-\item{multi}{Should multiple images be plotted?}
 
 \item{...}{passed onto \link{fitGAM}}
 
@@ -81,9 +78,9 @@ the correlation has naturally, for legibility.
 \examples{
 #Single image
 example(fitLinModels, "sbivar")
-plotGAMs(X, Y, Cx, Ey, features = c("X1", "Y3"))
+plotGAMs(X, Y, Cx, Ey, features = c("X1", "Y2"))
 plotGAMsTopResults(resGAMs, X, Y, Cx = Cx, Ey = Ey)
 # Multi image
-plotGAMsTopResults(resMoran, Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
+plotGAMsTopResults(resGAMsMulti, Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
 Vicari$TranscriptCoords, Vicari$MetaboliteCoords)
 }

@@ -59,10 +59,10 @@ but it will be overridden by "out" for downstream analysis
 example(sbivar, "sbivar")
 mouse = substr(names(Vicari$TranscriptOutcomes), 1, 10)
 designDf = data.frame("mouse" = mouse) # The design matrix
-multiMoranLmms = fitLinModels(VicariRes, designDf, Formula = ~ (1|mouse))
+multiGAMLmms = fitLinModels(VicariRes, designDf, Formula = ~ (1|mouse))
 #Extract the results
-resMoran = extractResultsMulti(multiMoranLmms, designDf = designDf)
-head(resMoran$result$Intercept)
+resGAMsMulti = extractResultsMulti(multiGAMLmms, designDf = designDf)
+head(resGAMsMulti$result$Intercept)
 }
 \seealso{
 \link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}, \link[stats]{p.adjust}

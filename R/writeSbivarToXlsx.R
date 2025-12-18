@@ -1,9 +1,10 @@
 #' Write effect sizes and p-values results to an excel worksheet
 #'
 #' The results of single- or multi-image analysis are written to an excel spreadsheet
-#' with different tabs for every parameter, sorted by increasing p-value.
+#' with separate tabs per parameter tested, sorted by increasing p-value.
 #'
-#' @param results The results of linear model fitting
+#' @param results The analysis results, from a call to \link{sbivar} (single-image)
+#' or \link{extractResultsMulti} (multi-image)
 #' @param file The file to write the results to
 #' @param overwrite A boolean, should the file be overwritten if it exists already?
 #' @param digits An integer, the number of significant digits to retain for the effect size,
@@ -14,7 +15,7 @@
 #' @details If no feature exceeds the significance threshold for a certain parameter,
 #' an empty tab is created. For each fixed effect, a single tab is written.
 #' The "baseline" tabs indicate the overall patterns, the other tabs are named after the fixed effects
-#' and indicate departure from this baseline depending on this fixed effect
+#' and indicate departure from this baseline for this fixed effect
 #' @return Returns invisible with a message when writing operation successful,
 #' otherwise throws a warning.
 #' @export
@@ -33,7 +34,7 @@
 writeSbivarToXlsx = function(results, file, overwrite = FALSE, digits = 3,
                              sigLevel = 0.05){
     stopifnot(is.logical(overwrite), is.character(file), is.numeric(digits),
-              is.numeric(sigLevel))
+              is.numeric(sigLevel), is.list(results))
     if (!grepl("\\.xlsx", file)) {
         message("Adding .xlsx extension to file")
         file <- paste0(file, ".xlsx")

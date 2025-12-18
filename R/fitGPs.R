@@ -19,15 +19,19 @@
 #' @returns A vector of length 4 with components range, nugget, sigma and mean
 #' @importFrom stats sigma coef
 #' @importFrom nlme gls
-fitGP = function(x, coord, GPmethod, corStruct, optControl){
-    xModGls <- do.call(nlme::gls, args = list("model" = formula("out ~ 1"),
-                        "data" = data.frame("out" = x, coord),
-                        "method" = GPmethod, "correlation" = corStruct,
-                        "control" = optControl))
-    xPars = c(coef(xModGls$modelStruct$corStruct, unconstrained = FALSE),
-              sigma(xModGls))
-    names(xPars) = c("range", "nugget", "sigma")
-    c(xPars, "mean" = unname(coef(xModGls)[1]))
+fitGP <- function(x, coord, GPmethod, corStruct, optControl) {
+  xModGls <- do.call(nlme::gls, args = list(
+    "model" = formula("out ~ 1"),
+    "data" = data.frame("out" = x, coord),
+    "method" = GPmethod, "correlation" = corStruct,
+    "control" = optControl
+  ))
+  xPars <- c(
+    coef(xModGls$modelStruct$corStruct, unconstrained = FALSE),
+    sigma(xModGls)
+  )
+  names(xPars) <- c("range", "nugget", "sigma")
+  c(xPars, "mean" = unname(coef(xModGls)[1]))
 }
 #' A wrapper to fit GPs on all columns of a matrix
 #'
@@ -35,8 +39,8 @@ fitGP = function(x, coord, GPmethod, corStruct, optControl){
 #' @param coord Matrix of coordinates
 #' @param ... passed onto \link{fitGP}
 #' @returns Matrix of fitted GP components
-fitManyGPs = function(mat, coord, ...){
-    simplify2array(loadBalanceBplapply(selfName(colnames(mat)), function(cn){
-        fitGP(mat[, cn], coord = coord, ...)
-    }))
+fitManyGPs <- function(mat, coord, ...) {
+  simplify2array(loadBalanceBplapply(selfName(colnames(mat)), function(cn) {
+    fitGP(mat[, cn], coord = coord, ...)
+  }))
 }

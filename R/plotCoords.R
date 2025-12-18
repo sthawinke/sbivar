@@ -16,25 +16,27 @@
 #' @examples
 #' data(Vicari)
 #' plotCoords(Vicari$TranscriptCoords[[1]], Vicari$MetaboliteCoords[[1]])
-#' #For multiple coordinates
-#' par(mfrow = c(2,3))
-#' foo = lapply(names(Vicari$TranscriptCoords), function(nam){
-#'     plotCoords(Vicari$TranscriptCoords[[nam]], Vicari$MetaboliteCoords[[nam]], main = nam)
+#' # For multiple coordinates
+#' par(mfrow = c(2, 3))
+#' foo <- lapply(names(Vicari$TranscriptCoords), function(nam) {
+#'   plotCoords(Vicari$TranscriptCoords[[nam]], Vicari$MetaboliteCoords[[nam]], main = nam)
 #' })
-#' par(mfrow=c(1,1))
+#' par(mfrow = c(1, 1))
 #' @importFrom graphics points
-plotCoords = function(Cx, Ey, pchX = 1, pchY = 3, cex = 0.8, ...){
-    plot(x = as.matrix(Cx), xlim = range(c(Cx[,1], Ey[,1])), ylim = range(c(Cx[,2], Ey[,2])),
-         asp = 1, pch = pchX, cex = cex, xlab = "x", ylab = "y", ...)
-    points(as.matrix(Ey), col = "blue", pch = pchY, cex = cex)
+plotCoords <- function(Cx, Ey, pchX = 1, pchY = 3, cex = 0.8, ...) {
+  plot(
+    x = as.matrix(Cx), xlim = range(c(Cx[, 1], Ey[, 1])), ylim = range(c(Cx[, 2], Ey[, 2])),
+    asp = 1, pch = pchX, cex = cex, xlab = "x", ylab = "y", ...
+  )
+  points(as.matrix(Ey), col = "blue", pch = pchY, cex = cex)
 }
 #' @inheritParams sbivarMulti
 #' @export
 #' @rdname plotCoords
-plotCoordsMulti = function(Cxl, Eyl, ...){
-    stopifnot(identical(names(Cxl),names(Eyl)))
-    foo = lapply(names(Cxl), function(nam) {
-        plotCoords(Cxl[[nam]], Eyl[[nam]], main =nam, ...)
-    })
-    return(invisible())
+plotCoordsMulti <- function(Cxl, Eyl, ...) {
+  stopifnot(identical(names(Cxl), names(Eyl)))
+  foo <- lapply(names(Cxl), function(nam) {
+    plotCoords(Cxl[[nam]], Eyl[[nam]], main = nam, ...)
+  })
+  return(invisible())
 }

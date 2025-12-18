@@ -18,61 +18,82 @@
 #' @inheritParams buildWeightMat
 #' @importFrom BiocParallel bpparam
 #' @seealso \link{MoransIMulti}, \link{correlationsMulti}, \link{GAMsMulti}
-sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
-                       method = c("Moran's I", "GAMs", "Correlation"), wo = c("Gauss", "nn"),
-                       numNN = c(4, 8, 24), etas = c(2e-5, 2e-3, 2e-1),
-                       normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), returnSEsMoransI = TRUE,
-                       variogramModels = c("Exp", "Lin"), width = cutoff/15, cutoff = sqrt(2)/3,
-                       pseudoCount = 1e-8,  n_points_grid = 6e2, verbose = TRUE){
-    method = match.arg(method);wo = match.arg(wo)
-    normX = match.arg(normX);normY = match.arg(normY)
-    stopifnot(is.numeric(numNN), all(numNN>0), is.numeric(etas), is.numeric(n_points_grid), is.logical(verbose),
-             is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family")))
-    Xl = lapply(Xl, addDimNames, "X");Yl = lapply(Yl, addDimNames, "Y")
-    foo = checkInputMulti(Xl, Yl, Cxl, Eyl, checkCoords = ccs <- (method!="Correlation"))
-    if(ccs){
-        Cxl = mapply(Cxl, Xl, SIMPLIFY = FALSE, FUN = tmpFun <- function(cx, x) {
-            colnames(cx) = c("x", "y");rownames(cx) = rownames(x);cx
-        })
-        if(missing(Eyl)){
-            message("Only one coordinate matrix list Cxl supplied, and dimensions of X and Y do match.
+sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
+                        method = c("Moran's I", "GAMs", "Correlation"), wo = c("Gauss", "nn"),
+                        numNN = c(4, 8, 24), etas = c(2e-5, 2e-3, 2e-1),
+                        normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), returnSEsMoransI = TRUE,
+                        variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
+                        pseudoCount = 1e-8, n_points_grid = 6e2, verbose = TRUE) {
+  method <- match.arg(method)
+  wo <- match.arg(wo)
+  normX <- match.arg(normX)
+  normY <- match.arg(normY)
+  stopifnot(
+    is.numeric(numNN), all(numNN > 0), is.numeric(etas), is.numeric(n_points_grid), is.logical(verbose),
+    is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family"))
+  )
+  Xl <- lapply(Xl, addDimNames, "X")
+  Yl <- lapply(Yl, addDimNames, "Y")
+  foo <- checkInputMulti(Xl, Yl, Cxl, Eyl, checkCoords = ccs <- (method != "Correlation"))
+  if (ccs) {
+    Cxl <- mapply(Cxl, Xl, SIMPLIFY = FALSE, FUN = tmpFun <- function(cx, x) {
+      colnames(cx) <- c("x", "y")
+      rownames(cx) <- rownames(x)
+      cx
+    })
+    if (missing(Eyl)) {
+      message("Only one coordinate matrix list Cxl supplied, and dimensions of X and Y do match.
                  Performing an analysis with joint coordinate sets.")
-            Eyl = Cxl
-        }
-        Eyl = mapply(Eyl, Yl, SIMPLIFY = FALSE, FUN = tmpFun)
-    } else if(!missing(Cxl) || !missing(Eyl)){
-        warning("Correlation analysis will ignore coordinate matrices provided.
+      Eyl <- Cxl
+    }
+    Eyl <- mapply(Eyl, Yl, SIMPLIFY = FALSE, FUN = tmpFun)
+  } else if (!missing(Cxl) || !missing(Eyl)) {
+    warning("Correlation analysis will ignore coordinate matrices provided.
                 Consider providing another 'method' argument for a full spatial analysis")
-    }
-    if(verbose){
-        message("Starting sbivar analysis of ", length(Xl), " images on ",
-                bpparam()$workers, " computing cores")
-    }
-    #Normalization
-    Xl = lapply(Xl, normMat, normX, pseudoCount)
-    Yl = lapply(Yl, normMat, normY, pseudoCount)
-    if(ccs){
-        Cxl = lapply(selfName(names(Cxl)), function(i){Cxl[[i]][rownames(Xl[[i]]),]})
-        Eyl = lapply(selfName(names(Eyl)), function(i){Eyl[[i]][rownames(Yl[[i]]),]})
-    }
-    out = if (method == "Moran's I"){
-        MoransIMulti(Xl, Yl, Cxl, Eyl, wo = wo, numNN = numNN, verbose = verbose, returnSEsMoransI = returnSEsMoransI,
-              etas = etas, variogramModels = variogramModels, width = width, cutoff = cutoff)
-    } else if(method == "GAMs"){
-        GAMsMulti(Xl, Yl, Cxl, Eyl, families = families,
-                 n_points_grid = n_points_grid, verbose = verbose)
-    }  else if(method == "Correlation"){
-        correlationsMulti(Xl, Yl, verbose = verbose)
-    }
-    out = list("estimates" = out, "method" = method, "multi" = TRUE,
-                "normX" = normX, "normY" = normY)
-    if(method=="GAMs"){
-        out$families = families
-    } else if(method == "Moran's I"){
-        out$wo = wo
-        out$wParams = selfName(switch(wo, "Gauss" = etas, "nn" = numNN))
-        out$returnSEsMoransI = returnSEsMoransI
-    }
-    return(out)
+  }
+  if (verbose) {
+    message(
+      "Starting sbivar analysis of ", length(Xl), " images on ",
+      bpparam()$workers, " computing cores"
+    )
+  }
+  # Normalization
+  Xl <- lapply(Xl, normMat, normX, pseudoCount)
+  Yl <- lapply(Yl, normMat, normY, pseudoCount)
+  if (ccs) {
+    Cxl <- lapply(selfName(names(Cxl)), function(i) {
+      Cxl[[i]][rownames(Xl[[i]]), ]
+    })
+    Eyl <- lapply(selfName(names(Eyl)), function(i) {
+      Eyl[[i]][rownames(Yl[[i]]), ]
+    })
+  }
+  out <- if (method == "Moran's I") {
+    MoransIMulti(Xl, Yl, Cxl, Eyl,
+      wo = wo, numNN = numNN, verbose = verbose, returnSEsMoransI = returnSEsMoransI,
+      etas = etas, variogramModels = variogramModels, width = width, cutoff = cutoff
+    )
+  } else if (method == "GAMs") {
+    GAMsMulti(Xl, Yl, Cxl, Eyl,
+      families = families,
+      n_points_grid = n_points_grid, verbose = verbose
+    )
+  } else if (method == "Correlation") {
+    correlationsMulti(Xl, Yl, verbose = verbose)
+  }
+  out <- list(
+    "estimates" = out, "method" = method, "multi" = TRUE,
+    "normX" = normX, "normY" = normY
+  )
+  if (method == "GAMs") {
+    out$families <- families
+  } else if (method == "Moran's I") {
+    out$wo <- wo
+    out$wParams <- selfName(switch(wo,
+      "Gauss" = etas,
+      "nn" = numNN
+    ))
+    out$returnSEsMoransI <- returnSEsMoransI
+  }
+  return(out)
 }
-

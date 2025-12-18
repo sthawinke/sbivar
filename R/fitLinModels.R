@@ -20,14 +20,16 @@
 #' @examples
 #' #' #Multi-image analysis on Vicari data, using GAMs
 #' data(Vicari)
-#' VicariRes = sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
-#' Vicari$TranscriptCoords, Vicari$MetaboliteCoords, normX = "rel", normY = "rel",
-#' method = "GAM")
-#' mouse = substr(names(Vicari$TranscriptOutcomes), 1, 10)
-#' designDf = data.frame("mouse" = mouse) # The design matrix
-#' multiGAMLmms = fitLinModels(VicariRes, designDf, Formula = ~ (1|mouse))
-#' #Extract the results
-#' resGAMsMulti = extractResultsMulti(multiGAMLmms, designDf = designDf)
+#' VicariRes <- sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
+#'   Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
+#'   normX = "rel", normY = "rel",
+#'   method = "GAM"
+#' )
+#' mouse <- substr(names(Vicari$TranscriptOutcomes), 1, 10)
+#' designDf <- data.frame("mouse" = mouse) # The design matrix
+#' multiGAMLmms <- fitLinModels(VicariRes, designDf, Formula = ~ (1 | mouse))
+#' # Extract the results
+#' resGAMsMulti <- extractResultsMulti(multiGAMLmms, designDf = designDf)
 #' head(resGAMsMulti$result$Intercept)
 #' @importFrom lmerTest lmer
 #' @importFrom stats formula terms model.matrix
@@ -37,85 +39,108 @@
 #' @importFrom BiocParallel bplapply bpparam
 #' @seealso \link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}, \link[stats]{p.adjust}
 #' @order 1
-fitLinModels = function(result, designDf, Formula, verbose = TRUE, inverseWeigh = TRUE, scaleByMax = TRUE,
-    Control = lmerControl(
-    check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
-    check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
-    check.conv.hess = .makeCC(action = "ignore", tol = 1e-06))){
-    stopifnot(all(c("estimates", "method", "multi") %in% names(result)),
-              is.logical(inverseWeigh), is.logical(scaleByMax))
-    if(!result$multi){
-        stop("Fitting linear models only makes sense for multi-image analyses!")
-    }
-    if(inverseWeigh && (result$method == "Moran's I") && !result$returnSEsMoransI){
-        stop("Inverse weiginh only possible if the variances of Moran's I are included!
+fitLinModels <- function(result, designDf, Formula, verbose = TRUE, inverseWeigh = TRUE, scaleByMax = TRUE,
+                         Control = lmerControl(
+                           check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
+                           check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
+                           check.conv.hess = .makeCC(action = "ignore", tol = 1e-06)
+                         )) {
+  stopifnot(
+    all(c("estimates", "method", "multi") %in% names(result)),
+    is.logical(inverseWeigh), is.logical(scaleByMax)
+  )
+  if (!result$multi) {
+    stop("Fitting linear models only makes sense for multi-image analyses!")
+  }
+  if (inverseWeigh && (result$method == "Moran's I") && !result$returnSEsMoransI) {
+    stop("Inverse weiginh only possible if the variances of Moran's I are included!
              Rerun sbivar() with estimateSEsMoransI=TRUE.")
+  }
+  measures <- result$estimates
+  stopifnot(
+    length(measures) == nrow(designDf), is.data.frame(designDf),
+    is.character(Formula) || is(Formula, "formula")
+  )
+  namesFun <- switch(result$method,
+    "Correlation" = names,
+    rownames
+  )
+  Features <- selfName(unique(unlist(lapply(measures, function(x) namesFun(x$res))))) # All feature pairs present
+  iter <- selfName(if (moran <- result$method == "Moran's I") {
+    result$wParams
+  } else {
+    1
+  })
+  # Prepare arrays of outcomes and weights
+  outArr <- array(0,
+    dim = c(nrow(designDf), length(Features), length(iter)),
+    dimnames = list(names(measures), Features, names(iter))
+  )
+  if (inverseWeigh) {
+    weightsArr <- outArr
+  }
+  for (i in names(measures)) {
+    outArr[i, namesFun(measures[[i]]$res), ] <- if (inverseWeigh) measures[[i]]$res[, seq_along(iter)] else measures[[i]]$res
+    if (scaleByMax && (result$method == "Moran's I")) {
+      outArr[i, namesFun(measures[[i]]$res), ] <- t(t(outArr[i, namesFun(measures[[i]]$res), ]) / measures[[i]]$maxIxy)
     }
-    measures = result$estimates
-    stopifnot(length(measures)==nrow(designDf), is.data.frame(designDf),
-              is.character(Formula) || is(Formula, "formula"))
-    namesFun = switch(result$method, "Correlation" = names, rownames)
-    Features = selfName(unique(unlist(lapply(measures, function(x) namesFun(x$res))))) # All feature pairs present
-    iter = selfName(if(moran <- result$method == "Moran's I"){
-        result$wParams
-    } else 1)
-    #Prepare arrays of outcomes and weights
-    outArr = array(0, dim = c(nrow(designDf), length(Features), length(iter)),
-                    dimnames = list(names(measures), Features, names(iter)))
-    if(inverseWeigh){
-        weightsArr = outArr
+    if (inverseWeigh) {
+      weightsArr[i, namesFun(measures[[i]]$res), ] <- 1 / measures[[i]]$res[, seq_along(iter) + length(iter)]^2
     }
-    for(i in names(measures)){
-        outArr[i,namesFun(measures[[i]]$res), ] = if(inverseWeigh) measures[[i]]$res[, seq_along(iter)] else measures[[i]]$res
-        if(scaleByMax && (result$method == "Moran's I")){
-            outArr[i,namesFun(measures[[i]]$res),] = t(t(outArr[i,namesFun(measures[[i]]$res),])/measures[[i]]$maxIxy)
+  }
+  # Prepare design matrices for linear model fitting
+  Formula <- replaceLhs(formula(Formula))
+  # Replace outcome variable by "out"
+  MM <- length(findbars(Formula)) > 0
+  fixedVars <- all.vars(nobars(Formula)[[3]])
+  baseDf <- data.frame("out" = 0, centerNumeric(designDf))
+  if (is.null(fixedVars)) {
+    contrasts <- NULL
+  } else {
+    discreteVars <- selfName(intersect(getDiscreteVars(designDf), fixedVars))
+    contrasts <- lapply(discreteVars, function(x) named.contr.sum)
+  }
+  if (MM) {
+    ff <- lFormula(Formula,
+      data = baseDf, contrasts = contrasts,
+      na.action = na.omit
+    )
+    # Prepare random effects fitting
+  }
+  modMat <- model.matrix(nobars(Formula), baseDf, contrasts.arg = contrasts)
+  # Fixed effects model matrix
+  Assign <- attr(modMat, "assign")
+  if (verbose) {
+    message(
+      "Fitting ", length(Features), if (MM) " mixed" else " fixed",
+      " effects models on ", bpparam()$workers, " cores"
+    )
+  }
+  models <- loadBalanceBplapply(Features, function(feat) {
+    lapply(selfName(names(iter)), function(it) {
+      baseDf$out <- outArr[, feat, it]
+      out <- if (sum(id <- !is.na(baseDf$out)) < 3) {
+        NULL
+      } else {
+        if (MM) {
+          ff$fr <- ff$fr[id, , drop = FALSE]
+          ff$X <- ff$X[id, , drop = FALSE]
+          attr(ff$X, "assign") <- Assign
+          ff$reTrms$Zt <- ff$reTrms$Zt[, id, drop = FALSE]
         }
-        if(inverseWeigh)
-            weightsArr[i,namesFun(measures[[i]]$res), ] = 1/measures[[i]]$res[, seq_along(iter) + length(iter)]^2
-    }
-    #Prepare design matrices for linear model fitting
-    Formula = replaceLhs(formula(Formula))
-    #Replace outcome variable by "out"
-    MM <- length(findbars(Formula)) > 0
-    fixedVars = all.vars(nobars(Formula)[[3]])
-    baseDf = data.frame("out" = 0, centerNumeric(designDf))
-    if (is.null(fixedVars)) {
-        contrasts <- NULL
-    } else {
-        discreteVars <- selfName(intersect(getDiscreteVars(designDf), fixedVars))
-        contrasts <- lapply(discreteVars, function(x) named.contr.sum)
-    }
-    if(MM){
-        ff <- lFormula(Formula, data = baseDf, contrasts = contrasts,
-                       na.action = na.omit)
-        #Prepare random effects fitting
-    }
-    modMat <- model.matrix(nobars(Formula), baseDf, contrasts.arg = contrasts)
-    #Fixed effects model matrix
-    Assign <- attr(modMat, "assign")
-    if(verbose)
-        message("Fitting ", length(Features), if(MM) " mixed" else " fixed",
-                " effects models on ", bpparam()$workers, " cores")
-    models <- loadBalanceBplapply(Features, function(feat) {
-        lapply(selfName(names(iter)), function(it){
-            baseDf$out = outArr[, feat, it]
-            out <- if (sum(id <- !is.na(baseDf$out)) < 3) {
-                NULL
-            } else {
-                if(MM){
-                    ff$fr <- ff$fr[id,, drop = FALSE];ff$X <- ff$X[id,, drop = FALSE]
-                    attr(ff$X, "assign") <- Assign
-                    ff$reTrms$Zt <- ff$reTrms$Zt[, id, drop = FALSE]
-                }
-                fitLinModel(ff = ff, y = baseDf[id, "out"], Terms = terms(Formula),
-                            modMat = modMat[id,,drop = FALSE],
-                            weights = if(inverseWeigh) weightsArr[id, feat, it]/sum(weightsArr[id, feat, it]),
-                            Control = Control, MM = MM, Assign = Assign)
-            }
-        })
+        fitLinModel(
+          ff = ff, y = baseDf[id, "out"], Terms = terms(Formula),
+          modMat = modMat[id, , drop = FALSE],
+          weights = if (inverseWeigh) weightsArr[id, feat, it] / sum(weightsArr[id, feat, it]),
+          Control = Control, MM = MM, Assign = Assign
+        )
+      }
     })
-    return(c(list("result" = models),
-             result[intersect(names(result), c("method", "families", "wo", "multi", "assayX", "assayY", "wParams"))]))
+  })
+  return(c(
+    list("result" = models),
+    result[intersect(names(result), c("method", "families", "wo", "multi", "assayX", "assayY", "wParams"))]
+  ))
 }
 #' Fit a linear model for an individual feature pair
 #'
@@ -134,28 +159,33 @@ fitLinModels = function(result, designDf, Formula, verbose = TRUE, inverseWeigh 
 #' @importFrom lme4 mkLmerDevfun optimizeLmer mkMerMod
 #' @importFrom stats lm.wfit lm.fit
 #' @importFrom smoppix lm_from_wfit
-fitLinModel <-function(ff, y, Control, Terms, modMat, MM, Assign, weights = NULL) {
-    if(MM){
-        fr <- ff$fr                    # this is a data.frame (model frame)
-        ## Use model-frame column names used by stats::model.frame
-        fr$`(weights)` <- weights
-        fr[["out"]] <- y               # replace response
-        mod <- try({
-            devfun <- mkLmerDevfun(fr, ff$X, ff$reTrms, control = Control)
-            opt <- optimizeLmer(devfun, control = Control)
-            out <- mkMerMod(rho = environment(devfun), opt = opt,
-                            reTrms = ff$reTrms, fr = fr)
-            out <- lmerTest:::as_lmerModLT(out, devfun = devfun)
-        }, silent = TRUE)
+fitLinModel <- function(ff, y, Control, Terms, modMat, MM, Assign, weights = NULL) {
+  if (MM) {
+    fr <- ff$fr # this is a data.frame (model frame)
+    ## Use model-frame column names used by stats::model.frame
+    fr$`(weights)` <- weights
+    fr[["out"]] <- y # replace response
+    mod <- try(
+      {
+        devfun <- mkLmerDevfun(fr, ff$X, ff$reTrms, control = Control)
+        opt <- optimizeLmer(devfun, control = Control)
+        out <- mkMerMod(
+          rho = environment(devfun), opt = opt,
+          reTrms = ff$reTrms, fr = fr
+        )
+        out <- lmerTest:::as_lmerModLT(out, devfun = devfun)
+      },
+      silent = TRUE
+    )
+  }
+  # Switch to fixed effects model when fit failed
+  if (!MM || inherits(mod, "try-error")) {
+    Fit <- if (is.null(weights)) {
+      lm.fit(y = y, x = modMat)
+    } else {
+      lm.wfit(y = y, x = modMat, w = weights)
     }
-    # Switch to fixed effects model when fit failed
-    if(!MM || inherits(mod, "try-error")){
-        Fit = if(is.null(weights)){
-                lm.fit(y = y, x = modMat)
-            } else {
-                lm.wfit(y = y, x = modMat, w = weights)
-            }
-        mod <- lm_from_wfit(Fit, y = y, Assign = Assign, Terms = Terms)
-    }
-    return(mod)
+    mod <- lm_from_wfit(Fit, y = y, Assign = Assign, Terms = Terms)
+  }
+  return(mod)
 }

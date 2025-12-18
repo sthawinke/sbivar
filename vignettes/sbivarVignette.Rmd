@@ -15,9 +15,11 @@ bibliography: ../inst/REFERENCES.bib
 ---
 
 ```{r, echo=FALSE, eval = FALSE}
-htmltools::img(src = knitr::image_uri("../inst/Sbivar.png"),
-               style = 'position:absolute; top:0; right:0; padding:8px;',
-               alt = 'logo', width = "280px", heigth = "200px")
+htmltools::img(
+  src = knitr::image_uri("../inst/Sbivar.png"),
+  style = "position:absolute; top:0; right:0; padding:8px;",
+  alt = "logo", width = "280px", heigth = "200px"
+)
 ```
 
 ```{r setup, include=FALSE, echo=FALSE}
@@ -76,15 +78,15 @@ nCores <- 2 # The number of CPUs
 and prepare the parallel backend. The code is different for windows or unix-based systems, but is taken care of by the following code snippet:
 
 ```{r nonwindows}
-if(.Platform$OS.type == "unix"){
-    #On unix-based systems, use MulticoreParam
-    register(MulticoreParam(nCores))
+if (.Platform$OS.type == "unix") {
+  # On unix-based systems, use MulticoreParam
+  register(MulticoreParam(nCores))
 } else {
-    #On windows, use makeCluster
-    library(doParallel)
-    Clus = makeCluster(nCores)
-    registerDoParallel(Clus)
-    register(DoparParam(), default = TRUE)
+  # On windows, use makeCluster
+  library(doParallel)
+  Clus <- makeCluster(nCores)
+  registerDoParallel(Clus)
+  register(DoparParam(), default = TRUE)
 }
 ```
 
@@ -109,9 +111,9 @@ names(Vicari)
 This object consists of four lists of length six: _TranscriptCoords_ and _MetaboliteCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. Only the 10 most abundant features per modality are included in the package. The metabolite measurements were augmented by a pseudocount of 10$^{-8}$ to avoid zeroes. The _sbivar_ package assumes that the data have been pre-aligned. Yet it is always a good idea to check the alignment visually:
 
 ```{r, fig.height = 7}
-par(mfrow = c(2,3))
+par(mfrow = c(2, 3))
 plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.25)
-par(mfrow = c(1,1))
+par(mfrow = c(1, 1))
 ```
 
 The alignment seems successful, notice that some tissue areas are only covered by one modality though.
@@ -121,18 +123,19 @@ The alignment seems successful, notice that some tissue areas are only covered b
 The Vicari data consist of six images which are best analysed jointly, but for didactical purposes we also analyse a single image here, the sample "V11L12-109_A1".
 
 ```{r getsinglesample}
-singleSample = "V11L12-109_A1"
-singleStxCoords = Vicari$TranscriptCoords[[singleSample]]
-singleStx = Vicari$TranscriptOutcomes[[singleSample]]
-singleMetCoords = Vicari$MetaboliteCoords[[singleSample]]
-singleMet = Vicari$MetaboliteOutcomes[[singleSample]]
+singleSample <- "V11L12-109_A1"
+singleStxCoords <- Vicari$TranscriptCoords[[singleSample]]
+singleStx <- Vicari$TranscriptOutcomes[[singleSample]]
+singleMetCoords <- Vicari$MetaboliteCoords[[singleSample]]
+singleMet <- Vicari$MetaboliteOutcomes[[singleSample]]
 ```
 
 We analyse this single sample using bivariate Moran's I. By default, three different $\eta$ parameters are considered for constructing the elements of the weight matrix: `r eval(formals(sbivar:::sbivarSingle)$etas)`. We choose to normalize both modalities to relative abundances (see _?normMat). 
 
 ```{r testmoran}
-moransIRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, 
-                      method = "Moran's I", normX = "rel", normY = "rel")
+moransIRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
+  method = "Moran's I", normX = "rel", normY = "rel"
+)
 ```
 
 Have a look at the results, which are sorted by increasing p-value:
@@ -144,8 +147,10 @@ head(moransIRes$result)
 Plot the most significantly spatially associated gene-metabolite pair `r gpMoran <- rownames(moransIRes$result)[1]`:
 
 ```{r plottoppairmoran, fig.height = 4.5}
-plotTopPair(moransIRes, X = singleStx, Y = singleMet, Cx = singleStxCoords, 
-            Ey = singleMetCoords)
+plotTopPair(moransIRes,
+  X = singleStx, Y = singleMet, Cx = singleStxCoords,
+  Ey = singleMetCoords
+)
 ```
 
 We see a clear positive relationship.
@@ -153,29 +158,34 @@ We see a clear positive relationship.
 In addition, we employ generalized additive models (GAMs), with a negative binomial outcome distribution for the transcriptome data, and a gamma outcome distribution for the metabolome data. A log-link is used in both cases.
 
 ```{r fitgam}
-FamiliesVicari = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log"))
-gamRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, 
-                      method = "GAMs",  families = FamiliesVicari)
+FamiliesVicari <- list("X" = mgcv::nb(), "Y" = Gamma(lin = "log"))
+gamRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
+  method = "GAMs", families = FamiliesVicari
+)
 ```
 
 Plot the most significant pair (log-transformed data are shown, the original analysis is on raw data):
 
 ```{r plottoppairgam, fig.height = 4.5}
-plotTopPair(gamRes, X = singleStx, Y = singleMet, Cx = singleStxCoords, 
-            Ey = singleMetCoords, normX = "rel", normY = "rel")
+plotTopPair(gamRes,
+  X = singleStx, Y = singleMet, Cx = singleStxCoords,
+  Ey = singleMetCoords, normX = "rel", normY = "rel"
+)
 ```
 
 Another feature is found most significant by GAMs, likely because they smooth over the two holes in the spatial transcriptomics measurements (left plot), adding to the signal, whereas the holes do not contribute to the Moran's I. This can be an asset or a weakness of GAMs. For GAMs, we can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes$result[gpGam<- rownames(gamRes$result)[1], "corxy"], 3)`:
 
 ```{r plotGAM}
-plotGAMsTopResults(gamRes, X = singleStx, Y = singleMet, Cx = singleStxCoords, 
-                   Ey = singleMetCoords, families = FamiliesVicari)
+plotGAMsTopResults(gamRes,
+  X = singleStx, Y = singleMet, Cx = singleStxCoords,
+  Ey = singleMetCoords, families = FamiliesVicari
+)
 ```
 
 Another available analysis for single images are Gaussian processes (GPs). Yet fitting GPs and calculating the score tests statistics can be computation and memory intensive! Hence the code is shown, but not run:
 
 ```{r gp, eval = FALSE}
-gpRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, method = "GPs")
+gpRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, method = "GPs")
 head(gpRes$result)
 ```
 
@@ -196,38 +206,41 @@ names(Vicari$TranscriptOutcomes)
 We see that the first three and the last three are replicates from different mice (V11L12-109 and V11T16-085). We construct a variable identifying the mouse, consisting of the first 10 characters of the names:
 
 ```{r mouseVariable}
-mouse = substr(names(Vicari$TranscriptOutcomes), 1, 10)
+mouse <- substr(names(Vicari$TranscriptOutcomes), 1, 10)
 ```
 
 For the multi-image case, we can also use bivariate Moran's I as measure of spatial association, with a nearest-neighbour (nn) weighting scheme for illustration (if the required _RANN_ package is available). For computational reasons, we limit calculations to the first 500 observations:
 
 ```{r multiMoran}
-VicariMultiTest = lapply(Vicari, function(x) lapply(x, function(y) y[1:500, ]))
-multiMoranRes = sbivar(VicariMultiTest$TranscriptOutcomes, VicariMultiTest$MetaboliteOutcomes, normX = "rel", normY = "rel",
-                            VicariMultiTest$TranscriptCoords, VicariMultiTest$MetaboliteCoords, 
-                            method = "Moran", wo = if(require(RANN)) "nn" else "Gauss")
+VicariMultiTest <- lapply(Vicari, function(x) lapply(x, function(y) y[1:500, ]))
+multiMoranRes <- sbivar(VicariMultiTest$TranscriptOutcomes, VicariMultiTest$MetaboliteOutcomes,
+  normX = "rel", normY = "rel",
+  VicariMultiTest$TranscriptCoords, VicariMultiTest$MetaboliteCoords,
+  method = "Moran", wo = if (require(RANN)) "nn" else "Gauss"
+)
 ```
 
 Next we plug the calculated Moran's I values into a linear model, with random effects for the individual mice, adn adding a bogus variable for illustrative purposes:
 
 ```{r multiLmms}
-designDf = data.frame("mouse" = mouse, "bogus" = factor(c(1,2,1,2,1,2)))
-multiMoranLmms = fitLinModels(multiMoranRes, designDf, Formula = ~ bogus + (1|mouse))
+designDf <- data.frame("mouse" = mouse, "bogus" = factor(c(1, 2, 1, 2, 1, 2)))
+multiMoranLmms <- fitLinModels(multiMoranRes, designDf, Formula = ~ bogus + (1 | mouse))
 ```
 
 Extract the results and show the results for the intercept, i.e. the overall effect
 
 ```{r extractMulti}
-multiMoranLmmsRes = extractResultsMulti(multiMoranLmms, designDf)
+multiMoranLmmsRes <- extractResultsMulti(multiMoranLmms, designDf)
 head(multiMoranLmmsRes$result$Intercept)
 ```
 
 No features are significantly associated after multiplicity correction. This is in part caused by different experimental parameters used for the different sections, i.e. these are not real replicates yet, as technology is still being developed. For illustration, we plot the feature pair with the smallest p-values nevertheless:
 
 ```{r plottopMulti, fig.height = 9}
-plotTopPair(multiMoranLmmsRes, 
-    Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes, 
-    Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.4)
+plotTopPair(multiMoranLmmsRes,
+  Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes,
+  Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.4
+)
 ```
 
 Again, the results of the multi-image analysis can be written to an external spreadsheet. Setting _sigLevel_ to 1 means all feature pairs are written to the file:
@@ -250,10 +263,14 @@ For illustration, we first construct _SpatialExperiment_ objects for the single-
 
 ```{r SEConstruct, message=FALSE}
 library(SpatialExperiment, quietly = TRUE)
-StxSE = SpatialExperiment(assays = list("transcripts" = t(singleStx)), 
-                          spatialCoords = singleStxCoords)
-MetSE = SpatialExperiment(assays = list("metabolites" = t(singleMet)), 
-                          spatialCoords = singleMetCoords)
+StxSE <- SpatialExperiment(
+  assays = list("transcripts" = t(singleStx)),
+  spatialCoords = singleStxCoords
+)
+MetSE <- SpatialExperiment(
+  assays = list("metabolites" = t(singleMet)),
+  spatialCoords = singleMetCoords
+)
 ```
 
 Look at the first object:
@@ -265,8 +282,10 @@ StxSE
 Next we call the _sbivar_ function with these as arguments, providing the names of the assays we want analysed. We set _verbose_ to FALSE to prevent printing output:
 
 ```{r SEanalysis}
-resSpatExp = sbivar(StxSE, MetSE, assayX = "transcripts", assayY = "metabolites", 
-                    families = FamiliesVicari, method = "GAMs", verbose = FALSE)
+resSpatExp <- sbivar(StxSE, MetSE,
+  assayX = "transcripts", assayY = "metabolites",
+  families = FamiliesVicari, method = "GAMs", verbose = FALSE
+)
 ```
 
 Plot the second most significant result, again providing the _SpatialExperiment_ objects
@@ -279,17 +298,21 @@ Now we construct a _MultiAssayExperiment_ object
 
 ```{r makeMAE}
 library(MultiAssayExperiment)
-MAE = MultiAssayExperiment(experiments = list("transcripts" = StxSE, 
-                                              "metabolites" = MetSE))
+MAE <- MultiAssayExperiment(experiments = list(
+  "transcripts" = StxSE,
+  "metabolites" = MetSE
+))
 MAE
 ```
 
 We run a the same analysis, now providing the experiment names on top of the assay names (since a _MultiAssayExperiment_ can contain more than two modalities):
 
 ```{r analyseMAE, eval = FALSE}
-resMAE = sbivar(MAE, assayX = "transcripts", assayY = "metabolites",
-                experimentX = "transcripts", experimentY = "metabolites", 
-                families = FamiliesVicari, method = "GAMs", normX = "rel", normY = "rel")
+resMAE <- sbivar(MAE,
+  assayX = "transcripts", assayY = "metabolites",
+  experimentX = "transcripts", experimentY = "metabolites",
+  families = FamiliesVicari, method = "GAMs", normX = "rel", normY = "rel"
+)
 ```
 
 ### Multi-image
@@ -297,34 +320,44 @@ resMAE = sbivar(MAE, assayX = "transcripts", assayY = "metabolites",
 For the multi-image case, there are several options. One is to provide a list of _SpatialExperiment_ objects to the _sbivar_ function. We construct such list here for illustrative purposes, and fit GAMs:
 
 ```{r multiListSE}
-StxSElist = lapply(selfName(names(Vicari$TranscriptOutcomes)), function(nam){
-    SpatialExperiment(assays = list("transcripts" = t(Vicari$TranscriptOutcomes[[nam]])),
-                      spatialCoords = Vicari$TranscriptCoords[[nam]])
+StxSElist <- lapply(selfName(names(Vicari$TranscriptOutcomes)), function(nam) {
+  SpatialExperiment(
+    assays = list("transcripts" = t(Vicari$TranscriptOutcomes[[nam]])),
+    spatialCoords = Vicari$TranscriptCoords[[nam]]
+  )
 })
-MetSElist = lapply(selfName(names(Vicari$MetaboliteOutcomes)), function(nam){
-    SpatialExperiment(assays = list("metabolites" = t(Vicari$MetaboliteOutcomes[[nam]])),
-                      spatialCoords = Vicari$MetaboliteCoords[[nam]])
+MetSElist <- lapply(selfName(names(Vicari$MetaboliteOutcomes)), function(nam) {
+  SpatialExperiment(
+    assays = list("metabolites" = t(Vicari$MetaboliteOutcomes[[nam]])),
+    spatialCoords = Vicari$MetaboliteCoords[[nam]]
+  )
 })
-multiMoranResSE = sbivar(X = StxSElist, Y = MetSElist, assayX = "transcripts", 
-                         assayY = "metabolites", method = "GAM")
-multiMoranLmmsSE = fitLinModels(multiMoranResSE, designDf, Formula = ~ (1|mouse))
-multiMoranLmmsResSE = extractResultsMulti(multiMoranLmmsSE, designDf)
+multiMoranResSE <- sbivar(
+  X = StxSElist, Y = MetSElist, assayX = "transcripts",
+  assayY = "metabolites", method = "GAM"
+)
+multiMoranLmmsSE <- fitLinModels(multiMoranResSE, designDf, Formula = ~ (1 | mouse))
+multiMoranLmmsResSE <- extractResultsMulti(multiMoranLmmsSE, designDf)
 head(multiMoranLmmsResSE$result$Intercept)
 ```
 
 Another option is to provide only two _SpatialExperiment_ objects, but provide a _sample_id_ argument that identifies the different images. For illustration, we construct such objects from the Vicari data.
 
 ```{r SEidentifier}
-SEsingleStx = SpatialExperiment(
-    assays = list("transcripts" = t(Reduce(Vicari$TranscriptOutcomes, f = rbind))), 
-    spatialCoords = Reduce(Vicari$TranscriptCoords, f = rbind), 
-    colData = data.frame("sample_id" = rep(names(Vicari$TranscriptOutcomes), 
-            times = vapply(Vicari$TranscriptOutcomes, FUN.VALUE = 0L, nrow))))
-SEsingleMet = SpatialExperiment(
-    assays = list("metabolites" = t(Reduce(Vicari$MetaboliteOutcomes, f = rbind))), 
-    spatialCoords = Reduce(Vicari$MetaboliteCoords, f = rbind), 
-    colData = data.frame("sample_id" = rep(names(Vicari$MetaboliteOutcomes), 
-            times = vapply(Vicari$MetaboliteOutcomes, FUN.VALUE = 0L, nrow))))
+SEsingleStx <- SpatialExperiment(
+  assays = list("transcripts" = t(Reduce(Vicari$TranscriptOutcomes, f = rbind))),
+  spatialCoords = Reduce(Vicari$TranscriptCoords, f = rbind),
+  colData = data.frame("sample_id" = rep(names(Vicari$TranscriptOutcomes),
+    times = vapply(Vicari$TranscriptOutcomes, FUN.VALUE = 0L, nrow)
+  ))
+)
+SEsingleMet <- SpatialExperiment(
+  assays = list("metabolites" = t(Reduce(Vicari$MetaboliteOutcomes, f = rbind))),
+  spatialCoords = Reduce(Vicari$MetaboliteCoords, f = rbind),
+  colData = data.frame("sample_id" = rep(names(Vicari$MetaboliteOutcomes),
+    times = vapply(Vicari$MetaboliteOutcomes, FUN.VALUE = 0L, nrow)
+  ))
+)
 ```
 
 A quick look:
@@ -336,12 +369,15 @@ SEsingleStx
 And run the same analysis:
 
 ```{r singleSEanalysis, eval = FALSE}
-sbivarMultiSingleSE = sbivar(SEsingleStx, SEsingleMet, sample_id_x = "sample_id",
-                             assayX = "transcripts", assayY = "metabolites", 
-                             method = "GAMs", normX = "rel", normY = "rel")
-multiMoranLmmsSingleSE = fitLinModels(sbivarMultiSingleSE, designDf, 
-                                      Formula = ~ (1|mouse))
-multiMoranLmmsResSingleSE = extractResultsMulti(multiMoranLmmsSingleSE, designDf)
+sbivarMultiSingleSE <- sbivar(SEsingleStx, SEsingleMet,
+  sample_id_x = "sample_id",
+  assayX = "transcripts", assayY = "metabolites",
+  method = "GAMs", normX = "rel", normY = "rel"
+)
+multiMoranLmmsSingleSE <- fitLinModels(sbivarMultiSingleSE, designDf,
+  Formula = ~ (1 | mouse)
+)
+multiMoranLmmsResSingleSE <- extractResultsMulti(multiMoranLmmsSingleSE, designDf)
 ```
 
 ## AnnData
@@ -349,43 +385,47 @@ multiMoranLmmsResSingleSE = extractResultsMulti(multiMoranLmmsSingleSE, designDf
 AnnData is python data format often used to store spatial experiment results, which can also be read into R. An AnnData object is e.g. created by reading an '.h5ad' with the functionality of the _anndata_ R-package. Here we adapted one a file from the [study](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/GZFCWC) by @Godfrey2025, keeping its structure but subsetting it to only necessary components and the 10 most abundant features per modality. For illustration, this file is included in the _sbivar_ package and can be read in (if the _anndata_ and _zellkonverter_ packages are installed) as:
 
 ```{r readh5ad, message = FALSE}
-if(reqadzk <- (require(anndata) && require(zellkonverter))){
-    annDataObj = read_h5ad(system.file("h5adData", "LC_170_subset.h5ad", package = "sbivar"))
+if (reqadzk <- (require(anndata) && require(zellkonverter))) {
+  annDataObj <- read_h5ad(system.file("h5adData", "LC_170_subset.h5ad", package = "sbivar"))
 }
 ```
 
 We suggest converting it to a _SingleCellExperiment_ object from the eponymous R-package using the _zellkonverter_ package:
 
 ```{r anndata}
-if(reqadzk){
-    sceStx <- AnnData2SCE(annDataObj, X_name = "X")
+if (reqadzk) {
+  sceStx <- AnnData2SCE(annDataObj, X_name = "X")
 }
 ```
 
 Note that a _SingleCellExperiment_ object can only contain one modality at the time, here the transcriptomics. From there on, it is only a small step to a _SpatialExperiment_ object as accepted by _sbivar_. The only tricky part are the spatial coordinates, which have no fixed slot in the _AnnData_ object. Here, they have been stored in the "obsm" slot of the _AnnData_ object, which means they have ended up in the "reducedDims" slot of the _SingleCellExperiment_ object. In addition, we create a _SpatialExperiment_ object for the metabolomics data, which has oddly been stored in the unstructured ("uns") slot of the _AnnData_ object. To keep build times of this vignette low, we again only look at a subset of 10 features
 
 ```{r scetospe}
-if(reqadzk){
-    library(SpatialExperiment)
-    speStx <- SpatialExperiment(list("Stx" = assay(sceStx, "X")[1:10,]), 
-                                colData = colData(sceStx), 
-                                spatialCoords = reducedDims(sceStx)$spatial)
-    #Now for the metabolomics data too
-    speMet = SpatialExperiment(list("msi" = t(annDataObj$uns$msi)[1:10,]), 
-                               colData = colData(sceStx), 
-                               spatialCoords = reducedDims(sceStx)$spatial)
-    rownames(speMet) = annDataObj$uns[["mz_features"]][1:10] 
-    #Need to set column names manually
+if (reqadzk) {
+  library(SpatialExperiment)
+  speStx <- SpatialExperiment(list("Stx" = assay(sceStx, "X")[1:10, ]),
+    colData = colData(sceStx),
+    spatialCoords = reducedDims(sceStx)$spatial
+  )
+  # Now for the metabolomics data too
+  speMet <- SpatialExperiment(list("msi" = t(annDataObj$uns$msi)[1:10, ]),
+    colData = colData(sceStx),
+    spatialCoords = reducedDims(sceStx)$spatial
+  )
+  rownames(speMet) <- annDataObj$uns[["mz_features"]][1:10]
+  # Need to set column names manually
 }
 ```
 
 Note that in this example, the samples of the two modalities have been pre-matched (the "spatialCoords" slot is the same), which is in general not recommended. The above code chunks should not be applied thoughtlessly, as the _AnnData_ structure is not very strict on the data types it includes. The analysis is then run and plotted as:
 
 ```{r speanalyse}
-if(reqadzk){
-    GodfreyRes = sbivar(speStx, speMet, assayX = "Stx", assayY = "msi", 
-                        normX = "rel", normY = "rel", verbose = FALSE)
-    plotTopPair(GodfreyRes, speStx, speMet)
+if (reqadzk) {
+  GodfreyRes <- sbivar(speStx, speMet,
+    assayX = "Stx", assayY = "msi",
+    normX = "rel", normY = "rel", verbose = FALSE
+  )
+  plotTopPair(GodfreyRes, speStx, speMet)
 }
 ```
 

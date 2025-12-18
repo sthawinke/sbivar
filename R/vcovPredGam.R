@@ -13,18 +13,21 @@
 #' \item{vcov}{Variance-covariance matrix of the predictions}
 #' @seealso \link[mgcv]{vcov.gam}, \link[mgcv]{predict.gam}
 #' @importFrom mgcv vcov.gam predict.gam
-vcovPredGam = function(model, newdata){
-    # Get the full coefficient covariance matrix
-    coef_cov_matrix <- vcov.gam(model)
-    # Get the basis matrix for predictions
-    basis_matrix <- predict.gam(model, newdata = newdata, type = "lpmatrix")
-    predOut = c(basis_matrix %*% coef(model))
-    #Same as predict(model, newdata = newdata, type = "response")
-    predOut = switch(model$family$link,
-                     "identity" = predOut, "inverse" = 1/predOut, "log" = exp(predOut))
-    prediction_cov_matrix <- basis_matrix %*% tcrossprod(coef_cov_matrix, basis_matrix)
-    #Checked using predict.gam(,se.fit = TRUE)
-    return(list("pred" = predOut, "vcov" = prediction_cov_matrix))
+vcovPredGam <- function(model, newdata) {
+  # Get the full coefficient covariance matrix
+  coef_cov_matrix <- vcov.gam(model)
+  # Get the basis matrix for predictions
+  basis_matrix <- predict.gam(model, newdata = newdata, type = "lpmatrix")
+  predOut <- c(basis_matrix %*% coef(model))
+  # Same as predict(model, newdata = newdata, type = "response")
+  predOut <- switch(model$family$link,
+    "identity" = predOut,
+    "inverse" = 1 / predOut,
+    "log" = exp(predOut)
+  )
+  prediction_cov_matrix <- basis_matrix %*% tcrossprod(coef_cov_matrix, basis_matrix)
+  # Checked using predict.gam(,se.fit = TRUE)
+  return(list("pred" = predOut, "vcov" = prediction_cov_matrix))
 }
 #' Get approximate variance of the
 #'
@@ -34,8 +37,12 @@ vcovPredGam = function(model, newdata){
 #' @param link Link function
 #'
 #' @returns Variance-covariance matrix of the spline predictions
-getApproxVar = function(vcovMat, cen, x, link){
-    vec = switch(link, "identity" = cen, "log" = cen*x, "inverse" = cen/x^2)
-    return(vec %*% vcovMat %*% vec)
-    #Minus for inverse link (gamma) cancels out
+getApproxVar <- function(vcovMat, cen, x, link) {
+  vec <- switch(link,
+    "identity" = cen,
+    "log" = cen * x,
+    "inverse" = cen / x^2
+  )
+  return(vec %*% vcovMat %*% vec)
+  # Minus for inverse link (gamma) cancels out
 }

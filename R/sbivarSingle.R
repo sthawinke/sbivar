@@ -151,6 +151,8 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
   )
   if (method == "Moran's I") {
     lis$maxIxy <- moranRes$maxIxy
+    lis$wo <- wo
+    lis$wParams <- switch(wo, "Gauss" = etas, "nn"= wParams)
   }
   if (method == "GAMs") {
     lis$families <- families

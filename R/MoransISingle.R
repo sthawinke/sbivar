@@ -125,8 +125,7 @@ MoransISingle <- function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose,
     })
   }
   return(list(
-    "res" = out, "wo" = wo, "etas" = if (wo == "Gauss") wParams,
-    "maxIxy" = maxIxy, "numNN" = if (wo == "nn") wParams
+    "res" = out, "maxIxy" = maxIxy
   ))
 }
 #' Estimate variograms using Matheron's binning estimator for many features at once, and evaluate

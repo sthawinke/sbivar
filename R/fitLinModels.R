@@ -33,7 +33,8 @@
 #' head(resGAMsMulti$result$Intercept)
 #' @importFrom lmerTest lmer
 #' @importFrom stats formula terms model.matrix
-#' @importFrom lme4 lmerControl .makeCC isSingular lFormula mkReTrms findbars nobars
+#' @importFrom lme4 lmerControl .makeCC isSingular lFormula mkReTrms
+#' @importFrom reformulas findbars nobars
 #' @importFrom methods is
 #' @importFrom smoppix centerNumeric named.contr.sum loadBalanceBplapply
 #' @importFrom BiocParallel bplapply bpparam

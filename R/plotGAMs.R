@@ -26,13 +26,13 @@
 #'
 #' @examples
 #' # Single image
-#' example(fitLinModels, "sbivar")
+#' example(sbivar, "sbivar")
 #' plotGAMs(X, Y, Cx, Ey, features = c("X1", "Y2"))
 #' plotGAMsTopResults(resGAMs, X, Y, Cx = Cx, Ey = Ey)
-#' # Multi image
-#' plotGAMsTopResults(
-#'   resGAMsMulti, Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
-#'   Vicari$TranscriptCoords, Vicari$MetaboliteCoords
+#' # Multi image, arbitrary pair
+#' data(Vicari)
+#' plotGAMs(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
+#'   Vicari$TranscriptCoords, Vicari$MetaboliteCoords, features = c("Gm42418", "X576.20502")
 #' )
 #' @import ggplot2
 #' @order 1

@@ -46,7 +46,7 @@ MoransISingle = function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose,
     Ws = vapply(wParams, FUN.VALUE = matrix(0, n, m), function(iter) {
         buildWeightMat(Cx = Cx, Ey = Ey, wo = wo, eta = iter, numNN = iter)
     })
-    Ws = Ws[,,idW <- (colSums(Ws, dims = 2)>0), drop = FALSE]
+    Ws = Ws[,,idW <- (colSums(Ws, dims = 2, na.rm = TRUE)>0), drop = FALSE]
     numWs = dim(Ws)[3]
     if(any(!idW) && (wo=="Gauss")){
         warning("Eta values ", etas[!idW], " yielded zero weight matrices and have been dropped!")

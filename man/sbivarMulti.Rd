@@ -13,7 +13,7 @@ sbivarMulti(
   method = c("Moran's I", "GAMs", "Correlation"),
   wo = c("Gauss", "nn"),
   numNN = c(4, 8, 24),
-  etas = c(2e-06, 6e-05, 0.002),
+  etas = c(2e-05, 0.002, 0.2),
   normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
   returnSEsMoransI = TRUE,

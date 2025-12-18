@@ -48,7 +48,7 @@
 #' @seealso \link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle}, \link{GPsSingle}
 sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
       normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
-      etas = c(2e-6, 6e-5, 2e-3), findMaxW = FALSE,
+      etas = c(2e-5, 2e-3, 2e-1), findMaxW = FALSE,
       families = list("X" = gaussian(), "Y" = gaussian()), n_points_grid = 6e2, verbose = TRUE,
       variogramModels = c("Exp", "Lin"), width = cutoff/15, cutoff = sqrt(2)/3,
       wo = c("Gauss", "nn"), numNN = c(4, 8, 24), pseudoCount = 1e-8, returnSEsMoransI = FALSE,

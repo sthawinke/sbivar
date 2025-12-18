@@ -49,6 +49,6 @@ writeSbivarToXlsx(resGAMs, file = "tmpFile", sigLevel = 1)
 file.remove("tmpFile.xlsx")
 #Multiple results
 example(fitLinModels, "sbivar")
-writeSbivarToXlsx(resMoran, file = "tmpFile", sigLevel = 1)
+writeSbivarToXlsx(resGAMsMulti, file = "tmpFile", sigLevel = 1)
 file.remove("tmpFile.xlsx")
 }

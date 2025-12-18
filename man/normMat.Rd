@@ -24,6 +24,6 @@ norm = "none" is pass-through, norm = "rel" divides by sample sums,
 "log" adds a pseudocount, divides by sample sums and log-normalizes. At the end, dimnames are added.
 }
 \examples{
-mat = matrix(rpois(2000, lambda = 3), 40, 50)
-nMat = normMat(mat, norm = "rel")
+mat <- matrix(rpois(2000, lambda = 3), 40, 50)
+nMat <- normMat(mat, norm = "rel")
 }

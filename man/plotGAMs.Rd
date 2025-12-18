@@ -76,11 +76,13 @@ Both spline surfaces are scaled to the [-1,1] range, the same as
 the correlation has naturally, for legibility.
 }
 \examples{
-#Single image
+# Single image
 example(fitLinModels, "sbivar")
 plotGAMs(X, Y, Cx, Ey, features = c("X1", "Y2"))
 plotGAMsTopResults(resGAMs, X, Y, Cx = Cx, Ey = Ey)
 # Multi image
-plotGAMsTopResults(resGAMsMulti, Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
-Vicari$TranscriptCoords, Vicari$MetaboliteCoords)
+plotGAMsTopResults(
+  resGAMsMulti, Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
+  Vicari$TranscriptCoords, Vicari$MetaboliteCoords
+)
 }

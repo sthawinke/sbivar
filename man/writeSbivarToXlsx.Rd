@@ -42,8 +42,8 @@ and indicate departure from this baseline for this fixed effect
 }
 \examples{
 example(sbivar, "sbivar")
-#The significance level is set to 1 here for illustration,
-#meaning that all feature pairs will be written to the spreadsheet.
+# The significance level is set to 1 here for illustration,
+# meaning that all feature pairs will be written to the spreadsheet.
 # Single result
 writeSbivarToXlsx(resGAMs, file = "tmpFile", sigLevel = 1)
 file.remove("tmpFile.xlsx")

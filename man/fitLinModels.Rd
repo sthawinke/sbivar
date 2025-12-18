@@ -56,12 +56,18 @@ The left hand side of "Formula" can be provided or not,
 but it will be overridden by "out" for downstream analysis
 }
 \examples{
-example(sbivar, "sbivar")
-mouse = substr(names(Vicari$TranscriptOutcomes), 1, 10)
-designDf = data.frame("mouse" = mouse) # The design matrix
-multiGAMLmms = fitLinModels(VicariRes, designDf, Formula = ~ (1|mouse))
-#Extract the results
-resGAMsMulti = extractResultsMulti(multiGAMLmms, designDf = designDf)
+#' #Multi-image analysis on Vicari data, using GAMs
+data(Vicari)
+VicariRes <- sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
+  Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
+  normX = "rel", normY = "rel",
+  method = "GAM"
+)
+mouse <- substr(names(Vicari$TranscriptOutcomes), 1, 10)
+designDf <- data.frame("mouse" = mouse) # The design matrix
+multiGAMLmms <- fitLinModels(VicariRes, designDf, Formula = ~ (1 | mouse))
+# Extract the results
+resGAMsMulti <- extractResultsMulti(multiGAMLmms, designDf = designDf)
 head(resGAMsMulti$result$Intercept)
 }
 \seealso{

@@ -26,8 +26,8 @@ The new grid will contain approximately the number of new points requested,
 depending on the size of the concave hull
 }
 \examples{
-Cx = matrix(runif(40, 0, 1), 20, 2)
-Ey = matrix(runif(30, 0, 1), 15, 2)
+Cx <- matrix(runif(40, 0, 1), 20, 2)
+Ey <- matrix(runif(30, 0, 1), 15, 2)
 buildNewGrid(Cx, Ey, n_points_grid = 50)
 }
 \seealso{

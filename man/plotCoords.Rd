@@ -34,10 +34,10 @@ and requires the user to set par(mar = ) appropriately, such that all plots are 
 \examples{
 data(Vicari)
 plotCoords(Vicari$TranscriptCoords[[1]], Vicari$MetaboliteCoords[[1]])
-#For multiple coordinates
-par(mfrow = c(2,3))
-foo = lapply(names(Vicari$TranscriptCoords), function(nam){
-    plotCoords(Vicari$TranscriptCoords[[nam]], Vicari$MetaboliteCoords[[nam]], main = nam)
+# For multiple coordinates
+par(mfrow = c(2, 3))
+foo <- lapply(names(Vicari$TranscriptCoords), function(nam) {
+  plotCoords(Vicari$TranscriptCoords[[nam]], Vicari$MetaboliteCoords[[nam]], main = nam)
 })
-par(mfrow=c(1,1))
+par(mfrow = c(1, 1))
 }

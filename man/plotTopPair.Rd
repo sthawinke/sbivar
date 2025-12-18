@@ -107,13 +107,16 @@ The normalization used for plotting is not necessarily the same as the one used 
 \examples{
 ### Single image
 # Single image analysis on synthetic data
-n=8e1;m=9e1;p=3;k=2
-X = matrix(rnorm(n*p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
-Y = matrix(rnorm(m*k), m, k, dimnames = list(NULL, paste0("Y", seq_len(k))))
-Cx = matrix(runif(n*2), n, 2)
-Ey = matrix(runif(m*2), m, 2)
-colnames(Cx) = colnames(Ey) = c("x", "y")
-resMoransI = sbivar(X, Y, Cx, Ey, method = "Moran's I")
+n <- 8e1
+m <- 9e1
+p <- 3
+k <- 2
+X <- matrix(rnorm(n * p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
+Y <- matrix(rnorm(m * k), m, k, dimnames = list(NULL, paste0("Y", seq_len(k))))
+Cx <- matrix(runif(n * 2), n, 2)
+Ey <- matrix(runif(m * 2), m, 2)
+colnames(Cx) <- colnames(Ey) <- c("x", "y")
+resMoransI <- sbivar(X, Y, Cx, Ey, method = "Moran's I")
 # Plot the feature pair with the most significant signal
 plotTopPair(resMoransI, X, Y, Cx, Ey)
 # Plot an arbitrary feature pair
@@ -122,8 +125,9 @@ plotPairSingle(X, Y, Cx, Ey, features = c("X1", "Y1"))
 data(Vicari)
 # Plot an arbitrary feature pair
 plotPairMulti(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
-Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
-normX = "log", normY = "log", features = c("mt.Nd2", "X555.20713"))
+  Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
+  normX = "log", normY = "log", features = c("mt.Nd2", "X555.20713")
+)
 }
 \seealso{
 \link{extractResultsMulti}, \link{fitLinModels}

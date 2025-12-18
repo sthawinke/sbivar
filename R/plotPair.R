@@ -30,6 +30,7 @@
 #' # Plot an arbitrary feature pair
 #' plotPairSingle(X, Y, Cx, Ey, features = c("X1", "Y1"))
 #' ### Multi image
+#' data(Vicari)
 #' # Plot an arbitrary feature pair
 #' plotPairMulti(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
 #' Vicari$TranscriptCoords, Vicari$MetaboliteCoords,

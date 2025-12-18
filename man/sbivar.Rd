@@ -36,10 +36,10 @@ included in the same SpatialExperiment objects X and Y. By default, they are ass
 \item{experimentX, experimentY}{Names of the experiments in X to be used in the analysis}
 }
 \value{
-The analysis result
+A list containing the analysis result, along with parameters used in the analysis
 }
 \description{
-Perform the spatial analysis of choice, either on a single or multiple images.
+Perform the a bivariate spatial association analysis, either on a single or multiple images.
 Depending on the input, the workhorse functions \link{sbivarSingle}
 (single-image) or \link{sbivarMulti} (multi-image) are called.
 }

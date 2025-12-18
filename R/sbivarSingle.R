@@ -45,6 +45,7 @@
 #' with rownames "mean", "nugget", "range" and "sigma", and column names as in X and Y.
 #' This argument allows to pass parameters of the Gaussian processes estimated with other software
 #' to perform the score test.
+#' @seealso \link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle}, \link{GPsSingle}
 sbivarSingle = function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
       normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
       etas = c(2e-6, 6e-5, 2e-3), findMaxW = FALSE,

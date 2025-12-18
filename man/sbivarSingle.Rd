@@ -96,3 +96,6 @@ to perform the score test.
 \note{
 All methods use multithreading on the cluster provided using the BiocParallel package
 }
+\seealso{
+\link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle}, \link{GPsSingle}
+}

@@ -13,7 +13,8 @@ writeSbivarToXlsx(
 )
 }
 \arguments{
-\item{results}{The results of linear model fitting}
+\item{results}{The analysis results, from a call to \link{sbivar} (single-image)
+or \link{extractResultsMulti} (multi-image)}
 
 \item{file}{The file to write the results to}
 
@@ -31,13 +32,13 @@ otherwise throws a warning.
 }
 \description{
 The results of single- or multi-image analysis are written to an excel spreadsheet
-with different tabs for every parameter, sorted by increasing p-value.
+with separate tabs per parameter tested, sorted by increasing p-value.
 }
 \details{
 If no feature exceeds the significance threshold for a certain parameter,
 an empty tab is created. For each fixed effect, a single tab is written.
 The "baseline" tabs indicate the overall patterns, the other tabs are named after the fixed effects
-and indicate departure from this baseline depending on this fixed effect
+and indicate departure from this baseline for this fixed effect
 }
 \examples{
 example(sbivar, "sbivar")

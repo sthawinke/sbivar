@@ -17,6 +17,7 @@
 #' @inheritParams sbivarSingle
 #' @inheritParams buildWeightMat
 #' @importFrom BiocParallel bpparam
+#' @seealso \link{MoransIMulti}, \link{correlationsMulti}, \link{GAMsMulti}
 sbivarMulti = function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
                        method = c("Moran's I", "GAMs", "Correlation"), wo = c("Gauss", "nn"),
                        numNN = c(4, 8, 24), etas = c(2e-6, 6e-5, 2e-3),

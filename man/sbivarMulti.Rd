@@ -66,4 +66,6 @@ All methods use multithreading on the cluster provided using the BiocParallel pa
 }
 \seealso{
 \link{fitLinModels}
+
+\link{MoransIMulti}, \link{correlationsMulti}, \link{GAMsMulti}
 }

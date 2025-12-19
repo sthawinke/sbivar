@@ -59,9 +59,9 @@ but it will be overridden by "out" for downstream analysis
 #' #Multi-image analysis on Vicari data, using GAMs
 data(Vicari)
 VicariRes <- sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
-  Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
-  normX = "rel", normY = "rel",
-  method = "GAM"
+    Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
+    normX = "rel", normY = "rel",
+    method = "GAM"
 )
 mouse <- substr(names(Vicari$TranscriptOutcomes), 1, 10)
 designDf <- data.frame("mouse" = mouse) # The design matrix

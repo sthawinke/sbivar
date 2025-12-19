@@ -65,7 +65,7 @@ register(MulticoreParam(2))
 
 ```{r gamSingle}
 moranRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
-  method = "Moran's I"
+    method = "Moran's I"
 )
 ```
 
@@ -99,9 +99,9 @@ For the multi-image case, we use GAMs as measure of spatial association, with a 
 
 ```{r multivic}
 multiGAMRes <- sbivar(
-  X = Vicari$TranscriptOutcomes, Y = Vicari$MetaboliteOutcomes,
-  Cx = Vicari$TranscriptCoords, Ey = Vicari$MetaboliteCoords,
-  method = "GAM", families = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log"))
+    X = Vicari$TranscriptOutcomes, Y = Vicari$MetaboliteOutcomes,
+    Cx = Vicari$TranscriptCoords, Ey = Vicari$MetaboliteCoords,
+    method = "GAM", families = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log"))
 )
 ```
 
@@ -123,8 +123,8 @@ No features are significantly associated after multiplicity correction. For illu
 
 ```{r topPairMulti, fig.height = 9}
 plotTopPair(multiGAMLmmsRes,
-  Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes,
-  Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.3
+    Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes,
+    Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.3
 )
 ```
 

@@ -29,7 +29,7 @@
 #' seX <- SpatialExperiment(assays = list("transcripts" = t(X)), spatialCoords = Cx)
 #' seY <- SpatialExperiment(assays = list("metabolites" = t(Y)), spatialCoords = Ey)
 #' resModtGPs <- sbivar(seX, seY,
-#'   assayX = "transcripts", assayY = "metabolites",
-#'   method = "GPs"
+#'     assayX = "transcripts", assayY = "metabolites",
+#'     method = "GPs"
 #' )
 setGeneric("sbivar", function(X, ...) standardGeneric("sbivar"))

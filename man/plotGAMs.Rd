@@ -83,6 +83,7 @@ plotGAMsTopResults(resGAMs, X, Y, Cx = Cx, Ey = Ey)
 # Multi image, arbitrary pair
 data(Vicari)
 plotGAMs(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
-  Vicari$TranscriptCoords, Vicari$MetaboliteCoords, features = c("Gm42418", "X576.20502")
+    Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
+    features = c("Gm42418", "X576.20502")
 )
 }

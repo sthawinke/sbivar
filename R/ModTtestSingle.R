@@ -13,17 +13,17 @@
 #' @param Cx The shared coordinate matrix
 #' @importFrom SpatialPack modified.ttest
 ModTtestSingle <- function(X, Y, Cx, verbose) {
-  featGrid <- expand.grid("featX" = colnames(X), "featY" = colnames(Y))
-  if (verbose) {
-    message("Performing ", nrow(featGrid), " modified t-tests")
-  }
-  out <- simplify2array(loadBalanceBplapply(seq_len(nrow(featGrid)), function(i) {
-    unlist(modified.ttest(
-      X[, featGrid[i, "featX"]], Y[, featGrid[i, "featY"]],
-      Cx
-    )[c("corr", "ESS", "p.value")])
-  }))
-  colnames(out) <- makeNames(colnames(X), colnames(Y))
-  rownames(out) <- c("Correlation", "Effective sample size", "pVal")
-  t(out)
+    featGrid <- expand.grid("featX" = colnames(X), "featY" = colnames(Y))
+    if (verbose) {
+        message("Performing ", nrow(featGrid), " modified t-tests")
+    }
+    out <- simplify2array(loadBalanceBplapply(seq_len(nrow(featGrid)), function(i) {
+        unlist(modified.ttest(
+            X[, featGrid[i, "featX"]], Y[, featGrid[i, "featY"]],
+            Cx
+        )[c("corr", "ESS", "p.value")])
+    }))
+    colnames(out) <- makeNames(colnames(X), colnames(Y))
+    rownames(out) <- c("Correlation", "Effective sample size", "pVal")
+    t(out)
 }

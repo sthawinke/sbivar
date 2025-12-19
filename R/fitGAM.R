@@ -13,10 +13,10 @@
 #' @import stats
 #' @seealso \link[mgcv]{gam}
 fitGAM <- function(df, outcome, k = -1, family = gaussian(), offset = NULL) {
-  try(gam(as.formula(paste(outcome, " ~ s(x, y, k = k)")),
-    data = df, family = family,
-    offset = offset
-  ), silent = TRUE)
+    try(gam(as.formula(paste(outcome, " ~ s(x, y, k = k)")),
+        data = df, family = family,
+        offset = offset
+    ), silent = TRUE)
 }
 #' Fit GAMs to all columns of a dataframe, as a wrapper for fitGAM
 #'
@@ -31,26 +31,26 @@ fitGAM <- function(df, outcome, k = -1, family = gaussian(), offset = NULL) {
 #' @importFrom smoppix loadBalanceBplapply
 #' @importFrom BiocParallel bplapply
 fitManyGAMs <- function(mat, coord, family = gaussian(), modality, ...) {
-  cns <- selfName(colnames(mat))
-  df <- data.frame(as.matrix(mat), coord)
-  if (family$family != "gaussian") {
-    libSizes <- rowSums(mat)
-    df <- df[id <- (libSizes > 0), ]
-    libSizes <- libSizes[id]
-  }
-  offset <- switch(family$link,
-    "inverse" = 1 / libSizes,
-    "log" = log(libSizes),
-    NULL
-  )
-  fits <- loadBalanceBplapply(cns, function(cn) {
-    fitGAM(df, outcome = cn, offset = offset, family = family, ...)
-  })
-  if (!any(id <- vapply(fits, FUN.VALUE = TRUE, is, "gam"))) {
-    stop(
-      "All GAM fits failed in modality ", modality,
-      ", please investigate cause! First failure:\n", fits[[1]]
+    cns <- selfName(colnames(mat))
+    df <- data.frame(as.matrix(mat), coord)
+    if (family$family != "gaussian") {
+        libSizes <- rowSums(mat)
+        df <- df[id <- (libSizes > 0), ]
+        libSizes <- libSizes[id]
+    }
+    offset <- switch(family$link,
+        "inverse" = 1 / libSizes,
+        "log" = log(libSizes),
+        NULL
     )
-  }
-  return(fits[id])
+    fits <- loadBalanceBplapply(cns, function(cn) {
+        fitGAM(df, outcome = cn, offset = offset, family = family, ...)
+    })
+    if (!any(id <- vapply(fits, FUN.VALUE = TRUE, is, "gam"))) {
+        stop(
+            "All GAM fits failed in modality ", modality,
+            ", please investigate cause! First failure:\n", fits[[1]]
+        )
+    }
+    return(fits[id])
 }

@@ -97,6 +97,8 @@ For serial calculations, for instance if memory is limiting, choose instead
 register(SerialParam())
 ```
 
+Furthermore, it is highly recommended to install a matrix library such as OpenBLAS \url{http://www.openmathlib.org/OpenBLAS/}, that employs threading for key matrix manipulations used throughout the package.
+
 # Data analysis
 
 ## Data exploration

@@ -154,7 +154,7 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
         lis$wo <- wo
         lis$wParams <- switch(wo,
             "Gauss" = etas,
-            "nn" = wParams
+            "nn" = numNNs
         )
     }
     if (method == "GAMs") {

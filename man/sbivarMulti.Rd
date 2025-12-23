@@ -36,6 +36,8 @@ sbivarMulti(
 
 \item{wo, numNNs, etas}{Passed onto \link{MoransISingle}}
 
+\item{normX, normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}
+
 \item{returnSEsMoransI}{A boolean, are standard errors of Moran's I to be returned?}
 
 \item{variogramModels}{A character vector, indicating the variogram model passed onto \link[gstat]{vgm}.

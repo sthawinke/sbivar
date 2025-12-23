@@ -15,7 +15,7 @@
 #' \item{normX,normY}{As provided}
 #' \item{families,wo,numNNs,etas}{Optional, as provided}
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
-#' @inheritParams sbivarMulti
+#' @inheritParams sbivarSingle
 #' @inheritParams buildWeightMat
 #' @inheritParams MoransISingle
 #' @importFrom BiocParallel bpparam

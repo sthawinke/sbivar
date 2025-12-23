@@ -11,7 +11,7 @@
 #' @param method A character string, indicating which method to apply
 #' @param GPmethod,Quants,numLscAlts,optControl,corStruct,gpParams Passed onto \link{fitGP}
 #' @param n_points_grid,families Passed onto \link{GAMsSingle}
-#' @param wo,variogramModels,numNNs,etas,cutoff,width,returnSEsMoransI Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}
+#' @param wo,variogramModels,numNNs,etas,cutoff,width,returnSEsMoransI,findMaxW Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}
 #' @param verbose Should info on type of analysis be printed?
 #' @param normX,normY,pseudoCount Normalization parameters, passed onto \link{normMat}
 #'

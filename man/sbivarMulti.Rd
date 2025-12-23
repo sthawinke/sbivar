@@ -34,9 +34,14 @@ sbivarMulti(
 
 \item{method}{A character string, indicating which method to apply}
 
-\item{wo, numNNs, etas}{Passed onto \link{MoransIsingle}}
+\item{wo, numNNs, etas}{Passed onto \link{MoransISingle}}
 
-\item{normX, normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}
+\item{returnSEsMoransI}{A boolean, are standard errors of Moran's I to be returned?}
+
+\item{variogramModels}{A character vector, indicating the variogram model passed onto \link[gstat]{vgm}.
+Currently, only "Exp" and "Lin" are implemented for computational reasons.}
+
+\item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}}
 
 \item{verbose}{Should info on type of analysis be printed?}
 }

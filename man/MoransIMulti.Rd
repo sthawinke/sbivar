@@ -11,6 +11,8 @@ MoransIMulti(Xl, Yl, Cxl, Eyl, returnSEsMoransI, verbose, ...)
 
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
+\item{returnSEsMoransI}{A boolean, are standard errors of Moran's I to be returned?}
+
 \item{verbose}{Should info on type of analysis be printed?}
 
 \item{...}{passed onto \link{MoransISingle}}

@@ -26,6 +26,8 @@ MoransISingle(
 
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
+\item{wo}{type of weight parameter, passed onto \link{buildWeightMat}}
+
 \item{numNNs, etas}{Vectors of weight matrix parameters, whose elements are passed onto \link{buildWeightMat}}
 
 \item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}}

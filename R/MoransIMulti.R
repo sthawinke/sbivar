@@ -5,6 +5,7 @@
 #'
 #' @inheritParams sbivarMulti
 #' @inheritParams buildWeightMat
+#' @inheritParams MoransISingle
 #' @param ... passed onto \link{MoransISingle}
 #'
 #' @returns A list of Moran's I estimates, standard errors and maximum values

@@ -6,6 +6,7 @@
 #' @param variogramModels A character vector, indicating the variogram model passed onto \link[gstat]{vgm}.
 #' Currently, only "Exp" and "Lin" are implemented for computational reasons.
 #' @param numNNs,etas Vectors of weight matrix parameters, whose elements are passed onto \link{buildWeightMat}
+#' @param wo type of weight parameter, passed onto \link{buildWeightMat}
 #' @param cutoff,width Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}
 #' @param findMaxW Is the maximum bivariate Moran's I needed?
 #' @param returnSEsMoransI A boolean, are standard errors of Moran's I to be returned?
@@ -141,6 +142,7 @@ MoransISingle <- function(
 #' @importFrom gstat variogram vgm fit.variogram
 #' @importFrom sp coordinates
 #' @inheritParams sbivarSingle
+#' @inheritParams MoransISingle
 #' @param X Outcome matrix
 #' @param Cx Coordinate matrix
 #' @return A list of evaluated variograms

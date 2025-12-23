@@ -7,7 +7,7 @@
 #' @param Cxl,Eyl Lists of corresponding coordinate matrices of dimension two
 #' @param method A character string, indicating which method to apply
 #' @param families,n_points_grid Passed onto \link{GAMsMulti}
-#' @param wo,numNNs,etas Passed onto \link{MoransIsingle}
+#' @param wo,numNNs,etas Passed onto \link{MoransISingle}
 #' @returns A list containing
 #' \item{estimates}{The estimated measures of association}
 #' \item{method}{The method used to find these estimates}
@@ -15,8 +15,9 @@
 #' \item{normX,normY}{As provided}
 #' \item{families,wo,numNNs,etas}{Optional, as provided}
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
-#' @inheritParams sbivarSingle
+#' @inheritParams sbivarMulti
 #' @inheritParams buildWeightMat
+#' @inheritParams MoransISingle
 #' @importFrom BiocParallel bpparam
 #' @seealso \link{fitLinModels}, \link{MoransIMulti}, \link{correlationsMulti}, \link{GAMsMulti}
 sbivarMulti <- function(

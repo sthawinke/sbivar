@@ -46,7 +46,7 @@ sbivarSingle(
 
 \item{verbose}{Should info on type of analysis be printed?}
 
-\item{wo, variogramModels, numNNs, eta, cutoof, width, returnSEsMoransI}{Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}}
+\item{wo, variogramModels, numNNs, etas, cutoff, width, returnSEsMoransI}{Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}}
 
 \item{GPmethod, Quants, numLscAlts, optControl, corStruct, gpParams}{Passed onto \link{fitGP}}
 }

@@ -14,7 +14,7 @@ vignette: >
 bibliography: ../inst/REFERENCES.bib 
 ---
 
-```{r, echo=FALSE, eval = FALSE}
+```{r, echo=FALSE}
 htmltools::img(
     src = knitr::image_uri("../inst/Sbivar.png"),
     style = "position:absolute; top:0; right:0; padding:8px;",
@@ -99,7 +99,7 @@ register(SerialParam())
 
 Furthermore, it is highly recommended to install a matrix library such as OpenBLAS \url{http://www.openmathlib.org/OpenBLAS/}, that employs threading for key matrix manipulations used throughout the package.
 
-# Data analysis
+# Example analysis on data by Vicari et al. (2024)
 
 ## Data exploration
 
@@ -122,7 +122,7 @@ The alignment seems successful, notice that some tissue areas are only covered b
 
 ## Single-image analysis
 
-The Vicari data consist of six images which are best analysed jointly, but for didactical purposes we also analyse a single image here, the sample "V11L12-109_A1".
+The Vicari data consist of six images which can be analysed jointly, but for didactical purposes we first analyse a single image here, the sample "V11L12-109_A1".
 
 ```{r getsinglesample}
 singleSample <- "V11L12-109_A1"
@@ -132,7 +132,7 @@ singleMetCoords <- Vicari$MetaboliteCoords[[singleSample]]
 singleMet <- Vicari$MetaboliteOutcomes[[singleSample]]
 ```
 
-We analyse this single sample using bivariate Moran's I. By default, three different $\eta$ parameters are considered for constructing the elements of the weight matrix: `r eval(formals(sbivar:::sbivarSingle)$etas)`. We choose to normalize both modalities to relative abundances (see _?normMat). 
+We analyse this single sample using bivariate Moran's I. By default, three different $\eta$ parameters are considered for constructing the elements of the weight matrix: `r format(eval(formals(sbivar:::sbivarSingle)$etas))`. We choose to normalize both modalities to relative abundances (see ?normMat). 
 
 ```{r testmoran}
 moransIRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
@@ -166,7 +166,7 @@ gamRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
 )
 ```
 
-Plot the most significant pair (log-transformed data are shown, the original analysis is on raw data):
+Plot the most significant pair (normalized data are shown, the original analysis is on raw data):
 
 ```{r plottoppairgam, fig.height = 4.5}
 plotTopPair(gamRes,
@@ -191,7 +191,7 @@ gpRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, method =
 head(gpRes$result)
 ```
 
-The analysis results can be written to an external spreadsheet using the following one-liner
+The analysis results can be written to an external spreadsheet using the following one-liner, e.g. for the GAM results.
 
 ```{r sbivarSingleOut, eval = FALSE}
 writeSbivarToXlsx(gamRes, file = "myfile.xlsx")
@@ -222,7 +222,7 @@ multiMoranRes <- sbivar(VicariMultiTest$TranscriptOutcomes, VicariMultiTest$Meta
 )
 ```
 
-Next we plug the calculated Moran's I values into a linear model, with random effects for the individual mice, adn adding a bogus variable for illustrative purposes:
+Next we plug the calculated Moran's I values into a linear model, with random effects for the individual mice, and adding a bogus fixed variable for illustrative purposes:
 
 ```{r multiLmms}
 designDf <- data.frame("mouse" = mouse, "bogus" = factor(c(1, 2, 1, 2, 1, 2)))
@@ -301,8 +301,8 @@ Now we construct a _MultiAssayExperiment_ object
 ```{r makeMAE}
 library(MultiAssayExperiment)
 MAE <- MultiAssayExperiment(experiments = list(
-    "transcripts" = StxSE,
-    "metabolites" = MetSE
+    "Stx" = StxSE,
+    "Msi" = MetSE
 ))
 MAE
 ```
@@ -312,7 +312,7 @@ We run a the same analysis, now providing the experiment names on top of the ass
 ```{r analyseMAE, eval = FALSE}
 resMAE <- sbivar(MAE,
     assayX = "transcripts", assayY = "metabolites",
-    experimentX = "transcripts", experimentY = "metabolites",
+    experimentX = "Stx", experimentY = "Msi",
     families = FamiliesVicari, method = "GAMs", normX = "rel", normY = "rel"
 )
 ```

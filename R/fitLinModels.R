@@ -81,7 +81,7 @@ fitLinModels <- function(result, designDf, Formula, verbose = TRUE, inverseWeigh
         weightsArr <- outArr
     }
     for (i in names(measures)) {
-        outArr[i, namesFun(measures[[i]]$res), ] <- if (inverseWeigh) measures[[i]]$res[, seq_along(iter)] else measures[[i]]$res
+        outArr[i, namesFun(measures[[i]]$res), ] <- measures[[i]]$res[, seq_along(iter)]
         if (scaleByMax && (result$method == "Moran's I")) {
             outArr[i, namesFun(measures[[i]]$res), ] <- t(t(outArr[i, namesFun(measures[[i]]$res), ]) / measures[[i]]$maxIxy)
         }

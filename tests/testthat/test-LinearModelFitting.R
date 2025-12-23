@@ -9,9 +9,37 @@ test_that("SbivarSingle works for correct input", {
     )
     expect_is(
         class = "list",
+        multiFitGams2 <- fitLinModels(estGAMs, inverseWeigh = FALSE,
+                                     designDf = toyDesign,
+                                     Formula = out ~ covariate + cofactor + (1 | group)
+        )
+    )
+    expect_is(
+        class = "list",
         multiFitMoran <- fitLinModels(estMoran,
             designDf = toyDesign,
             Formula = out ~ covariate + cofactor + (1 | group)
+        )
+    )
+    expect_is(
+        class = "list",
+        multiFitMoran2 <- fitLinModels(estMoran, inverseWeigh = FALSE,
+                                      designDf = toyDesign,
+                                      Formula = out ~ covariate + cofactor + (1 | group)
+        )
+    )
+    expect_is(
+        class = "list",
+        multiFitMoran3 <- fitLinModels(estMoran, inverseWeigh = FALSE, scaleByMax = FALSE,
+                                       designDf = toyDesign,
+                                       Formula = out ~ covariate + cofactor + (1 | group)
+        )
+    )
+    expect_is(
+        class = "list",
+        multiFitMoran4 <- fitLinModels(estMoran, inverseWeigh = TRUE, scaleByMax = FALSE,
+                                       designDf = toyDesign,
+                                       Formula = out ~ covariate + cofactor + (1 | group)
         )
     )
     # Extract the results

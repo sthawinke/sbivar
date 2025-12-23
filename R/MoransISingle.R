@@ -19,8 +19,10 @@
 #' as it is computation intensive and not always needed.
 #' @note No multithreading is implemented for the variance calculation, as the matrix calculations involved
 #' may use inherent multithreading with OpenBLAS.
-MoransISingle <- function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose,
-    findMaxW, variogramModels, returnSEsMoransI, ...) {
+MoransISingle <- function(
+      X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose,
+      findMaxW, variogramModels, returnSEsMoransI, ...
+) {
     n <- nrow(X)
     m <- nrow(Y)
     p <- ncol(X)
@@ -58,7 +60,7 @@ MoransISingle <- function(X, Y, Cx, Ey, wo, etas, numNN, cutoff, width, verbose,
     }
     wParams <- selfName(switch(wo,
         "Gauss" = etas,
-        "nn" = numNN
+        "nn" = numNNs
     ))
     Ws <- vapply(wParams, FUN.VALUE = matrix(0, n, m), function(iter) {
         buildWeightMat(Cx = Cx, Ey = Ey, wo = wo, eta = iter, numNN = iter)

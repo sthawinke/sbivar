@@ -12,8 +12,10 @@ sbivarSingle(
   method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
   normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
+  pseudoCount = 1e-08,
   etas = c(2e-04, 0.002, 0.02),
   findMaxW = FALSE,
+  returnSEsMoransI = FALSE,
   families = list(X = gaussian(), Y = gaussian()),
   n_points_grid = 600,
   verbose = TRUE,
@@ -22,8 +24,6 @@ sbivarSingle(
   cutoff = sqrt(2)/3,
   wo = c("Gauss", "nn"),
   numNN = c(4, 8, 24),
-  pseudoCount = 1e-08,
-  returnSEsMoransI = FALSE,
   GPmethod = c("REML", "ML"),
   gpParams,
   Quants = c(0.005, 0.5),
@@ -40,11 +40,13 @@ sbivarSingle(
 
 \item{method}{A character string, indicating which method to apply}
 
-\item{normX, normY}{Character vectors indicating normalization, "log" means log-normalization of relative abundances}
+\item{normX, normY}{Character vectors indicating normalization, see \link{normMat}}
 
-\item{etas}{A vector of decay parameters for the weight function, see details}
+\item{pseudoCount}{A pseudocount added prior to log-normalization to avoid taking the log of zero}
 
 \item{findMaxW}{Is the maximum bivariate Moran's I needed?}
+
+\item{returnSEsMoransI}{A boolean, are standard errors of Moran's I to be returned?}
 
 \item{n_points_grid, families}{Passed onto \link{GAMsSingle}}
 
@@ -55,15 +57,13 @@ Currently, only "Exp" and "Lin" are implemented for computational reasons.}
 
 \item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}}
 
-\item{wo, numNN}{passed onto \link{buildWeightMat}}
-
-\item{pseudoCount}{A pseudocount added prior to log-normalization to avoid taking the log of zero}
-
-\item{returnSEsMoransI}{A boolean, are standard errors of Moran's I to be returned?}
+\item{wo}{Weight matrix type, passed onto \link{buildWeightMat}}
 
 \item{GPmethod, Quants, numLscAlts, optControl, corStruct}{Passed onto \link{fitGP}}
 
 \item{gpParams}{Parameters of the Gaussian processes, see details}
+
+\item{numNNs, etas}{Vectors of weight matrix parameters, whose elements are passed onto \link{buildWeightMat}}
 }
 \value{
 A list with at least the following components

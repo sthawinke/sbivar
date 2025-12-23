@@ -40,12 +40,14 @@
 #' @importFrom BiocParallel bplapply bpparam
 #' @seealso \link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}, \link[stats]{p.adjust}
 #' @order 1
-fitLinModels <- function(result, designDf, Formula, verbose = TRUE, inverseWeigh = result$method != "Correlation", scaleByMax = TRUE,
-    Control = lmerControl(
-        check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
-        check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
-        check.conv.hess = .makeCC(action = "ignore", tol = 1e-06)
-    )) {
+fitLinModels <- function(
+      result, designDf, Formula, verbose = TRUE, inverseWeigh = result$method != "Correlation", scaleByMax = TRUE,
+      Control = lmerControl(
+          check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
+          check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
+          check.conv.hess = .makeCC(action = "ignore", tol = 1e-06)
+      )
+) {
     stopifnot(
         all(c("estimates", "method", "multi") %in% names(result)),
         is.logical(inverseWeigh), is.logical(scaleByMax), length(result$estimates) == nrow(designDf), is.data.frame(designDf),
@@ -83,7 +85,7 @@ fitLinModels <- function(result, designDf, Formula, verbose = TRUE, inverseWeigh
         weightsArr <- outArr
     }
     for (i in names(measures)) {
-        outArr[i, namesFun(measures[[i]]$res), ] <- if(result$method=="Correlation") measures[[i]]$res else measures[[i]]$res[, seq_along(iter)]
+        outArr[i, namesFun(measures[[i]]$res), ] <- if (result$method == "Correlation") measures[[i]]$res else measures[[i]]$res[, seq_along(iter)]
         if (scaleByMax && (result$method == "Moran's I")) {
             outArr[i, namesFun(measures[[i]]$res), ] <- t(t(outArr[i, namesFun(measures[[i]]$res), ]) / measures[[i]]$maxIxy)
         }

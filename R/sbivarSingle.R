@@ -12,13 +12,13 @@
 #' @param gpParams Parameters of the Gaussian processes, see details
 #' @param GPmethod,Quants,numLscAlts,optControl,corStruct Passed onto \link{fitGP}
 #' @param n_points_grid,families Passed onto \link{GAMsSingle}
-#' @param wo,numNN passed onto \link{buildWeightMat}
-#' @param etas A vector of decay parameters for the weight function, see details
+#' @param wo Weight matrix type, passed onto \link{buildWeightMat}
+#' @param numNNs,etas Vectors of weight matrix parameters, whose elements are passed onto \link{buildWeightMat}
 #' @param cutoff,width Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}
 #' @param verbose Should info on type of analysis be printed?
 #' @param findMaxW Is the maximum bivariate Moran's I needed?
 #' @param pseudoCount A pseudocount added prior to log-normalization to avoid taking the log of zero
-#' @param normX,normY Character vectors indicating normalization, "log" means log-normalization of relative abundances
+#' @param normX,normY Character vectors indicating normalization, see \link{normMat}
 #' @param variogramModels A character string, indicating the variogram model passed onto \link[gstat]{vgm}.
 #' Currently, only "Exp" and "Lin" are implemented for computational reasons.
 #' @param returnSEsMoransI A boolean, are standard errors of Moran's I to be returned?
@@ -46,20 +46,22 @@
 #' This argument allows to pass parameters of the Gaussian processes estimated with other software
 #' to perform the score test.
 #' @seealso \link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle}, \link{GPsSingle}
-sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
-    normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
-    etas = c(2e-4, 2e-3, 2e-2), findMaxW = FALSE,
-    families = list("X" = gaussian(), "Y" = gaussian()), n_points_grid = 6e2, verbose = TRUE,
-    variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
-    wo = c("Gauss", "nn"), numNN = c(4, 8, 24), pseudoCount = 1e-8, returnSEsMoransI = FALSE,
-    GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 5,
-    optControl = lmeControl(
-        opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
-        niterEM = 1e3, msMaxEval = 1e3
-    ),
-    corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25))) {
+sbivarSingle <- function(
+      X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
+      normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
+      etas = c(2e-4, 2e-3, 2e-2), findMaxW = FALSE, returnSEsMoransI = FALSE,
+      families = list("X" = gaussian(), "Y" = gaussian()), n_points_grid = 6e2, verbose = TRUE,
+      variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
+      wo = c("Gauss", "nn"), numNN = c(4, 8, 24),
+      GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 5,
+      optControl = lmeControl(
+          opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
+          niterEM = 1e3, msMaxEval = 1e3
+      ),
+      corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25))
+) {
     stopifnot(
-        is.numeric(n_points_grid), ncol(Cx) == 2, is.numeric(numNN), all(numNN > 0),
+        is.numeric(n_points_grid), ncol(Cx) == 2, is.numeric(numNNs), all(numNNs > 0),
         all(vapply(families, FUN.VALUE = TRUE, is, "family")), is.list(optControl),
         inherits(corStruct, "corStruct"), inherits(corStruct, "corGaus"), is.numeric(etas),
         length(Quants) == 2, is.numeric(Quants), is.logical(verbose), is.logical(findMaxW)
@@ -121,7 +123,7 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
     Ey <- Ey[rownames(Y), ]
     out <- if (method == "Moran's I") {
         (moranRes <- MoransISingle(
-            X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo, numNN = numNN,
+            X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo, numNNs = selfName(numNNs),
             variogramModels = variogramModels, etas = selfName(etas), width = width,
             returnSEsMoransI = returnSEsMoransI, verbose = verbose, cutoff = cutoff, findMaxW = findMaxW
         ))$res

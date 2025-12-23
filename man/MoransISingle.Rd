@@ -11,7 +11,7 @@ MoransISingle(
   Ey,
   wo,
   etas,
-  numNN,
+  numNNs,
   cutoff,
   width,
   verbose,
@@ -26,9 +26,9 @@ MoransISingle(
 
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
-\item{wo, numNN}{passed onto \link{buildWeightMat}}
+\item{wo}{Weight matrix type, passed onto \link{buildWeightMat}}
 
-\item{etas}{A vector of decay parameters for the weight function, see details}
+\item{numNNs, etas}{Vectors of weight matrix parameters, whose elements are passed onto \link{buildWeightMat}}
 
 \item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}}
 

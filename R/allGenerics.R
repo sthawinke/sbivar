@@ -1,12 +1,12 @@
-#' Perform a spatial bivariate association analysis
+#' Bivariate spatial association analysis
 #' @description
-#' Perform the a bivariate spatial association analysis, either on a single or multiple images.
+#' Perform a bivariate spatial association analysis, either on a single or multiple images.
 #' Depending on the input, the workhorse functions \link{sbivarSingle}
 #' (single-image) or \link{sbivarMulti} (multi-image) are called.
 #' @rdname sbivar
 #' @importFrom methods setGeneric setMethod
 #' @export
-#' @param X the input object, see methods('sbivar')
+#' @param X the input object, containing measurements of the first modality, see methods('sbivar')
 #' @param ... additional constructor and analysis arguments
 #' @return A list containing the analysis result, along with parameters used in the analysis
 #' @seealso \link{sbivarSingle}, \link{sbivarMulti}

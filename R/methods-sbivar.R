@@ -45,7 +45,7 @@ setMethod("sbivar", "list", function(X, Y, Cx, Ey, assayX = NULL, assayY = NULL,
 #' @param assayX,assayY Assay names to be used in the analysis,
 #' see \link[SummarizedExperiment]{assay}
 #' @param sample_id_x,sample_id_y If provided, these are used to discriminate between different images
-#' included in the same SpatialExperiment objects X and Y. By default, they are assumed to be the same for both X and Y
+#' included in the same SpatialExperiment objects X and Y. By default, they are assumed to be the same for both X and Y.
 #' @rdname sbivar
 #' @export
 setMethod("sbivar", "SpatialExperiment", function(X, Y, assayX, assayY, sample_id_x,
@@ -70,7 +70,7 @@ setMethod("sbivar", "SpatialExperiment", function(X, Y, assayX, assayY, sample_i
     return(out)
 })
 #' @rdname sbivar
-#' @param experimentX,experimentY Names of the experiments in X to be used in the analysis
+#' @param experimentX,experimentY Names of the experiments in X and Y to be used in the analysis
 #' @export
 #' @importFrom MultiAssayExperiment MultiAssayExperiment
 setMethod("sbivar", "MultiAssayExperiment", function(X, experimentX, experimentY,

@@ -12,7 +12,7 @@ sbivarMulti(
   families = list(X = gaussian(), Y = gaussian()),
   method = c("Moran's I", "GAMs", "Correlation"),
   wo = c("Gauss", "nn"),
-  numNN = c(4, 8, 24),
+  numNNs = c(4, 8, 24),
   etas = c(2e-04, 0.002, 0.02),
   normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
@@ -34,11 +34,9 @@ sbivarMulti(
 
 \item{method}{A character string, indicating which method to apply}
 
-\item{wo, numNN}{Passed onto \link{buildWeightMat}}
+\item{wo, numNNs, etas}{Passed onto \link{MoransIsingle}}
 
-\item{etas}{A vector of decay parameters for the weight function, see details}
-
-\item{normX, normY}{Character vectors indicating normalization, "log" means log-normalization of relative abundances}
+\item{normX, normY}{Character vectors indicating normalization, see \link{normMat}}
 
 \item{returnSEsMoransI}{A boolean, are standard errors of Moran's I to be returned?}
 
@@ -56,6 +54,8 @@ A list containing
 \item{estimates}{The estimated measures of association}
 \item{method}{The method used to find these estimates}
 \item{multi}{TRUE, a flag for the type of analysis}
+\item{normX,normY}{As provided}
+\item{families,wo,numNNs,etas}{Optional, as provided}
 }
 \description{
 This function calculates measures of spatial association for every image.
@@ -65,7 +65,5 @@ The resulting estimates can then be analysed further using the \link{fitLinModel
 All methods use multithreading on the cluster provided using the BiocParallel package
 }
 \seealso{
-\link{fitLinModels}
-
-\link{MoransIMulti}, \link{correlationsMulti}, \link{GAMsMulti}
+\link{fitLinModels}, \link{MoransIMulti}, \link{correlationsMulti}, \link{GAMsMulti}
 }

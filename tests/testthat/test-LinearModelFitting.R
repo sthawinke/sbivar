@@ -9,9 +9,10 @@ test_that("SbivarSingle works for correct input", {
     )
     expect_is(
         class = "list",
-        multiFitGams2 <- fitLinModels(estGAMs, inverseWeigh = FALSE,
-                                     designDf = toyDesign,
-                                     Formula = out ~ covariate + cofactor + (1 | group)
+        multiFitGams2 <- fitLinModels(estGAMs,
+            inverseWeigh = FALSE,
+            designDf = toyDesign,
+            Formula = out ~ covariate + cofactor + (1 | group)
         )
     )
     expect_is(
@@ -23,30 +24,33 @@ test_that("SbivarSingle works for correct input", {
     )
     expect_is(
         class = "list",
-        multiFitMoran2 <- fitLinModels(estMoran, inverseWeigh = FALSE,
-                                      designDf = toyDesign,
-                                      Formula = out ~ covariate + cofactor + (1 | group)
+        multiFitMoran2 <- fitLinModels(estMoran,
+            inverseWeigh = FALSE,
+            designDf = toyDesign,
+            Formula = out ~ covariate + cofactor + (1 | group)
         )
     )
     expect_is(
         class = "list",
-        multiFitMoran3 <- fitLinModels(estMoran, inverseWeigh = FALSE, scaleByMax = FALSE,
-                                       designDf = toyDesign,
-                                       Formula = out ~ covariate + cofactor + (1 | group)
+        multiFitMoran3 <- fitLinModels(estMoran,
+            inverseWeigh = FALSE, scaleByMax = FALSE,
+            designDf = toyDesign,
+            Formula = out ~ covariate + cofactor + (1 | group)
         )
     )
     expect_is(
         class = "list",
-        multiFitMoran4 <- fitLinModels(estMoran, inverseWeigh = TRUE, scaleByMax = FALSE,
-                                       designDf = toyDesign,
-                                       Formula = out ~ covariate + cofactor + (1 | group)
+        multiFitMoran4 <- fitLinModels(estMoran,
+            inverseWeigh = TRUE, scaleByMax = FALSE,
+            designDf = toyDesign,
+            Formula = out ~ covariate + cofactor + (1 | group)
         )
     )
     expect_is(
         class = "list",
         multiFitCors <- fitLinModels(estMultiCor,
-                                     designDf = toyDesign,
-                                     Formula = out ~ covariate + cofactor + (1 | group)
+            designDf = toyDesign,
+            Formula = out ~ covariate + cofactor + (1 | group)
         )
     )
     # Extract the results

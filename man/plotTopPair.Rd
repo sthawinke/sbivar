@@ -67,7 +67,7 @@ for X and Y matrices, respectively, before plotting, see details.}
 \item{parameter}{The linear model parameter used to find the feature with the strongest effect.
 The default is the intercept, i.e. the overall effect.}
 
-\item{X}{the input object, see methods('sbivar')}
+\item{X}{the input object, containing measurements of the first modality, see methods('sbivar')}
 
 \item{Y}{Matrix or SpatialExperiment object of second modality}
 

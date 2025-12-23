@@ -7,29 +7,32 @@
 #' @param Cxl,Eyl Lists of corresponding coordinate matrices of dimension two
 #' @param method A character string, indicating which method to apply
 #' @param families,n_points_grid Passed onto \link{GAMsMulti}
-#' @param wo,numNN Passed onto \link{buildWeightMat}
+#' @param wo,numNNs,etas Passed onto \link{MoransIsingle}
 #' @returns A list containing
 #' \item{estimates}{The estimated measures of association}
 #' \item{method}{The method used to find these estimates}
 #' \item{multi}{TRUE, a flag for the type of analysis}
-#' @seealso \link{fitLinModels}
+#' \item{normX,normY}{As provided}
+#' \item{families,wo,numNNs,etas}{Optional, as provided}
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
 #' @inheritParams sbivarSingle
 #' @inheritParams buildWeightMat
 #' @importFrom BiocParallel bpparam
-#' @seealso \link{MoransIMulti}, \link{correlationsMulti}, \link{GAMsMulti}
-sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
-    method = c("Moran's I", "GAMs", "Correlation"), wo = c("Gauss", "nn"),
-    numNN = c(4, 8, 24), etas = c(2e-4, 2e-3, 2e-2),
-    normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), returnSEsMoransI = TRUE,
-    variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
-    pseudoCount = 1e-8, n_points_grid = 6e2, verbose = TRUE) {
+#' @seealso \link{fitLinModels}, \link{MoransIMulti}, \link{correlationsMulti}, \link{GAMsMulti}
+sbivarMulti <- function(
+      Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
+      method = c("Moran's I", "GAMs", "Correlation"), wo = c("Gauss", "nn"),
+      numNNs = c(4, 8, 24), etas = c(2e-4, 2e-3, 2e-2),
+      normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), returnSEsMoransI = TRUE,
+      variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
+      pseudoCount = 1e-8, n_points_grid = 6e2, verbose = TRUE
+) {
     method <- match.arg(method)
     wo <- match.arg(wo)
     normX <- match.arg(normX)
     normY <- match.arg(normY)
     stopifnot(
-        is.numeric(numNN), all(numNN > 0), is.numeric(etas), is.numeric(n_points_grid), is.logical(verbose),
+        is.numeric(numNNs), all(numNNs > 0), is.numeric(etas), is.numeric(n_points_grid), is.logical(verbose),
         is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family"))
     )
     Xl <- lapply(Xl, addDimNames, "X")
@@ -53,7 +56,7 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" 
     }
     if (verbose) {
         message(
-            "Starting sbivar analysis of ", length(Xl), " images on ",
+            "Starting sbivar analysis (", method, ") of ", length(Xl), " images on ",
             bpparam()$workers, " computing cores"
         )
     }
@@ -70,7 +73,7 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" 
     }
     out <- if (method == "Moran's I") {
         MoransIMulti(Xl, Yl, Cxl, Eyl,
-            wo = wo, numNN = numNN, verbose = verbose, returnSEsMoransI = returnSEsMoransI,
+            wo = wo, numNNs = numNNs, verbose = verbose, returnSEsMoransI = returnSEsMoransI,
             etas = etas, variogramModels = variogramModels, width = width, cutoff = cutoff
         )
     } else if (method == "GAMs") {
@@ -91,7 +94,7 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" 
         out$wo <- wo
         out$wParams <- selfName(switch(wo,
             "Gauss" = etas,
-            "nn" = numNN
+            "nn" = numNNs
         ))
         out$returnSEsMoransI <- returnSEsMoransI
     }

@@ -40,7 +40,7 @@
 #' @importFrom BiocParallel bplapply bpparam
 #' @seealso \link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}, \link[stats]{p.adjust}
 #' @order 1
-fitLinModels <- function(result, designDf, Formula, verbose = TRUE, inverseWeigh = TRUE, scaleByMax = TRUE,
+fitLinModels <- function(result, designDf, Formula, verbose = TRUE, inverseWeigh = result$method != "Correlation", scaleByMax = TRUE,
     Control = lmerControl(
         check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
         check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
@@ -48,20 +48,22 @@ fitLinModels <- function(result, designDf, Formula, verbose = TRUE, inverseWeigh
     )) {
     stopifnot(
         all(c("estimates", "method", "multi") %in% names(result)),
-        is.logical(inverseWeigh), is.logical(scaleByMax)
+        is.logical(inverseWeigh), is.logical(scaleByMax), length(result$estimates) == nrow(designDf), is.data.frame(designDf),
+        is.character(Formula) || is(Formula, "formula")
     )
+    measures <- result$estimates
     if (!result$multi) {
         stop("Fitting linear models only makes sense for multi-image analyses!")
     }
     if (inverseWeigh && (result$method == "Moran's I") && !result$returnSEsMoransI) {
-        stop("Inverse weiginh only possible if the variances of Moran's I are included!
+        stop("Inverse weighing only possible if the variances of Moran's I are included!
              Rerun sbivar() with estimateSEsMoransI=TRUE.")
     }
-    measures <- result$estimates
-    stopifnot(
-        length(measures) == nrow(designDf), is.data.frame(designDf),
-        is.character(Formula) || is(Formula, "formula")
-    )
+    if (inverseWeigh && (result$method == "Correlation")) {
+        warning("Inverse weighing not available for method = 'Correlation'.
+                Performing an unweighted analysis", immediate. = TRUE)
+        inverseWeigh <- FALSE
+    }
     namesFun <- switch(result$method,
         "Correlation" = names,
         rownames
@@ -81,11 +83,11 @@ fitLinModels <- function(result, designDf, Formula, verbose = TRUE, inverseWeigh
         weightsArr <- outArr
     }
     for (i in names(measures)) {
-        outArr[i, namesFun(measures[[i]]$res), ] <- measures[[i]]$res[, seq_along(iter)]
+        outArr[i, namesFun(measures[[i]]$res), ] <- if(result$method=="Correlation") measures[[i]]$res else measures[[i]]$res[, seq_along(iter)]
         if (scaleByMax && (result$method == "Moran's I")) {
             outArr[i, namesFun(measures[[i]]$res), ] <- t(t(outArr[i, namesFun(measures[[i]]$res), ]) / measures[[i]]$maxIxy)
         }
-        if (inverseWeigh) {
+        if (inverseWeigh && (result$method %in% c("Moran's I", "GAMs"))) {
             weightsArr[i, namesFun(measures[[i]]$res), ] <- 1 / measures[[i]]$res[, seq_along(iter) + length(iter)]^2
         }
     }

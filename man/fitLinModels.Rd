@@ -10,7 +10,7 @@ fitLinModels(
   designDf,
   Formula,
   verbose = TRUE,
-  inverseWeigh = TRUE,
+  inverseWeigh = result$method != "Correlation",
   scaleByMax = TRUE,
   Control = lmerControl(check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
     check.conv.singular = .makeCC(action = "ignore", tol = 1e-04), check.conv.hess =

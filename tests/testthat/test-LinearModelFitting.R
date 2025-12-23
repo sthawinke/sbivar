@@ -42,6 +42,13 @@ test_that("SbivarSingle works for correct input", {
                                        Formula = out ~ covariate + cofactor + (1 | group)
         )
     )
+    expect_is(
+        class = "list",
+        multiFitCors <- fitLinModels(estMultiCor,
+                                     designDf = toyDesign,
+                                     Formula = out ~ covariate + cofactor + (1 | group)
+        )
+    )
     # Extract the results
     expect_identical(
         names(resGams <- extractResultsMulti(multiFitGams, designDf = toyDesign)$result),

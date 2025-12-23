@@ -1,9 +1,8 @@
-#' Plot a top feature pair from the analysis, or an arbitrary pair for a series of images
+#' @title Plot a feature pair
 #' @description Plot a chosen feature pair, or the highest ranking feature pair,
 #' for a single image or multiple images.
 #' @param parameter The linear model parameter used to find the feature with the strongest effect.
 #' The default is the intercept, i.e. the overall effect.
-#' @param results The results list, from call to \link{extractResultsMulti}
 #' @param topRank An integer, the feature pair with the rank-th smallest p-value is plotted
 #' @param ... passed onto lower level functions
 #' @inheritParams sbivarMulti
@@ -100,7 +99,7 @@ plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "
         theme(axis.text = element_blank(), axis.ticks = element_blank())
 }
 #' @inheritParams sbivar
-#' @param results Results returned by \link{sbivarSingle}
+#' @param results Results returned by \link{sbivarSingle} or \link{extractResultsMulti}
 #' @param x,y Outcome vectors
 #' @param normX,normY Character strings, indicating what normalization is required
 #' for X and Y matrices, respectively, before plotting, see details.

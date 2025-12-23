@@ -1,4 +1,4 @@
-#' Write effect sizes and p-values results to an excel worksheet
+#' Write \emph{sbivar} results to an excel worksheet
 #'
 #' The results of single- or multi-image analysis are written to an excel spreadsheet
 #' with separate tabs per parameter tested, sorted by increasing p-value.

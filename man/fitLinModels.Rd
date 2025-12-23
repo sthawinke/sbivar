@@ -58,12 +58,14 @@ but it will be overridden by "out" for downstream analysis
 \examples{
 #' #Multi-image analysis on Vicari data, using GAMs
 data(Vicari)
-VicariRes <- sbivar(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
-    Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
+#Subset to 5 images and 500 spots limit computing time
+VicariMultiTest <- lapply(Vicari, function(x) lapply(x[1:5], function(y) y[1:500, ]))
+VicariRes <- sbivar(VicariMultiTest$TranscriptOutcomes, VicariMultiTest$MetaboliteOutcomes,
+    VicariMultiTest$TranscriptCoords, VicariMultiTest$MetaboliteCoords,
     normX = "rel", normY = "rel",
     method = "GAM"
 )
-mouse <- substr(names(Vicari$TranscriptOutcomes), 1, 10)
+mouse <- substr(names(Vicari$TranscriptOutcomes)[1:5], 1, 10)
 designDf <- data.frame("mouse" = mouse) # The design matrix
 multiGAMLmms <- fitLinModels(VicariRes, designDf, Formula = ~ (1 | mouse))
 # Extract the results

@@ -2,7 +2,7 @@
 % Please edit documentation in R/writeSbivarToXlsx.R
 \name{writeSbivarToXlsx}
 \alias{writeSbivarToXlsx}
-\title{Write effect sizes and p-values results to an excel worksheet}
+\title{Write \emph{sbivar} results to an excel worksheet}
 \usage{
 writeSbivarToXlsx(
   results,

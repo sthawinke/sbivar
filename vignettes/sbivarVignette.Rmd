@@ -110,7 +110,7 @@ data(Vicari)
 names(Vicari)
 ```
 
-This object consists of four lists of length six: _TranscriptCoords_ and _MetaboliteCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. Only the 10 most abundant features per modality are included in the package. The metabolite measurements were augmented by a pseudocount of 10$^{-8}$ to avoid zeroes. The _sbivar_ package assumes that the data have been pre-aligned. Yet it is always a good idea to check the alignment visually:
+This object consists of four lists of length six: _TranscriptCoords_ and _MetaboliteCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. Only the 10 most abundant features per modality are included in the package. The _sbivar_ package assumes that the data have been pre-aligned. Yet it is always a good idea to check the alignment visually:
 
 ```{r, fig.height = 7}
 par(mfrow = c(2, 3))
@@ -175,7 +175,7 @@ plotTopPair(gamRes,
 )
 ```
 
-Another feature is found most significant by GAMs, likely because they smooth over the two holes in the spatial transcriptomics measurements (left plot), adding to the signal, whereas the holes do not contribute to the Moran's I. This can be an asset or a weakness of GAMs. For GAMs, we can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes$result[gpGam<- rownames(gamRes$result)[1], "corxy"], 3)`:
+Another feature is found most significant by GAMs, this one with a negative relationship. For GAMs, we can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes$result[gpGam<- rownames(gamRes$result)[1], "corxy"], 3)`:
 
 ```{r plotGAM}
 plotGAMsTopResults(gamRes,

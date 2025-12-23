@@ -5,7 +5,7 @@
 \alias{plotPairSingle}
 \alias{plotPairMulti}
 \alias{plotPairSingleVectors}
-\title{Plot a top feature pair from the analysis, or an arbitrary pair for a series of images}
+\title{Plot a feature pair}
 \usage{
 plotTopPair(
   results,
@@ -55,7 +55,7 @@ plotPairSingleVectors(
 )
 }
 \arguments{
-\item{results}{Results returned by \link{sbivarSingle}}
+\item{results}{Results returned by \link{sbivarSingle} or \link{extractResultsMulti}}
 
 \item{...}{passed onto lower level functions}
 

@@ -23,7 +23,7 @@ sbivarSingle(
   width = cutoff/15,
   cutoff = sqrt(2)/3,
   wo = c("Gauss", "nn"),
-  numNN = c(4, 8, 24),
+  numNNs = c(4, 8, 24),
   GPmethod = c("REML", "ML"),
   gpParams,
   Quants = c(0.005, 0.5),
@@ -40,30 +40,15 @@ sbivarSingle(
 
 \item{method}{A character string, indicating which method to apply}
 
-\item{normX, normY}{Character vectors indicating normalization, see \link{normMat}}
-
-\item{pseudoCount}{A pseudocount added prior to log-normalization to avoid taking the log of zero}
-
-\item{findMaxW}{Is the maximum bivariate Moran's I needed?}
-
-\item{returnSEsMoransI}{A boolean, are standard errors of Moran's I to be returned?}
+\item{normX, normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}
 
 \item{n_points_grid, families}{Passed onto \link{GAMsSingle}}
 
 \item{verbose}{Should info on type of analysis be printed?}
 
-\item{variogramModels}{A character string, indicating the variogram model passed onto \link[gstat]{vgm}.
-Currently, only "Exp" and "Lin" are implemented for computational reasons.}
+\item{wo, variogramModels, numNNs, eta, cutoof, width, returnSEsMoransI}{Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}}
 
-\item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}}
-
-\item{wo}{Weight matrix type, passed onto \link{buildWeightMat}}
-
-\item{GPmethod, Quants, numLscAlts, optControl, corStruct}{Passed onto \link{fitGP}}
-
-\item{gpParams}{Parameters of the Gaussian processes, see details}
-
-\item{numNNs, etas}{Vectors of weight matrix parameters, whose elements are passed onto \link{buildWeightMat}}
+\item{GPmethod, Quants, numLscAlts, optControl, corStruct, gpParams}{Passed onto \link{fitGP}}
 }
 \value{
 A list with at least the following components
@@ -81,17 +66,8 @@ If only Cx is supplied and X and Y have the same number of rows, a joint analysi
 If Cx and Ey are provided, and X and Y have the same number of rows, equality of Cx and Ey is checked.
 If true, a joint analysis is run, with a warning.
 
-Any normalization of the data should happen prior to calling this function.
-For instance, count data or metabolome data are best scaled to relative values and log-normalized prior to fitting GPs.
 For GAMs, usually no normalization is needed, as the non-gaussianity is taken care of by
 the outcome distribution, offset and link functions. Currently, identity, inverse and log-link are implemented.
-If multiple decay parameters eta are supplied (etas is a vector), tests are performed for all weight matrices
-and the resulting p-values combined using the Cauchy combination rule.
-
-gpParams must be a list of length 2 with names 'X' and 'Y', consisting of matrices
-with rownames "mean", "nugget", "range" and "sigma", and column names as in X and Y.
-This argument allows to pass parameters of the Gaussian processes estimated with other software
-to perform the score test.
 }
 \note{
 All methods use multithreading on the cluster provided using the BiocParallel package

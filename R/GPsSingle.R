@@ -1,10 +1,17 @@
 #' Fit Gaussian processes (GPs) if needed, and perform score tests
 #'
+#' Fit all univariate GPs on both modalities, and perform all bivariate tests across them
+#'
 #' @inheritParams sbivarSingle
 #' @inheritParams fitGP
+#' @param gpParams Parameters of the Gaussian processes, see details
 #' @param numLscAlts Number of length scales to be tested for bivariate association
 #' @param Quants Most extreme quantiles of the distance distribution to take as length scales
 #' @returns A named list of results
+#' @details gpParams must be a list of length 2 with names 'X' and 'Y', consisting of matrices
+#' with rownames "mean", "nugget", "range" and "sigma", and column names as in X and Y.
+#' This argument allows to pass parameters of the Gaussian processes estimated with other software
+#' to perform the score test.
 GPsSingle <- function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
     corStruct, optControl, verbose) {
     if (missing(gpParams)) {

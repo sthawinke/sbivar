@@ -6,7 +6,7 @@
 \alias{sbivar,list-method}
 \alias{sbivar,SpatialExperiment-method}
 \alias{sbivar,MultiAssayExperiment-method}
-\title{Bivariate spatial association analysis}
+\title{Spatial bivariate association analysis}
 \usage{
 sbivar(X, ...)
 

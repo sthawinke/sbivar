@@ -43,5 +43,11 @@ At this point, only \link[nlme]{corGaus} is accepted.}
 A named list of results
 }
 \description{
-Fit Gaussian processes (GPs) if needed, and perform score tests
+Fit all univariate GPs on both modalities, and perform all bivariate tests across them
+}
+\details{
+gpParams must be a list of length 2 with names 'X' and 'Y', consisting of matrices
+with rownames "mean", "nugget", "range" and "sigma", and column names as in X and Y.
+This argument allows to pass parameters of the Gaussian processes estimated with other software
+to perform the score test.
 }

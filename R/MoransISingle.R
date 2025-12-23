@@ -3,6 +3,12 @@
 #' The variance calculation requires estimation of the spatial autocorrelation structure of every feature separately
 #'
 #' @inheritParams sbivarSingle
+#' @param variogramModels A character vector, indicating the variogram model passed onto \link[gstat]{vgm}.
+#' Currently, only "Exp" and "Lin" are implemented for computational reasons.
+#' @param numNNs,etas Vectors of weight matrix parameters, whose elements are passed onto \link{buildWeightMat}
+#' @param cutoff,width Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}
+#' @param findMaxW Is the maximum bivariate Moran's I needed?
+#' @param returnSEsMoransI A boolean, are standard errors of Moran's I to be returned?
 #' @param ... passed onto \link[gstat]{variogram}
 #'
 #' @returns A dataframe of results sorted by p-value, also containing the estimated Moran's I statistic and its variance.

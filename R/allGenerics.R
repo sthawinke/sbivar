@@ -1,4 +1,4 @@
-#' Bivariate spatial association analysis
+#' Spatial bivariate association analysis
 #' @description
 #' Perform a bivariate spatial association analysis, either on a single or multiple images.
 #' Depending on the input, the workhorse functions \link{sbivarSingle}

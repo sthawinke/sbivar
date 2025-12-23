@@ -9,26 +9,14 @@
 #' @param X,Y Matrices of omics measurements
 #' @param Cx,Ey Corresponding coordinate matrices of dimension two
 #' @param method A character string, indicating which method to apply
-#' @param gpParams Parameters of the Gaussian processes, see details
-#' @param GPmethod,Quants,numLscAlts,optControl,corStruct Passed onto \link{fitGP}
+#' @param GPmethod,Quants,numLscAlts,optControl,corStruct,gpParams Passed onto \link{fitGP}
 #' @param n_points_grid,families Passed onto \link{GAMsSingle}
-#' @param wo Weight matrix type, passed onto \link{buildWeightMat}
-#' @param numNNs,etas Vectors of weight matrix parameters, whose elements are passed onto \link{buildWeightMat}
-#' @param cutoff,width Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}
+#' @param wo,variogramModels,numNNs,eta,cutoof,width,returnSEsMoransI Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}
 #' @param verbose Should info on type of analysis be printed?
-#' @param findMaxW Is the maximum bivariate Moran's I needed?
-#' @param pseudoCount A pseudocount added prior to log-normalization to avoid taking the log of zero
-#' @param normX,normY Character vectors indicating normalization, see \link{normMat}
-#' @param variogramModels A character string, indicating the variogram model passed onto \link[gstat]{vgm}.
-#' Currently, only "Exp" and "Lin" are implemented for computational reasons.
-#' @param returnSEsMoransI A boolean, are standard errors of Moran's I to be returned?
+#' @param normX,normY,pseudoCount Normalization parameters, passed onto \link{normMat}
 #'
-#' @details Any normalization of the data should happen prior to calling this function.
-#' For instance, count data or metabolome data are best scaled to relative values and log-normalized prior to fitting GPs.
-#' For GAMs, usually no normalization is needed, as the non-gaussianity is taken care of by
+#' @details For GAMs, usually no normalization is needed, as the non-gaussianity is taken care of by
 #' the outcome distribution, offset and link functions. Currently, identity, inverse and log-link are implemented.
-#' If multiple decay parameters eta are supplied (etas is a vector), tests are performed for all weight matrices
-#' and the resulting p-values combined using the Cauchy combination rule.
 #'
 #' @returns A list with at least the following components
 #' \item{result}{A matrix which contains at least a p-values ("pVal") and a
@@ -39,12 +27,7 @@
 #' @importFrom stats p.adjust
 #' @importFrom methods is
 #' @importFrom nlme corGaus lmeControl
-#' @importFrom BiocParallel bpparam
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
-#' @details gpParams must be a list of length 2 with names 'X' and 'Y', consisting of matrices
-#' with rownames "mean", "nugget", "range" and "sigma", and column names as in X and Y.
-#' This argument allows to pass parameters of the Gaussian processes estimated with other software
-#' to perform the score test.
 #' @seealso \link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle}, \link{GPsSingle}
 sbivarSingle <- function(
       X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
@@ -52,7 +35,7 @@ sbivarSingle <- function(
       etas = c(2e-4, 2e-3, 2e-2), findMaxW = FALSE, returnSEsMoransI = FALSE,
       families = list("X" = gaussian(), "Y" = gaussian()), n_points_grid = 6e2, verbose = TRUE,
       variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
-      wo = c("Gauss", "nn"), numNN = c(4, 8, 24),
+      wo = c("Gauss", "nn"), numNNs = c(4, 8, 24),
       GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 5,
       optControl = lmeControl(
           opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
@@ -63,7 +46,7 @@ sbivarSingle <- function(
     stopifnot(
         is.numeric(n_points_grid), ncol(Cx) == 2, is.numeric(numNNs), all(numNNs > 0),
         all(vapply(families, FUN.VALUE = TRUE, is, "family")), is.list(optControl),
-        inherits(corStruct, "corStruct"), inherits(corStruct, "corGaus"), is.numeric(etas),
+        inherits(corStruct, "corGaus"), is.numeric(etas),
         length(Quants) == 2, is.numeric(Quants), is.logical(verbose), is.logical(findMaxW)
     )
     if (verbose) {

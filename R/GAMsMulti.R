@@ -1,4 +1,6 @@
-#' Wrapper function to fit GAMs and find correlations and standard error for data lists
+#' Fit GAMs and find correlations and standard error for data lists
+#'
+#' Wraps \link{GAMsSingle} for lists
 #'
 #' @param families,n_points_grid See \link{GAMsSingle}
 #' @inheritParams sbivarMulti

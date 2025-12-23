@@ -2,7 +2,7 @@
 % Please edit documentation in R/GAMsMulti.R
 \name{GAMsMulti}
 \alias{GAMsMulti}
-\title{Wrapper function to fit GAMs and find correlations and standard error for data lists}
+\title{Fit GAMs and find correlations and standard error for data lists}
 \usage{
 GAMsMulti(Xl, Yl, Cxl, Eyl, families, n_points_grid, verbose)
 }
@@ -19,5 +19,5 @@ GAMsMulti(Xl, Yl, Cxl, Eyl, families, n_points_grid, verbose)
 A list named like Xl, containing all results
 }
 \description{
-Wrapper function to fit GAMs and find correlations and standard error for data lists
+Wraps \link{GAMsSingle} for lists
 }

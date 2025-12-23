@@ -110,11 +110,11 @@ scaleHelpFun <- function(X, feat) {
 #' Normalize to relative expression, and potentially add pseudocount and log-normalize.
 #' @param x The matrix
 #' @param norm A character string, either "none", "log" or "rel"
+#' @param pseudoCount A pseudocount added prior to log-normalization to avoid taking the log of zero
 #' @details norm = "none" is pass-through, norm = "rel" divides by sample sums,
 #' "log" adds a pseudocount, divides by sample sums and log-normalizes. At the end, dimnames are added.
 #' @returns A normalized matrix
 #' @export
-#' @inheritParams sbivarSingle
 #' @examples
 #' mat <- matrix(rpois(2000, lambda = 3), 40, 50)
 #' nMat <- normMat(mat, norm = "rel")

@@ -36,16 +36,7 @@ sbivarMulti(
 
 \item{wo, numNNs, etas}{Passed onto \link{MoransIsingle}}
 
-\item{normX, normY}{Character vectors indicating normalization, see \link{normMat}}
-
-\item{returnSEsMoransI}{A boolean, are standard errors of Moran's I to be returned?}
-
-\item{variogramModels}{A character string, indicating the variogram model passed onto \link[gstat]{vgm}.
-Currently, only "Exp" and "Lin" are implemented for computational reasons.}
-
-\item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}}
-
-\item{pseudoCount}{A pseudocount added prior to log-normalization to avoid taking the log of zero}
+\item{normX, normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}
 
 \item{verbose}{Should info on type of analysis be printed?}
 }

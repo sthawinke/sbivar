@@ -1,11 +1,12 @@
-#' Wrapper function to fit GAMs and test for all possible combinations
+#' Fit univariate GAMs and test bivariate combinations
+#'
+#' Fit univariate GAMs with 2d cubic smoothing splines for both modalities, and test for correlation between all bivariate combinations
 #'
 #' @inheritParams sbivarSingle
 #' @param families A vector of length 2 giving the distributional families
 #' for the outcome values. See details of \link{sbivarSingle}.
 #' @param n_points_grid The number of points in the new grid for the GAMs to be
 #' evaluated on.
-#' It only matters for the messages printed.
 #' @returns A named list of results
 GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose) {
     if (verbose) {

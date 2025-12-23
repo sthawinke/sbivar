@@ -2,7 +2,7 @@
 % Please edit documentation in R/GAMsSingle.R
 \name{GAMsSingle}
 \alias{GAMsSingle}
-\title{Wrapper function to fit GAMs and test for all possible combinations}
+\title{Fit univariate GAMs and test bivariate combinations}
 \usage{
 GAMsSingle(X, Y, Cx, Ey, families, n_points_grid, verbose)
 }
@@ -15,8 +15,7 @@ GAMsSingle(X, Y, Cx, Ey, families, n_points_grid, verbose)
 for the outcome values. See details of \link{sbivarSingle}.}
 
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
-evaluated on.
-It only matters for the messages printed.}
+evaluated on.}
 
 \item{verbose}{Should info on type of analysis be printed?}
 }
@@ -24,5 +23,5 @@ It only matters for the messages printed.}
 A named list of results
 }
 \description{
-Wrapper function to fit GAMs and test for all possible combinations
+Fit univariate GAMs with 2d cubic smoothing splines for both modalities, and test for correlation between all bivariate combinations
 }

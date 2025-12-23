@@ -26,8 +26,6 @@ MoransISingle(
 
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
-\item{wo}{Weight matrix type, passed onto \link{buildWeightMat}}
-
 \item{numNNs, etas}{Vectors of weight matrix parameters, whose elements are passed onto \link{buildWeightMat}}
 
 \item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}}
@@ -36,7 +34,7 @@ MoransISingle(
 
 \item{findMaxW}{Is the maximum bivariate Moran's I needed?}
 
-\item{variogramModels}{A character string, indicating the variogram model passed onto \link[gstat]{vgm}.
+\item{variogramModels}{A character vector, indicating the variogram model passed onto \link[gstat]{vgm}.
 Currently, only "Exp" and "Lin" are implemented for computational reasons.}
 
 \item{returnSEsMoransI}{A boolean, are standard errors of Moran's I to be returned?}

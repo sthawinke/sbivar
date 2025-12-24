@@ -10,7 +10,7 @@
 #' @importFrom stats pcauchy
 CCT <- function(pvals) {
     if (anyNA(pvals)) {
-        return(NA)
+        return(1)
     }
     #### check if there are p-values that are either exactly 0 or 1.
     is.zero <- any(pvals == 0)

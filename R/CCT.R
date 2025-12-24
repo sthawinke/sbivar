@@ -26,11 +26,11 @@ CCT <- function(pvals) {
     }
     #### check if there are very small non-zero p-values
     is.small <- (pvals < 1e-16)
-    if (!any(is.small)) {
-        cct.stat <- mean(tan((0.5 - pvals) * pi))
-    } else {
+    if (any(is.small)) {
         cct.stat <- sum(1 / (pi * pvals[is.small]))
         cct.stat <- (cct.stat + sum(tan((0.5 - pvals[!is.small]) * pi))) / length(pvals)
+    } else {
+        cct.stat <- mean(tan((0.5 - pvals) * pi))
     }
     #### check if the test statistic is very large.
     pval <- if (cct.stat > 1e+15) {

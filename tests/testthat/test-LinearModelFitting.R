@@ -3,7 +3,7 @@ test_that("fitLinModels works for GAM input", {
     expect_is(
         class = "list",
         multiFitGams <- fitLinModels(estGAMs,
-            designDf = toyDesign,
+            designDf = toyDesign, inverseWeigh = TRUE,
             Formula = out ~ covariate + cofactor + (1 | group)
         )
     )

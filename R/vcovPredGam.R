@@ -13,7 +13,8 @@
 #' \item{vcov}{Variance-covariance matrix of the predictions}
 #' @seealso \link[mgcv]{vcov.gam}, \link[mgcv]{predict.gam}
 #' @importFrom mgcv vcov.gam predict.gam
-vcovPredGam <- function(model, newdata, findVariances) {
+#' @inheritParams MoransISingle
+vcovPredGam <- function(model, newdata, findVariances = TRUE) {
     # Get the full coefficient covariance matrix
     coef_cov_matrix <- vcov.gam(model)
     # Get the basis matrix for predictions

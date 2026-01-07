@@ -48,8 +48,8 @@ if (.Platform$OS.type == "unix") {
 # register(SerialParam()) # Switch on when mapping test coverage
 resMoranTest <- sbivar(X, Y, Cx, Ey, method = "Moran")
 resGAMsSingle <- sbivar(X, Y, Cx, Ey, method = "GAM")
-estGAMs <- sbivar(Xl, Yl, Cxl, Eyl, method = "GAMs")
-estMoran <- sbivar(Xl, Yl, Cxl, Eyl, method = "Moran", wo = "nn")
+estGAMs <- sbivar(Xl, Yl, Cxl, Eyl, method = "GAMs", findVariances = TRUE)
+estMoran <- sbivar(Xl, Yl, Cxl, Eyl, method = "Moran", wo = "nn", findVariances = TRUE)
 estMultiCor <- sbivar(Xl, Xl, Cxl, method = "Correlation")
 multiFitGams <- fitLinModels(estGAMs,
     design = toyDesign,

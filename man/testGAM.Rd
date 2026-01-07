@@ -10,6 +10,8 @@ testGAM(modelx, modely, predx, predy, findVariances)
 \item{modelx, modely}{Two fitted GAMs}
 
 \item{predx, predy}{Predictions and covariance matrices of fitted GAMs in common grid}
+
+\item{findVariances}{Should variances be calculated? For internal use only, not default for multi-image analysis}
 }
 \value{
 A vector with correlation, its standard error and the p-value

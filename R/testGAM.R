@@ -7,6 +7,7 @@
 #' @param predx,predy Predictions and covariance matrices of fitted GAMs in common grid
 #'
 #' @returns A vector with correlation, its standard error and the p-value
+#' @inheritParams MoransISingle
 testGAM <- function(modelx, modely, predx, predy, findVariances) {
     # Covariance
     cxy <- sum((cen1 <- (predx$pred - mean(predx$pred))) * (cen2 <- (predy$pred - mean(predy$pred))))

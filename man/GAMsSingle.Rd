@@ -27,6 +27,8 @@ for the outcome values. See details of \link{sbivarSingle}.}
 evaluated on.}
 
 \item{verbose}{Should info on type of analysis be printed?}
+
+\item{findVariances}{Should variances be calculated? For internal use only, not default for multi-image analysis}
 }
 \value{
 A named list of results

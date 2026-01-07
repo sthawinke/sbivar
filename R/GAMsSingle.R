@@ -8,6 +8,7 @@
 #' @param n_points_grid The number of points in the new grid for the GAMs to be
 #' evaluated on.
 #' @returns A named list of results
+#' @inheritParams MoransISingle
 GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, findVariances = TRUE) {
     if (verbose) {
         message("Fitting GAMs for first modality (", ncol(X), " features) ...")

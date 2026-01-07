@@ -16,7 +16,7 @@ buildWeightMat(
 \arguments{
 \item{Cx, Ey}{Two coordinate matrices}
 
-\item{wo}{The weighting option, either "nn" or "exp"}
+\item{wo}{The weighting option, either "nn" or "Gauss"}
 
 \item{eta}{parameter that controls the decay of the weights with distance, see details}
 
@@ -33,4 +33,5 @@ statistic.
 }
 \details{
 For wo = "Gauss", the weight decays as exp(-d^2/eta) with d the distance between observations.
+For wo = "nn" the numNN nearest neighbours are given equal weight, all others are zero.
 }

@@ -20,7 +20,7 @@ exploreWeights <- function(etas, dists = seq(0, 0.1, length.out = 1e3), palette 
     if (length(etas) > length(Pal)) {
         stop("Insufficient colours in palette ", palette, "for supplied etas!")
     }
-    plot(type = "n", x = 0, y = 0, xlim = range(dists), ylim = c(0, 1), xlab = "distance", ylab = "weight")
+    plot(type = "n", x = 0, y = 0, xlim = range(dists), ylim = c(0, 1), xlab = "Distance", ylab = "Weight")
     foo <- lapply(seq_along(etas), function(i) {
         lines(dists, exp(-dists^2 / etas[i]), col = Pal[i])
     })

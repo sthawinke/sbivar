@@ -4,7 +4,7 @@
 #' statistic.
 #'
 #' @param Cx,Ey Two coordinate matrices
-#' @param wo The weighting option, either "nn" or "exp"
+#' @param wo The weighting option, either "nn" or "Gauss"
 #' @param numNN An integer, the number of neighbours
 #' @param eta parameter that controls the decay of the weights with distance, see details
 #' @param distMat The distance matrix
@@ -13,6 +13,7 @@
 #' @return A weight matrix
 #' @details
 #' For wo = "Gauss", the weight decays as exp(-d^2/eta) with d the distance between observations.
+#' For wo = "nn" the numNN nearest neighbours are given equal weight, all others are zero.
 buildWeightMat <- function(Cx, Ey, wo, eta, numNN,
     distMat = spatstat.geom::crossdist(Cx[, 1], Cx[, 2], Ey[, 1], Ey[, 2])) {
     if (wo == "nn") {

@@ -10,6 +10,7 @@
 #' @param cutoff,width Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}
 #' @param findMaxW Is the maximum bivariate Moran's I needed?
 #' @param returnSEsMoransI A boolean, are standard errors of Moran's I to be returned?
+#' @param findVariances Should variances be calculated? For internal use only, not default for multi-image analysis
 #' @param ... passed onto \link[gstat]{variogram}
 #'
 #' @returns A dataframe of results sorted by p-value, also containing the estimated Moran's I statistic and its variance.
@@ -28,7 +29,7 @@
 #' may use inherent multithreading with OpenBLAS.
 MoransISingle <- function(
       X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose,
-      findMaxW, variogramModels, returnSEsMoransI, ...
+      findMaxW, variogramModels, returnSEsMoransI, findVariances = TRUE, ...
 ) {
     n <- nrow(X)
     m <- nrow(Y)
@@ -81,6 +82,9 @@ MoransISingle <- function(
     Ixys <- vapply(seq_len(numWs), FUN.VALUE = matrix(0, p, k), function(i) {
         crossprod(X, Ws[, , i] %*% Y)
     }) / sqrt(prodFac) # Normalize for matrix size
+    # Reformat to long format
+    out <- matrix(c(Ixys), ncol = numWs, dimnames = list(NULL, paste0("Ixy_", wParams)))
+    if(findVariances){
     if (verbose) {
         message("Calculating variances of bivariate Moran's I statistics ...")
     }
@@ -117,8 +121,6 @@ MoransISingle <- function(
     IxyPvals <- makePval(Ixys / (seIxy <- sqrt(varIxy)))
     # CCT correction
     cctPvals <- apply(IxyPvals, c(1, 2), CCT)
-    # Reformat to long format
-    out <- matrix(c(Ixys), ncol = numWs, dimnames = list(NULL, paste0("Ixy_", wParams)))
     if (returnSEsMoransI) {
         out <- cbind(out, matrix(c(seIxy),
             ncol = numWs,
@@ -126,6 +128,7 @@ MoransISingle <- function(
         ))
     }
     out <- cbind(out, "pVal" = c(cctPvals))
+    }
     rownames(out) <- makeNames(colnames(X), colnames(Y))
     # Maximum values, if needed
     maxIxy <- if (findMaxW) {

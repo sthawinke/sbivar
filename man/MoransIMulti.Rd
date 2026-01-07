@@ -4,14 +4,14 @@
 \alias{MoransIMulti}
 \title{Find all Moran's I statistics for a list of matrices}
 \usage{
-MoransIMulti(Xl, Yl, Cxl, Eyl, returnSEsMoransI, verbose, ...)
+MoransIMulti(Xl, Yl, Cxl, Eyl, findVariances, verbose, ...)
 }
 \arguments{
 \item{Xl, Yl}{Lists of matrices of omics measurements}
 
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
-\item{returnSEsMoransI}{A boolean, are standard errors of Moran's I to be returned?}
+\item{findVariances}{Should variances be calculated? For internal use only, not default for multi-image analysis}
 
 \item{verbose}{Should info on type of analysis be printed?}
 

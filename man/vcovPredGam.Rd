@@ -4,7 +4,7 @@
 \alias{vcovPredGam}
 \title{Return predictions of a gam, along with their variance-covariance matrix}
 \usage{
-vcovPredGam(model, newdata)
+vcovPredGam(model, newdata, findVariances)
 }
 \arguments{
 \item{model}{The gam model}

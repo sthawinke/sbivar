@@ -43,7 +43,7 @@
 #' @seealso \link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}, \link[stats]{p.adjust}
 #' @order 1
 fitLinModels <- function(
-      result, designDf, Formula, verbose = TRUE, inverseWeigh = result$method != "Correlation", scaleByMax = TRUE,
+      result, designDf, Formula, verbose = TRUE, inverseWeigh = FALSE, scaleByMax = TRUE,
       Control = lmerControl(
           check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
           check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),

@@ -13,7 +13,7 @@
 #' \item{vcov}{Variance-covariance matrix of the predictions}
 #' @seealso \link[mgcv]{vcov.gam}, \link[mgcv]{predict.gam}
 #' @importFrom mgcv vcov.gam predict.gam
-vcovPredGam <- function(model, newdata) {
+vcovPredGam <- function(model, newdata, findVariances) {
     # Get the full coefficient covariance matrix
     coef_cov_matrix <- vcov.gam(model)
     # Get the basis matrix for predictions
@@ -25,7 +25,7 @@ vcovPredGam <- function(model, newdata) {
         "inverse" = 1 / predOut,
         "log" = exp(predOut)
     )
-    prediction_cov_matrix <- basis_matrix %*% tcrossprod(coef_cov_matrix, basis_matrix)
+    prediction_cov_matrix <- if(findVariances) basis_matrix %*% tcrossprod(coef_cov_matrix, basis_matrix)
     # Checked using predict.gam(,se.fit = TRUE)
     return(list("pred" = predOut, "vcov" = prediction_cov_matrix))
 }

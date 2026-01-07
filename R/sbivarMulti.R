@@ -24,9 +24,9 @@ sbivarMulti <- function(
       Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
       method = c("Moran's I", "GAMs", "Correlation"), wo = c("Gauss", "nn"),
       numNNs = c(4, 8, 24), etas = c(2e-4, 2e-3, 2e-2),
-      normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), returnSEsMoransI = TRUE,
+      normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
       variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
-      pseudoCount = 1e-8, n_points_grid = 6e2, verbose = TRUE
+      pseudoCount = 1e-8, n_points_grid = 6e2, verbose = TRUE, findVariances = FALSE
 ) {
     method <- match.arg(method)
     wo <- match.arg(wo)
@@ -74,12 +74,12 @@ sbivarMulti <- function(
     }
     out <- if (method == "Moran's I") {
         MoransIMulti(Xl, Yl, Cxl, Eyl,
-            wo = wo, numNNs = numNNs, verbose = verbose, returnSEsMoransI = returnSEsMoransI,
+            wo = wo, numNNs = numNNs, verbose = verbose, findVariances = findVariances,
             etas = etas, variogramModels = variogramModels, width = width, cutoff = cutoff
         )
     } else if (method == "GAMs") {
         GAMsMulti(Xl, Yl, Cxl, Eyl,
-            families = families,
+            families = families, findVariances = findVariances,
             n_points_grid = n_points_grid, verbose = verbose
         )
     } else if (method == "Correlation") {
@@ -97,7 +97,7 @@ sbivarMulti <- function(
             "Gauss" = etas,
             "nn" = numNNs
         ))
-        out$returnSEsMoransI <- returnSEsMoransI
+        out$returnSEsMoransI <- findVariances
     }
     return(out)
 }

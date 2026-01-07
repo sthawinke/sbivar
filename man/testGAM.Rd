@@ -4,7 +4,7 @@
 \alias{testGAM}
 \title{Test for correlation between the predictions of two GAM models}
 \usage{
-testGAM(modelx, modely, predx, predy)
+testGAM(modelx, modely, predx, predy, findVariances)
 }
 \arguments{
 \item{modelx, modely}{Two fitted GAMs}

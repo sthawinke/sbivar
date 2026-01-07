@@ -8,7 +8,7 @@
 #' @param n_points_grid The number of points in the new grid for the GAMs to be
 #' evaluated on.
 #' @returns A named list of results
-GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose) {
+GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, findVariances = TRUE) {
     if (verbose) {
         message("Fitting GAMs for first modality (", ncol(X), " features) ...")
     }
@@ -22,21 +22,23 @@ GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose) {
         numTests <- ncol(X) * ncol(Y)
         message("Performing all ", numTests, " pairwise tests on fitted GAMs ...")
     }
+    Nrow = if(findVariances) 3 else 1
     out <- vapply(selfName(names(gamsx)), function(featx) {
-        predx <- vcovPredGam(gamsx[[featx]], newdata = ng)
-        out <- vapply(selfName(names(gamsy)), FUN.VALUE = double(3), function(featy) {
+        predx <- vcovPredGam(gamsx[[featx]], newdata = ng, findVariances = findVariances)
+        out <- vapply(selfName(names(gamsy)), FUN.VALUE = double(Nrow), function(featy) {
             testGAM(
                 predx = predx, modely = gamsy[[featy]], modelx = gamsx[[featx]],
-                predy = vcovPredGam(gamsy[[featy]], newdata = ng)
+                predy = vcovPredGam(gamsy[[featy]], newdata = ng, findVariances = findVariances),
+                findVariances = findVariances
             )
         })
         printProgress(featx, colnames(X), verbose)
         return(out)
-    }, FUN.VALUE = matrix(0, nrow = 3, ncol = length(gamsy)))
+    }, FUN.VALUE = matrix(0, nrow = Nrow, ncol = length(gamsy)))
     # Reformat to long format
-    t(matrix(c(out), 3, length(gamsx) * length(gamsy),
+    t(matrix(c(out), Nrow, length(gamsx) * length(gamsy),
         dimnames = list(
-            c("corxy", "se.corxy", "pVal"),
+            c("corxy", if(findVariances) c("se.corxy", "pVal")),
             paste(rep(names(gamsx), each = length(gamsy)), rep(names(gamsy), times = length(gamsx)),
                 sep = "__"
             )

@@ -18,6 +18,7 @@ MoransISingle(
   findMaxW,
   variogramModels,
   returnSEsMoransI,
+  findVariances = TRUE,
   ...
 )
 }
@@ -40,6 +41,8 @@ MoransISingle(
 Currently, only "Exp" and "Lin" are implemented for computational reasons.}
 
 \item{returnSEsMoransI}{A boolean, are standard errors of Moran's I to be returned?}
+
+\item{findVariances}{Should variances be calculated? For internal use only, not default for multi-image analysis}
 
 \item{...}{passed onto \link[gstat]{variogram}}
 }

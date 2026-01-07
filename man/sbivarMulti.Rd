@@ -16,13 +16,13 @@ sbivarMulti(
   etas = c(2e-04, 0.002, 0.02),
   normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
-  returnSEsMoransI = TRUE,
   variogramModels = c("Exp", "Lin"),
   width = cutoff/15,
   cutoff = sqrt(2)/3,
   pseudoCount = 1e-08,
   n_points_grid = 600,
-  verbose = TRUE
+  verbose = TRUE,
+  findVariances = FALSE
 )
 }
 \arguments{
@@ -38,14 +38,14 @@ sbivarMulti(
 
 \item{normX, normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}
 
-\item{returnSEsMoransI}{A boolean, are standard errors of Moran's I to be returned?}
-
 \item{variogramModels}{A character vector, indicating the variogram model passed onto \link[gstat]{vgm}.
 Currently, only "Exp" and "Lin" are implemented for computational reasons.}
 
 \item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}}
 
 \item{verbose}{Should info on type of analysis be printed?}
+
+\item{findVariances}{Should variances be calculated? For internal use only, not default for multi-image analysis}
 }
 \value{
 A list containing

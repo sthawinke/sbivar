@@ -4,7 +4,16 @@
 \alias{GAMsSingle}
 \title{Fit univariate GAMs and test bivariate combinations}
 \usage{
-GAMsSingle(X, Y, Cx, Ey, families, n_points_grid, verbose)
+GAMsSingle(
+  X,
+  Y,
+  Cx,
+  Ey,
+  families,
+  n_points_grid,
+  verbose,
+  findVariances = TRUE
+)
 }
 \arguments{
 \item{X, Y}{Matrices of omics measurements}

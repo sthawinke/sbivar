@@ -4,7 +4,16 @@
 \alias{GAMsMulti}
 \title{Fit GAMs and find correlations and standard error for data lists}
 \usage{
-GAMsMulti(Xl, Yl, Cxl, Eyl, families, n_points_grid, verbose)
+GAMsMulti(
+  Xl,
+  Yl,
+  Cxl,
+  Eyl,
+  families,
+  n_points_grid,
+  verbose,
+  findVariances = FALSE
+)
 }
 \arguments{
 \item{Xl, Yl}{Lists of matrices of omics measurements}
@@ -14,6 +23,8 @@ GAMsMulti(Xl, Yl, Cxl, Eyl, families, n_points_grid, verbose)
 \item{families, n_points_grid}{See \link{GAMsSingle}}
 
 \item{verbose}{Should info on type of analysis be printed?}
+
+\item{findVariances}{Should variances be calculated? For internal use only, not default for multi-image analysis}
 }
 \value{
 A list named like Xl, containing all results

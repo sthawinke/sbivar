@@ -18,7 +18,7 @@ vcovPredGam <- function(model, newdata, findVariances = TRUE) {
     # Get the full coefficient covariance matrix
     coef_cov_matrix <- vcov.gam(model)
     # Get the basis matrix for predictions
-    basis_matrix <- predict.gam(model, newdata = newdata, type = "lpmatrix")
+    basis_matrix <- predict.gam(model, newdata = newdata, type = "lpmatrix", newdata.guaranteed = TRUE)
     predOut <- c(basis_matrix %*% coef(model))
     # Same as predict(model, newdata = newdata, type = "response")
     predOut <- switch(model$family$link,

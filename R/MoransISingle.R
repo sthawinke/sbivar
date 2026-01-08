@@ -76,7 +76,7 @@ MoransISingle <- function(
     Ws <- Ws[, , idW <- (colSums(Ws, dims = 2, na.rm = TRUE) > 0), drop = FALSE]
     numWs <- dim(Ws)[3]
     if (any(!idW) && (wo == "Gauss")) {
-        warning("Eta values ", etas[!idW], " yielded zero weight matrices and have been dropped!")
+        warning("Eta values ", etas[!idW], " yielded zero weight matrices and have been dropped!", immediate. = TRUE)
         etas <- etas[idW]
     }
     Ixys <- vapply(seq_len(numWs), FUN.VALUE = matrix(0, p, k), function(i) {

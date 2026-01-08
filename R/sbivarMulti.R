@@ -53,7 +53,7 @@ sbivarMulti <- function(
         Eyl <- mapply(Eyl, Yl, SIMPLIFY = FALSE, FUN = tmpFun)
     } else if (!missing(Cxl) || !missing(Eyl)) {
         warning("Correlation analysis will ignore coordinate matrices provided.
-                Consider providing another 'method' argument for a full spatial analysis")
+                Consider providing another 'method' argument for a full spatial analysis", immediate. = TRUE)
     }
     if (verbose) {
         message(

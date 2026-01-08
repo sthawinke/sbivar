@@ -97,7 +97,7 @@ sbivarSingle <- function(
     }
     if ((normX == "log" || normY == "log") && method == "GAMs") {
         warning("Normalizing data is not recommended for GAMs!
-                try accounting for non-normality through the 'families' argument.")
+                try accounting for non-normality through the 'families' argument.", immediate. = TRUE)
     }
     colnames(Cx) <- colnames(Ey) <- c("x", "y")
     X <- normMat(X, normX, pseudoCount)

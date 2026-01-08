@@ -20,7 +20,7 @@
 #' @examples
 #' #' #Multi-image analysis on Vicari data, using GAMs
 #' data(Vicari)
-#' #Subset to 5 images and 500 spots limit computing time
+#' # Subset to 5 images and 500 spots limit computing time
 #' VicariMultiTest <- lapply(Vicari, function(x) lapply(x[1:5], function(y) y[1:500, ]))
 #' VicariRes <- sbivar(VicariMultiTest$TranscriptOutcomes, VicariMultiTest$MetaboliteOutcomes,
 #'     VicariMultiTest$TranscriptCoords, VicariMultiTest$MetaboliteCoords,
@@ -42,20 +42,19 @@
 #' @importFrom BiocParallel bplapply bpparam
 #' @seealso \link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}, \link[stats]{p.adjust}
 #' @order 1
-fitLinModels <- function(
-      result, designDf, Formula, verbose = TRUE, inverseWeigh = FALSE, scaleByMax = TRUE,
-      Control = lmerControl(
-          check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
-          check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
-          check.conv.hess = .makeCC(action = "ignore", tol = 1e-06)
-      )
-) {
-    if(missing(designDf) && length(ncol(attr(terms(Formula), "factors"))) == 0){
+fitLinModels <- function(result, designDf, Formula, verbose = TRUE, inverseWeigh = FALSE, scaleByMax = TRUE,
+    Control = lmerControl(
+        check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
+        check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
+        check.conv.hess = .makeCC(action = "ignore", tol = 1e-06)
+    )) {
+    if (missing(designDf) && length(ncol(attr(terms(Formula), "factors"))) == 0) {
         designDf <- data.frame("foo" = seq_along(result$estimates))
-    } #Allow for intercept only models
+    } # Allow for intercept only models
     stopifnot(
         all(c("estimates", "method", "multi") %in% names(result)),
-        is.logical(inverseWeigh), is.logical(scaleByMax), length(result$estimates) == nrow(designDf), is.data.frame(designDf),
+        is.logical(inverseWeigh), is.logical(scaleByMax), length(result$estimates) == nrow(designDf),
+        is.data.frame(designDf),
         is.character(Formula) || is(Formula, "formula")
     )
     measures <- result$estimates
@@ -76,7 +75,7 @@ fitLinModels <- function(
         rownames
     )
     Features <- selfName(unique(unlist(lapply(measures, function(x) namesFun(x$res))))) # All feature pairs present
-    iter <- selfName(if(moran <- result$method == "Moran's I") {
+    iter <- selfName(if (moran <- result$method == "Moran's I") {
         result$wParams
     } else {
         1

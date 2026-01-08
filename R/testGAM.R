@@ -15,7 +15,9 @@ testGAM <- function(modelx, modely, predx, predy, findVariances) {
     denom <- (length(predx$pred) - 1) * sd(predx$pred) * sd(predy$pred)
     corxy <- cxy / denom
     # Its standard error, exploit block diagonality
-    se <- if(findVariances) sqrt(getApproxVar(predx$vcov, cen2, predx$pred, modelx$family$link) +
-        getApproxVar(predy$vcov, cen1, predy$pred, modely$family$link))
+    se <- if (findVariances) {
+        sqrt(getApproxVar(predx$vcov, cen2, predx$pred, modelx$family$link) +
+            getApproxVar(predy$vcov, cen1, predy$pred, modely$family$link))
+    }
     return(c("corxy" = corxy, "se.corxy" = se / denom, "pVal" = makePval(cxy / se)))
 }

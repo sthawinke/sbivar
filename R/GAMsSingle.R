@@ -23,7 +23,7 @@ GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, findVaria
         numTests <- ncol(X) * ncol(Y)
         message("Performing all ", numTests, " pairwise tests on fitted GAMs ...")
     }
-    Nrow = if(findVariances) 3 else 1
+    Nrow <- if (findVariances) 3 else 1
     out <- vapply(selfName(names(gamsx)), function(featx) {
         predx <- vcovPredGam(gamsx[[featx]], newdata = ng, findVariances = findVariances)
         out <- vapply(selfName(names(gamsy)), FUN.VALUE = double(Nrow), function(featy) {
@@ -39,7 +39,7 @@ GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, findVaria
     # Reformat to long format
     t(matrix(c(out), Nrow, length(gamsx) * length(gamsy),
         dimnames = list(
-            c("corxy", if(findVariances) c("se.corxy", "pVal")),
+            c("corxy", if (findVariances) c("se.corxy", "pVal")),
             paste(rep(names(gamsx), each = length(gamsy)), rep(names(gamsy), times = length(gamsx)),
                 sep = "__"
             )

@@ -16,6 +16,6 @@ GAMsMulti <- function(Xl, Yl, Cxl, Eyl, families, n_points_grid, verbose, findVa
             families = families, n_points_grid = n_points_grid,
             verbose = FALSE, findVariances = findVariances
         )
-        return(list("res" = out[, c("corxy", if(findVariances) "se.corxy"), drop = FALSE]))
+        return(list("res" = out[, c("corxy", if (findVariances) "se.corxy"), drop = FALSE]))
     })
 }

@@ -20,14 +20,12 @@
 #' @inheritParams MoransISingle
 #' @importFrom BiocParallel bpparam
 #' @seealso \link{fitLinModels}, \link{MoransIMulti}, \link{correlationsMulti}, \link{GAMsMulti}
-sbivarMulti <- function(
-      Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
-      method = c("Moran's I", "GAMs", "Correlation"), wo = c("Gauss", "nn"),
-      numNNs = c(4, 8, 24), etas = c(2e-4, 2e-3, 2e-2),
-      normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
-      variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
-      pseudoCount = 1e-8, n_points_grid = 6e2, verbose = TRUE, findVariances = FALSE
-) {
+sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
+    method = c("Moran's I", "GAMs", "Correlation"), wo = c("Gauss", "nn"),
+    numNNs = c(4, 8, 24), etas = c(2e-4, 2e-3, 2e-2),
+    normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
+    variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
+    pseudoCount = 1e-8, n_points_grid = 6e2, verbose = TRUE, findVariances = FALSE) {
     method <- match.arg(method)
     wo <- match.arg(wo)
     normX <- match.arg(normX)

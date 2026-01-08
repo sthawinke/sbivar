@@ -12,9 +12,9 @@ correlationsMulti <- function(Xl, Yl, verbose) {
         if (verbose) {
             printIteration(nam, names(Xl))
         }
-        commonNames = intersect(rownames(Xl[[nam]]), rownames(Yl[[nam]]))
-        #Ensure same dimensions
-        out <- c(cor(Xl[[nam]][commonNames,], Yl[[nam]][commonNames,]))
+        commonNames <- intersect(rownames(Xl[[nam]]), rownames(Yl[[nam]]))
+        # Ensure same dimensions
+        out <- c(cor(Xl[[nam]][commonNames, ], Yl[[nam]][commonNames, ]))
         names(out) <- makeNames(colnames(Xl[[nam]]), colnames(Yl[[nam]]))
         return(list("res" = out))
     })

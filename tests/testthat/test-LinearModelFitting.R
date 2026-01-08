@@ -15,6 +15,13 @@ test_that("fitLinModels works for GAM input", {
             Formula = out ~ covariate + cofactor + (1 | group)
         )
     )
+    expect_is(#Intercept only model
+        class = "list",
+        multiFitGams3 <- fitLinModels(estGAMs,
+                                      inverseWeigh = FALSE,
+                                      Formula = out ~ 1
+        )
+    )
     # Extract the results
     expect_identical(
         names(resGams <- extractResultsMulti(multiFitGams, designDf = toyDesign)$result),

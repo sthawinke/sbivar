@@ -50,6 +50,9 @@ fitLinModels <- function(
           check.conv.hess = .makeCC(action = "ignore", tol = 1e-06)
       )
 ) {
+    if(missing(designDf) && length(ncol(attr(terms(Formula), "factors"))) == 0){
+        designDf <- data.frame("foo" = seq_along(result$estimates))
+    } #Allow for intercept only models
     stopifnot(
         all(c("estimates", "method", "multi") %in% names(result)),
         is.logical(inverseWeigh), is.logical(scaleByMax), length(result$estimates) == nrow(designDf), is.data.frame(designDf),
@@ -73,7 +76,7 @@ fitLinModels <- function(
         rownames
     )
     Features <- selfName(unique(unlist(lapply(measures, function(x) namesFun(x$res))))) # All feature pairs present
-    iter <- selfName(if (moran <- result$method == "Moran's I") {
+    iter <- selfName(if(moran <- result$method == "Moran's I") {
         result$wParams
     } else {
         1

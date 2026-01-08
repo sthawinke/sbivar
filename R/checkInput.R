@@ -61,7 +61,8 @@ checkInputMulti <- function(Xl, Yl, Cxl, Eyl, checkCoords = TRUE) {
         if (!identical(names(Xl), names(Yl)) || !identical(names(Yl), names(Cxl))) {
             stop("All names of Xl, Yl and Cxl must be identical")
         }
-        if (length(Yl) != length(Eyl)) {
+        if (!missing(Eyl)){
+            if(length(Yl) != length(Eyl)) {
             stop("Length of outcome matrices Yl and their coordinates Eyl do not match!")
         }
         if (!all(vapply(Yl, nrow, FUN.VALUE = 0) == vapply(Eyl, nrow, FUN.VALUE = 0))) {
@@ -70,8 +71,9 @@ checkInputMulti <- function(Xl, Yl, Cxl, Eyl, checkCoords = TRUE) {
         if (is.null(names(Eyl))) {
             stop("Eyl must be a named list")
         }
-        if (!identical(names(Eyl), names(Xl))) {
+        if (!missing(Eyl) && !identical(names(Eyl), names(Xl))) {
             stop("Eyl must be named identically to Xl, Yl and Cxl")
+        }
         }
     }
 }

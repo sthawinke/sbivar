@@ -39,19 +39,19 @@ sbivarMulti <- function(
     Xl <- lapply(Xl, addDimNames, "X")
     Yl <- lapply(Yl, addDimNames, "Y")
     foo <- checkInputMulti(Xl, Yl, Cxl, Eyl, checkCoords = ccs <- (method != "Correlation"))
+    if (missing(Eyl)) {
+        message("Only one coordinate matrix list Cxl supplied, and dimensions of X and Y do match.
+                 Performing an analysis with joint coordinate sets.")
+        Eyl <- Cxl
+    }
     if (ccs) {
         Cxl <- mapply(Cxl, Xl, SIMPLIFY = FALSE, FUN = tmpFun <- function(cx, x) {
             colnames(cx) <- c("x", "y")
             rownames(cx) <- rownames(x)
             cx
         })
-        if (missing(Eyl)) {
-            message("Only one coordinate matrix list Cxl supplied, and dimensions of X and Y do match.
-                 Performing an analysis with joint coordinate sets.")
-            Eyl <- Cxl
-        }
         Eyl <- mapply(Eyl, Yl, SIMPLIFY = FALSE, FUN = tmpFun)
-    } else if (!missing(Cxl) || !missing(Eyl)) {
+    } else if (!missing(Cxl)) {
         warning("Correlation analysis will ignore coordinate matrices provided.
                 Consider providing another 'method' argument for a full spatial analysis", immediate. = TRUE)
     }

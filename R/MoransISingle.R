@@ -45,23 +45,6 @@ MoransISingle <- function(
     movedCoords <- moveTwoCoords(Cx, Ey)
     Cx <- movedCoords$Cx
     Ey <- movedCoords$Ey
-    # Estimate spatial autocorrelation
-    if (verbose) {
-        message("Fitting variograms for first modality (", p, " features) ...")
-    }
-    variogramsX <- matheronVariograms(X, Cx,
-        width = width, cutoff = cutoff,
-        variogramModels = variogramModels, ...
-    )
-    if (verbose) {
-        message("Fitting variograms for second modality (", k, " features) ...")
-    }
-    variogramsY <- matheronVariograms(Y, Ey,
-        width = width, cutoff = cutoff,
-        variogramModels = variogramModels, ...
-    )
-    distX <- as.vector(stats::dist(Cx))
-    distY <- as.vector(stats::dist(Ey))
     prodFac <- (n - 1) * (m - 1)
     if (verbose) {
         message("Calculating bivariate Moran's I statistics ...")
@@ -85,6 +68,23 @@ MoransISingle <- function(
     # Reformat to long format
     out <- matrix(c(Ixys), ncol = numWs, dimnames = list(NULL, paste0("Ixy_", wParams)))
     if(findVariances){
+        # Estimate spatial autocorrelation
+        if (verbose) {
+            message("Fitting variograms for first modality (", p, " features) ...")
+        }
+        variogramsX <- matheronVariograms(X, Cx,
+                                          width = width, cutoff = cutoff,
+                                          variogramModels = variogramModels, ...
+        )
+        if (verbose) {
+            message("Fitting variograms for second modality (", k, " features) ...")
+        }
+        variogramsY <- matheronVariograms(Y, Ey,
+                                          width = width, cutoff = cutoff,
+                                          variogramModels = variogramModels, ...
+        )
+        distX <- as.vector(stats::dist(Cx))
+        distY <- as.vector(stats::dist(Ey))
     if (verbose) {
         message("Calculating variances of bivariate Moran's I statistics ...")
     }

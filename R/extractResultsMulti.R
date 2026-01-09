@@ -10,7 +10,11 @@
 #' @rdname fitLinModels
 #' @order 2
 extractResultsMulti <- function(result, designDf, method = "BH") {
-    categoricalVars <- getDiscreteVars(designDf)
+    if(misDes <- missing(designDf)){
+        warning(immediate. = TRUE, "No design matrix supplied, extracting only results for intercept!")
+    } else {
+        categoricalVars <- getDiscreteVars(designDf)
+    }
     if (result$method == "Moran's I") {
         wParChar <- switch(result$wo,
             "Gauss" = "eta_",
@@ -35,7 +39,7 @@ extractResultsMulti <- function(result, designDf, method = "BH") {
             }))
             colnames(ints) <- c("Estimate", "SE", "pVal")
             AnovaTabs <- lapply(res[id], anova)
-            fixedVars <- selfName(unique(unlist(lapply(res[id], function(x) {
+            fixedVars <- if(misDes) character(0) else selfName(unique(unlist(lapply(res[id], function(x) {
                 all.vars(terms(x))[-1]
             }))))
             fixedOut <- lapply(fixedVars, function(Var) {

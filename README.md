@@ -80,7 +80,7 @@ register(MulticoreParam(2))
 
 ``` r
 moranRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
-  method = "Moran's I"
+    method = "Moran's I"
 )
 ```
 
@@ -88,11 +88,11 @@ moranRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
 
     ## Testing significance of bivariate Moran's I for 100 feature pairs
 
+    ## Calculating bivariate Moran's I statistics ...
+
     ## Fitting variograms for first modality (10 features) ...
 
     ## Fitting variograms for second modality (10 features) ...
-
-    ## Calculating bivariate Moran's I statistics ...
 
     ## Calculating variances of bivariate Moran's I statistics ...
 
@@ -122,13 +122,20 @@ Have a look at the results:
 head(moranRes$result)
 ```
 
-    ##                      Ixy_2e-05     Ixy_0.002       Ixy_0.2       pVal     pAdj
-    ## Fth1__X573.21671  1.194528e-04  1.022411e-04  1.221550e-05 0.02057933 0.997663
-    ## Fth1__X426.13386 -1.185796e-04 -9.845418e-05 -7.282392e-06 0.02677542 0.997663
-    ## Fth1__X537.21448 -7.912325e-05 -8.095472e-05 -1.562551e-05 0.11938969 0.997663
-    ## Fth1__X573.23369  3.945623e-05  3.128742e-05  3.549317e-06 0.14467783 0.997663
-    ## Fth1__X576.20502  7.059640e-05  7.222983e-05  1.586494e-05 0.38430998 0.997663
-    ## Fth1__X523.19829 -3.460037e-05 -4.901948e-05 -1.281152e-05 0.43401716 0.997663
+    ##                        Ixy_2e-04     Ixy_0.002      Ixy_0.02       pVal
+    ## Fth1__X573.21671    1.193165e-04  1.022411e-04  6.061050e-05 0.01816490
+    ## Fth1__X426.13386   -1.228684e-04 -9.845418e-05 -4.604064e-05 0.01944693
+    ## Fth1__X537.21448   -8.188347e-05 -8.095472e-05 -5.791695e-05 0.08811071
+    ## Fth1__X573.23369    4.075583e-05  3.128742e-05  1.621407e-05 0.09431839
+    ## mt.Co1__X426.13386  7.685216e-05  5.274923e-05  1.184522e-05 0.21346616
+    ## Fth1__X576.20502    7.445046e-05  7.222983e-05  5.841386e-05 0.24726333
+    ##                         pAdj
+    ## Fth1__X573.21671   0.9723466
+    ## Fth1__X426.13386   0.9723466
+    ## Fth1__X537.21448   0.9862872
+    ## Fth1__X573.23369   0.9862872
+    ## mt.Co1__X426.13386 0.9862872
+    ## Fth1__X576.20502   0.9862872
 
 Plot the most significantly spatially associated gene-metabolite pair :
 
@@ -161,13 +168,13 @@ log-link is used in both cases.
 
 ``` r
 multiGAMRes <- sbivar(
-  X = Vicari$TranscriptOutcomes, Y = Vicari$MetaboliteOutcomes,
-  Cx = Vicari$TranscriptCoords, Ey = Vicari$MetaboliteCoords,
-  method = "GAM", families = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log"))
+    X = Vicari$TranscriptOutcomes, Y = Vicari$MetaboliteOutcomes,
+    Cx = Vicari$TranscriptCoords, Ey = Vicari$MetaboliteCoords,
+    method = "GAM", families = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log"))
 )
 ```
 
-    ## Starting sbivar analysis of 6 images on 10 computing cores
+    ## Starting sbivar analysis (GAMs) of 6 images on 10 computing cores
 
     ## Image 1 of 6
 
@@ -189,7 +196,7 @@ design <- data.frame("mouse" = mouse)
 multiGAMLmms <- fitLinModels(multiGAMRes, design, Formula = ~ (1 | mouse))
 ```
 
-    ## Fitting 100 mixed effects models on 10 cores
+    ## Fitting 80 mixed effects models on 10 cores
 
 Extract the results for the desired parameter (the intercept)
 
@@ -199,12 +206,12 @@ head(multiGAMLmmsRes$result$Intercept)
 ```
 
     ##                       Estimate         SE        pVal      pAdj
-    ## Fth1__X426.13386    -0.5173665 0.08692546 0.001913878 0.1913878
-    ## mt.Atp6__X426.13386  0.3764458 0.07540160 0.004131023 0.2065512
-    ## Gm42418__X555.20345  0.2615645 0.06416528 0.009573444 0.3145332
-    ## mt.Co3__X288.1186   -0.7161940 0.19572304 0.014606780 0.3145332
-    ## mt.Co1__X288.1186   -0.5606903 0.15622991 0.015726658 0.3145332
-    ## Gm42418__X555.20713  0.2342598 0.07195066 0.022549405 0.3678948
+    ## mt.Co1__X426.13386   0.3751419 0.08554576 0.007119296 0.5695437
+    ## mt.Co2__X426.13386   0.2389757 0.10770610 0.077247025 0.8000025
+    ## mt.Nd1__X576.20502   0.1965198 0.09729149 0.099382000 0.8000025
+    ## mt.Nd2__X576.20502   0.2211247 0.11499889 0.112517980 0.8000025
+    ## Gm42418__X576.20502 -0.1295621 0.06926126 0.120316386 0.8000025
+    ## mt.Nd4__X576.20502   0.2110836 0.11554592 0.127284444 0.8000025
 
 No features are significantly associated after multiplicity correction.
 For illustration, we plot the feature pair with the smallest p-values
@@ -212,8 +219,8 @@ nevertheless:
 
 ``` r
 plotTopPair(multiGAMLmmsRes,
-  Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes,
-  Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.3
+    Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes,
+    Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.3
 )
 ```
 

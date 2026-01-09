@@ -37,12 +37,12 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" 
     Xl <- lapply(Xl, addDimNames, "X")
     Yl <- lapply(Yl, addDimNames, "Y")
     foo <- checkInputMulti(Xl, Yl, Cxl, Eyl, checkCoords = ccs <- (method != "Correlation"))
-    if (missing(Eyl)) {
-        message("Only one coordinate matrix list Cxl supplied, and dimensions of X and Y do match.
-                 Performing an analysis with joint coordinate sets.")
-        Eyl <- Cxl
-    }
     if (ccs) {
+        if (missing(Eyl)) {
+            message("Only one coordinate matrix list Cxl supplied, and dimensions of X and Y do match.
+                 Performing an analysis with joint coordinate sets.")
+            Eyl <- Cxl
+        }
         Cxl <- mapply(Cxl, Xl, SIMPLIFY = FALSE, FUN = tmpFun <- function(cx, x) {
             colnames(cx) <- c("x", "y")
             rownames(cx) <- rownames(x)

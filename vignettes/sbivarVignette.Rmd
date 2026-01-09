@@ -14,7 +14,7 @@ vignette: >
 bibliography: ../inst/REFERENCES.bib 
 ---
 
-```{r, echo=FALSE, eval = FALSE}
+```{r, echo=FALSE}
 htmltools::img(
     src = knitr::image_uri("../inst/Sbivar.png"),
     style = "position:absolute; top:0; right:0; padding:8px;",

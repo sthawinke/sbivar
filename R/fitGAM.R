@@ -26,12 +26,16 @@ fitGAM <- function(df, outcome, k = -1, family = gaussian(), offset = NULL) {
 #' For debugging purposes mainly
 #' @param ... Passed onto \link{fitGAM}
 #' @inheritParams fitGAM
+#' @param pseudoCount Pseudocount added to avoid zeroes for gamma distribution
 #'
 #' @returns A list of GAM models
 #' @importFrom smoppix loadBalanceBplapply
 #' @importFrom BiocParallel bplapply
-fitManyGAMs <- function(mat, coord, family = gaussian(), modality, ...) {
+fitManyGAMs <- function(mat, coord, family = gaussian(), modality, pseudoCount = 1e-8,...) {
     cns <- selfName(colnames(mat))
+    if(family$family == "Gamma"){
+        mat <- mat + pseudoCount
+    }
     df <- data.frame(as.matrix(mat), coord)
     if (family$family != "gaussian") {
         libSizes <- rowSums(mat)

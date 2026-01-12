@@ -22,7 +22,7 @@
 #' @seealso \link{fitLinModels}, \link{MoransIMulti}, \link{correlationsMulti}, \link{GAMsMulti}
 sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
     method = c("Moran's I", "GAMs", "Correlation"), wo = c("Gauss", "nn"),
-    numNNs = c(4, 8, 24), etas = c(2e-5, 2e-4, 2e-3),
+    numNNs = c(4, 8, 24), etas = c(5e-6, 4e-5, 2e-4),
     normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
     variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
     pseudoCount = 1e-8, n_points_grid = 6e2, verbose = TRUE, findVariances = FALSE) {

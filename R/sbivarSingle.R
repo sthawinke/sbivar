@@ -31,7 +31,7 @@
 #' @seealso \link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle}, \link{GPsSingle}
 sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
     normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
-    etas = c(2e-4, 2e-3, 2e-2), findMaxW = FALSE, returnSEsMoransI = FALSE,
+    etas = c(2e-4, 2e-3, 2e-2), findMaxW = FALSE, returnSEsMoransI = TRUE,
     families = list("X" = gaussian(), "Y" = gaussian()), n_points_grid = 6e2, verbose = TRUE,
     variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
     wo = c("Gauss", "nn"), numNNs = c(4, 8, 24),

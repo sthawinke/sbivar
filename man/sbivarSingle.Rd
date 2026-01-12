@@ -15,7 +15,7 @@ sbivarSingle(
   pseudoCount = 1e-08,
   etas = c(2e-04, 0.002, 0.02),
   findMaxW = FALSE,
-  returnSEsMoransI = FALSE,
+  returnSEsMoransI = TRUE,
   families = list(X = gaussian(), Y = gaussian()),
   n_points_grid = 600,
   verbose = TRUE,

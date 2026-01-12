@@ -14,7 +14,7 @@ vignette: >
 bibliography: ../inst/REFERENCES.bib 
 ---
 
-```{r, echo=FALSE, eval = FALSE}
+```{r image, echo=FALSE, eval = FALSE}
 htmltools::img(
     src = knitr::image_uri("../inst/Sbivar.png"),
     style = "position:absolute; top:0; right:0; padding:8px;",
@@ -59,13 +59,13 @@ library(sbivar)
 
 The _sbivar_ package can be computationally intensive, since the number of bivariate tests equals the product of the numbers of features of both modalities. For this reason we provide multithreading through the _BiocParallel_ package. 
 
-```{r}
+```{r loadBiocparallel}
 library(BiocParallel)
 ```
 
 All the user needs to do, is choose the number of cores: 
 
-```{r}
+```{r nCores}
 nCores <- 2 # The number of CPUs
 ```
 
@@ -87,7 +87,7 @@ if (.Platform$OS.type == "unix") {
 Wherever applicable, the registered backend will be used throughout the analysis.
 For serial calculations, for instance if memory is limiting, choose instead
 
-```{r , eval = FALSE}
+```{r registerserial, eval = FALSE}
 register(SerialParam())
 ```
 
@@ -106,7 +106,7 @@ names(Vicari)
 
 This object consists of four lists of length six: _TranscriptCoords_ and _MetaboliteCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. Only the 10 most abundant features per modality are included in the package. The _sbivar_ package assumes that the data have been pre-aligned. Yet it is always a good idea to check the alignment visually:
 
-```{r, fig.height = 7}
+```{r plotcoordsVicari, fig.height = 7}
 par(mfrow = c(2, 3))
 plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.25)
 par(mfrow = c(1, 1))
@@ -257,7 +257,7 @@ The [SpatialExperiment](https://doi.org/doi:10.18129/B9.bioc.SpatialExperiment) 
 
 For illustration, we first construct _SpatialExperiment_ objects for the single-image case:
 
-```{r SEConstruct, message=FALSE}
+```{r SEConstruct, message = FALSE}
 library(SpatialExperiment, quietly = TRUE)
 StxSE <- SpatialExperiment(
     assays = list("transcripts" = t(singleStx)),

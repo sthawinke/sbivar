@@ -14,4 +14,10 @@
 
 # 0.1.4
 
-- Enforce x-y column names in sbivarMulti too
+- Enforce x-y column names for the coordinates in sbivarMulti too
+
+# 0.2.0
+
+- Implement bivariate Moran’s I for single images
+- Disallow sample matching and correlation for disjoint coordinate sets
+- Scale by maximum values for bivariate Moran’s I

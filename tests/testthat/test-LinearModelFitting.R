@@ -31,7 +31,7 @@ test_that("fitLinModels works for GAM input", {
     expect_warning(
         resGams3 <- extractResultsMulti(multiFitGams3)$result,
     )
-    expect_identical(names(resGams3),  "Intercept")
+    expect_identical(names(resGams3), "Intercept")
     expect_false(is.unsorted(resGams$Intercept[, "pVal"]))
 })
 test_that("fitLinModels works for Moran's I input", {

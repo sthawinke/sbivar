@@ -10,7 +10,7 @@
 #' @rdname fitLinModels
 #' @order 2
 extractResultsMulti <- function(result, designDf, method = "BH") {
-    if(misDes <- missing(designDf)){
+    if (misDes <- missing(designDf)) {
         warning(immediate. = TRUE, "No design matrix supplied, extracting only results for intercept!")
     } else {
         categoricalVars <- getDiscreteVars(designDf)
@@ -39,9 +39,13 @@ extractResultsMulti <- function(result, designDf, method = "BH") {
             }))
             colnames(ints) <- c("Estimate", "SE", "pVal")
             AnovaTabs <- lapply(res[id], anova)
-            fixedVars <- if(misDes) character(0) else selfName(unique(unlist(lapply(res[id], function(x) {
-                all.vars(terms(x))[-1]
-            }))))
+            fixedVars <- if (misDes) {
+                character(0)
+            } else {
+                selfName(unique(unlist(lapply(res[id], function(x) {
+                    all.vars(terms(x))[-1]
+                }))))
+            }
             fixedOut <- lapply(fixedVars, function(Var) {
                 if (discr <- Var %in% categoricalVars) {
                     unVals <- unique(designDf[[Var]])

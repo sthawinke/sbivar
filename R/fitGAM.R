@@ -31,9 +31,9 @@ fitGAM <- function(df, outcome, k = -1, family = gaussian(), offset = NULL) {
 #' @returns A list of GAM models
 #' @importFrom smoppix loadBalanceBplapply
 #' @importFrom BiocParallel bplapply
-fitManyGAMs <- function(mat, coord, family = gaussian(), modality, pseudoCount = 1e-8,...) {
+fitManyGAMs <- function(mat, coord, family = gaussian(), modality, pseudoCount = 1e-8, ...) {
     cns <- selfName(colnames(mat))
-    if(family$family == "Gamma"){
+    if (family$family == "Gamma") {
         mat <- mat + pseudoCount
     }
     df <- data.frame(as.matrix(mat), coord)

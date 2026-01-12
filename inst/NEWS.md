@@ -21,3 +21,8 @@
 - Implement bivariate Moran’s I for single images
 - Disallow sample matching and correlation for disjoint coordinate sets
 - Scale by maximum values for bivariate Moran’s I
+
+# 0.3.0
+
+ - Modify weighting parameters for Moran's I
+ - Add pseudocount for GAMs with gamma distribution

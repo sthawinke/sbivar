@@ -91,10 +91,15 @@ fitLinModels <- function(result, designDf, Formula, verbose = TRUE, inverseWeigh
     for (i in names(measures)) {
         outArr[i, namesFun(measures[[i]]$res), ] <- if (result$method == "Correlation") measures[[i]]$res else measures[[i]]$res[, seq_along(iter)]
         if (scaleByMax && (result$method == "Moran's I")) {
+            #Scale estimates
             outArr[i, namesFun(measures[[i]]$res), ] <- t(t(outArr[i, namesFun(measures[[i]]$res), ]) / measures[[i]]$maxIxy)
         }
         if (inverseWeigh && (result$method %in% c("Moran's I", "GAMs"))) {
             weightsArr[i, namesFun(measures[[i]]$res), ] <- 1 / measures[[i]]$res[, seq_along(iter) + length(iter)]^2
+            if(scaleByMax && (result$method == "Moran's I")){
+                #Scale variances too
+                weightsArr[i, namesFun(measures[[i]]$res), ] <- t(t(weightsArr[i, namesFun(measures[[i]]$res), ])*measures[[i]]$maxIxy)
+            }
         }
     }
     # Prepare design matrices for linear model fitting

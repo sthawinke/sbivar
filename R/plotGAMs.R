@@ -67,7 +67,7 @@ plotGAMs <- function(
     }
     ggplot(gamDf, aes(x, y, fill = Value)) +
         geom_tile() +
-        xlab("x-coordinate") + xlab("y-coordinate") +
+        xlab("x-coordinate") + ylab("y-coordinate") +
         coord_fixed() +
         facet_grid(if (multi) {
             image ~ feature

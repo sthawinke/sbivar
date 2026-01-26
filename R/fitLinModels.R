@@ -98,7 +98,7 @@ fitLinModels <- function(result, designDf, Formula, verbose = TRUE, inverseWeigh
             weightsArr[i, namesFun(measures[[i]]$res), ] <- 1 / measures[[i]]$res[, seq_along(iter) + length(iter)]^2
             if(scaleByMax && (result$method == "Moran's I")){
                 #Scale variances too
-                weightsArr[i, namesFun(measures[[i]]$res), ] <- t(t(weightsArr[i, namesFun(measures[[i]]$res), ])*measures[[i]]$maxIxy)
+                weightsArr[i, namesFun(measures[[i]]$res), ] <- t(t(weightsArr[i, namesFun(measures[[i]]$res), ])*measures[[i]]$maxIxy^2)
             }
         }
     }

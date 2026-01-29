@@ -4,14 +4,25 @@
 \alias{buildWeightMat}
 \title{Build a weight matrix for bivariate Moran's I}
 \usage{
-buildWeightMat(Cx, Ey, wo = c("distance", "nn"), numNN = 8)
+buildWeightMat(
+  Cx,
+  Ey,
+  wo,
+  eta,
+  numNN,
+  distMat = spatstat.geom::crossdist(Cx[, 1], Cx[, 2], Ey[, 1], Ey[, 2])
+)
 }
 \arguments{
 \item{Cx, Ey}{Two coordinate matrices}
 
-\item{wo}{The weighting option, either "nn" or "distance"}
+\item{wo}{The weighting option, either "nn" or "Gauss"}
+
+\item{eta}{parameter that controls the decay of the weights with distance, see details}
 
 \item{numNN}{An integer, the number of neighbours}
+
+\item{distMat}{The distance matrix}
 }
 \value{
 A weight matrix
@@ -19,4 +30,8 @@ A weight matrix
 \description{
 Build a weight matrix to be used in the calculation of the bivariate Moran's I
 statistic.
+}
+\details{
+For wo = "Gauss", the weight decays as exp(-d^2/eta) with d the distance between observations.
+For wo = "nn" the numNN nearest neighbours are given equal weight, all others are zero.
 }

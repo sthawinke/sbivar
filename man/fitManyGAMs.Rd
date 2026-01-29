@@ -4,7 +4,14 @@
 \alias{fitManyGAMs}
 \title{Fit GAMs to all columns of a dataframe, as a wrapper for fitGAM}
 \usage{
-fitManyGAMs(mat, coord, family = gaussian(), modality, ...)
+fitManyGAMs(
+  mat,
+  coord,
+  family = gaussian(),
+  modality,
+  pseudoCount = 1e-08,
+  ...
+)
 }
 \arguments{
 \item{mat}{The matrix of outcomes}
@@ -15,6 +22,8 @@ fitManyGAMs(mat, coord, family = gaussian(), modality, ...)
 
 \item{modality}{Character vector indicating which modality is being fit.
 For debugging purposes mainly}
+
+\item{pseudoCount}{Pseudocount added to avoid zeroes for gamma distribution}
 
 \item{...}{Passed onto \link{fitGAM}}
 }

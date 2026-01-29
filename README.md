@@ -47,14 +47,14 @@ This object consists of four lists of length six: *MetaboliteCoords* and
 is to look at the alignment of the coordinates:
 
 ``` r
-par(mfrow = c(2,3))
+par(mfrow = c(2, 3))
 plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.2)
 ```
 
 ![](README_files/figure-gfm/plotvicari-1.png)<!-- -->
 
 ``` r
-par(mfrow = c(1,1))
+par(mfrow = c(1, 1))
 ```
 
 ## Single-image analysis
@@ -64,60 +64,91 @@ but for didactical purposes we also analyse a single image here, the
 sample “V11L12-109_A1”.
 
 ``` r
-singleSample = "V11L12-109_A1"
-singleStxCoords = Vicari$TranscriptCoords[[singleSample]]
-singleStx = Vicari$TranscriptOutcomes[[singleSample]]
-singleMetCoords = Vicari$MetaboliteCoords[[singleSample]]
-singleMet = Vicari$MetaboliteOutcomes[[singleSample]]
+singleSample <- "V11L12-109_A1"
+singleStxCoords <- Vicari$TranscriptCoords[[singleSample]]
+singleStx <- Vicari$TranscriptOutcomes[[singleSample]]
+singleMetCoords <- Vicari$MetaboliteCoords[[singleSample]]
+singleMet <- Vicari$MetaboliteOutcomes[[singleSample]]
 ```
 
-Now analyse this single sample using generalized additive models (GAMs),
-with a negative binomial outcome distribution for the transcriptome
-data, and a gamma outcome distribution for the metabolome data. A
-log-link is used in both cases.
+Now analyse this single sample using bivariate Moran’s I.
 
 ``` r
-gamRes = sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, 
-    method = "GAMs", families = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log")))
+library(BiocParallel)
+register(MulticoreParam(2))
 ```
 
-    ## Performing sbivar analysis on a single image
+``` r
+moranRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
+    method = "Moran's I"
+)
+```
+
+    ## Starting sbivar analysis of a single image on 10 computing cores
+
+    ## Testing significance of bivariate Moran's I for 100 feature pairs
+
+    ## Calculating bivariate Moran's I statistics ...
+
+    ## Fitting variograms for first modality (10 features) ...
+
+    ## Fitting variograms for second modality (10 features) ...
+
+    ## Calculating variances of bivariate Moran's I statistics ...
+
+    ## 10% of tests completed
+
+    ## 20% of tests completed
+
+    ## 30% of tests completed
+
+    ## 40% of tests completed
+
+    ## 50% of tests completed
+
+    ## 60% of tests completed
+
+    ## 70% of tests completed
+
+    ## 80% of tests completed
+
+    ## 90% of tests completed
+
+    ## 100% of tests completed
 
 Have a look at the results:
 
 ``` r
-head(gamRes$result)
+head(moranRes$result)
 ```
 
-    ##                         corxy   se.corxy         pVal         pAdj
-    ## Fth1__X426.13386   -0.6235648 0.03376571 3.778484e-76 3.022787e-74
-    ## Fth1__X537.21448   -0.7678727 0.04349708 9.575449e-70 3.830180e-68
-    ## Fth1__X576.20502    0.5364918 0.03614188 7.602646e-50 2.027372e-48
-    ## mt.Co3__X573.21671 -0.7490288 0.05298734 2.278872e-45 4.557743e-44
-    ## Fth1__X573.21671    0.6821924 0.04960751 4.968026e-43 7.948841e-42
-    ## mt.Co3__X537.21448  0.6924677 0.05107560 7.133813e-42 9.511750e-41
+    ##                        Ixy_2e-04     Ixy_0.002      Ixy_0.02       pVal
+    ## Fth1__X573.21671    1.193165e-04  1.022411e-04  6.061050e-05 0.01816490
+    ## Fth1__X426.13386   -1.228684e-04 -9.845418e-05 -4.604064e-05 0.01944693
+    ## Fth1__X537.21448   -8.188347e-05 -8.095472e-05 -5.791695e-05 0.08811071
+    ## Fth1__X573.23369    4.075583e-05  3.128742e-05  1.621407e-05 0.09431839
+    ## mt.Co1__X426.13386  7.685216e-05  5.274923e-05  1.184522e-05 0.21346616
+    ## Fth1__X576.20502    7.445046e-05  7.222983e-05  5.841386e-05 0.24726333
+    ##                         pAdj
+    ## Fth1__X573.21671   0.9723466
+    ## Fth1__X426.13386   0.9723466
+    ## Fth1__X537.21448   0.9862872
+    ## Fth1__X573.23369   0.9862872
+    ## mt.Co1__X426.13386 0.9862872
+    ## Fth1__X576.20502   0.9862872
 
 Plot the most significantly spatially associated gene-metabolite pair :
 
 ``` r
-plotTopPair(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
+plotTopPair(moranRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
 ```
 
 ![](README_files/figure-gfm/toppairsingle-1.png)<!-- -->
 
-We can also plot the corresponding spline fit, with the contributions to
-the correlation -0.624:
-
-``` r
-plotGAMsTopResults(gamRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
-```
-
-![](README_files/figure-gfm/plotgamsingle-1.png)<!-- -->
-
 Write the results to a spreadsheet
 
 ``` r
-writeSbivarToXlsx(gamRes, file = "myfile.xlsx")
+writeSbivarToXlsx(moranRes, file = "myfile.xlsx")
 ```
 
 ## Multi-image analysis
@@ -127,52 +158,70 @@ identifying the mouse, consisting of the first 10 characters of the
 names:
 
 ``` r
-mouse = substr(names(Vicari$TranscriptOutcomes),1, 10)
+mouse <- substr(names(Vicari$TranscriptOutcomes), 1, 10)
 ```
 
-For the multi-image case, we use bivariate Moran’s I as measure of
-spatial association, with weights of the weight matrix decaying with
-distance:
+For the multi-image case, we use GAMs as measure of spatial association,
+with a negative binomial outcome distribution for the transcriptome
+data, and a gamma outcome distribution for the metabolome data. A
+log-link is used in both cases.
 
 ``` r
-multiMoranRes = sbivar(X = Vicari$TranscriptOutcomes, Y = Vicari$MetaboliteOutcomes, 
-                            Cx = Vicari$TranscriptCoords, Ey = Vicari$MetaboliteCoords, 
-                            method = "Moran", wo = "distance")
+multiGAMRes <- sbivar(
+    X = Vicari$TranscriptOutcomes, Y = Vicari$MetaboliteOutcomes,
+    Cx = Vicari$TranscriptCoords, Ey = Vicari$MetaboliteCoords,
+    method = "GAM", families = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log"))
+)
 ```
 
-    ## Performing sbivar analysis on 6 images
+    ## Starting sbivar analysis (GAMs) of 6 images on 10 computing cores
 
-Next we plug the calculated Moran’s I values into a linear model, with
-random effects for the individual mice:
+    ## Image 1 of 6
+
+    ## Image 2 of 6
+
+    ## Image 3 of 6
+
+    ## Image 4 of 6
+
+    ## Image 5 of 6
+
+    ## Image 6 of 6
+
+Next we plug the calculated correlations between the spline surfaces
+into a linear model, with random effects for the individual mice:
 
 ``` r
-design = data.frame("mouse" = mouse)
-multiMoranLmms = fitLinModels(multiMoranRes, design, Formula = ~ (1|mouse))
+design <- data.frame("mouse" = mouse)
+multiGAMLmms <- fitLinModels(multiGAMRes, design, Formula = ~ (1 | mouse))
 ```
+
+    ## Fitting 80 mixed effects models on 10 cores
 
 Extract the results for the desired parameter (the intercept)
 
 ``` r
-multiMoranLmmsRes  = extractResultsMulti(multiMoranLmms, design)
-head(multiMoranLmmsRes$result$Intercept)
+multiGAMLmmsRes <- extractResultsMulti(multiGAMLmms, design)
+head(multiGAMLmmsRes$result$Intercept)
 ```
 
-    ##                        Estimate          SE       pVal      pAdj
-    ## mt.Cytb__X555.20713 -0.03518101 0.010491203 0.02025382 0.4827185
-    ## Fth1__X573.21671     0.03450211 0.010305698 0.02037630 0.4827185
-    ## mt.Nd1__X555.20713  -0.03149509 0.009942476 0.02487818 0.4827185
-    ## mt.Co1__X555.20713  -0.02999445 0.009827300 0.02835449 0.4827185
-    ## mt.Nd2__X555.20713  -0.03040737 0.010019648 0.02892305 0.4827185
-    ## mt.Atp6__X555.20713 -0.03035158 0.010184514 0.03079390 0.4827185
+    ##                       Estimate         SE        pVal      pAdj
+    ## mt.Co1__X426.13386   0.3751419 0.08554576 0.007119296 0.5695437
+    ## mt.Co2__X426.13386   0.2389757 0.10770610 0.077247025 0.8000025
+    ## mt.Nd1__X576.20502   0.1965198 0.09729149 0.099382000 0.8000025
+    ## mt.Nd2__X576.20502   0.2211247 0.11499889 0.112517980 0.8000025
+    ## Gm42418__X576.20502 -0.1295621 0.06926126 0.120316386 0.8000025
+    ## mt.Nd4__X576.20502   0.2110836 0.11554592 0.127284444 0.8000025
 
 No features are significantly associated after multiplicity correction.
 For illustration, we plot the feature pair with the smallest p-values
 nevertheless:
 
 ``` r
-plotTopPair(multiMoranLmmsRes, 
-    Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes, 
-    Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.3)
+plotTopPair(multiGAMLmmsRes,
+    Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes,
+    Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.3
+)
 ```
 
 ![](README_files/figure-gfm/topPairMulti-1.png)<!-- -->

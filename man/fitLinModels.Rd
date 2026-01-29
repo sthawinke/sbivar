@@ -10,9 +10,11 @@ fitLinModels(
   designDf,
   Formula,
   verbose = TRUE,
+  inverseWeigh = FALSE,
+  scaleByMax = TRUE,
   Control = lmerControl(check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
-    check.conv.singular = .makeCC(action = "ignore", tol = formals(isSingular)$tol),
-    check.conv.hess = .makeCC(action = "ignore", tol = 1e-06))
+    check.conv.singular = .makeCC(action = "ignore", tol = 1e-04), check.conv.hess =
+    .makeCC(action = "ignore", tol = 1e-06))
 )
 
 extractResultsMulti(result, designDf, method = "BH")
@@ -26,6 +28,10 @@ from a call to the \link{sbivar} function with multiple images}
 \item{Formula}{A formula for the linear model to be fitted, can contain random effects.}
 
 \item{verbose}{Should a message with number of linear models and cores be printed?}
+
+\item{inverseWeigh}{A boolean, should estimates be inverse weighed by variance for GAMs and Moran's I?}
+
+\item{scaleByMax}{A boolean, should Moran's I be scaled by maximum values before plugging into the linear model}
 
 \item{Control}{A control list for lmerTest::lmer}
 
@@ -50,13 +56,21 @@ The left hand side of "Formula" can be provided or not,
 but it will be overridden by "out" for downstream analysis
 }
 \examples{
-example(sbivar, "sbivar")
-mouse = substr(names(Vicari$TranscriptOutcomes), 1, 10)
-designDf = data.frame("mouse" = mouse) # The design matrix
-multiMoranLmms = fitLinModels(VicariRes, designDf, Formula = ~ (1|mouse))
-#Extract the results
-resMoran = extractResultsMulti(multiMoranLmms, designDf = designDf)
-head(resMoran$result$Intercept)
+#' #Multi-image analysis on Vicari data, using GAMs
+data(Vicari)
+# Subset to 5 images and 500 spots limit computing time
+VicariMultiTest <- lapply(Vicari, function(x) lapply(x[1:5], function(y) y[1:500, ]))
+VicariRes <- sbivar(VicariMultiTest$TranscriptOutcomes, VicariMultiTest$MetaboliteOutcomes,
+    VicariMultiTest$TranscriptCoords, VicariMultiTest$MetaboliteCoords,
+    normX = "rel", normY = "rel",
+    method = "GAM"
+)
+mouse <- substr(names(Vicari$TranscriptOutcomes)[1:5], 1, 10)
+designDf <- data.frame("mouse" = mouse) # The design matrix
+multiGAMLmms <- fitLinModels(VicariRes, designDf, Formula = ~ (1 | mouse))
+# Extract the results
+resGAMsMulti <- extractResultsMulti(multiGAMLmms, designDf = designDf)
+head(resGAMsMulti$result$Intercept)
 }
 \seealso{
 \link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}, \link[stats]{p.adjust}

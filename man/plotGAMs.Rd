@@ -16,7 +16,6 @@ plotGAMs(
   families = list(X = gaussian(), Y = gaussian()),
   addTitle = TRUE,
   n_points_grid = 600,
-  multi = is.list(X),
   ...
 )
 
@@ -32,9 +31,9 @@ plotGAMsTopResults(
 )
 }
 \arguments{
-\item{X, Y}{Matrices of omics measurements}
+\item{X, Y}{Matrices of omics measurements, or lists thereof}
 
-\item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
+\item{Cx, Ey}{Corresponding coordinate matrices of dimension two, or lists thereof}
 
 \item{features}{The features to plot}
 
@@ -49,9 +48,6 @@ for the outcome values. See details of \link{sbivarSingle}.}
 
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.}
-
-\item{multi}{Flag to indicate this is part of a multi-image analysis.
-It only matters for the messages printed.}
 
 \item{...}{passed onto \link{fitGAM}}
 
@@ -69,21 +65,24 @@ A ggplot object
 \description{
 Spawns a three-panel plot with the splines fitted for the two variables, plus a visualization
 of regions with positive and negative correlations between those splines.
-The splines are refitted using \link{fitGAM}, so no gam-objects can be provided.
+The splines are refitted using \link{fitGAM}, so no GAM-objects can be provided.
 plotGAMsFromMatrix() takes entire outcome matrices X and Y as argument,
-to be able to account for offsets in refitting the GAMs.#'
-plotGAMsTopResults() plots the feature with the smallest p-value in resultsSingle.
+to be able to account for offsets in refitting the GAMs.
+plotGAMsTopResults() plots the feature with the smallest p-value in the 'results' object.
 }
 \note{
 Both spline surfaces are scaled to the [-1,1] range, the same as
 the correlation has naturally, for legibility.
 }
 \examples{
-#Single image
-example(fitLinModels, "sbivar")
-plotGAMs(X, Y, Cx, Ey, features = c("X1", "Y3"))
+# Single image
+example(sbivar, "sbivar")
+plotGAMs(X, Y, Cx, Ey, features = c("X1", "Y2"))
 plotGAMsTopResults(resGAMs, X, Y, Cx = Cx, Ey = Ey)
-# Multi image
-plotGAMsTopResults(resMoran, Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
-Vicari$TranscriptCoords, Vicari$MetaboliteCoords)
+# Multi image, arbitrary pair
+data(Vicari)
+plotGAMs(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
+    Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
+    features = c("Gm42418", "X576.20502")
+)
 }

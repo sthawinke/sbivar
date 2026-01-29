@@ -1,7 +1,7 @@
 Package: sbivar
 Type: Package
 Title: Test for Spatial Bivariate Association Across Omics Types
-Version: 0.1.5
+Version: 0.2.0
 Authors@R: c(person(given = "Stijn", family = "Hawinkel", 
     email = "stijn.hawinkel@psb.ugent.be", 
     role=c("cre", "aut"), comment = c(ORCID = "0000-0002-4501-5180")),
@@ -18,9 +18,13 @@ RdMacros: Rdpack
 RoxygenNote: 7.3.3
 biocViews: Transcriptomics, Spatial, Proteomics, Metabolomics
 Depends: R (>= 4.5.0)
-Imports: lme4,lmerTest,mgcv,ggplot2,RANN,concaveman,SpatialPack,BiocParallel,Rdpack,stats,sf,Matrix,smoppix(>= 1.1.8),spatstat.geom,reshape2,methods,abind,nlme,MultiAssayExperiment,SpatialExperiment,SummarizedExperiment,openxlsx
-Suggests:testthat,knitr,rmarkdown,doParallel,htmltools,zellkonverter,anndata
+Imports: lme4,reformulas,lmerTest,mgcv,ggplot2,concaveman,MultiAssayExperiment,BiocParallel,Rdpack,SpatialPack,stats,sf,Matrix,smoppix(>= 1.1.8),spatstat.geom,methods,abind,nlme,sp,gstat,SummarizedExperiment,openxlsx
+Suggests:testthat,knitr,rmarkdown,doParallel,htmltools,zellkonverter,anndata,RANN,SpatialExperiment
 VignetteBuilder: knitr
 BugReports: https://github.com/sthawinke/sbivar/issues
+<<<<<<< HEAD
 URL: https://github.com/sbivar/sbivar
 Year: 2025
+=======
+URL: https://github.com/sthawinke/sbivar
+>>>>>>> devel

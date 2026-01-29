@@ -4,12 +4,14 @@
 \alias{vcovPredGam}
 \title{Return predictions of a gam, along with their variance-covariance matrix}
 \usage{
-vcovPredGam(model, newdata)
+vcovPredGam(model, newdata, findVariances = TRUE)
 }
 \arguments{
 \item{model}{The gam model}
 
 \item{newdata}{The grid on which new predictions are made}
+
+\item{findVariances}{Should variances be calculated? For internal use only, not default for multi-image analysis}
 }
 \value{
 A list with components

@@ -9,15 +9,25 @@ sbivarSingle(
   Y,
   Cx,
   Ey,
-  method = c("GAMs", "Modified t-test", "GPs"),
-  n_points_grid = 600,
-  mapToFinest = FALSE,
+  method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
+  normX = c("none", "rel", "log"),
+  normY = c("none", "rel", "log"),
+  pseudoCount = 1e-08,
+  etas = c(5e-06, 4e-05, 2e-04),
+  findMaxW = FALSE,
+  returnSEsMoransI = TRUE,
   families = list(X = gaussian(), Y = gaussian()),
-  GPmethod = c("REML", "ML"),
+  n_points_grid = 600,
   verbose = TRUE,
+  variogramModels = c("Exp", "Lin"),
+  width = cutoff/15,
+  cutoff = sqrt(2)/3,
+  wo = c("Gauss", "nn"),
+  numNNs = c(4, 8, 24),
+  GPmethod = c("REML", "ML"),
   gpParams,
   Quants = c(0.005, 0.5),
-  numLscAlts = 10,
+  numLscAlts = 5,
   optControl = lmeControl(opt = "optim", maxIter = 500, msMaxIter = 500, niterEM = 1000,
     msMaxEval = 1000),
   corStruct = corGaus(form = ~x + y, nugget = TRUE, value = c(1, 0.25))
@@ -30,15 +40,15 @@ sbivarSingle(
 
 \item{method}{A character string, indicating which method to apply}
 
-\item{n_points_grid, families}{Passed onto \link{wrapGAMs}}
+\item{normX, normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}
 
-\item{mapToFinest}{Passed onto \link{wrapModTtest}}
-
-\item{GPmethod, Quants, numLscAlts, optControl, corStruct}{Passed onto \link{fitGP}}
+\item{n_points_grid, families}{Passed onto \link{GAMsSingle}}
 
 \item{verbose}{Should info on type of analysis be printed?}
 
-\item{gpParams}{Parameters of the Gaussian processes, see details}
+\item{wo, variogramModels, numNNs, etas, cutoff, width, returnSEsMoransI, findMaxW}{Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}}
+
+\item{GPmethod, Quants, numLscAlts, optControl, corStruct, gpParams}{Passed onto \link{fitGP}}
 }
 \value{
 A list with at least the following components
@@ -56,16 +66,12 @@ If only Cx is supplied and X and Y have the same number of rows, a joint analysi
 If Cx and Ey are provided, and X and Y have the same number of rows, equality of Cx and Ey is checked.
 If true, a joint analysis is run, with a warning.
 
-Any normalization of the data should happen prior to calling this function.
-For instance, count data or metabolome data are best scaled to relative values and log-normalized prior to fitting GPs.
 For GAMs, usually no normalization is needed, as the non-gaussianity is taken care of by
 the outcome distribution, offset and link functions. Currently, identity, inverse and log-link are implemented.
-
-gpParams must be a list of length 2 with names 'X' and 'Y', consisting of matrices
-with rownames "mean", "nugget", "range" and "sigma", and column names as in X and Y.
-This argument allows to pass parameters of the Gaussian processes estimated with other software
-to perform the score test.
 }
 \note{
 All methods use multithreading on the cluster provided using the BiocParallel package
+}
+\seealso{
+\link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle}, \link{GPsSingle}
 }

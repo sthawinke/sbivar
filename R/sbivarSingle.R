@@ -9,15 +9,13 @@
 #' @param X,Y Matrices of omics measurements
 #' @param Cx,Ey Corresponding coordinate matrices of dimension two
 #' @param method A character string, indicating which method to apply
-#' @param mapToFinest Passed onto \link{wrapModTtest}
-#' @param gpParams Parameters of the Gaussian processes, see details
-#' @param GPmethod,Quants,numLscAlts,optControl,corStruct Passed onto \link{fitGP}
-#' @param n_points_grid,families Passed onto \link{wrapGAMs}
+#' @param GPmethod,Quants,numLscAlts,optControl,corStruct,gpParams Passed onto \link{fitGP}
+#' @param n_points_grid,families Passed onto \link{GAMsSingle}
+#' @param wo,variogramModels,numNNs,etas,cutoff,width,returnSEsMoransI,findMaxW Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}
 #' @param verbose Should info on type of analysis be printed?
+#' @param normX,normY,pseudoCount Normalization parameters, passed onto \link{normMat}
 #'
-#' @details Any normalization of the data should happen prior to calling this function.
-#' For instance, count data or metabolome data are best scaled to relative values and log-normalized prior to fitting GPs.
-#' For GAMs, usually no normalization is needed, as the non-gaussianity is taken care of by
+#' @details For GAMs, usually no normalization is needed, as the non-gaussianity is taken care of by
 #' the outcome distribution, offset and link functions. Currently, identity, inverse and log-link are implemented.
 #'
 #' @returns A list with at least the following components
@@ -29,73 +27,123 @@
 #' @importFrom stats p.adjust
 #' @importFrom methods is
 #' @importFrom nlme corGaus lmeControl
-#' @importFrom BiocParallel bpparam
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
-#' @details gpParams must be a list of length 2 with names 'X' and 'Y', consisting of matrices
-#' with rownames "mean", "nugget", "range" and "sigma", and column names as in X and Y.
-#' This argument allows to pass parameters of the Gaussian processes estimated with other software
-#' to perform the score test.
-sbivarSingle = function(X, Y, Cx, Ey, method = c("GAMs", "Modified t-test", "GPs"),
-                  n_points_grid = 6e2, mapToFinest = FALSE, families = list("X" = gaussian(), "Y" = gaussian()),
-                  GPmethod = c("REML", "ML"), verbose = TRUE,
-                  gpParams, Quants = c(0.005, 0.5), numLscAlts = 10,
-                  optControl = lmeControl(opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
-                                          niterEM = 1e3, msMaxEval = 1e3),
-                  corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25))){
-    stopifnot(is.numeric(n_points_grid), ncol(Cx) == 2, is.character(method),
-              all(vapply(families, FUN.VALUE = TRUE, is, "family")), is.list(optControl),
-             inherits(corStruct, "corStruct"),
-              inherits(corStruct, "corGaus"), length(Quants)==2, is.numeric(Quants), is.logical(verbose))
-    if(verbose){
-        message("Starting sbivar analysis of a single image on ",
-        bpparam()$workers, " computing cores")
+#' @seealso \link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle}, \link{GPsSingle}
+sbivarSingle <- function(
+      X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
+      normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
+      etas = c(5e-6, 2e-4, 2e-2), findMaxW = FALSE, returnSEsMoransI = TRUE,
+      families = list("X" = gaussian(), "Y" = gaussian()), n_points_grid = 6e2, verbose = TRUE,
+      variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
+      wo = c("Gauss", "nn"), numNNs = c(4, 8, 24),
+      GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 5,
+      optControl = lmeControl(
+          opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
+          niterEM = 1e3, msMaxEval = 1e3
+      ),
+      corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25))
+) {
+    stopifnot(
+        is.numeric(n_points_grid), ncol(Cx) == 2, is.numeric(numNNs), all(numNNs > 0),
+        all(vapply(families, FUN.VALUE = TRUE, is, "family")), is.list(optControl),
+        inherits(corStruct, "corGaus"), is.numeric(etas),
+        length(Quants) == 2, is.numeric(Quants), is.logical(verbose), is.logical(findMaxW)
+    )
+    if (verbose) {
+        message(
+            "Starting sbivar analysis of a single image on ",
+            bpparam()$workers, " computing cores"
+        )
     }
-    n = nrow(X);m = nrow(Y);p = ncol(X);k=ncol(Y)
-    X = giveValidNames(X);Y = giveValidNames(Y)
-    method = match.arg(method)
-    GPmethod = match.arg(GPmethod)
-    foo = checkInputSingle(X, Y, Cx, Ey)
-    if(missing(Ey)){
-        #Run a joint analysis
-        message("Only one coordinate matrix Cx supplied, and dimensions of X and Y do match.
-             Performing an analysis with joint coordinate sets.")
-        Ey = Cx
-        jointCoordinates = TRUE
-    } else if(identical(Cx, Ey)){
-        message("Identical coordinate matrices supplied, performing a joint analysis")
-        jointCoordinates = TRUE
-    } else {
-        jointCoordinates = FALSE
+    X <- addDimNames(X, "X")
+    Y <- addDimNames(Y, "Y")
+    method <- match.arg(method)
+    variogramModels <- match.arg(variogramModels, several.ok = TRUE)
+    normX <- match.arg(normX)
+    normY <- match.arg(normY)
+    GPmethod <- match.arg(GPmethod)
+    wo <- match.arg(wo)
+    foo <- checkInputSingle(X, Y, Cx, Ey)
+    if (missing(Ey)) {
+        if (nrow(X) != nrow(Y)) {
+            stop("Only one coordinate matrix supplied, but sample size of X and Y do not match!
+                 Please supply the 'Ey' argument and consider 'Moran's I' as method.")
+        }
+        # Run a joint analysis
+        if (verbose) {
+            message("Only one coordinate matrix Cx supplied, and dimensions of X and Y do match.
+                 Performing an analysis with joint coordinate sets.")
+        }
+        Ey <- Cx
+    } else if (method == "Modified t-test") {
+        stop("Two coordinate matrices supplied, whereas the modified t-test requires only one.
+            If coordinates are shared, omit Ey. If coordinates are disjoint, consider using method = 'MoransI'.")
     }
-    if(!identical(names(families), c("X", "Y"))){
+    if (!identical(names(families), c("X", "Y"))) {
         stop("Name families 'X' and 'Y' for unambiguous matching")
     }
-    if(!missing(gpParams)){
-        if(!is.list(gpParams) || names(gpParams) != c("X", "Y") ||
-           !all(vapply(gpParams, FUN.VALUE = TRUE, function(x){
-               identical(sort(rownames(x), c("mean", "nugget", "range", "sigma")))
-               })) || !all(colnames(X) %in% colnames(gpParams$X) ||
-                           !all(colnames(Y) %in% colnames(gpParams$Y)))){
+    rownames(Cx) <- rownames(X)
+    rownames(Ey) <- rownames(Y)
+    if (!missing(gpParams)) {
+        if (!is.list(gpParams) || names(gpParams) != c("X", "Y") ||
+            !all(vapply(gpParams, FUN.VALUE = TRUE, function(x) {
+                identical(sort(rownames(x), c("mean", "nugget", "range", "sigma")))
+            })) || !all(colnames(X) %in% colnames(gpParams$X) ||
+            !all(colnames(Y) %in% colnames(gpParams$Y)))) {
             stop("gpParams must be a list with names 'X' and 'Y' consisting of
             matrices with rownames 'mean', 'nugget', 'range', 'sigma',
                  and colnames the same as matrices X and Y!")
         }
     }
-    colnames(Cx) = colnames(Ey) = c("x", "y")
-    out = if(method == "GAMs"){
-        wrapGAMs(X = X, Y = Y, Cx = Cx, Ey = Ey, families = families,
-                 n_points_grid = n_points_grid, verbose = verbose)
-    } else if(method == "GPs"){
-        wrapGPs(X = X, Y = Y, Cx = Cx, Ey = Ey, gpParams = gpParams, Quants = Quants,
-                GPmethod = GPmethod, corStruct = corStruct, optControl = optControl,
-                numLscAlts = numLscAlts, verbose = verbose)
-    } else if(method == "Modified t-test"){
-        wrapModTtest(X = X, Y = Y, Cx = Cx, Ey = Ey, mapToFinest = mapToFinest,
-                     jointCoordinates = jointCoordinates, verbose = verbose)
+    if ((normX == "log" || normY == "log") && method == "GAMs") {
+        warning("Normalizing data is not recommended for GAMs!
+                try accounting for non-normality through the 'families' argument.", immediate. = TRUE)
     }
-    out = cbind(out, "pAdj" = p.adjust(out[, "pVal"], method = "BH"))
-    result = out[order(out[, "pVal"]),]
-    list("result" = result, "families" = families, "method" = method,
-         "multi" = FALSE)
+    colnames(Cx) <- colnames(Ey) <- c("x", "y")
+    X <- normMat(X, normX, pseudoCount)
+    Cx <- Cx[rownames(X), ]
+    Y <- normMat(Y, normY, pseudoCount)
+    Ey <- Ey[rownames(Y), ]
+    out <- if (method == "Moran's I") {
+        (moranRes <- MoransISingle(
+            X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo, numNNs = selfName(numNNs),
+            variogramModels = variogramModels, etas = selfName(etas), width = width,
+            returnSEsMoransI = returnSEsMoransI, verbose = verbose, cutoff = cutoff, findMaxW = findMaxW
+        ))$res
+    } else if (method == "GAMs") {
+        GAMsSingle(
+            X = X, Y = Y, Cx = Cx, Ey = Ey, families = families,
+            n_points_grid = n_points_grid, verbose = verbose
+        )
+    } else if (method == "GPs") {
+        GPsSingle(
+            X = X, Y = Y, Cx = Cx, Ey = Ey, gpParams = gpParams, Quants = Quants,
+            GPmethod = GPmethod, corStruct = corStruct, optControl = optControl,
+            numLscAlts = numLscAlts, verbose = verbose
+        )
+    } else if (method == "Modified t-test") {
+        sharedNames <- intersect(rownames(X), rownames(Y))
+        ModTtestSingle(
+            X = X[sharedNames, ], Y = Y[sharedNames, ],
+            Cx = Cx[sharedNames, ], verbose = verbose
+        )
+    }
+    out <- cbind(out, "pAdj" = p.adjust(out[, "pVal"], method = "BH"))
+    result <- out[order(out[, "pVal"]), ]
+    lis <- list(
+        "result" = result, "method" = method,
+        "multi" = FALSE, "normX" = normX, "normY" = normY
+    )
+    if (method == "Moran's I") {
+        lis$maxIxy <- moranRes$maxIxy
+        lis$wo <- wo
+        lis$wParams <- switch(wo,
+            "Gauss" = etas,
+            "nn" = numNNs
+        )
+    }
+    if (method == "GAMs") {
+        lis$families <- families
+    }
+    return(lis)
 }
-

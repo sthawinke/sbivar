@@ -4,31 +4,18 @@
 \alias{CCT}
 \title{An analytical p-value combination method using the Cauchy distribution.}
 \usage{
-CCT(pvals, weights = NULL)
+CCT(pvals)
 }
 \arguments{
 \item{pvals}{a numeric vector of p-values, where each of the element is
 between 0 to 1, to be combined.}
-
-\item{weights}{a numeric vector of non-negative weights. If \code{NULL}, the
-equal weights are assumed.}
 }
 \value{
 The aggregated p-value
+\insertAllCited{}
 }
 \description{
-The \code{CCT} function takes in a numeric vector of p-values, a numeric
-vector of non-negative weights, and return the aggregated p-value using Cauchy combination rule
-The code was taken from the xihaoli/STAAR github repo, and adapted
-}
-\references{
-Liu, Y., & Xie, J. (2020). Cauchy combination test: a powerful test
-with analytic p-value calculation under arbitrary dependency structures.
-\emph{Journal of the American Statistical Association}, \emph{115}(529), 393-402.
-(\href{https://doi.org/10.1080/01621459.2018.1554485}{pub})
-
-Liu, Y., et al. (2019). Acat: A fast and powerful p value combination
-method for rare-variant analysis in sequencing studies.
-\emph{The American Journal of Human Genetics}, \emph{104}(3), 410-421.
-(\href{https://doi.org/10.1016/j.ajhg.2019.01.002}{pub})
+The \code{CCT} function takes in a numeric vector of p-values,
+and returns the aggregated p-value using Cauchy combination rule
+The code was taken from the xihaoli/STAAR github repo, and adapted.
 }

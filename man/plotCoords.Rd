@@ -5,14 +5,14 @@
 \alias{plotCoordsMulti}
 \title{Plot the coordinates of two omics modalities}
 \usage{
-plotCoords(Cx, Ey, pch = 1, pchY = 3, cex = 0.8, ...)
+plotCoords(Cx, Ey, pchX = 1, pchY = 3, cex = 0.8, ...)
 
 plotCoordsMulti(Cxl, Eyl, ...)
 }
 \arguments{
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
-\item{pch, pchY}{Point shapes for x and y}
+\item{pchX, pchY}{Point shapes for x and y}
 
 \item{cex}{Expansion factor}
 
@@ -29,15 +29,15 @@ This is a useful check of the alignment and overlap.
 }
 \details{
 plotCoordsMulti() is a wrapper for plotCoords for lists of coordinates,
-and requires the user to set par(mar = ) appropriately, so all plots are shown.
+and requires the user to set par(mar = ) appropriately, such that all plots are shown.
 }
 \examples{
-example(sbivar, "sbivar")
-plotCoords(Cx, Ey)
-#For multiple coordinates
-par(mfrow = c(2,3))
-foo = lapply(names(Vicari$TranscriptCoords), function(nam){
+data(Vicari)
+plotCoords(Vicari$TranscriptCoords[[1]], Vicari$MetaboliteCoords[[1]])
+# For multiple coordinates
+par(mfrow = c(2, 3))
+foo <- lapply(names(Vicari$TranscriptCoords), function(nam) {
     plotCoords(Vicari$TranscriptCoords[[nam]], Vicari$MetaboliteCoords[[nam]], main = nam)
 })
-par(mfrow=c(1,1))
+par(mfrow = c(1, 1))
 }

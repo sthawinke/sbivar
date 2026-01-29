@@ -4,14 +4,12 @@
 \alias{scaleHelpFun}
 \title{Wrapper to normalize, select feature and scale}
 \usage{
-scaleHelpFun(X, feat, normFun)
+scaleHelpFun(X, feat)
 }
 \arguments{
 \item{X}{data matrix}
 
 \item{feat}{the feature name}
-
-\item{normFun}{normalizing function}
 }
 \value{
 A vector of values

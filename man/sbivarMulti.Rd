@@ -10,12 +10,19 @@ sbivarMulti(
   Cxl,
   Eyl,
   families = list(X = gaussian(), Y = gaussian()),
-  method = c("GAMs", "Correlation", "Moran's I"),
-  mapToFinest = FALSE,
-  wo = c("distance", "nn"),
-  numNN = 8,
+  method = c("Moran's I", "GAMs", "Correlation"),
+  wo = c("Gauss", "nn"),
+  numNNs = c(4, 8, 24),
+  etas = c(5e-06, 4e-05, 2e-04),
+  normX = c("none", "rel", "log"),
+  normY = c("none", "rel", "log"),
+  variogramModels = c("Exp", "Lin"),
+  width = cutoff/15,
+  cutoff = sqrt(2)/3,
+  pseudoCount = 1e-08,
   n_points_grid = 600,
-  verbose = TRUE
+  verbose = TRUE,
+  findVariances = FALSE
 )
 }
 \arguments{
@@ -23,21 +30,30 @@ sbivarMulti(
 
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
-\item{families, n_points_grid}{Passed onto \link{wrapGAMsMulti}}
+\item{families, n_points_grid}{Passed onto \link{GAMsMulti}}
 
 \item{method}{A character string, indicating which method to apply}
 
-\item{mapToFinest}{Passed onto \link{wrapModTtest}}
+\item{wo, numNNs, etas}{Passed onto \link{MoransISingle}}
 
-\item{wo, numNN}{Passed onto \link{buildWeightMat}}
+\item{normX, normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}
+
+\item{variogramModels}{A character vector, indicating the variogram model passed onto \link[gstat]{vgm}.
+Currently, only "Exp" and "Lin" are implemented for computational reasons.}
+
+\item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}}
 
 \item{verbose}{Should info on type of analysis be printed?}
+
+\item{findVariances}{Should variances be calculated? For internal use only, not default for multi-image analysis}
 }
 \value{
 A list containing
 \item{estimates}{The estimated measures of association}
 \item{method}{The method used to find these estimates}
 \item{multi}{TRUE, a flag for the type of analysis}
+\item{normX,normY}{As provided}
+\item{families,wo,numNNs,etas}{Optional, as provided}
 }
 \description{
 This function calculates measures of spatial association for every image.
@@ -47,5 +63,5 @@ The resulting estimates can then be analysed further using the \link{fitLinModel
 All methods use multithreading on the cluster provided using the BiocParallel package
 }
 \seealso{
-\link{fitLinModels}
+\link{fitLinModels}, \link{MoransIMulti}, \link{correlationsMulti}, \link{GAMsMulti}
 }

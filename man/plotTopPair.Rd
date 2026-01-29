@@ -5,9 +5,16 @@
 \alias{plotPairSingle}
 \alias{plotPairMulti}
 \alias{plotPairSingleVectors}
-\title{Plot a top feature pair from the analysis, or an arbitrary pair for a series of images}
+\title{Plot a feature pair}
 \usage{
-plotTopPair(results, ..., topRank = 1, parameter = "Intercept")
+plotTopPair(
+  results,
+  ...,
+  normX = results$normX,
+  normY = results$normY,
+  topRank = 1,
+  parameter = "Intercept"
+)
 
 plotPairSingle(
   X,
@@ -15,8 +22,8 @@ plotPairSingle(
   Cx,
   Ey,
   features,
-  normalizationX = c("none", "log"),
-  normalizationY = c("none", "log"),
+  normX = c("none", "rel", "log"),
+  normY = c("none", "rel", "log"),
   assayX,
   assayY,
   ...
@@ -28,11 +35,12 @@ plotPairMulti(
   Cxl,
   Eyl,
   features,
-  normalizationX = c("none", "log"),
-  normalizationY = c("none", "log"),
+  normX = c("none", "rel", "log"),
+  normY = c("none", "rel", "log"),
   size = 1.25,
   assayX,
-  assayY
+  assayY,
+  theme = theme_bw()
 )
 
 plotPairSingleVectors(
@@ -42,29 +50,30 @@ plotPairSingleVectors(
   Ey,
   size = 1.25,
   modalityNames = c("Modality X", "Modality Y"),
+  theme = theme_bw(),
   ...
 )
 }
 \arguments{
-\item{results}{Results returned by \link{sbivarSingle}}
+\item{results}{Results returned by \link{sbivarSingle} or \link{extractResultsMulti}}
 
 \item{...}{passed onto lower level functions}
+
+\item{normX, normY}{Character strings, indicating what normalization is required
+for X and Y matrices, respectively, before plotting, see details.}
 
 \item{topRank}{An integer, the feature pair with the rank-th smallest p-value is plotted}
 
 \item{parameter}{The linear model parameter used to find the feature with the strongest effect.
 The default is the intercept, i.e. the overall effect.}
 
-\item{X}{the input object, see methods('sbivar')}
+\item{X}{the input object, containing measurements of the first modality, see methods('sbivar')}
 
 \item{Y}{Matrix or SpatialExperiment object of second modality}
 
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
 
 \item{features}{Feature vector of length 2 to be plotted}
-
-\item{normalizationX, normalizationY}{Character strings, indicating what normalization is required
-for X and Y matrices, respectively, before plotting, see details.}
 
 \item{assayX, assayY}{Assay names to be used in the analysis,
 see \link[SummarizedExperiment]{assay}}
@@ -74,6 +83,8 @@ see \link[SummarizedExperiment]{assay}}
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
 \item{size}{Point size}
+
+\item{theme}{the ggplot2 theme}
 
 \item{x, y}{Outcome vectors}
 
@@ -89,26 +100,34 @@ Plot a chosen feature pair, or the highest ranking feature pair,
 for a single image or multiple images.
 }
 \details{
-For sequence count data, such as transcriptomics, log-normalization
-may be indicated to achieve clear plots (normalizationX = "log", see  \link{logNorm}). The normalization used for plotting is
- not necessarily the same as the one used for the analysis.
+For sequence count data, such as transcriptomics, normalization
+may be indicated to achieve clear plots (normX = "rel" or "log", see  \link{normMat}).
+The normalization used for plotting is not necessarily the same as the one used for the analysis.
 }
 \examples{
 ### Single image
-example(sbivar, "sbivar")
+# Single image analysis on synthetic data
+n <- 8e1
+m <- 9e1
+p <- 3
+k <- 2
+X <- matrix(rnorm(n * p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
+Y <- matrix(rnorm(m * k), m, k, dimnames = list(NULL, paste0("Y", seq_len(k))))
+Cx <- matrix(runif(n * 2), n, 2)
+Ey <- matrix(runif(m * 2), m, 2)
+colnames(Cx) <- colnames(Ey) <- c("x", "y")
+resMoransI <- sbivar(X, Y, Cx, Ey, method = "Moran's I")
 # Plot the feature pair with the most significant signal
-plotTopPair(resModtTest, X, Y, Cx, Ey)
+plotTopPair(resMoransI, X, Y, Cx, Ey)
 # Plot an arbitrary feature pair
 plotPairSingle(X, Y, Cx, Ey, features = c("X1", "Y1"))
 ### Multi image
-example(fitLinModels, "sbivar")
-# Plot the feature pair with the most significant signal for a certain parameter,
-#here the intercept (overall effect)
-plotTopPair(resMoran, Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
-Vicari$TranscriptCoords, Vicari$MetaboliteCoords, parameter = "Intercept")
+data(Vicari)
 # Plot an arbitrary feature pair
 plotPairMulti(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
-Vicari$TranscriptCoords, Vicari$MetaboliteCoords, features = c("mt.Nd2", "X555.20713"))
+    Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
+    normX = "log", normY = "log", features = c("mt.Nd2", "X555.20713")
+)
 }
 \seealso{
 \link{extractResultsMulti}, \link{fitLinModels}

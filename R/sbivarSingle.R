@@ -110,7 +110,8 @@ sbivarSingle <- function(
     Ey <- Ey[rownames(Y), ]
     out <- if (method == "Moran's I") {
         (moranRes <- MoransISingle(
-            X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo, numNNs = selfName(numNNs),
+            X = X[, featuresX, drop = FALSE], Y = Y[, featuresY, drop = FALSE],
+            Cx = Cx, Ey = Ey, wo = wo, numNNs = selfName(numNNs),
             variogramModels = variogramModels, etas = selfName(etas), width = width,
             returnSEsMoransI = returnSEsMoransI, verbose = verbose, cutoff = cutoff, findMaxW = findMaxW,
             featuresX = featuresX, featuresY = featuresY
@@ -129,7 +130,8 @@ sbivarSingle <- function(
     } else if (method == "Modified t-test") {
         sharedNames <- intersect(rownames(X), rownames(Y))
         ModTtestSingle(
-            X = X[sharedNames, ], Y = Y[sharedNames, ],
+            X = X[sharedNames, featuresX, drop = FALSE],
+            Y = Y[sharedNames, featuresY, drop = FALSE],
             Cx = Cx[sharedNames, ], verbose = verbose
         )
     }

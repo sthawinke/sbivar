@@ -29,8 +29,6 @@
 #' may use inherent multithreading with OpenBLAS.
 MoransISingle <- function(X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose,
     findMaxW, variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...) {
-    X <- X[, featuresX, drop = FALSE]
-    Y <- Y[, featuresY, drop = FALSE]
     n <- nrow(X)
     m <- nrow(Y)
     p <- ncol(X)

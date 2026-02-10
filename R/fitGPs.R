@@ -39,8 +39,8 @@ fitGP <- function(x, coord, GPmethod, corStruct, optControl) {
 #' @param coord Matrix of coordinates
 #' @param ... passed onto \link{fitGP}
 #' @returns Matrix of fitted GP components
-fitManyGPs <- function(mat, coord, ...) {
-    simplify2array(loadBalanceBplapply(selfName(colnames(mat)), function(cn) {
+fitManyGPs <- function(mat, coord, features, ...) {
+    simplify2array(loadBalanceBplapply(selfName(features), function(cn) {
         fitGP(mat[, cn], coord = coord, ...)
     }))
 }

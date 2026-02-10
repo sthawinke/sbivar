@@ -4,7 +4,7 @@
 \alias{fitManyGPs}
 \title{A wrapper to fit GPs on all columns of a matrix}
 \usage{
-fitManyGPs(mat, coord, ...)
+fitManyGPs(mat, coord, features, ...)
 }
 \arguments{
 \item{mat}{Matrix of observations}

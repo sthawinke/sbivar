@@ -31,8 +31,7 @@ fitGAM <- function(df, outcome, k = -1, family = gaussian(), offset = NULL) {
 #' @returns A list of GAM models
 #' @importFrom smoppix loadBalanceBplapply
 #' @importFrom BiocParallel bplapply
-fitManyGAMs <- function(mat, coord, family = gaussian(), modality, pseudoCount = 1e-8, ...) {
-    cns <- selfName(colnames(mat))
+fitManyGAMs <- function(mat, coord, family = gaussian(), modality, features, pseudoCount = 1e-8, ...) {
     if (family$family == "Gamma") {
         mat <- mat + pseudoCount
     }
@@ -47,7 +46,7 @@ fitManyGAMs <- function(mat, coord, family = gaussian(), modality, pseudoCount =
         "log" = log(libSizes),
         NULL
     )
-    fits <- loadBalanceBplapply(cns, function(cn) {
+    fits <- loadBalanceBplapply(selfName(features), function(cn) {
         fitGAM(df, outcome = cn, offset = offset, family = family, ...)
     })
     if (!any(id <- vapply(fits, FUN.VALUE = TRUE, is, "gam"))) {

@@ -17,6 +17,8 @@ sbivarSingle(
   findMaxW = FALSE,
   returnSEsMoransI = TRUE,
   families = list(X = gaussian(), Y = gaussian()),
+  featuresX = colnames(X),
+  featuresY = colnames(Y),
   n_points_grid = 600,
   verbose = TRUE,
   variogramModels = c("Exp", "Lin"),
@@ -41,6 +43,9 @@ sbivarSingle(
 \item{method}{A character string, indicating which method to apply}
 
 \item{normX, normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}
+
+\item{featuresX, featuresY}{Features to be tested. Setting these allows to test a limited feature set,
+while using the whole matrix to calculate library sizes as offset or for normalization.}
 
 \item{n_points_grid, families}{Passed onto \link{GAMsSingle}}
 

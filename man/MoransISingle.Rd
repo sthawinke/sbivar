@@ -18,6 +18,8 @@ MoransISingle(
   findMaxW,
   variogramModels,
   returnSEsMoransI,
+  featuresX,
+  featuresY,
   findVariances = TRUE,
   ...
 )
@@ -41,6 +43,9 @@ MoransISingle(
 Currently, only "Exp" and "Lin" are implemented for computational reasons.}
 
 \item{returnSEsMoransI}{A boolean, are standard errors of Moran's I to be returned?}
+
+\item{featuresX, featuresY}{Features to be tested. Setting these allows to test a limited feature set,
+while using the whole matrix to calculate library sizes as offset or for normalization.}
 
 \item{findVariances}{Should variances be calculated? For internal use only, not default for multi-image analysis}
 

@@ -15,7 +15,9 @@ GPsSingle(
   GPmethod,
   corStruct,
   optControl,
-  verbose
+  verbose,
+  featuresX,
+  featuresY
 )
 }
 \arguments{
@@ -38,6 +40,9 @@ At this point, only \link[nlme]{corGaus} is accepted.}
 \item{optControl}{List of control values, see \link[nlme]{glsControl}.}
 
 \item{verbose}{Should info on type of analysis be printed?}
+
+\item{featuresX, featuresY}{Features to be tested. Setting these allows to test a limited feature set,
+while using the whole matrix to calculate library sizes as offset or for normalization.}
 }
 \value{
 A named list of results

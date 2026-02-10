@@ -12,6 +12,8 @@ GAMsSingle(
   families,
   n_points_grid,
   verbose,
+  featuresX,
+  featuresY,
   findVariances = TRUE
 )
 }
@@ -27,6 +29,9 @@ for the outcome values. See details of \link{sbivarSingle}.}
 evaluated on.}
 
 \item{verbose}{Should info on type of analysis be printed?}
+
+\item{featuresX, featuresY}{Features to be tested. Setting these allows to test a limited feature set,
+while using the whole matrix to calculate library sizes as offset or for normalization.}
 
 \item{findVariances}{Should variances be calculated? For internal use only, not default for multi-image analysis}
 }

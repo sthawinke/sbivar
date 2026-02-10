@@ -9,6 +9,7 @@ fitManyGAMs(
   coord,
   family = gaussian(),
   modality,
+  features,
   pseudoCount = 1e-08,
   ...
 )

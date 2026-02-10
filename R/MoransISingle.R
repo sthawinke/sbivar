@@ -28,7 +28,9 @@
 #' @note No multithreading is implemented for the variance calculation, as the matrix calculations involved
 #' may use inherent multithreading with OpenBLAS.
 MoransISingle <- function(X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose,
-    findMaxW, variogramModels, returnSEsMoransI, findVariances = TRUE, ...) {
+    findMaxW, variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...) {
+    X <- X[, featuresX, drop = FALSE]
+    Y <- Y[, featuresY, drop = FALSE]
     n <- nrow(X)
     m <- nrow(Y)
     p <- ncol(X)
@@ -61,7 +63,7 @@ MoransISingle <- function(X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose
         etas <- etas[idW]
     }
     Ixys <- vapply(seq_len(numWs), FUN.VALUE = matrix(0, p, k), function(i) {
-        crossprod(X, Ws[, , i] %*% Y)
+        crossprod(X, Ws[, , i] %*% Y[, featuresY, drop = FALSE])
     }) / sqrt(prodFac) # Normalize for matrix size
     # Reformat to long format
     out <- matrix(c(Ixys), ncol = numWs, dimnames = list(NULL, paste0("Ixy_", wParams)))

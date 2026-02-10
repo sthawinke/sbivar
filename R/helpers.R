@@ -271,11 +271,7 @@ addDimNames <- function(mat, letter) {
     if (is.null(rownames(mat))) {
         rownames(mat) <- paste0("Sample", seq_len(nrow(mat)))
     }
-    colnames(mat) <- if (is.null(colnames(mat))) {
-        paste0(letter, seq_len(ncol(mat)))
-    } else {
-        make.names(colnames(mat))
-    }
+    colnames(mat) <- make.names(colnames(mat))
     return(mat)
 }
 #' Print feature progress

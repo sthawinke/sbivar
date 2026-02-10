@@ -52,16 +52,20 @@ test_that("Sbivar works on BioConductor objects SpatialExperiment and MultiAssay
     m <- 1e2
     p <- 4
     k <- 3
-    rna_counts <- matrix(rpois(n * p, lambda = 5), nrow = p, ncol = n)
-    colnames(rna_counts) <- paste0("rnaSpot", seq_len(n))
+    rna_counts <- matrix(rpois(n * p, lambda = 5),
+        nrow = p, ncol = n,
+        dimnames = list(paste0("rnaSpot", seq_len(p)), paste0("Gene", seq_len(n)))
+    )
     rna_coords <- cbind("x" = runif(n, 0, 1), "y" = runif(n, 0, 1))
     spe_rna <- SpatialExperiment(
         assays = list("counts" = rna_counts),
         spatialCoords = rna_coords
     )
     # --- Protein data ---
-    prot_counts <- matrix(rpois(m * k, lambda = 10), nrow = k, ncol = m)
-    colnames(prot_counts) <- paste0("protSpot", seq_len(m))
+    prot_counts <- matrix(rpois(m * k, lambda = 10),
+        nrow = k, ncol = m,
+        dimnames = list(paste0("protSpot", seq_len(k)), paste0("Protein", seq_len(m)))
+    )
     prot_coords <- cbind("x" = runif(m, 0, 1), "y" = runif(m, 0, 1))
     spe_prot <- SpatialExperiment(
         assays = list("counts" = prot_counts),

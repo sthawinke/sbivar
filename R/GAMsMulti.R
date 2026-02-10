@@ -14,7 +14,7 @@ GAMsMulti <- function(Xl, Yl, Cxl, Eyl, families, n_points_grid, verbose, findVa
         }
         out <- GAMsSingle(Xl[[nam]], Yl[[nam]], Cxl[[nam]], Eyl[[nam]],
             families = families, n_points_grid = n_points_grid,
-            verbose = FALSE, findVariances = findVariances
+            verbose = FALSE, findVariances = findVariances, featuresX = colnames(Xl[[nam]]), featuresY = colnames(Yl[[nam]])
         )
         return(list("res" = out[, c("corxy", if (findVariances) "se.corxy"), drop = FALSE]))
     })

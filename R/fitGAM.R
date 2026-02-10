@@ -27,6 +27,7 @@ fitGAM <- function(df, outcome, k = -1, family = gaussian(), offset = NULL) {
 #' @param ... Passed onto \link{fitGAM}
 #' @inheritParams fitGAM
 #' @param pseudoCount Pseudocount added to avoid zeroes for gamma distribution
+#' @param features Features to be fit, others are only used to estimate the offset
 #'
 #' @returns A list of GAM models
 #' @importFrom smoppix loadBalanceBplapply

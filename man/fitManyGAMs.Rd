@@ -24,6 +24,8 @@ fitManyGAMs(
 \item{modality}{Character vector indicating which modality is being fit.
 For debugging purposes mainly}
 
+\item{features}{Features to be fit, others are only used to estimate the offset}
+
 \item{pseudoCount}{Pseudocount added to avoid zeroes for gamma distribution}
 
 \item{...}{Passed onto \link{fitGAM}}

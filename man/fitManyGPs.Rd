@@ -11,6 +11,8 @@ fitManyGPs(mat, coord, features, ...)
 
 \item{coord}{Matrix of coordinates}
 
+\item{features}{Features to be fit, others are only used to estimate the offset}
+
 \item{...}{passed onto \link{fitGP}}
 }
 \value{

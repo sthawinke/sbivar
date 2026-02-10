@@ -38,6 +38,7 @@ fitGP <- function(x, coord, GPmethod, corStruct, optControl) {
 #' @param mat Matrix of observations
 #' @param coord Matrix of coordinates
 #' @param ... passed onto \link{fitGP}
+#' @inheritParams fitManyGAMs
 #' @returns Matrix of fitted GP components
 fitManyGPs <- function(mat, coord, features, ...) {
     simplify2array(loadBalanceBplapply(selfName(features), function(cn) {

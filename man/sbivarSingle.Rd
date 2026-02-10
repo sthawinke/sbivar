@@ -13,7 +13,7 @@ sbivarSingle(
   normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
   pseudoCount = 1e-08,
-  etas = c(5e-06, 4e-05, 2e-04),
+  etas = c(5e-06, 2e-04, 0.02),
   findMaxW = FALSE,
   returnSEsMoransI = TRUE,
   families = list(X = gaussian(), Y = gaussian()),

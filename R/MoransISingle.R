@@ -112,7 +112,7 @@ MoransISingle <- function(
         })
         varIxy <- aperm(varIxy, perm = 3:1) # Rearrange
         for (i in seq_len(numWs)) { # If negative variance, fall back on independence
-            if (any(zeroId <- (varIxy[, , i] <= 0))) {
+            if (length(zeroId <- c(which(varIxy[,,i] <= 0), which(is.na(varIxy[,,i]))))) {
                 varIxy[, , i][zeroId] <- sum(Ws[, , i]^2) # tr(W^tW)
             }
         }

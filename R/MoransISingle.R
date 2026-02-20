@@ -27,10 +27,8 @@
 #' as it is computation intensive and not always needed.
 #' @note No multithreading is implemented for the variance calculation, as the matrix calculations involved
 #' may use inherent multithreading with OpenBLAS.
-MoransISingle <- function(
-      X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose,
-      findMaxW, variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...
-) {
+MoransISingle <- function(X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose,
+    findMaxW, variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...) {
     n <- nrow(X)
     m <- nrow(Y)
     p <- ncol(X)
@@ -112,7 +110,7 @@ MoransISingle <- function(
         })
         varIxy <- aperm(varIxy, perm = 3:1) # Rearrange
         for (i in seq_len(numWs)) { # If negative variance, fall back on independence
-            if (length(zeroId <- c(which(varIxy[,,i] <= 0), which(is.na(varIxy[,,i]))))) {
+            if (length(zeroId <- c(which(varIxy[, , i] <= 0), which(is.na(varIxy[, , i]))))) {
                 varIxy[, , i][zeroId] <- sum(Ws[, , i]^2) # tr(W^tW)
             }
         }

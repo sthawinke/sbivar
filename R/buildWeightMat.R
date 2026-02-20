@@ -1,7 +1,7 @@
 #' Build a weight matrix for bivariate Moran's I
 #'
 #' Build a weight matrix to be used in the calculation of the bivariate Moran's I
-#' statistic.
+#' statistic, normalized to sum to one.
 #'
 #' @param Cx,Ey Two coordinate matrices
 #' @param wo The weighting option, either "nn" or "Gauss"

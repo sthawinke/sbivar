@@ -17,7 +17,7 @@ ModTtestSingle(X, Y, Cx, verbose)
 A dataframe of results sorted by p-value, also containing effective sample size (ESS) and correlation estimate.
 }
 \description{
-Then modified t-test is applied to all pairs, which tests for the significance
+The modified t-test is applied to all pairs, which tests for the significance
 of the Pearson correlation while accounting for spatial autocorrelation \insertCite{Clifford1989}{sbivar}.
 }
 \references{

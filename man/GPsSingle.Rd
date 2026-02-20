@@ -32,7 +32,7 @@ GPsSingle(
 \item{Quants}{Most extreme quantiles of the distance distribution to take as length scales}
 
 \item{GPmethod}{The method by which to fit the Gaussian processes,
-passed onto \link[nlme]{gls} as "method" if it equals "REML" or "ML".}
+passed onto \link[nlme]{gls} as "method".}
 
 \item{corStruct}{The correlation object, see \link[nlme]{corStruct}.
 At this point, only \link[nlme]{corGaus} is accepted.}
@@ -41,7 +41,7 @@ At this point, only \link[nlme]{corGaus} is accepted.}
 
 \item{verbose}{Should info on type of analysis be printed?}
 
-\item{featuresX, featuresY}{Features to be tested. Setting these allows to test a limited feature set,
+\item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization.}
 }
 \value{

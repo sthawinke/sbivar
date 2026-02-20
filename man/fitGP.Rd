@@ -12,7 +12,7 @@ fitGP(x, coord, GPmethod, corStruct, optControl)
 \item{coord}{Coordinate matrix}
 
 \item{GPmethod}{The method by which to fit the Gaussian processes,
-passed onto \link[nlme]{gls} as "method" if it equals "REML" or "ML".}
+passed onto \link[nlme]{gls} as "method".}
 
 \item{corStruct}{The correlation object, see \link[nlme]{corStruct}.
 At this point, only \link[nlme]{corGaus} is accepted.}
@@ -24,14 +24,7 @@ A vector of length 4 with components range, nugget, sigma and mean
 }
 \description{
 A Gaussian process (GP) models the spatial autocovariance using a kernel function
-that descibes the covariance as a decreasing function of distance between observations.
-}
-\details{
-Setting GPmethod to "ML" or "REML" leads to model fitting in R using the \link[nlme]{gls} function.
-Setting GPmethod to "gpytorch" uses the eponymous python package. This has the option of gpu acceleration
-when providing "cuda" as device. The GPs are then fit on the available GPU for speedup.
-The parametrization of the GPs is the one common in geostatistics, as described in \link[nlme]{gls}.
-Results from gpytorch are transformed to this parametrization for uniformity.
+that describes the covariance as a decreasing function of distance between observations.
 }
 \note{
 Fitting GPs can be computation and memory intensive!

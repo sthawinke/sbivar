@@ -2,7 +2,7 @@
 % Please edit documentation in R/sbivarMulti.R
 \name{sbivarMulti}
 \alias{sbivarMulti}
-\title{Apply one or more tests for bivariate spatial association}
+\title{Estimate measures of bivariate spatial association for multiple images}
 \usage{
 sbivarMulti(
   Xl,
@@ -22,7 +22,7 @@ sbivarMulti(
   pseudoCount = 1e-08,
   n_points_grid = 600,
   verbose = TRUE,
-  findVariances = FALSE
+  findVariances = TRUE
 )
 }
 \arguments{
@@ -45,15 +45,14 @@ Currently, only "Exp" and "Lin" are implemented for computational reasons.}
 
 \item{verbose}{Should info on type of analysis be printed?}
 
-\item{findVariances}{Should variances be calculated? For internal use only, not default for multi-image analysis}
+\item{findVariances}{Should variances be calculated? For internal use only}
 }
 \value{
 A list containing
 \item{estimates}{The estimated measures of association}
-\item{method}{The method used to find these estimates}
 \item{multi}{TRUE, a flag for the type of analysis}
-\item{normX,normY}{As provided}
-\item{families,wo,numNNs,etas}{Optional, as provided}
+\item{normX,normY,method}{As provided}
+\item{families,wo,wParams}{Optional, as provided. wParams are either etas or numNNs}
 }
 \description{
 This function calculates measures of spatial association for every image.

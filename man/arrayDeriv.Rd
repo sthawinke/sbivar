@@ -9,7 +9,7 @@ arrayDeriv(fittedGP, distMat, what)
 \arguments{
 \item{fittedGP}{The fitted Gaussian process (vector of 4 parameters)}
 
-\item{distMat}{The distance matrix of Cx and Ey}
+\item{distMat}{The complete distance matrix of Cx and Ey stacked}
 
 \item{what}{For which parameter is the derivative required?}
 }

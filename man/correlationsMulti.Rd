@@ -9,7 +9,7 @@ correlationsMulti(Xl, Yl, verbose)
 \arguments{
 \item{Xl, Yl}{Lists of matrices of omics measurements}
 
-\item{verbose}{Should info on type of analysis be printed?}
+\item{verbose}{Should progress be printed?}
 }
 \value{
 A list of named correlation vectors

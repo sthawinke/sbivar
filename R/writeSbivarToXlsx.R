@@ -11,11 +11,11 @@
 #' raw and adjusted p-values
 #' @param sigLevel The significance level threshold to use for the adjusted p-values,
 #' only features exceeding the threshold are written to the file. Set this parameter to 1 to write all features
-#'
+#' @seealso \link[openxlsx]{createWorkbook}
 #' @details If no feature exceeds the significance threshold for a certain parameter,
 #' an empty tab is created. For each fixed effect, a single tab is written.
 #' The "baseline" tabs indicate the overall patterns, the other tabs are named after the fixed effects
-#' and indicate departure from this baseline for this fixed effect
+#' and indicate departure from this baseline for this fixed effect.
 #' @return Returns invisible with a message when writing operation successful,
 #' otherwise throws a warning.
 #' @export
@@ -26,7 +26,7 @@
 #' # meaning that all feature pairs will be written to the spreadsheet.
 #' # Single result
 #' writeSbivarToXlsx(resGAMs, file = "tmpFile", sigLevel = 1)
-#' file.remove("tmpFile.xlsx")
+#' file.remove("tmpFile.xlsx") #Clean up after you, omit this in a real analysis
 writeSbivarToXlsx <- function(
       results, file, overwrite = FALSE, digits = 3,
       sigLevel = 0.05

@@ -7,7 +7,7 @@
 buildAltSigmas(distMat, numLscAlts, Quants, idN, idM)
 }
 \arguments{
-\item{distMat}{The distance matrix of Cx and Ey}
+\item{distMat}{The complete distance matrix of Cx and Ey stacked}
 
 \item{numLscAlts}{Number of length scales (and thus number of covariance matrices to be tested)}
 
@@ -19,5 +19,5 @@ buildAltSigmas(distMat, numLscAlts, Quants, idN, idM)
 A list of covariance matrices
 }
 \description{
-Construct a series of covariance matrices with cross-modality correlations, for different length scales.
+These matrices are used to test for bivariate association at different length scales
 }

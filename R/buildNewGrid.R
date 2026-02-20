@@ -2,7 +2,9 @@
 #'
 #' Given two coordinate matrices, concave hulls are found around them. The intersection
 #' between these two hulls is found, and in that area an evenly spaced, discrete
-#' grid is constructed. This function is mainly used to create a grid on which two fitted GAMs can be
+#' grid is constructed.
+#'
+#' @note This function is mainly used to create a grid on which two fitted GAMs can be
 #' evaluated to calculate correlations.
 #'
 #' @param Cx,Ey The coordinate matrices

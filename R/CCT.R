@@ -1,11 +1,12 @@
 #' An analytical p-value combination method using the Cauchy distribution.
 #'
 #' The \code{CCT} function takes in a numeric vector of p-values,
-#' and returns the aggregated p-value using Cauchy combination rule
-#' The code was taken from the xihaoli/STAAR github repo, and adapted.
-#' @param pvals a numeric vector of p-values, where each of the element is
+#' and returns the aggregated p-value using Cauchy combination rule.
+#' The code was taken from the xihaoli/STAAR github repo \insertCite{Liu2020}{sbivar}, and adapted.
+#' @param pvals a numeric vector of p-values, where each of the elements is
 #' between 0 to 1, to be combined.
 #' @return The aggregated p-value
+#' @references
 #' \insertAllCited{}
 #' @importFrom stats pcauchy
 CCT <- function(pvals) {

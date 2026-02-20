@@ -14,7 +14,7 @@
 #' @param wo,variogramModels,numNNs,etas,cutoff,width,returnSEsMoransI,findMaxW Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}
 #' @param verbose Should info on type of analysis be printed?
 #' @param normX,normY,pseudoCount Normalization parameters, passed onto \link{normMat}
-#' @param featuresX,featuresY Features to be tested. Setting these allows to test a limited feature set,
+#' @param featuresX,featuresY Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
 #' while using the whole matrix to calculate library sizes as offset or for normalization.
 #'
 #' @details For GAMs, usually no normalization is needed, as the non-gaussianity is taken care of by
@@ -23,9 +23,9 @@
 #' @returns A list with at least the following components
 #' \item{result}{A matrix which contains at least a p-values ("pVal") and a
 #' Benjamini-Hochberg adjusted p-value ("pAdj"), sorted by increasing p-value.}
-#' \item{families}{As provided}
-#' \item{method}{As provided}
 #' \item{multi}{FALSE, a flag for the type of analysis}
+#' \item{method,normX,normY}{As provided}
+#' \item{families,wo,wParams}{Optional, as provided. wParams are either etas or numNNs}
 #' @importFrom stats p.adjust
 #' @importFrom methods is
 #' @importFrom nlme corGaus lmeControl

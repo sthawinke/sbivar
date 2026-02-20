@@ -1,9 +1,8 @@
 #' Find all cross-correlations for a list of matrices
 #' @description
 #' Find all raw cross-correlations between lists of observations matrices from different modalities.
-#'
+#' @param verbose Should progress be printed?
 #' @inheritParams sbivarMulti
-#' @inheritParams wrapModTtest
 #'
 #' @returns A list of named correlation vectors
 #' @importFrom stats cor

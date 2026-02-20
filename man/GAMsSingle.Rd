@@ -30,14 +30,14 @@ evaluated on.}
 
 \item{verbose}{Should info on type of analysis be printed?}
 
-\item{featuresX, featuresY}{Features to be tested. Setting these allows to test a limited feature set,
+\item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization.}
 
-\item{findVariances}{Should variances be calculated? For internal use only, not default for multi-image analysis}
+\item{findVariances}{Should variances be calculated? For internal use only}
 }
 \value{
 A named list of results
 }
 \description{
-Fit univariate GAMs with 2d cubic smoothing splines for both modalities, and test for correlation between all bivariate combinations
+Fit univariate GAMs with 2D cubic smoothing splines for both modalities, and test for correlation between all bivariate combinations.
 }

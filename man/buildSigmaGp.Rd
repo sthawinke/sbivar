@@ -9,7 +9,7 @@ buildSigmaGp(pars, distMat)
 \arguments{
 \item{pars}{A vector of parameters}
 
-\item{distMat}{The distance matrix of Cx and Ey}
+\item{distMat}{The complete distance matrix of Cx and Ey stacked}
 }
 \value{
 The covariance matrix

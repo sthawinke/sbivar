@@ -44,7 +44,7 @@ sbivarSingle(
 
 \item{normX, normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}
 
-\item{featuresX, featuresY}{Features to be tested. Setting these allows to test a limited feature set,
+\item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization.}
 
 \item{n_points_grid, families}{Passed onto \link{GAMsSingle}}
@@ -59,9 +59,9 @@ while using the whole matrix to calculate library sizes as offset or for normali
 A list with at least the following components
 \item{result}{A matrix which contains at least a p-values ("pVal") and a
 Benjamini-Hochberg adjusted p-value ("pAdj"), sorted by increasing p-value.}
-\item{families}{As provided}
-\item{method}{As provided}
 \item{multi}{FALSE, a flag for the type of analysis}
+\item{method,normX,normY}{As provided}
+\item{families,wo,wParams}{Optional, as provided. wParams are either etas or numNNs}
 }
 \description{
 The tests can be applied to either disjoint or joint coordinate sets.

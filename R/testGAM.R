@@ -6,7 +6,7 @@
 #' @param modelx,modely Two fitted GAMs
 #' @param predx,predy Predictions and covariance matrices of fitted GAMs in common grid
 #'
-#' @returns A vector with correlation, its standard error and the p-value
+#' @returns A vector with the correlation estimate, its standard error and the p-value
 #' @inheritParams MoransISingle
 testGAM <- function(modelx, modely, predx, predy, findVariances) {
     # Covariance

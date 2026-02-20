@@ -38,7 +38,7 @@ with separate tabs per parameter tested, sorted by increasing p-value.
 If no feature exceeds the significance threshold for a certain parameter,
 an empty tab is created. For each fixed effect, a single tab is written.
 The "baseline" tabs indicate the overall patterns, the other tabs are named after the fixed effects
-and indicate departure from this baseline for this fixed effect
+and indicate departure from this baseline for this fixed effect.
 }
 \examples{
 example(sbivar, "sbivar")
@@ -46,5 +46,8 @@ example(sbivar, "sbivar")
 # meaning that all feature pairs will be written to the spreadsheet.
 # Single result
 writeSbivarToXlsx(resGAMs, file = "tmpFile", sigLevel = 1)
-file.remove("tmpFile.xlsx")
+file.remove("tmpFile.xlsx") #Clean up after you, omit this in a real analysis
+}
+\seealso{
+\link[openxlsx]{createWorkbook}
 }

@@ -7,15 +7,17 @@
 CCT(pvals)
 }
 \arguments{
-\item{pvals}{a numeric vector of p-values, where each of the element is
+\item{pvals}{a numeric vector of p-values, where each of the elements is
 between 0 to 1, to be combined.}
 }
 \value{
 The aggregated p-value
-\insertAllCited{}
 }
 \description{
 The \code{CCT} function takes in a numeric vector of p-values,
-and returns the aggregated p-value using Cauchy combination rule
-The code was taken from the xihaoli/STAAR github repo, and adapted.
+and returns the aggregated p-value using Cauchy combination rule.
+The code was taken from the xihaoli/STAAR github repo \insertCite{Liu2020}{sbivar}, and adapted.
+}
+\references{
+\insertAllCited{}
 }

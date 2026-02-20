@@ -3,10 +3,10 @@
 #' @param A An mxmxp array
 #' @param M An mxm matrix
 #' @return An mxmxp array
-#' @description Array resulting from all matrix products of slices of array A mxmxp, with matrix M is mxm.
+#' @description Array resulting from all matrix products of slices of array A of size mxmxp, with matrix M of size mxm.
 #' This is a faster version of \code{vapply(seq_len(p), FUN.VALUE = mat, function(i)\{mat \%*\% arr[,,i]\})},
-#' although it may consume more memory
-#' @details The speedup comes from a single call to %*%, very efficient in BLAS.
+#' although it may consume more memory.
+#' @details The speedup comes from a single call to \%*\%, very efficient in BLAS.
 arrayMatProd <- function(A, M) {
     n <- dim(A)[1]
     p <- dim(A)[3]

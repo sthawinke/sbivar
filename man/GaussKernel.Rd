@@ -7,7 +7,7 @@
 GaussKernel(distMat, range)
 }
 \arguments{
-\item{distMat}{The distance matrix of Cx and Ey}
+\item{distMat}{The complete distance matrix of Cx and Ey stacked}
 
 \item{range}{Range (or length-scale) parameter of the Gaussian covariance kernel}
 }

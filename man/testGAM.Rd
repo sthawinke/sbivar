@@ -11,10 +11,10 @@ testGAM(modelx, modely, predx, predy, findVariances)
 
 \item{predx, predy}{Predictions and covariance matrices of fitted GAMs in common grid}
 
-\item{findVariances}{Should variances be calculated? For internal use only, not default for multi-image analysis}
+\item{findVariances}{Should variances be calculated? For internal use only}
 }
 \value{
-A vector with correlation, its standard error and the p-value
+A vector with the correlation estimate, its standard error and the p-value
 }
 \description{
 The variance of the correlation between the spline surfaces is found by

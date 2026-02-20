@@ -1,7 +1,7 @@
 #' Find all Moran's I statistics for a list of matrices
 #'
 #' Find all Moran's I values for lists of observations matrices from different modalities,
-#' by caling the \link{MoransISingle} function.
+#' by calling the \link{MoransISingle} function.
 #'
 #' @inheritParams sbivarMulti
 #' @inheritParams buildWeightMat

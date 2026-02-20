@@ -1,5 +1,7 @@
 #' Construct a series of covariance matrices with cross-modality correlations, for different length scales.
 #'
+#' These matrices are used to test for bivariate association at different length scales
+#'
 #' @inheritParams testGP
 #' @param numLscAlts Number of length scales (and thus number of covariance matrices to be tested)
 #' @param Quants Most extreme quantiles of the distance distribution to be used as length scales.

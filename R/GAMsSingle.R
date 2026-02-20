@@ -1,6 +1,6 @@
 #' Fit univariate GAMs and test bivariate combinations
 #'
-#' Fit univariate GAMs with 2d cubic smoothing splines for both modalities, and test for correlation between all bivariate combinations
+#' Fit univariate GAMs with 2D cubic smoothing splines for both modalities, and test for correlation between all bivariate combinations.
 #'
 #' @inheritParams sbivarSingle
 #' @param families A vector of length 2 giving the distributional families

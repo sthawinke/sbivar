@@ -11,20 +11,20 @@ fitGAM(df, outcome, k = -1, family = gaussian(), offset = NULL)
 
 \item{outcome}{A character vector indicating the outcome variable}
 
-\item{k}{Dimension of the basis of the smooth term see \link[mgcv]{s}.}
+\item{k}{Dimension of the basis of the smooth term, see \link[mgcv]{s}.}
 
 \item{family}{A character string indicating the family, see \link[stats]{family}.}
 
 \item{offset}{A numeric vector with the offset, e.g. the library sizes for
 spatial transcriptomic data, already on the scale of the regressor,
-so log-transformed for count models}
+so log-transformed for count models.}
 }
 \value{
 A fitted GAM model, or try-error when the fit fails
 }
 \description{
-A generalized additive model (GAM) captures spatial dependence through a bivariate spatial spline.
+Fit a generalized additive model (GAM) captures spatial dependence through a bivariate spatial spline.
 }
 \seealso{
-\link[mgcv]{gam}
+\link[mgcv]{gam},\link[mgcv]{s}
 }

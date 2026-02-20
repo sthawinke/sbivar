@@ -24,7 +24,7 @@ GAMsMulti(
 
 \item{verbose}{Should info on type of analysis be printed?}
 
-\item{findVariances}{Should variances be calculated? For internal use only, not default for multi-image analysis}
+\item{findVariances}{Should variances be calculated? For internal use only}
 }
 \value{
 A list named like Xl, containing all results

@@ -44,10 +44,10 @@ Currently, only "Exp" and "Lin" are implemented for computational reasons.}
 
 \item{returnSEsMoransI}{A boolean, are standard errors of Moran's I to be returned?}
 
-\item{featuresX, featuresY}{Features to be tested. Setting these allows to test a limited feature set,
+\item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization.}
 
-\item{findVariances}{Should variances be calculated? For internal use only, not default for multi-image analysis}
+\item{findVariances}{Should variances be calculated? For internal use only}
 
 \item{...}{passed onto \link[gstat]{variogram}}
 }
@@ -56,7 +56,7 @@ A dataframe of results sorted by p-value, also containing the estimated Moran's 
 In addition, the maximum value of the Moran's I statistic, and the parameters of the weight matrix
 }
 \description{
-The variance calculation requires estimation of the spatial autocorrelation structure of every feature separately
+The variance calculation requires estimation of the spatial autocorrelation structure of every feature separately, using Matheron's variogram estimator \insertCite{Matheron1963}{sbivar}.
 }
 \details{
 By default, a number of range parameters and corresponding weight matrices are screened for spatial association,

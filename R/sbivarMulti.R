@@ -1,4 +1,4 @@
-#' Apply one or more tests for bivariate spatial association
+#' Estimate measures of bivariate spatial association for multiple images
 #'
 #' This function calculates measures of spatial association for every image.
 #' The resulting estimates can then be analysed further using the \link{fitLinModels} function.
@@ -10,10 +10,9 @@
 #' @param wo,numNNs,etas Passed onto \link{MoransISingle}
 #' @returns A list containing
 #' \item{estimates}{The estimated measures of association}
-#' \item{method}{The method used to find these estimates}
 #' \item{multi}{TRUE, a flag for the type of analysis}
-#' \item{normX,normY}{As provided}
-#' \item{families,wo,numNNs,etas}{Optional, as provided}
+#' \item{normX,normY,method}{As provided}
+#' \item{families,wo,wParams}{Optional, as provided. wParams are either etas or numNNs}
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
 #' @inheritParams sbivarSingle
 #' @inheritParams buildWeightMat
@@ -26,7 +25,7 @@ sbivarMulti <- function(
       numNNs = c(4, 8, 24), etas = c(5e-6, 2e-4, 2e-2),
       normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
       variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
-      pseudoCount = 1e-8, n_points_grid = 6e2, verbose = TRUE, findVariances = FALSE
+      pseudoCount = 1e-8, n_points_grid = 6e2, verbose = TRUE, findVariances = TRUE
 ) {
     method <- match.arg(method)
     wo <- match.arg(wo)

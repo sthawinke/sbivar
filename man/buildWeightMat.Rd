@@ -29,7 +29,7 @@ A weight matrix
 }
 \description{
 Build a weight matrix to be used in the calculation of the bivariate Moran's I
-statistic.
+statistic, normalized to sum to one.
 }
 \details{
 For wo = "Gauss", the weight decays as exp(-d^2/eta) with d the distance between observations.

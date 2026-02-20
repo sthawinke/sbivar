@@ -11,7 +11,7 @@ vcovPredGam(model, newdata, findVariances = TRUE)
 
 \item{newdata}{The grid on which new predictions are made}
 
-\item{findVariances}{Should variances be calculated? For internal use only, not default for multi-image analysis}
+\item{findVariances}{Should variances be calculated? For internal use only}
 }
 \value{
 A list with components

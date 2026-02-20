@@ -11,7 +11,7 @@ MoransIMulti(Xl, Yl, Cxl, Eyl, findVariances, verbose, ...)
 
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
-\item{findVariances}{Should variances be calculated? For internal use only, not default for multi-image analysis}
+\item{findVariances}{Should variances be calculated? For internal use only}
 
 \item{verbose}{Should info on type of analysis be printed?}
 
@@ -22,7 +22,7 @@ A list of Moran's I estimates, standard errors and maximum values
 }
 \description{
 Find all Moran's I values for lists of observations matrices from different modalities,
-by caling the \link{MoransISingle} function.
+by calling the \link{MoransISingle} function.
 }
 \seealso{
 \link{MoransISingle}

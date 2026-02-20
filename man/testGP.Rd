@@ -2,7 +2,7 @@
 % Please edit documentation in R/testGP.R
 \name{testGP}
 \alias{testGP}
-\title{Perform the score test for significance of the bivariate spatial association in a Gaussian process.}
+\title{Perform a score test on the bivariate spatial association in a Gaussian process.}
 \usage{
 testGP(x, y, Cx, Ey, altSigmas, distMat, solXonly, solYonly, sx)
 }
@@ -13,7 +13,7 @@ testGP(x, y, Cx, Ey, altSigmas, distMat, solXonly, solYonly, sx)
 
 \item{altSigmas}{A prepared series of bivariate association matrices}
 
-\item{distMat}{The distance matrix of Cx and Ey}
+\item{distMat}{The complete distance matrix of Cx and Ey stacked}
 
 \item{solXonly, solYonly}{Parameters of the Gaussian processes of x and y}
 
@@ -27,6 +27,10 @@ A vector of length 2: a p-value and an indicator of the sign:
 This function tests for the variance of a random effect, causing the covariance, to be zero.
 It is a score test as developed by \insertCite{Zhang2003}{sbivar}, with the test statistic
 having a scaled chi-square distribution.
+}
+\details{
+To tests are performed, one for positive and one for negative association,
+and two times the smallest p-value to achieve a two-sided test. The sign indicates which direction was most significant.
 }
 \references{
 \insertAllCited{}

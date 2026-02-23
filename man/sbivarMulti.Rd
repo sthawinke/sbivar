@@ -22,7 +22,7 @@ sbivarMulti(
   pseudoCount = 1e-08,
   n_points_grid = 600,
   verbose = TRUE,
-  findVariances = TRUE
+  findVariances = FALSE
 )
 }
 \arguments{

@@ -25,7 +25,7 @@ sbivarMulti <- function(
       numNNs = c(4, 8, 24), etas = c(5e-6, 2e-4, 2e-2),
       normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
       variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
-      pseudoCount = 1e-8, n_points_grid = 6e2, verbose = TRUE, findVariances = FALSE
+      pseudoCount = 1e-8, n_points_grid = 6e2, verbose = TRUE, findVariances = FALSE, findMaxW = TRUE
 ) {
     method <- match.arg(method)
     wo <- match.arg(wo)
@@ -73,7 +73,7 @@ sbivarMulti <- function(
     }
     out <- if (method == "Moran's I") {
         MoransIMulti(Xl, Yl, Cxl, Eyl,
-            wo = wo, numNNs = numNNs, verbose = verbose, findVariances = findVariances,
+            wo = wo, numNNs = numNNs, verbose = verbose, findVariances = findVariances, findMaxW = findMaxW,
             etas = etas, variogramModels = variogramModels, width = width, cutoff = cutoff
         )
     } else if (method == "GAMs") {

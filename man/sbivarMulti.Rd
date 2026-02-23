@@ -22,7 +22,8 @@ sbivarMulti(
   pseudoCount = 1e-08,
   n_points_grid = 600,
   verbose = TRUE,
-  findVariances = FALSE
+  findVariances = FALSE,
+  findMaxW = TRUE
 )
 }
 \arguments{
@@ -46,6 +47,8 @@ Currently, only "Exp" and "Lin" are implemented for computational reasons.}
 \item{verbose}{Should info on type of analysis be printed?}
 
 \item{findVariances}{Should variances be calculated? For internal use only}
+
+\item{findMaxW}{Is the maximum bivariate Moran's I needed?}
 }
 \value{
 A list containing

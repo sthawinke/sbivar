@@ -10,14 +10,14 @@
 #'
 #' @returns A list of Moran's I estimates, standard errors and maximum values
 #' @seealso \link{MoransISingle}
-MoransIMulti <- function(Xl, Yl, Cxl, Eyl, findVariances, verbose, ...) {
+MoransIMulti <- function(Xl, Yl, Cxl, Eyl, findVariances, verbose, findMaxW, ...) {
     lapply(selfName(names(Xl)), function(nam) {
         if (verbose) {
             printIteration(nam, names(Xl))
         }
         MoransISingle(
             X = Xl[[nam]], Y = Yl[[nam]], Cx = Cxl[[nam]], Ey = Eyl[[nam]],
-            verbose = FALSE, findMaxW = TRUE, findVariances = findVariances, returnSEsMoransI = findVariances, ...
+            verbose = FALSE, findMaxW = findMaxW, findVariances = findVariances, returnSEsMoransI = findVariances, ...
         )[c("res", "maxIxy")]
     })
 }

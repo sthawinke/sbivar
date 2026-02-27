@@ -46,7 +46,7 @@ example(sbivar, "sbivar")
 # meaning that all feature pairs will be written to the spreadsheet.
 # Single result
 writeSbivarToXlsx(resGAMs, file = "tmpFile", sigLevel = 1)
-file.remove("tmpFile.xlsx") #Clean up after you, omit this in a real analysis
+file.remove("tmpFile.xlsx") # Clean up after you, omit this in a real analysis
 }
 \seealso{
 \link[openxlsx]{createWorkbook}

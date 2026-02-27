@@ -14,7 +14,7 @@ vignette: >
 bibliography: ../inst/REFERENCES.bib 
 ---
 
-```{r image, echo=FALSE, eval = FALSE}
+```{r image, echo=FALSE}
 htmltools::img(
     src = knitr::image_uri("../inst/Sbivar.png"),
     style = "position:absolute; top:0; right:0; padding:8px;",
@@ -104,11 +104,11 @@ data(Vicari)
 names(Vicari)
 ```
 
-This object consists of four lists of length six: _TranscriptCoords_ and _MetaboliteCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. Only the 10 most abundant features per modality are included in the package. The _sbivar_ package assumes that the data have been pre-aligned. Yet it is always a good idea to check the alignment visually:
+This object consists of four lists of length six: _TranscriptCoords_ and _MetaboliteCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. Only the 10 most abundant features per modality are included in the package. The _sbivar_ package assumes that the data have been pre-aligned, hence it is always a good idea to check the alignment visually:
 
 ```{r plotcoordsVicari, fig.height = 7}
 par(mfrow = c(2, 3))
-plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.25)
+plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.2)
 par(mfrow = c(1, 1))
 ```
 
@@ -126,7 +126,7 @@ singleMetCoords <- Vicari$MetaboliteCoords[[singleSample]]
 singleMet <- Vicari$MetaboliteOutcomes[[singleSample]]
 ```
 
-We analyse this single sample using bivariate Moran's I. By default, three different $\eta$ parameters are considered for constructing the elements of the weight matrix: `r format(eval(formals(sbivar:::sbivarSingle)$etas))`. We choose to normalize both modalities to relative abundances (see ?normMat). 
+We analyse this single sample using bivariate Moran's I. We choose to normalize both modalities to relative abundances (see ?normMat). 
 
 ```{r testmoran}
 moransIRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
@@ -205,7 +205,7 @@ We see that the first three and the last three are replicates from different mic
 mouse <- substr(names(Vicari$TranscriptOutcomes), 1, 10)
 ```
 
-For the multi-image case, we can also use bivariate Moran's I as measure of spatial association, with a nearest-neighbour (nn) weighting scheme for illustration (if the required _RANN_ package is available). For computational reasons, we limit calculations to the first 500 observations:
+For the multi-image case, we can also use bivariate Moran's I as measure of spatial association, here with a nearest-neighbour (nn) weighting scheme for illustration (if the required _RANN_ package is available). For computational reasons, we limit calculations to the first 500 observations:
 
 ```{r multiMoran}
 VicariMultiTest <- lapply(Vicari, function(x) lapply(x, function(y) y[1:500, ]))
@@ -230,7 +230,7 @@ multiMoranLmmsRes <- extractResultsMulti(multiMoranLmms, designDf)
 head(multiMoranLmmsRes$result$Intercept)
 ```
 
-No features are significantly associated after multiplicity correction. This is in part caused by different experimental parameters used for the different sections, i.e. these are not real replicates yet, as technology is still being developed. For illustration, we plot the feature pair with the smallest p-values nevertheless:
+No features are significantly associated after multiplicity correction. This is in part caused by different experimental procedures used for the different sections, i.e. these are not real replicates yet, as technology is still being developed. For illustration, we plot the feature pair with the smallest p-values nevertheless:
 
 ```{r plottopMulti, fig.height = 9}
 plotTopPair(multiMoranLmmsRes,

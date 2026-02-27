@@ -31,21 +31,19 @@
 #' @importFrom nlme corGaus lmeControl
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
 #' @seealso \link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle}, \link{GPsSingle}
-sbivarSingle <- function(
-      X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
-      normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
-      etas = c(5e-6, 2e-4, 2e-2), findMaxW = FALSE, returnSEsMoransI = TRUE,
-      families = list("X" = gaussian(), "Y" = gaussian()), featuresX = colnames(X), featuresY = colnames(Y),
-      n_points_grid = 6e2, verbose = TRUE,
-      variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
-      wo = c("Gauss", "nn"), numNNs = c(4, 8, 24),
-      GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 5,
-      optControl = lmeControl(
-          opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
-          niterEM = 1e3, msMaxEval = 1e3
-      ),
-      corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25))
-) {
+sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
+    normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
+    etas = c(5e-6, 2e-4, 2e-2), findMaxW = FALSE, returnSEsMoransI = TRUE,
+    families = list("X" = gaussian(), "Y" = gaussian()), featuresX = colnames(X), featuresY = colnames(Y),
+    n_points_grid = 6e2, verbose = TRUE,
+    variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
+    wo = c("Gauss", "nn"), numNNs = c(4, 8, 24),
+    GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 5,
+    optControl = lmeControl(
+        opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
+        niterEM = 1e3, msMaxEval = 1e3
+    ),
+    corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25))) {
     stopifnot(
         is.numeric(n_points_grid), ncol(Cx) == 2, is.numeric(numNNs), all(numNNs > 0),
         all(vapply(families, FUN.VALUE = TRUE, is, "family")), is.list(optControl), !is.null(colnames(X)),

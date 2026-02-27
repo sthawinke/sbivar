@@ -7,7 +7,8 @@
 exploreWeights(
   etas,
   dists = seq(0, 0.1, length.out = 1000),
-  palette = "paired"
+  palette = "paired",
+  legend.position = "topright"
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ exploreWeights(
 \item{dists}{A set of distances, smaller than the square root of 2 since all coordinates are scaled to the unit square.}
 
 \item{palette}{The colour palette}
+
+\item{legend.position}{Legend position, passed onto \link[graphics]{legend} as x}
 }
 \value{
 Plots the weighting functions

@@ -37,11 +37,9 @@
 #' )
 #' @import ggplot2
 #' @order 1
-plotGAMs <- function(
-      X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scaleMinusOne",
-      families = list("X" = gaussian(), "Y" = gaussian()),
-      addTitle = TRUE, n_points_grid = 6e2, ...
-) {
+plotGAMs <- function(X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scaleMinusOne",
+    families = list("X" = gaussian(), "Y" = gaussian()),
+    addTitle = TRUE, n_points_grid = 6e2, ...) {
     stopifnot(
         is.numeric(n_points_grid), all(vapply(families, FUN.VALUE = TRUE, is, "family")),
         is.character(features)
@@ -88,10 +86,8 @@ plotGAMs <- function(
 #' @rdname plotGAMs
 #' @order 2
 #' @inheritParams plotTopPair
-plotGAMsTopResults <- function(
-      results, X, Y, Cx, Ey, topRank = 1,
-      parameter = "Intercept", ...
-) {
+plotGAMsTopResults <- function(results, X, Y, Cx, Ey, topRank = 1,
+    parameter = "Intercept", ...) {
     stopifnot(is.numeric(topRank))
     topFeats <- sund(rownames(
         if (results$multi) {

@@ -26,11 +26,9 @@
 #' # meaning that all feature pairs will be written to the spreadsheet.
 #' # Single result
 #' writeSbivarToXlsx(resGAMs, file = "tmpFile", sigLevel = 1)
-#' file.remove("tmpFile.xlsx") #Clean up after you, omit this in a real analysis
-writeSbivarToXlsx <- function(
-      results, file, overwrite = FALSE, digits = 3,
-      sigLevel = 0.05
-) {
+#' file.remove("tmpFile.xlsx") # Clean up after you, omit this in a real analysis
+writeSbivarToXlsx <- function(results, file, overwrite = FALSE, digits = 3,
+    sigLevel = 0.05) {
     stopifnot(
         is.logical(overwrite), is.character(file), is.numeric(digits),
         is.numeric(sigLevel), is.list(results)

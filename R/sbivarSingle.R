@@ -58,6 +58,7 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
             bpparam()$workers, " computing cores"
         )
     }
+    foo <- checkInputSingle(X, Y, Cx, Ey)
     X <- addDimNames(X, "X")
     Y <- addDimNames(Y, "Y")
     featuresX <- make.names(featuresX)
@@ -68,7 +69,6 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
     normY <- match.arg(normY)
     GPmethod <- match.arg(GPmethod)
     wo <- match.arg(wo)
-    foo <- checkInputSingle(X, Y, Cx, Ey)
     if (missing(Ey)) {
         if (nrow(X) != nrow(Y)) {
             stop("Only one coordinate matrix supplied, but sample size of X and Y do not match!
@@ -87,8 +87,16 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
     if (!identical(names(families), c("X", "Y"))) {
         stop("Name families 'X' and 'Y' for unambiguous matching")
     }
-    rownames(Cx) <- rownames(X)
-    rownames(Ey) <- rownames(Y)
+    if(is.null(rownames(Cx))){
+        rownames(Cx) <- rownames(X)
+    } else {
+        Cx <- Cx[rownames(X),]
+    }
+    if(is.null(rownames(Ey))){
+        rownames(Ey) <- rownames(Y)
+    } else {
+        Ey <- Ey[rownames(Y),]
+    }
     if (!missing(gpParams)) {
         if (!is.list(gpParams) || names(gpParams) != c("X", "Y") ||
             !all(vapply(gpParams, FUN.VALUE = TRUE, function(x) {

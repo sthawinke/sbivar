@@ -28,9 +28,21 @@ checkInputSingle <- function(X, Y, Cx, Ey) {
             stop("Coordinate matrices must be of dimension 2!")
         }
     }
+    if (is.null(colnames(X))) {
+        stop("Feature matrix X lacks column names!")
+    }
+    if (is.null(colnames(Y))) {
+        stop("Feature matrix Y lacks column names!")
+    }
     if (findDoubleUnderScore(c(colnames(X), colnames(Y)))) {
         stop("Double underscores found in feature names. Please change the names,
              as the double underscore is used in this package to separate feature pairs!")
+    }
+    if (!is.null(rx <- rownames(X)) && !is.null(rcx <- rownames(Cx)) && !identical(sort(rx), sort(rcx))) {
+        stop("Rownames of X and Cx do not match")
+    }
+    if (!is.null(ry <- rownames(Y)) && !is.null(rcy <- rownames(Ey)) && !identical(sort(ry), sort(rcy))) {
+        stop("Rownames of Y and Ey do not match")
     }
 }
 checkInputMulti <- function(Xl, Yl, Cxl, Eyl, checkCoords = TRUE) {

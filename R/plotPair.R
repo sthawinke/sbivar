@@ -65,8 +65,8 @@ plotTopPair <- function(results, ..., normX = results$normX, normY = results$nor
 #' @param theme the ggplot2 theme
 plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "log"),
     normY = c("none", "rel", "log"), size = 1.25, assayX, assayY, theme = theme_bw()) {
-    Xl <- lapply(getX(Xl, assayX), addDimNames, "X")
-    Yl <- lapply(getX(Yl, assayY), addDimNames, "Y")
+    Xl <- getX(Xl, assayX)
+    Yl <- getX(Yl, assayY)
     Cxl <- getSpatialCoords(Xl, Cxl)
     Eyl <- getSpatialCoords(Yl, Eyl)
     foo <- checkInputMulti(Xl, Yl, Cxl, Eyl)
@@ -119,14 +119,12 @@ plotPairSingle <- function(X, Y, Cx, Ey, features, normX = c("none", "rel", "log
         Ey <- SpatialExperiment::spatialCoords(Y)
         Y <- assayT(Y, assayY)
     }
-    X <- addDimNames(X, "X")
-    Y <- addDimNames(Y, "Y")
     features <- make.names(features)
+    colnames(X) <- make.names(colnames(X))
+    colnames(Y) <- make.names(colnames(Y))
     foo <- checkInputSingle(X, Y, Cx, Ey)
     normX <- match.arg(normX)
     normY <- match.arg(normY)
-    rownames(Cx) <- rownames(X)
-    rownames(Ey) <- rownames(Y)
     X <- normMat(X, normX)
     Y <- normMat(Y, normY)
     plotPairSingleVectors(

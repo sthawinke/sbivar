@@ -129,8 +129,6 @@ buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun
         Y <- Y[idY <- (rowSums(Y) > 0), ]
         Ey <- Ey[idY, ]
     }
-    X <- addDimNames(X, "X")
-    Y <- addDimNames(Y, "Y")
     colnames(Cx) <- colnames(Ey) <- c("x", "y")
     newGrid <- buildNewGrid(Cx = Cx, Ey = Ey, n_points_grid = n_points_grid)
     modelx <- fitGAM(

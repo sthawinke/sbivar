@@ -149,7 +149,7 @@ plotTopPair(moransIRes,
 )
 ```
 
-We see a clear positive relationship.
+We see a clear negative relationship.
 
 In addition, we employ generalized additive models (GAMs), with a negative binomial outcome distribution for the transcriptome data, and a gamma outcome distribution for the metabolome data. A log-link is used in both cases.
 
@@ -169,7 +169,7 @@ plotTopPair(gamRes,
 )
 ```
 
-Another feature is found most significant by GAMs, this one with a negative relationship. For GAMs, we can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes$result[gpGam<- rownames(gamRes$result)[1], "corxy"], 3)`:
+Another feature is found most significant by GAMs, again with a negative relationship. For GAMs, we can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes$result[gpGam<- rownames(gamRes$result)[1], "corxy"], 3)`:
 
 ```{r plotGAM}
 plotGAMsTopResults(gamRes,
@@ -287,7 +287,7 @@ resSpatExp <- sbivar(StxSE, MetSE,
 Plot the second most significant result, again providing the _SpatialExperiment_ objects
 
 ```{r plotTopSE}
-plotTopPair(resSpatExp, X = StxSE, Y = MetSE, topRank = 2)
+plotTopPair(resSpatExp, X = StxSE, Y = MetSE, topRank = 2, size = 0.4)
 ```
 
 Now we construct a _MultiAssayExperiment_ object
@@ -330,7 +330,7 @@ MetSElist <- lapply(selfName(names(Vicari$MetaboliteOutcomes)), function(nam) {
 })
 multiMoranResSE <- sbivar(
     X = StxSElist, Y = MetSElist, assayX = "transcripts",
-    assayY = "metabolites", method = "GAM"
+    assayY = "metabolites", method = "GAM", verbose = FALSE
 )
 multiMoranLmmsSE <- fitLinModels(multiMoranResSE, designDf, Formula = ~ (1 | mouse))
 multiMoranLmmsResSE <- extractResultsMulti(multiMoranLmmsSE, designDf)
@@ -421,7 +421,7 @@ if (reqadzk) {
         assayX = "Stx", assayY = "msi",
         normX = "rel", normY = "rel", verbose = FALSE
     )
-    plotTopPair(GodfreyRes, speStx, speMet)
+    plotTopPair(GodfreyRes, speStx, speMet, size = 0.4)
 }
 ```
 

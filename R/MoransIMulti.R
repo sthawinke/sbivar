@@ -17,7 +17,9 @@ MoransIMulti <- function(Xl, Yl, Cxl, Eyl, findVariances, verbose, findMaxW, ...
         }
         MoransISingle(
             X = Xl[[nam]], Y = Yl[[nam]], Cx = Cxl[[nam]], Ey = Eyl[[nam]],
-            verbose = FALSE, findMaxW = findMaxW, findVariances = findVariances, returnSEsMoransI = findVariances, ...
+            verbose = FALSE, findMaxW = findMaxW, findVariances = findVariances,
+            returnSEsMoransI = findVariances, featuresX = colnames(Xl[[nam]]),
+            featuresY = colnames(Yl[[nam]]), ...
         )[c("res", "maxIxy")]
     })
 }

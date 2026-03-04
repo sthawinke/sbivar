@@ -33,8 +33,6 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" 
         is.numeric(numNNs), all(numNNs > 0), is.numeric(etas), is.numeric(n_points_grid), is.logical(verbose),
         is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family"))
     )
-    Xl <- lapply(Xl, addDimNames, "X")
-    Yl <- lapply(Yl, addDimNames, "Y")
     foo <- checkInputMulti(Xl, Yl, Cxl, Eyl, checkCoords = ccs <- (method != "Correlation"))
     if (ccs) {
         if (missing(Eyl)) {
@@ -42,12 +40,11 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" 
                  Performing an analysis with joint coordinate sets.")
             Eyl <- Cxl
         }
-        Cxl <- mapply(Cxl, Xl, SIMPLIFY = FALSE, FUN = tmpFun <- function(cx, x) {
+        Cxl <- lapply(Cxl, tmpFun <- function(cx) {
             colnames(cx) <- c("x", "y")
-            rownames(cx) <- rownames(x)
             cx
         })
-        Eyl <- mapply(Eyl, Yl, SIMPLIFY = FALSE, FUN = tmpFun)
+        Eyl <- lapply(Eyl, tmpFun)
     } else if (!missing(Cxl)) {
         warning("Correlation analysis will ignore coordinate matrices provided.
                 Consider providing another 'method' argument for a full spatial analysis", immediate. = TRUE)

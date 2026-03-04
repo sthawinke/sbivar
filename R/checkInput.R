@@ -27,6 +27,9 @@ checkInputSingle <- function(X, Y, Cx, Ey) {
         if (ncol(Ey) != 2) {
             stop("Coordinate matrices must be of dimension 2!")
         }
+        if (!identical(sort(rownames(Y)), sort(rownames(Ey)))) {
+            stop("Rownames of Y and Ey do not match")
+        }
     }
     if (is.null(colnames(X))) {
         stop("Feature matrix X lacks column names!")
@@ -41,13 +44,22 @@ checkInputSingle <- function(X, Y, Cx, Ey) {
     if (!identical(sort(rownames(X)), sort(rownames(Cx)))) {
         stop("Rownames of X and Cx do not match")
     }
-    if (!identical(sort(rownames(Y)), sort(rownames(Ey)))) {
-        stop("Rownames of Y and Ey do not match")
-    }
 }
 checkInputMulti <- function(Xl, Yl, Cxl, Eyl, checkCoords = TRUE) {
     if (length(Xl) == 1) {
         stop("Lists of length 1 not allowed, please convert to matrix!")
+    }
+    if(any(vapply(Xl,FUN.VALUE = FALSE,  function(x) is.null(colnames(x))))){
+        stop("Some feature names are missing in Xl!")
+    }
+    if(any(vapply(Yl, FUN.VALUE = FALSE, function(x) is.null(colnames(x))))){
+        stop("Some feature names are missing in Yl!")
+    }
+    if(any(vapply(Xl, FUN.VALUE = FALSE, function(x) is.null(rownames(x))))){
+        stop("Some sample names are missing in Xl!")
+    }
+    if(any(vapply(Yl, FUN.VALUE = FALSE, function(x) is.null(rownames(x))))){
+        stop("Some sample names are missing in Yl!")
     }
     if (findDoubleUnderScore(unlist(lapply(c(Xl, Yl), colnames)))) {
         stop("Double underscores found in feature names. Please change the names,
@@ -73,6 +85,11 @@ checkInputMulti <- function(Xl, Yl, Cxl, Eyl, checkCoords = TRUE) {
         if (!identical(names(Xl), names(Yl)) || !identical(names(Yl), names(Cxl))) {
             stop("All names of Xl, Yl and Cxl must be identical")
         }
+        if(any(!mapply(Xl, Cxl, FUN = function(x, y) {
+            identical(sort(rownames(x)), sort(rownames(y)))
+            }))){
+            stop("Not all sample names are identical in Xl and Cxl!")
+        }
         if (!missing(Eyl)) {
             if (length(Yl) != length(Eyl)) {
                 stop("Length of outcome matrices Yl and their coordinates Eyl do not match!")
@@ -85,6 +102,11 @@ checkInputMulti <- function(Xl, Yl, Cxl, Eyl, checkCoords = TRUE) {
             }
             if (!missing(Eyl) && !identical(names(Eyl), names(Xl))) {
                 stop("Eyl must be named identically to Xl, Yl and Cxl")
+            }
+            if(any(!mapply(Yl, Eyl, FUN = function(x, y) {
+                identical(sort(rownames(x)), sort(rownames(y)))
+            }))){
+                stop("Not all sample names are identical in Yl and Eyl!")
             }
         }
     }

@@ -58,21 +58,20 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
             bpparam()$workers, " computing cores"
         )
     }
-    foo <- checkInputSingle(X, Y, Cx, Ey)
-    colnames(Cx) <- colnames(Ey) <- c("x", "y")
-    colnames(X) <- make.names(colnames(X))
-    colnames(Y) <- make.names(colnames(Y))
-    X <- normMat(X, normX, pseudoCount)
-    Y <- normMat(Y, normY, pseudoCount)
-    Cx <- Cx[rownames(X), ] #Match coordinates to observations through rownames
-    Ey <- Ey[rownames(Y), ]
-    featuresX <- make.names(featuresX)
-    featuresY <- make.names(featuresY)
     method <- match.arg(method)
     variogramModels <- match.arg(variogramModels, several.ok = TRUE)
     normX <- match.arg(normX)
     normY <- match.arg(normY)
     GPmethod <- match.arg(GPmethod)
+    foo <- checkInputSingle(X, Y, Cx, Ey)
+    colnames(Cx) <- c("x", "y")
+    colnames(X) <- make.names(colnames(X))
+    colnames(Y) <- make.names(colnames(Y))
+    X <- normMat(X, normX, pseudoCount)
+    Y <- normMat(Y, normY, pseudoCount)
+    Cx <- Cx[rownames(X), ] #Match coordinates to observations through rownames
+    featuresX <- make.names(featuresX)
+    featuresY <- make.names(featuresY)
     wo <- match.arg(wo)
     if (missing(Ey)) {
         if (nrow(X) != nrow(Y)) {
@@ -88,6 +87,9 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
     } else if (method == "Modified t-test") {
         stop("Two coordinate matrices supplied, whereas the modified t-test requires only one.
             If coordinates are shared, omit Ey. If coordinates are disjoint, consider using method = 'MoransI'.")
+    } else {
+        Ey <- Ey[rownames(Y), ]
+        colnames(Ey) <- c("x", "y")
     }
     if (!identical(names(families), c("X", "Y"))) {
         stop("Name families 'X' and 'Y' for unambiguous matching")

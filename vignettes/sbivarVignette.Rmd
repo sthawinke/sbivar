@@ -421,7 +421,7 @@ if (reqadzk) {
         assayX = "Stx", assayY = "msi",
         normX = "rel", normY = "rel", verbose = FALSE
     )
-    plotTopPair(GodfreyRes, speStx, speMet, size = 0.4)
+    plotTopPair(GodfreyRes, speStx, speMet)
 }
 ```
 

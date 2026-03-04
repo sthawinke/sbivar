@@ -15,6 +15,18 @@ checkInputSingle <- function(X, Y, Cx, Ey) {
     if (ncol(Cx) != 2) {
         stop("Coordinate matrices must be of dimension 2!")
     }
+    if (is.null(colnames(X))) {
+        stop("Feature matrix X lacks column names!")
+    }
+    if (is.null(colnames(Y))) {
+        stop("Feature matrix Y lacks column names!")
+    }
+    if (is.null(rownames(X))) {
+        stop("Feature matrix X lacks column names!")
+    }
+    if (is.null(rownames(Y))) {
+        stop("Feature matrix Y lacks column names!")
+    }
     if (missing(Ey)) {
         if (n != m) {
             stop("Only one coordinate matrix Cx supplied, and dimensions of X and Y do not match.
@@ -31,12 +43,6 @@ checkInputSingle <- function(X, Y, Cx, Ey) {
             stop("Rownames of Y and Ey do not match")
         }
     }
-    if (is.null(colnames(X))) {
-        stop("Feature matrix X lacks column names!")
-    }
-    if (is.null(colnames(Y))) {
-        stop("Feature matrix Y lacks column names!")
-    }
     if (findDoubleUnderScore(c(colnames(X), colnames(Y)))) {
         stop("Double underscores found in feature names. Please change the names,
              as the double underscore is used in this package to separate feature pairs!")
@@ -49,16 +55,16 @@ checkInputMulti <- function(Xl, Yl, Cxl, Eyl, checkCoords = TRUE) {
     if (length(Xl) == 1) {
         stop("Lists of length 1 not allowed, please convert to matrix!")
     }
-    if(any(vapply(Xl,FUN.VALUE = FALSE,  function(x) is.null(colnames(x))))){
+    if (any(vapply(Xl, FUN.VALUE = FALSE, function(x) is.null(colnames(x))))) {
         stop("Some feature names are missing in Xl!")
     }
-    if(any(vapply(Yl, FUN.VALUE = FALSE, function(x) is.null(colnames(x))))){
+    if (any(vapply(Yl, FUN.VALUE = FALSE, function(x) is.null(colnames(x))))) {
         stop("Some feature names are missing in Yl!")
     }
-    if(any(vapply(Xl, FUN.VALUE = FALSE, function(x) is.null(rownames(x))))){
+    if (any(vapply(Xl, FUN.VALUE = FALSE, function(x) is.null(rownames(x))))) {
         stop("Some sample names are missing in Xl!")
     }
-    if(any(vapply(Yl, FUN.VALUE = FALSE, function(x) is.null(rownames(x))))){
+    if (any(vapply(Yl, FUN.VALUE = FALSE, function(x) is.null(rownames(x))))) {
         stop("Some sample names are missing in Yl!")
     }
     if (findDoubleUnderScore(unlist(lapply(c(Xl, Yl), colnames)))) {
@@ -85,9 +91,9 @@ checkInputMulti <- function(Xl, Yl, Cxl, Eyl, checkCoords = TRUE) {
         if (!identical(names(Xl), names(Yl)) || !identical(names(Yl), names(Cxl))) {
             stop("All names of Xl, Yl and Cxl must be identical")
         }
-        if(any(!mapply(Xl, Cxl, FUN = function(x, y) {
+        if (any(!mapply(Xl, Cxl, FUN = function(x, y) {
             identical(sort(rownames(x)), sort(rownames(y)))
-            }))){
+        }))) {
             stop("Not all sample names are identical in Xl and Cxl!")
         }
         if (!missing(Eyl)) {
@@ -103,9 +109,9 @@ checkInputMulti <- function(Xl, Yl, Cxl, Eyl, checkCoords = TRUE) {
             if (!missing(Eyl) && !identical(names(Eyl), names(Xl))) {
                 stop("Eyl must be named identically to Xl, Yl and Cxl")
             }
-            if(any(!mapply(Yl, Eyl, FUN = function(x, y) {
+            if (any(!mapply(Yl, Eyl, FUN = function(x, y) {
                 identical(sort(rownames(x)), sort(rownames(y)))
-            }))){
+            }))) {
                 stop("Not all sample names are identical in Yl and Eyl!")
             }
         }

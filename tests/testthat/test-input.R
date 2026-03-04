@@ -26,6 +26,12 @@ test_that("SbivarSingle throws errors for incorrect input", {
         method = "GPs",
         corStruct = nlme::corExp(form = ~ x + y, nugget = TRUE, value = c(1, 0.25))
     ))
+    Xunnamed <- X
+    colnames(Xunnamed) <- NULL
+    expect_error(sbivar(Xunnamed, Y, Cx, Ey, method = "GAMs"))
+    Xunnamed <- X
+    rownames(Xunnamed) <- NULL
+    expect_error(sbivar(Xunnamed, Y, Cx, Ey, method = "GAMs"))
 })
 test_that("sbivarMulti works for correct input", {
     gamList <- sbivar(Xl, Yl, Cxl, Eyl, method = "GAMs")
@@ -57,6 +63,7 @@ test_that("Sbivar works on BioConductor objects SpatialExperiment and MultiAssay
         dimnames = list(paste0("rnaSpot", seq_len(p)), paste0("Gene", seq_len(n)))
     )
     rna_coords <- cbind("x" = runif(n, 0, 1), "y" = runif(n, 0, 1))
+    rownames(rna_coords) <- colnames(rna_counts)
     spe_rna <- SpatialExperiment(
         assays = list("counts" = rna_counts),
         spatialCoords = rna_coords
@@ -67,6 +74,7 @@ test_that("Sbivar works on BioConductor objects SpatialExperiment and MultiAssay
         dimnames = list(paste0("protSpot", seq_len(k)), paste0("Protein", seq_len(m)))
     )
     prot_coords <- cbind("x" = runif(m, 0, 1), "y" = runif(m, 0, 1))
+    rownames(prot_coords) <- colnames(prot_counts)
     spe_prot <- SpatialExperiment(
         assays = list("counts" = prot_counts),
         spatialCoords = prot_coords

@@ -17,7 +17,9 @@
 #' @param featuresX,featuresY Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
 #' while using the whole matrix to calculate library sizes as offset or for normalization.
 #'
-#' @details For GAMs, usually no normalization is needed, as the non-gaussianity is taken care of by
+#' @details X and Y need to have rownames for matching to the coordinates, and column names for identifying the features.
+#' Cx and Ey must have rownames matching those in X and Y, and have two columns.
+#' For GAMs, usually no normalization is needed, as the non-gaussianity is taken care of by
 #' the outcome distribution, offset and link functions. Currently, identity, inverse and log-link are implemented.
 #'
 #' @returns A list with at least the following components
@@ -31,19 +33,21 @@
 #' @importFrom nlme corGaus lmeControl
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
 #' @seealso \link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle}, \link{GPsSingle}
-sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
-    normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
-    etas = c(5e-6, 2e-4, 2e-2), findMaxW = FALSE, returnSEsMoransI = TRUE,
-    families = list("X" = gaussian(), "Y" = gaussian()), featuresX = colnames(X), featuresY = colnames(Y),
-    n_points_grid = 6e2, verbose = TRUE,
-    variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
-    wo = c("Gauss", "nn"), numNNs = c(4, 8, 24),
-    GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 5,
-    optControl = lmeControl(
-        opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
-        niterEM = 1e3, msMaxEval = 1e3
-    ),
-    corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25))) {
+sbivarSingle <- function(
+      X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
+      normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
+      etas = c(5e-6, 2e-4, 2e-2), findMaxW = FALSE, returnSEsMoransI = TRUE,
+      families = list("X" = gaussian(), "Y" = gaussian()), featuresX = colnames(X), featuresY = colnames(Y),
+      n_points_grid = 6e2, verbose = TRUE,
+      variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
+      wo = c("Gauss", "nn"), numNNs = c(4, 8, 24),
+      GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 5,
+      optControl = lmeControl(
+          opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
+          niterEM = 1e3, msMaxEval = 1e3
+      ),
+      corStruct = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25))
+) {
     stopifnot(
         is.numeric(n_points_grid), ncol(Cx) == 2, is.numeric(numNNs), all(numNNs > 0),
         all(vapply(families, FUN.VALUE = TRUE, is, "family")), is.list(optControl), !is.null(colnames(X)),
@@ -69,7 +73,7 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
     colnames(Y) <- make.names(colnames(Y))
     X <- normMat(X, normX, pseudoCount)
     Y <- normMat(Y, normY, pseudoCount)
-    Cx <- Cx[rownames(X), ] #Match coordinates to observations through rownames
+    Cx <- Cx[rownames(X), ] # Match coordinates to observations through rownames
     featuresX <- make.names(featuresX)
     featuresY <- make.names(featuresY)
     wo <- match.arg(wo)

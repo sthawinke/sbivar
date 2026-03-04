@@ -71,6 +71,8 @@ If only Cx is supplied and X and Y have the same number of rows, a joint analysi
 If Cx and Ey are provided, and X and Y have the same number of rows, equality of Cx and Ey is checked.
 If true, a joint analysis is run, with a warning.
 
+X and Y need to have rownames for matching to the coordinates, and column names for identifying the features.
+Cx and Ey must have rownames matching those in X and Y, and have two columns.
 For GAMs, usually no normalization is needed, as the non-gaussianity is taken care of by
 the outcome distribution, offset and link functions. Currently, identity, inverse and log-link are implemented.
 }

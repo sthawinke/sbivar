@@ -63,8 +63,8 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
     colnames(X) <- make.names(colnames(X))
     colnames(Y) <- make.names(colnames(Y))
     X <- normMat(X, normX, pseudoCount)
-    Cx <- Cx[rownames(X), ]
     Y <- normMat(Y, normY, pseudoCount)
+    Cx <- Cx[rownames(X), ] #Match coordinates to observations through rownames
     Ey <- Ey[rownames(Y), ]
     featuresX <- make.names(featuresX)
     featuresY <- make.names(featuresY)

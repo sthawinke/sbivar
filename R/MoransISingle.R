@@ -93,7 +93,7 @@ MoransISingle <- function(
         diagMatX <- diag(n)
         ltriX <- which(lower.tri(diagMatX))
         ltriY <- which(lower.tri(diag(m)))
-        varIxy <- vapply(selfName(feqturesX), FUN.VALUE = matrix(0, numWs, k), function(featx) {
+        varIxy <- vapply(selfName(featuresX), FUN.VALUE = matrix(0, numWs, k), function(featx) {
             diagMatX[ltriX] <- evalVariogram(variogramsX[[featx]], distX)
             diagMatX <- forceSymmetric(diagMatX, uplo = "L")
             sigXws0 <- lapply(seq_len(numWs), function(i) {

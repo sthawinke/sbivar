@@ -5,28 +5,27 @@ n <- 8e1
 m <- 1e2
 p <- 4
 k <- 3
-X <- matrix(rnorm(n * p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
-Y <- matrix(rnorm(m * k), m, k, dimnames = list(NULL, paste0("Y", seq_len(k))))
-Cx <- matrix(runif(n * 2), n, 2)
-Ey <- matrix(runif(m * 2), m, 2)
-colnames(Cx) <- colnames(Ey) <- c("x", "y")
+X <- matrix(rnorm(n * p), n, p, dimnames = list(paste0("sampleX", seq_len(n)), paste0("X", seq_len(p))))
+Y <- matrix(rnorm(m * k), m, k, dimnames = list(paste0("sampleY", seq_len(m)), paste0("Y", seq_len(k))))
+Cx <- matrix(runif(n * 2), n, 2, dimnames = list(rownames(X), c("x", "y")))
+Ey <- matrix(runif(m * 2), m, 2, dimnames = list(rownames(Y), c("x", "y")))
 # Multiple images
 ims <- 6
 Xl <- lapply(selfName(seq_len(ims)), function(i) {
     n <- rpois(1, n)
-    matrix(rnorm(n * p), n, p, dimnames = list(NULL, paste0("X", seq_len(p))))
+    matrix(rnorm(n * p), n, p, dimnames = list(paste0("sampleX", seq_len(n)), paste0("X", seq_len(p))))
 })
 Yl <- lapply(selfName(seq_len(ims)), function(i) {
     m <- rpois(1, m)
-    matrix(rnorm(m * k), m, k, dimnames = list(NULL, paste0("Y", seq_len(k))))
+    matrix(rnorm(m * k), m, k, dimnames = list(paste0("sampleY", seq_len(m)), paste0("Y", seq_len(k))))
 })
 Cxl <- lapply(Xl, function(x) {
     n <- nrow(x)
-    matrix(runif(n * 2), n, 2, dimnames = list(NULL, c("x", "y")))
+    matrix(runif(n * 2), n, 2, dimnames = list(paste0("sampleX", seq_len(n)), c("x", "y")))
 })
 Eyl <- lapply(Yl, function(y) {
     m <- nrow(y)
-    matrix(runif(m * 2), m, 2, dimnames = list(NULL, c("x", "y")))
+    matrix(runif(m * 2), m, 2, dimnames = list(paste0("sampleY", seq_len(m)), c("x", "y")))
 })
 toyDesign <- data.frame(
     "covariate" = rnorm(ims),

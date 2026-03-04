@@ -59,8 +59,13 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
         )
     }
     foo <- checkInputSingle(X, Y, Cx, Ey)
-    X <- addDimNames(X, "X")
-    Y <- addDimNames(Y, "Y")
+    colnames(Cx) <- colnames(Ey) <- c("x", "y")
+    colnames(X) <- make.names(colnames(X))
+    colnames(Y) <- make.names(colnames(Y))
+    X <- normMat(X, normX, pseudoCount)
+    Cx <- Cx[rownames(X), ]
+    Y <- normMat(Y, normY, pseudoCount)
+    Ey <- Ey[rownames(Y), ]
     featuresX <- make.names(featuresX)
     featuresY <- make.names(featuresY)
     method <- match.arg(method)
@@ -87,16 +92,6 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
     if (!identical(names(families), c("X", "Y"))) {
         stop("Name families 'X' and 'Y' for unambiguous matching")
     }
-    if(is.null(rownames(Cx))){
-        rownames(Cx) <- rownames(X)
-    } else {
-        Cx <- Cx[rownames(X),]
-    }
-    if(is.null(rownames(Ey))){
-        rownames(Ey) <- rownames(Y)
-    } else {
-        Ey <- Ey[rownames(Y),]
-    }
     if (!missing(gpParams)) {
         if (!is.list(gpParams) || names(gpParams) != c("X", "Y") ||
             !all(vapply(gpParams, FUN.VALUE = TRUE, function(x) {
@@ -112,15 +107,9 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
         warning("Normalizing data is not recommended for GAMs!
                 try accounting for non-normality through the 'families' argument.", immediate. = TRUE)
     }
-    colnames(Cx) <- colnames(Ey) <- c("x", "y")
-    X <- normMat(X, normX, pseudoCount)
-    Cx <- Cx[rownames(X), ]
-    Y <- normMat(Y, normY, pseudoCount)
-    Ey <- Ey[rownames(Y), ]
     out <- if (method == "Moran's I") {
         (moranRes <- MoransISingle(
-            X = X[, featuresX, drop = FALSE], Y = Y[, featuresY, drop = FALSE],
-            Cx = Cx, Ey = Ey, wo = wo, numNNs = selfName(numNNs),
+            X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo, numNNs = selfName(numNNs),
             variogramModels = variogramModels, etas = selfName(etas), width = width,
             returnSEsMoransI = returnSEsMoransI, verbose = verbose, cutoff = cutoff, findMaxW = findMaxW,
             featuresX = featuresX, featuresY = featuresY

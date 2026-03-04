@@ -63,7 +63,7 @@ MoransISingle <- function(
         etas <- etas[idW]
     }
     Ixys <- vapply(seq_len(numWs), FUN.VALUE = matrix(0, p, k), function(i) {
-        crossprod(X, Ws[, , i] %*% Y[, featuresY, drop = FALSE])
+        crossprod(X[, featuresX, drop = FALSE], Ws[, , i] %*% Y[, featuresY, drop = FALSE])
     }) / sqrt(prodFac) # Normalize for matrix size
     # Reformat to long format
     out <- matrix(c(Ixys), ncol = numWs, dimnames = list(NULL, paste0("Ixy_", wParams)))
@@ -93,7 +93,7 @@ MoransISingle <- function(
         diagMatX <- diag(n)
         ltriX <- which(lower.tri(diagMatX))
         ltriY <- which(lower.tri(diag(m)))
-        varIxy <- vapply(selfName(colnames(X)), FUN.VALUE = matrix(0, numWs, k), function(featx) {
+        varIxy <- vapply(selfName(feqturesX), FUN.VALUE = matrix(0, numWs, k), function(featx) {
             diagMatX[ltriX] <- evalVariogram(variogramsX[[featx]], distX)
             diagMatX <- forceSymmetric(diagMatX, uplo = "L")
             sigXws0 <- lapply(seq_len(numWs), function(i) {
@@ -102,12 +102,12 @@ MoransISingle <- function(
             sigXws <- vapply(seq_len(numWs), FUN.VALUE = double(mm2), function(i) {
                 sigXws0[[i]][ltriY]
             })
-            out <- 2 * vapply(selfName(colnames(Y)), FUN.VALUE = double(numWs), function(featy) {
+            out <- 2 * vapply(selfName(featuresY), FUN.VALUE = double(numWs), function(featy) {
                 vgy <- evalVariogram(variogramsY[[featy]], distY)
                 .colSums(sigXws * vgy, mm2, numWs) # Fast tr(W^t Sigma_x W Sigma_y)
             }) + vapply(sigXws0, FUN.VALUE = double(1), tr)
             # Diagonal plus two times lower diagonal, exploiting symmetry
-            printProgress(featx, colnames(X), verbose)
+            printProgress(featx, featuresX, verbose)
             return(out)
         })
         varIxy <- aperm(varIxy, perm = 3:1) # Rearrange
@@ -129,7 +129,7 @@ MoransISingle <- function(
         }
         out <- cbind(out, "pVal" = c(cctPvals))
     }
-    rownames(out) <- makeNames(colnames(X), colnames(Y))
+    rownames(out) <- makeNames(featuresX, featuresY)
     # Maximum values, if needed
     maxIxy <- if (findMaxW) {
         vapply(selfName(names(wParams)), FUN.VALUE = double(1), function(i) {

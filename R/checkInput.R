@@ -38,10 +38,10 @@ checkInputSingle <- function(X, Y, Cx, Ey) {
         stop("Double underscores found in feature names. Please change the names,
              as the double underscore is used in this package to separate feature pairs!")
     }
-    if (!is.null(rx <- rownames(X)) && !is.null(rcx <- rownames(Cx)) && !identical(sort(rx), sort(rcx))) {
+    if (!identical(sort(rownames(X)), sort(rownames(Cx)))) {
         stop("Rownames of X and Cx do not match")
     }
-    if (!is.null(ry <- rownames(Y)) && !is.null(rcy <- rownames(Ey)) && !identical(sort(ry), sort(rcy))) {
+    if (!identical(sort(rownames(Y)), sort(rownames(Ey)))) {
         stop("Rownames of Y and Ey do not match")
     }
 }

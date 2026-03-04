@@ -261,19 +261,6 @@ moveTwoCoords <- function(Cx, Ey) {
     Ey <- Ey / MaxCoord
     list("Cx" = Cx, "Ey" = Ey)
 }
-#' Add dimnames to a matrix
-#'
-#' @param mat The matrix
-#' @param letter A letter to start the rownames
-#'
-#' @returns A matrix with rownames
-addDimNames <- function(mat, letter) {
-    if (is.null(rownames(mat))) {
-        rownames(mat) <- paste0("Sample", seq_len(nrow(mat)))
-    }
-    colnames(mat) <- make.names(colnames(mat))
-    return(mat)
-}
 #' Print feature progress
 #'
 #' @param feat The current feature

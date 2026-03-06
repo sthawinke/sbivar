@@ -49,23 +49,33 @@ n <- 8e1
 m <- 9e1
 p <- 3
 k <- 2
-X <- matrix(rnorm(n * p), n, p, dimnames =
-list(paste0("sampleX", seq_len(n)), paste0("X", seq_len(p))))
-Y <- matrix(rnorm(m * k), m, k, dimnames =
-list(paste0("sampleY", seq_len(m)), paste0("Y", seq_len(k))))
+X <- matrix(rnorm(n * p), n, p,
+    dimnames =
+        list(paste0("sampleX", seq_len(n)), paste0("X", seq_len(p)))
+)
+Y <- matrix(rnorm(m * k), m, k,
+    dimnames =
+        list(paste0("sampleY", seq_len(m)), paste0("Y", seq_len(k)))
+)
 Cx <- matrix(runif(n * 2), n, 2, dimnames = list(rownames(X), c("x", "y")))
 Ey <- matrix(runif(m * 2), m, 2, dimnames = list(rownames(Y), c("x", "y")))
 resMoransI <- sbivar(X, Y, Cx, Ey, method = "Moran's I")
 resGAMs <- sbivar(X, Y, Cx, Ey, method = "GAMs")
-Y2 <- matrix(rnorm(n * k), n, k, dimnames =
-list(paste0("sampleX", seq_len(n)), paste0("Y", seq_len(k))))
+Y2 <- matrix(rnorm(n * k), n, k,
+    dimnames =
+        list(paste0("sampleX", seq_len(n)), paste0("Y", seq_len(k)))
+)
 resModtTestJoint <- sbivar(X, Y2, Cx, method = "Modified")
 # Single image analysis on synthetic data, converted to SpatialExperiment
 library(SpatialExperiment)
-seX <- SpatialExperiment(assays = list("transcripts" = t(X)),
-spatialCoords = Cx)
-seY <- SpatialExperiment(assays = list("metabolites" = t(Y)),
-spatialCoords = Ey)
+seX <- SpatialExperiment(
+    assays = list("transcripts" = t(X)),
+    spatialCoords = Cx
+)
+seY <- SpatialExperiment(
+    assays = list("metabolites" = t(Y)),
+    spatialCoords = Ey
+)
 resModtGPs <- sbivar(seX, seY,
     assayX = "transcripts", assayY = "metabolites",
     method = "GPs"

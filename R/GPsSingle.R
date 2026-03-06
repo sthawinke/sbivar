@@ -12,18 +12,22 @@
 #' with rownames "mean", "nugget", "range" and "sigma", and column names as in X and Y.
 #' This argument allows to pass parameters of the Gaussian processes estimated with other software
 #' to perform the score test.
-GPsSingle <- function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
-    corStruct, optControl, verbose, featuresX, featuresY) {
+GPsSingle <- function(
+      X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
+      corStruct, optControl, verbose, featuresX, featuresY
+) {
+    p <- length(featuresX)
+    k <- length(featuresY)
     if (missing(gpParams)) {
         if (verbose) {
-            message("Fitting GPs for first modality (", length(featuresX), " features) ...")
+            message("Fitting GPs for first modality (", p, " features) ...")
         }
         gpsx <- fitManyGPs(
             mat = X, coord = Cx, GPmethod = GPmethod, features = featuresX,
             corStruct = corStruct, optControl = optControl
         )
         if (verbose) {
-            message("Fitting GPs for second modality (", length(featuresY), " features) ...")
+            message("Fitting GPs for second modality (", k, " features) ...")
         }
         gpsy <- fitManyGPs(
             mat = Y, coord = Ey, GPmethod = GPmethod, features = featuresY,
@@ -45,7 +49,7 @@ GPsSingle <- function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
     )
     if (verbose) {
         message(
-            "Performing all ", numTests <- length(featuresX) * length(featuresY),
+            "Performing all ", p * k,
             " pairwise score tests on fitted GPs ..."
         )
     }
@@ -59,12 +63,12 @@ GPsSingle <- function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
         })
         printProgress(featx, featuresX, verbose)
         return(out)
-    }, FUN.VALUE = matrix(0, nrow = 2, ncol = length(featuresY)))
+    }, FUN.VALUE = matrix(0, nrow = 2, ncol = k))
     # Reformat to long format
-    t(matrix(c(out), 2, length(featuresX) * length(featuresY),
+    t(matrix(c(out), 2, p * k,
         dimnames = list(
             c("pVal", "sign"),
-            paste(rep(featuresX, each = length(featuresY)), rep(featuresY, times = length(featuresX)), sep = "__")
+            paste(rep(featuresX, each = k), rep(featuresY, times = p), sep = "__")
         )
     ))
 }

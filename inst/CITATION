@@ -1,11 +1,11 @@
 note <- sprintf("R package version %s", meta$Version)
 
-bibentry(bibtype = "Software",
+bibentry(bibtype = "Misc",
          author = c(person("Stijn", "Hawinkel"),
                     person("Wangjun", "Hu"),
                     person("Britta", "Velten"),
                     person("Steven", "Maere")
                     ),
                     title = "Statistical tests for bivariate spatial association across multi-omics data",
-                    year         = "2026",
+                    year  = "2026",
                     header = "To cite sbivar in publications please use:")

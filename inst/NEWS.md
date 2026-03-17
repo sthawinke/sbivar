@@ -27,3 +27,5 @@
  - Modify weighting parameters for Moran's I
  - Add pseudocount for GAMs with gamma distribution
  - Stricter row and column name checking
+ 
+# Preparing submission to Bioconductor 0.99.1

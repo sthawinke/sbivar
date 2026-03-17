@@ -54,5 +54,5 @@ Fit all univariate GPs on both modalities, and perform all bivariate tests acros
 gpParams must be a list of length 2 with names 'X' and 'Y', consisting of matrices
 with rownames "mean", "nugget", "range" and "sigma", and column names as in X and Y.
 This argument allows to pass parameters of the Gaussian processes estimated with other software
-to perform the score test.
+(e.g. with GPU acceleration) to perform the score test.
 }

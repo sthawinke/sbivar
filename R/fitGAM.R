@@ -50,10 +50,10 @@ fitManyGAMs <- function(mat, coord, family = gaussian(), modality, features, pse
     fits <- loadBalanceBplapply(selfName(features), function(cn) {
         fitGAM(df, outcome = cn, offset = offset, family = family, ...)
     })
-    if (!any(id <- vapply(fits, FUN.VALUE = TRUE, is, "gam"))) {
-        stop(
-            "All GAM fits failed in modality ", modality,
-            ", please investigate cause! First failure:\n", fits[[1]]
+    if (!all(id <- vapply(fits, FUN.VALUE = TRUE, is, "gam"))) {
+        warning(immediate. = TRUE,
+            "Some GAM fits failed in modality ", modality,
+            ", please investigate cause! First failure:\n", fits[[which.min(id)]]
         )
     }
     return(fits[id])

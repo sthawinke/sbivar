@@ -52,7 +52,7 @@ fitManyGAMs <- function(mat, coord, family = gaussian(), modality, features, pse
     })
     if (!all(id <- vapply(fits, FUN.VALUE = TRUE, is, "gam"))) {
         warning(immediate. = TRUE,
-            "Some GAM fits failed in modality ", modality,
+            sum(!id), " GAM fits failed in modality ", modality,
             ", please investigate cause! First failure:\n", fits[[which.min(id)]]
         )
     }

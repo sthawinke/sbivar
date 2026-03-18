@@ -20,8 +20,8 @@ GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX
     gamsy <- fitManyGAMs(mat = Y, coord = Ey, family = families[["Y"]], modality = "Y", features = featuresY)
     ng <- buildNewGrid(Cx = Cx, Ey = Ey, n_points_grid = n_points_grid)
     if (verbose) {
-        numTests <- length(featuresX) * length(featuresY)
-        message("Performing all ", numTests, " pairwise tests on fitted GAMs ...")
+        numTests <- length(gamsx) * length(gamsy)
+        message("Performing ", numTests, " pairwise tests on fitted GAMs ...")
     }
     Nrow <- if (findVariances) 3 else 1
     out <- vapply(selfName(names(gamsx)), function(featx) {

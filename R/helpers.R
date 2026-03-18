@@ -234,15 +234,6 @@ getSpatialCoords <- function(X, Cx) {
     }
     out
 }
-#' Shift coordinates to baseline 0
-#'
-#' @param Coord coordinate matrix
-#' @return Shifted coordinate matrix
-moveCoords <- function(Coord) {
-    Coord[, 1] <- Coord[, 1] - min(Coord[, 1])
-    Coord[, 2] <- Coord[, 2] - min(Coord[, 2])
-    return(Coord)
-}
 #' Move two sets of coordinates to 0-1. without shifting them with respect to each other
 #'
 #' @param Cx,Ey Coordinate matrices

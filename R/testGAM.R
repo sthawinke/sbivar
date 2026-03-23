@@ -19,7 +19,7 @@ testGAM <- function(modelx, modely, predx, predy, findVariances) {
         sqrt(getApproxVar(predx$vcov, cen2, predx$pred, modelx$family$link) +
             getApproxVar(predy$vcov, cen1, predy$pred, modely$family$link))
     }
-    if(is.infinite(cxy) || is.na(se)){
+    if(is.na(corxy) || is.infinite(corxy) || (findVariances && is.na(se))){
         return(c("corxy" = NA, "se.corxy" = NA, "pVal" = NA))
     } else {
         return(c("corxy" = corxy, "se.corxy" = se / denom, "pVal" = makePval(cxy / se)))

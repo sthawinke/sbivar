@@ -109,7 +109,7 @@ sbivarSingle <- function(
                  and colnames the same as matrices X and Y!")
         }
     }
-    if ((normX == "log" || normY == "log") && method == "GAMs") {
+    if (((normX %in% c("rel", "log")) || (normY %in% c("rel", "log"))) && method == "GAMs") {
         warning("Normalizing data is not recommended for GAMs!
                 try accounting for non-normality through the 'families' argument.", immediate. = TRUE)
     }

@@ -25,6 +25,10 @@ A fitted GAM model, or try-error when the fit fails
 \description{
 Fit a generalized additive model (GAM) captures spatial dependence through a bivariate spatial spline.
 }
+\details{
+If a gamma fit is attempted and fails, which frequenlty happens for sparse data,
+a negative binomial fit is attempted instead
+}
 \seealso{
 \link[mgcv]{gam},\link[mgcv]{s}
 }

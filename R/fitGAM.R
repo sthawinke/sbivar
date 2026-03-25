@@ -11,12 +11,19 @@
 #' @returns A fitted GAM model, or try-error when the fit fails
 #' @importFrom mgcv gam s
 #' @import stats
+#' @details If a gamma fit is attempted and fails, which frequenlty happens for sparse data,
+#' a negative binomial fit is attempted instead
 #' @seealso \link[mgcv]{gam},\link[mgcv]{s}
 fitGAM <- function(df, outcome, k = -1, family = gaussian(), offset = NULL) {
-    try(gam(as.formula(paste(outcome, " ~ s(x, y, k = k)")),
+    fit <- try(gam(as.formula(paste(outcome, " ~ s(x, y, k = k)")),
         data = df, family = family,
         offset = offset
     ), silent = TRUE)
+    if(is(fit, "try-error") && family$family == "Gamma"){
+        fit <- fitGAM(df = df, outcome = outcome, k = k, family = mgcv::nb(),
+                       offset = offset)
+    }
+    return(fit)
 }
 #' Fit GAMs to all columns of a dataframe, as a wrapper for fitGAM
 #'

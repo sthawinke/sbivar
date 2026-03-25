@@ -12,10 +12,8 @@
 #' with rownames "mean", "nugget", "range" and "sigma", and column names as in X and Y.
 #' This argument allows to pass parameters of the Gaussian processes estimated with other software
 #' (e.g. with GPU acceleration) to perform the score test.
-GPsSingle <- function(
-      X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
-      corStruct, optControl, verbose, featuresX, featuresY
-) {
+GPsSingle <- function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
+    corStruct, optControl, verbose, featuresX, featuresY) {
     p <- length(featuresX)
     k <- length(featuresY)
     if (missing(gpParams)) {

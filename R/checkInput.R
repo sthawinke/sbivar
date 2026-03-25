@@ -42,6 +42,9 @@ checkInputSingle <- function(X, Y, Cx, Ey) {
         if (!identical(sort(rownames(Y)), sort(rownames(Ey)))) {
             stop("Rownames of Y and Ey do not match")
         }
+        if (any(c(apply(Cx, 2, min) > apply(Ey, 2, max), apply(Cx, 2, max) < apply(Ey, 2, min)))) {
+            stop("No overlap of the coordinates found! Have the samples been aligned?")
+        }
     }
     if (findDoubleUnderScore(c(colnames(X), colnames(Y)))) {
         stop("Double underscores found in feature names. Please change the names,

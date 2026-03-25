@@ -19,9 +19,11 @@ fitGAM <- function(df, outcome, k = -1, family = gaussian(), offset = NULL) {
         data = df, family = family,
         offset = offset
     ), silent = TRUE)
-    if(is(fit, "try-error") && family$family == "Gamma"){
-        fit <- fitGAM(df = df, outcome = outcome, k = k, family = mgcv::nb(),
-                       offset = offset)
+    if (is(fit, "try-error") && family$family == "Gamma") {
+        fit <- fitGAM(
+            df = df, outcome = outcome, k = k, family = mgcv::nb(),
+            offset = offset
+        )
     }
     return(fit)
 }
@@ -58,7 +60,8 @@ fitManyGAMs <- function(mat, coord, family = gaussian(), modality, features, pse
         fitGAM(df, outcome = cn, offset = offset, family = family, ...)
     })
     if (!all(id <- vapply(fits, FUN.VALUE = TRUE, is, "gam"))) {
-        warning(immediate. = TRUE,
+        warning(
+            immediate. = TRUE,
             sum(!id), " GAM fits failed in modality ", modality,
             ", please investigate cause! First failure:\n", fits[[which.min(id)]]
         )

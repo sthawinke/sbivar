@@ -28,4 +28,10 @@
  - Add pseudocount for GAMs with gamma distribution
  - Stricter row and column name checking
  
-# Preparing submission to Bioconductor 0.99.1
+# 0.99.1
+
+- Preparing submission to Bioconductor
+
+# 0.99.2
+
+ - When Gamma fit fails, attempt negative binomial fit

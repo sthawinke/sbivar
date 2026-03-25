@@ -48,10 +48,8 @@ setMethod("sbivar", "list", function(X, Y, Cx, Ey, assayX = NULL, assayY = NULL,
 #' included in the same SpatialExperiment objects X and Y. By default, they are assumed to be the same for both X and Y.
 #' @rdname sbivar
 #' @export
-setMethod("sbivar", "SpatialExperiment", function(
-      X, Y, assayX, assayY, sample_id_x,
-      sample_id_y = sample_id_x, ...
-) {
+setMethod("sbivar", "SpatialExperiment", function(X, Y, assayX, assayY, sample_id_x,
+    sample_id_y = sample_id_x, ...) {
     if (!requireNamespace("SpatialExperiment", quietly = TRUE)) {
         stop("SpatialExperiment package needs to be installed first!")
     }
@@ -75,10 +73,8 @@ setMethod("sbivar", "SpatialExperiment", function(
 #' @param experimentX,experimentY Names of the experiments in X and Y to be used in the analysis
 #' @export
 #' @importFrom MultiAssayExperiment MultiAssayExperiment
-setMethod("sbivar", "MultiAssayExperiment", function(
-      X, experimentX, experimentY,
-      assayX, assayY, ...
-) {
+setMethod("sbivar", "MultiAssayExperiment", function(X, experimentX, experimentY,
+    assayX, assayY, ...) {
     stopifnot(
         is.character(experimentX), is.character(experimentY),
         all((experiments <- c(experimentX, experimentY)) %in% names(X))

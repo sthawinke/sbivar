@@ -54,12 +54,6 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
         all(featuresY %in% colnames(Y)), !anyDuplicated(featuresX), !anyDuplicated(featuresY),
         length(Quants) == 2, is.numeric(Quants), is.logical(verbose), is.logical(findMaxW)
     )
-    if (verbose) {
-        message(
-            "Starting sbivar analysis of a single image on ",
-            bpparam()$workers, " computing cores"
-        )
-    }
     method <- match.arg(method)
     variogramModels <- match.arg(variogramModels, several.ok = TRUE)
     normX <- match.arg(normX)
@@ -110,6 +104,12 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
     if (((normX %in% c("rel", "log")) || (normY %in% c("rel", "log"))) && method == "GAMs") {
         warning("Normalizing data is not recommended for GAMs!
                 try accounting for non-normality through the 'families' argument.", immediate. = TRUE)
+    }
+    if (verbose) {
+        message(
+            "Starting sbivar analysis of a single image on ",
+            bpparam()$workers, " computing cores"
+        )
     }
     out <- if (method == "Moran's I") {
         (moranRes <- MoransISingle(

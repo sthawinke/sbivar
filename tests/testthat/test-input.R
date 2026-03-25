@@ -11,6 +11,8 @@ test_that("SbivarSingle works for correct input", {
 })
 test_that("SbivarSingle throws errors for incorrect input", {
     expect_error(sbivar(X, Y, Cx, Ey, method = "Modified"))
+    expect_error(sbivar(X, Y, Cx + 10, Ey, method = "GAMs"))
+    expect_error(sbivar(X, Y, Cx , Ey + 10, method = "GAMs"))
     expect_error(sbivar(X, Y, Cx, method = "GAMs"))
     expect_error(sbivar(X, Y, Cx, Cx, method = "GAMs"))
     expect_error(sbivar(X, Y, Cx, Ey,

@@ -49,12 +49,6 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" 
         warning("Correlation analysis will ignore coordinate matrices provided.
                 Consider providing another 'method' argument for a full spatial analysis", immediate. = TRUE)
     }
-    if (verbose) {
-        message(
-            "Starting sbivar analysis (", method, ") of ", length(Xl), " images on ",
-            bpparam()$workers, " computing cores"
-        )
-    }
     # Normalization
     Xl <- lapply(Xl, normMat, normX, pseudoCount)
     Yl <- lapply(Yl, normMat, normY, pseudoCount)
@@ -65,6 +59,12 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" 
         Eyl <- lapply(selfName(names(Eyl)), function(i) {
             Eyl[[i]][rownames(Yl[[i]]), ]
         })
+    }
+    if (verbose) {
+        message(
+            "Starting sbivar analysis (", method, ") of ", length(Xl), " images on ",
+            bpparam()$workers, " computing cores"
+        )
     }
     out <- if (method == "Moran's I") {
         MoransIMulti(Xl, Yl, Cxl, Eyl,

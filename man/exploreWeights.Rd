@@ -6,7 +6,7 @@
 \usage{
 exploreWeights(
   etas,
-  dists = seq(0, 0.1, length.out = 1000),
+  dists = seq(0, 0.2, length.out = 1000),
   palette = "paired",
   legend.position = "topright"
 )

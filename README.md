@@ -5,19 +5,9 @@ sets<img src='inst/Sbivar.png' align='right' height='20%' width='20%'/>
 This repo provides code for performing bivariate association tests
 between different spatial modalities measured on the same or consecutive
 slices, possibly with disjoint coordinate sets. A common coordinate
-framework (CCF) as obtained from alignment is considered given.
+framework as obtained from alignment is considered given.
 
 <!-- % As introduced in our [preprint](). -->
-
-Before installing the *sbivar* package, an update of the *smoppix*
-package from Github (or BioConductor *devel* branch) of the same author
-of at least version 1.1.8 may be needed to gain access to previously
-unexported functions. The latest version of the *smoppix* can be
-installed as:
-
-``` r
-devtools::install_github("sthawinke/smoppix")
-```
 
 The package can be installed from GitHub as follows:
 
@@ -59,7 +49,7 @@ par(mfrow = c(1, 1))
 
 ## Single-image analysis
 
-The Vicari data consist of six images which are best analysed jointly,
+The Vicari data consist of six images which could be analysed jointly,
 but for didactical purposes we also analyse a single image here, the
 sample “V11L12-109_A1”.
 
@@ -122,20 +112,20 @@ Have a look at the results:
 head(moranRes$result)
 ```
 
-    ##                        Ixy_2e-04     Ixy_0.002      Ixy_0.02       pVal
-    ## Fth1__X573.21671    1.193165e-04  1.022411e-04  6.061050e-05 0.01816490
-    ## Fth1__X426.13386   -1.228684e-04 -9.845418e-05 -4.604064e-05 0.01944693
-    ## Fth1__X537.21448   -8.188347e-05 -8.095472e-05 -5.791695e-05 0.08811071
-    ## Fth1__X573.23369    4.075583e-05  3.128742e-05  1.621407e-05 0.09431839
-    ## mt.Co1__X426.13386  7.685216e-05  5.274923e-05  1.184522e-05 0.21346616
-    ## Fth1__X576.20502    7.445046e-05  7.222983e-05  5.841386e-05 0.24726333
-    ##                         pAdj
-    ## Fth1__X573.21671   0.9723466
-    ## Fth1__X426.13386   0.9723466
-    ## Fth1__X537.21448   0.9862872
-    ## Fth1__X573.23369   0.9862872
-    ## mt.Co1__X426.13386 0.9862872
-    ## Fth1__X576.20502   0.9862872
+    ##                        Ixy_5e-06     Ixy_2e-04      Ixy_0.02 SE(Ixy)_5e-06
+    ## Fth1__X426.13386   -9.958962e-05 -1.318836e-04 -4.699044e-05  4.884710e-05
+    ## Fth1__X573.21671    1.116778e-04  1.238469e-04  6.206438e-05  4.682860e-05
+    ## mt.Co1__X426.13386  1.246730e-04  9.255068e-05  1.971629e-05  5.275410e-05
+    ## Fth1__X537.21448   -8.479378e-05 -8.609003e-05 -5.844255e-05  4.597603e-05
+    ## Fth1__X573.23369    2.839504e-05  4.140745e-05  1.660062e-05  2.663718e-05
+    ## mt.Co3__X426.13386  1.090300e-04  7.631569e-05  1.983539e-05  5.517525e-05
+    ##                    SE(Ixy)_2e-04 SE(Ixy)_0.02        pVal      pAdj
+    ## Fth1__X426.13386    4.492210e-05 3.122381e-05 0.009042104 0.4648595
+    ## Fth1__X573.21671    4.302256e-05 3.443858e-05 0.009297191 0.4648595
+    ## mt.Co1__X426.13386  4.908292e-05 3.874747e-05 0.042207509 0.9942020
+    ## Fth1__X537.21448    4.226008e-05 3.725381e-05 0.062735162 0.9942020
+    ## Fth1__X573.23369    1.932606e-05 1.610441e-05 0.082076392 0.9942020
+    ## mt.Co3__X426.13386  5.170858e-05 4.130072e-05 0.111022300 0.9942020
 
 Plot the most significantly spatially associated gene-metabolite pair :
 
@@ -196,7 +186,7 @@ design <- data.frame("mouse" = mouse)
 multiGAMLmms <- fitLinModels(multiGAMRes, design, Formula = ~ (1 | mouse))
 ```
 
-    ## Fitting 80 mixed effects models on 10 cores
+    ## Fitting 100 mixed effects models on 10 cores
 
 Extract the results for the desired parameter (the intercept)
 
@@ -206,12 +196,12 @@ head(multiGAMLmmsRes$result$Intercept)
 ```
 
     ##                       Estimate         SE        pVal      pAdj
-    ## mt.Co1__X426.13386   0.3751419 0.08554576 0.007119296 0.5695437
-    ## mt.Co2__X426.13386   0.2389757 0.10770610 0.077247025 0.8000025
-    ## mt.Nd1__X576.20502   0.1965198 0.09729149 0.099382000 0.8000025
-    ## mt.Nd2__X576.20502   0.2211247 0.11499889 0.112517980 0.8000025
-    ## Gm42418__X576.20502 -0.1295621 0.06926126 0.120316386 0.8000025
-    ## mt.Nd4__X576.20502   0.2110836 0.11554592 0.127284444 0.8000025
+    ## Fth1__X426.13386    -0.4933606 0.08125198 0.001750079 0.1750079
+    ## mt.Atp6__X426.13386  0.3744655 0.08421578 0.006724141 0.3362071
+    ## Fth1__X523.19829    -0.3106654 0.09923639 0.025941054 0.6898147
+    ## Fth1__X573.21671     0.3320684 0.12996033 0.050945903 0.6898147
+    ## Gm42418__X555.20345  0.1925448 0.07737820 0.055272014 0.6898147
+    ## mt.Co1__X573.21671  -0.3337184 0.13590704 0.057546663 0.6898147
 
 No features are significantly associated after multiplicity correction.
 For illustration, we plot the feature pair with the smallest p-values

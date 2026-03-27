@@ -38,15 +38,13 @@ This vignette demonstrates the use of the _sbivar_ package: Spatial BIVARiate as
 The package can be installed from Bioconductor as follows:
 
 ```{r install, eval = FALSE}
-library(BiocManager)
-install("sbivar")
+BiocManager::install("sbivar")
 ```
 
 Alternatively, the latest version can be installed from github as:
 
 ```{r installAndLoadGitHub, eval = FALSE}
-library(pak)
-pak("sthawinke/sbivar")
+remotes::install_github("sthawinke/sbivar", build_vignettes = TRUE)
 ```
 
 Once installed, we can load the package:

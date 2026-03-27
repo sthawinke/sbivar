@@ -10,7 +10,7 @@ This repo provides code for performing bivariate association tests between diffe
 The package can be installed from GitHub as follows:
 
 ```{r installAndLoadGitHub, eval = FALSE}
-devtools::install_github("sthawinke/sbivar", build_vignettes = TRUE)
+remotes::install_github("sthawinke/sbivar", build_vignettes = TRUE)
 ```
 
 ```{r install, eval = FALSE, echo = FALSE}

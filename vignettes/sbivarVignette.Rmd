@@ -45,8 +45,8 @@ install("sbivar")
 Alternatively, the latest version can be installed from github as:
 
 ```{r installAndLoadGitHub, eval = FALSE}
-library(devtools)
-install_github("sthawinke/sbivar")
+library(pak)
+pak("sthawinke/sbivar")
 ```
 
 Once installed, we can load the package:

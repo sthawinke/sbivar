@@ -3,7 +3,6 @@
 #' Fit a generalized additive model (GAM) captures spatial dependence through a bivariate spatial spline.
 #' @param df The dataframe containing outcome and coordinates
 #' @param outcome A character vector indicating the outcome variable
-#' @param k Dimension of the basis of the smooth term, see \link[mgcv]{s}.
 #' @param family A character string indicating the family, see \link[stats]{family}.
 #' @param offset A numeric vector with the offset, e.g. the library sizes for
 #' spatial transcriptomic data, already on the scale of the regressor,
@@ -15,14 +14,14 @@
 #' a negative binomial fit is attempted instead
 #' @seealso \link[mgcv]{gam},\link[mgcv]{s}
 #' @inheritParams fitGP
-fitGAM <- function(df, outcome, k = -1, family = gaussian(), offset = NULL, Gamm, correlation) {
-    Form <- as.formula(paste(outcome, " ~ s(x, y, k = k)"))
+fitGAM <- function(df, outcome, family = gaussian(), offset = NULL, Gamm, correlation, gamMethod, bs) {
+    Form <- as.formula(paste0(outcome, " ~ s(x, y, k = -1, bs = '", bs, "')"))
     fit <- if(Gamm){
         try(gamm(Form, correlation = correlation,
                 data = df, family = family,
                 offset = offset)$gam, silent = TRUE)
     } else {
-        try(gam(Form,
+        try(gam(Form, method = gamMethod,
         data = df, family = family,
         offset = offset), silent = TRUE)
     }

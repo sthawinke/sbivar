@@ -7,19 +7,18 @@
 fitGAM(
   df,
   outcome,
-  k = -1,
   family = gaussian(),
   offset = NULL,
   Gamm,
-  correlation
+  correlation,
+  gamMethod,
+  bs
 )
 }
 \arguments{
 \item{df}{The dataframe containing outcome and coordinates}
 
 \item{outcome}{A character vector indicating the outcome variable}
-
-\item{k}{Dimension of the basis of the smooth term, see \link[mgcv]{s}.}
 
 \item{family}{A character string indicating the family, see \link[stats]{family}.}
 

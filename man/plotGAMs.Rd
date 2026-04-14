@@ -16,6 +16,7 @@ plotGAMs(
   families = list(X = gaussian(), Y = gaussian()),
   addTitle = TRUE,
   n_points_grid = 600,
+  Gamm = TRUE,
   ...
 )
 
@@ -48,6 +49,8 @@ for the outcome values. See details of \link{sbivarSingle}.}
 
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.}
+
+\item{Gamm}{Should an autocorrelation structure be included in the spline fit to achieve a GAMM model?}
 
 \item{...}{passed onto \link{fitGAM}}
 

@@ -13,9 +13,11 @@ GAMsSingle(
   n_points_grid,
   verbose,
   featuresX,
+  bs,
   featuresY,
   Gamm,
   correlation,
+  gamMethod,
   findVariances = TRUE
 )
 }

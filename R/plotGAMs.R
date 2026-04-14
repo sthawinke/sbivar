@@ -39,8 +39,8 @@
 #' @order 1
 plotGAMs <- function(
       X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scaleMinusOne",
-      families = list("X" = gaussian(), "Y" = gaussian()),
-      addTitle = TRUE, n_points_grid = 6e2, ...
+      families = list("X" = gaussian(), "Y" = gaussian()), bs = "tp",
+      addTitle = TRUE, n_points_grid = 6e2, Gamm = TRUE, ...
 ) {
     stopifnot(
         is.numeric(n_points_grid), all(vapply(families, FUN.VALUE = TRUE, is, "family")),
@@ -52,7 +52,7 @@ plotGAMs <- function(
         foo <- checkInputMulti(X, Y, Cx, Ey)
         gamDfs <- lapply(names(X), function(nam) {
             df <- buildGamDf(
-                X[[nam]], Y[[nam]], Cx[[nam]], Ey[[nam]],
+                X[[nam]], Y[[nam]], Cx[[nam]], Ey[[nam]], bs = bs,
                 n_points_grid, families, features, scaleFun
             )$df
             df$image <- nam
@@ -61,7 +61,7 @@ plotGAMs <- function(
         Reduce(gamDfs, f = rbind)
     } else {
         foo <- checkInputSingle(X, Y, Cx, Ey)
-        df <- buildGamDf(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun)
+        df <- buildGamDf(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun, bs = bs)
         corEst <- df$corEst
         df$df
     }
@@ -124,7 +124,7 @@ makeOffset <- function(X, family) {
     }
     return(out)
 }
-buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun, ...) {
+buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun,  ...) {
     if (families[["X"]]$family != "gaussian") {
         X <- X[idX <- (rowSums(X) > 0), ]
         Cx <- Cx[idX, ]

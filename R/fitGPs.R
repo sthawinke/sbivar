@@ -5,20 +5,20 @@
 #' @note Fitting GPs can be computation and memory intensive!
 #' @param x outcome vector
 #' @param coord Coordinate matrix
+#' @param correlation A corStruct object, see \link[nlme]{corStruct}.
+#' At this point, \link[nlme]{corGaus} is hard-coded,
 #' @param GPmethod The method by which to fit the Gaussian processes,
 #' passed onto \link[nlme]{gls} as "method".
-#' @param corStruct The correlation object, see \link[nlme]{corStruct}.
-#' At this point, only \link[nlme]{corGaus} is accepted.
 #' @param optControl List of control values, see \link[nlme]{glsControl}.
 #'
 #' @returns A vector of length 4 with components range, nugget, sigma and mean
 #' @importFrom stats sigma coef
 #' @importFrom nlme gls
-fitGP <- function(x, coord, GPmethod, corStruct, optControl) {
+fitGP <- function(x, coord, GPmethod, correlation, optControl) {
     xModGls <- do.call(nlme::gls, args = list(
         "model" = formula("out ~ 1"),
         "data" = data.frame("out" = x, coord),
-        "method" = GPmethod, "correlation" = corStruct,
+        "method" = GPmethod, "correlation" = correlation,
         "control" = optControl
     ))
     xPars <- c(

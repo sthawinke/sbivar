@@ -9,16 +9,23 @@
 #' spatial transcriptomic data, already on the scale of the regressor,
 #' so log-transformed for count models.
 #' @returns A fitted GAM model, or try-error when the fit fails
-#' @importFrom mgcv gam s
+#' @importFrom mgcv gam gamm s
 #' @import stats
 #' @details If a gamma fit is attempted and fails, which frequenlty happens for sparse data,
 #' a negative binomial fit is attempted instead
 #' @seealso \link[mgcv]{gam},\link[mgcv]{s}
-fitGAM <- function(df, outcome, k = -1, family = gaussian(), offset = NULL) {
-    fit <- try(gam(as.formula(paste(outcome, " ~ s(x, y, k = k)")),
+#' @inheritParams fitGP
+fitGAM <- function(df, outcome, k = -1, family = gaussian(), offset = NULL, Gamm, correlation) {
+    Form <- as.formula(paste(outcome, " ~ s(x, y, k = k)"))
+    fit <- if(Gamm){
+        try(gamm(Form, correlation = correlation,
+                data = df, family = family,
+                offset = offset)$gam, silent = TRUE)
+    } else {
+        try(gam(Form,
         data = df, family = family,
-        offset = offset
-    ), silent = TRUE)
+        offset = offset), silent = TRUE)
+    }
     if (is(fit, "try-error") && family$family == "Gamma") {
         fit <- fitGAM(
             df = df, outcome = outcome, k = k, family = mgcv::nb(),

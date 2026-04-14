@@ -4,7 +4,7 @@
 \alias{fitGP}
 \title{Fit a Gaussian process (GP) to a single outcome vector}
 \usage{
-fitGP(x, coord, GPmethod, corStruct, optControl)
+fitGP(x, coord, GPmethod, correlation, optControl)
 }
 \arguments{
 \item{x}{outcome vector}
@@ -14,7 +14,7 @@ fitGP(x, coord, GPmethod, corStruct, optControl)
 \item{GPmethod}{The method by which to fit the Gaussian processes,
 passed onto \link[nlme]{gls} as "method".}
 
-\item{corStruct}{The correlation object, see \link[nlme]{corStruct}.
+\item{correlation}{The correlation object, see \link[nlme]{correlation}.
 At this point, only \link[nlme]{corGaus} is accepted.}
 
 \item{optControl}{List of control values, see \link[nlme]{glsControl}.}

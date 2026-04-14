@@ -13,7 +13,7 @@
 #' This argument allows to pass parameters of the Gaussian processes estimated with other software
 #' (e.g. with GPU acceleration) to perform the score test.
 GPsSingle <- function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
-    corStruct, optControl, verbose, featuresX, featuresY) {
+    correlation, optControl, verbose, featuresX, featuresY) {
     p <- length(featuresX)
     k <- length(featuresY)
     if (missing(gpParams)) {
@@ -22,14 +22,14 @@ GPsSingle <- function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
         }
         gpsx <- fitManyGPs(
             mat = X, coord = Cx, GPmethod = GPmethod, features = featuresX,
-            corStruct = corStruct, optControl = optControl
+            correlation = correlation, optControl = optControl
         )
         if (verbose) {
             message("Fitting GPs for second modality (", k, " features) ...")
         }
         gpsy <- fitManyGPs(
             mat = Y, coord = Ey, GPmethod = GPmethod, features = featuresY,
-            corStruct = corStruct, optControl = optControl
+            correlation = correlation, optControl = optControl
         )
     } else {
         # Extract fits

@@ -114,7 +114,7 @@ MoransISingle <- function(X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose
                 varIxy[, , i][zeroId] <- sum(Ws[, , i]^2) # tr(W^tW)
             }
         }
-        varIxy <- varIxy / prodFac # Correct for matrix size
+        # varIxy <- varIxy / prodFac # Correct for matrix size
         # P-values
         IxyPvals <- makePval(Ixys / (seIxy <- sqrt(varIxy)))
         # CCT correction

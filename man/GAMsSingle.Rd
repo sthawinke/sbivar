@@ -14,6 +14,8 @@ GAMsSingle(
   verbose,
   featuresX,
   featuresY,
+  Gamm,
+  correlation,
   findVariances = TRUE
 )
 }

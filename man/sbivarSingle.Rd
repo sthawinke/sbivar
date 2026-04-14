@@ -16,6 +16,7 @@ sbivarSingle(
   etas = c(5e-06, 2e-04, 0.02),
   findMaxW = FALSE,
   returnSEsMoransI = TRUE,
+  Gamm = TRUE,
   families = list(X = gaussian(), Y = gaussian()),
   featuresX = colnames(X),
   featuresY = colnames(Y),
@@ -32,7 +33,7 @@ sbivarSingle(
   numLscAlts = 5,
   optControl = lmeControl(opt = "optim", maxIter = 500, msMaxIter = 500, niterEM = 1000,
     msMaxEval = 1000),
-  corStruct = corGaus(form = ~x + y, nugget = TRUE, value = c(1, 0.25))
+  correlation = corGaus(form = ~x + y, nugget = TRUE, value = c(1, 0.25))
 )
 }
 \arguments{
@@ -53,7 +54,7 @@ while using the whole matrix to calculate library sizes as offset or for normali
 
 \item{wo, variogramModels, numNNs, etas, cutoff, width, returnSEsMoransI, findMaxW}{Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}}
 
-\item{GPmethod, Quants, numLscAlts, optControl, corStruct, gpParams}{Passed onto \link{fitGP}}
+\item{GPmethod, Quants, numLscAlts, optControl, correlation, gpParams}{Passed onto \link{fitGP}}
 }
 \value{
 A list with at least the following components

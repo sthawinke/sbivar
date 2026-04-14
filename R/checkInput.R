@@ -22,10 +22,10 @@ checkInputSingle <- function(X, Y, Cx, Ey) {
         stop("Feature matrix Y lacks column names!")
     }
     if (is.null(rownames(X))) {
-        stop("Feature matrix X lacks column names!")
+        stop("Feature matrix X lacks row names!")
     }
     if (is.null(rownames(Y))) {
-        stop("Feature matrix Y lacks column names!")
+        stop("Feature matrix Y lacks row names!")
     }
     if (missing(Ey)) {
         if (n != m) {

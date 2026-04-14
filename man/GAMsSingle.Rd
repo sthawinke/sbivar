@@ -35,6 +35,8 @@ evaluated on.}
 \item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization.}
 
+\item{Gamm}{Should an autocorrelation structure be included in the spline fit to achieve a GAMM model?}
+
 \item{findVariances}{Should variances be calculated? For internal use only}
 }
 \value{

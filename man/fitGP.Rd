@@ -14,8 +14,8 @@ fitGP(x, coord, GPmethod, correlation, optControl)
 \item{GPmethod}{The method by which to fit the Gaussian processes,
 passed onto \link[nlme]{gls} as "method".}
 
-\item{correlation}{The correlation object, see \link[nlme]{correlation}.
-At this point, only \link[nlme]{corGaus} is accepted.}
+\item{correlation}{A corStruct object, see \link[nlme]{corStruct}.
+At this point, \link[nlme]{corGaus} is hard-coded,}
 
 \item{optControl}{List of control values, see \link[nlme]{glsControl}.}
 }

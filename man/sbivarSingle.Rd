@@ -45,6 +45,8 @@ sbivarSingle(
 
 \item{normX, normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}
 
+\item{Gamm}{Should an autocorrelation structure be included in the spline fit to achieve a GAMM model?}
+
 \item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization.}
 
@@ -54,7 +56,7 @@ while using the whole matrix to calculate library sizes as offset or for normali
 
 \item{wo, variogramModels, numNNs, etas, cutoff, width, returnSEsMoransI, findMaxW}{Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}}
 
-\item{GPmethod, Quants, numLscAlts, optControl, correlation, gpParams}{Passed onto \link{fitGP}}
+\item{GPmethod, Quants, numLscAlts, optControl, gpParams}{Passed onto \link{fitGP}}
 }
 \value{
 A list with at least the following components

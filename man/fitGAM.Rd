@@ -26,6 +26,9 @@ fitGAM(
 \item{offset}{A numeric vector with the offset, e.g. the library sizes for
 spatial transcriptomic data, already on the scale of the regressor,
 so log-transformed for count models.}
+
+\item{correlation}{A corStruct object, see \link[nlme]{corStruct}.
+At this point, \link[nlme]{corGaus} is hard-coded,}
 }
 \value{
 A fitted GAM model, or try-error when the fit fails

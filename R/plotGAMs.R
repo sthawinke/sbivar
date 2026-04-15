@@ -37,9 +37,11 @@
 #' )
 #' @import ggplot2
 #' @order 1
-plotGAMs <- function(X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scaleMinusOne",
-    families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE,
-    n_points_grid = 6e2, includeGPsmooth = includeGPsmooth, ...) {
+plotGAMs <- function(
+      X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scaleMinusOne",
+      families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE,
+      n_points_grid = 6e2, includeGPsmooth = TRUE, ...
+) {
     stopifnot(
         is.numeric(n_points_grid), all(vapply(families, FUN.VALUE = TRUE, is, "family")),
         is.character(features)
@@ -51,7 +53,8 @@ plotGAMs <- function(X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scale
         gamDfs <- lapply(names(X), function(nam) {
             df <- buildGamDf(
                 X[[nam]], Y[[nam]], Cx[[nam]], Ey[[nam]], n_points_grid,
-                families, features, scaleFun, includeGPsmooth = includeGPsmooth
+                families, features, scaleFun,
+                includeGPsmooth = includeGPsmooth
             )$df
             df$image <- nam
             df
@@ -60,7 +63,7 @@ plotGAMs <- function(X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scale
     } else {
         foo <- checkInputSingle(X, Y, Cx, Ey)
         df <- buildGamDf(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun,
-                         includeGPsmooth = includeGPsmooth
+            includeGPsmooth = includeGPsmooth
         )
         corEst <- df$corEst
         df$df

@@ -16,7 +16,7 @@ plotGAMs(
   families = list(X = gaussian(), Y = gaussian()),
   addTitle = TRUE,
   n_points_grid = 600,
-  includeGPsmooth = includeGPsmooth,
+  includeGPsmooth = TRUE,
   ...
 )
 

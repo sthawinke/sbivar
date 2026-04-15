@@ -2,6 +2,8 @@ context("Unit tests for input errors")
 test_that("SbivarSingle works for correct input", {
     sbiRes <- sbivar(X, Y, Cx, Ey, method = "GAMs")
     expect_is(sbiRes, "list")
+    sbiResNoGp <- sbivar(X, Y, Cx, Ey, method = "GAMs", includeGPsmooth = FALSE)
+    expect_is(sbiResNoGp, "list")
     expect_message(sbiResMoran <- sbivar(X, Y, Cx, Ey, method = "Moran's I"))
     expect_message(sbiResMod <- sbivar(X, X, Cx, method = "Modified"))
     expect_true(all(c("pVal", "pAdj") %in% colnames(sbiResMoran$result)))

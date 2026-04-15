@@ -39,8 +39,8 @@
 #' @order 1
 plotGAMs <- function(
       X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scaleMinusOne",
-      families = list("X" = gaussian(), "Y" = gaussian()), bs = "tp",
-      addTitle = TRUE, n_points_grid = 6e2, Gamm = TRUE, ...
+      families = list("X" = gaussian(), "Y" = gaussian()), bs = "tp", correlation = corGaus(form = ~x + y, nugget = TRUE, value = c(1, 0.25)),
+      addTitle = TRUE, n_points_grid = 6e2, Gamm = FALSE, gamMethod = "REML", ...
 ) {
     stopifnot(
         is.numeric(n_points_grid), all(vapply(families, FUN.VALUE = TRUE, is, "family")),
@@ -52,8 +52,8 @@ plotGAMs <- function(
         foo <- checkInputMulti(X, Y, Cx, Ey)
         gamDfs <- lapply(names(X), function(nam) {
             df <- buildGamDf(
-                X[[nam]], Y[[nam]], Cx[[nam]], Ey[[nam]], bs = bs,
-                n_points_grid, families, features, scaleFun
+                X[[nam]], Y[[nam]], Cx[[nam]], Ey[[nam]], bs = bs, correlation= correlation,
+                n_points_grid, families, features, scaleFun, Gamm = Gamm, gamMethod = gamMethod
             )$df
             df$image <- nam
             df
@@ -61,7 +61,8 @@ plotGAMs <- function(
         Reduce(gamDfs, f = rbind)
     } else {
         foo <- checkInputSingle(X, Y, Cx, Ey)
-        df <- buildGamDf(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun, bs = bs)
+        df <- buildGamDf(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun,
+                         bs = bs, Gamm = Gamm, gamMethod = gamMethod, correlation = correlation)
         corEst <- df$corEst
         df$df
     }

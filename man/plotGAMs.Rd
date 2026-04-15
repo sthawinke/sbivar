@@ -14,9 +14,12 @@ plotGAMs(
   offsets = list(),
   scaleFun = "scaleMinusOne",
   families = list(X = gaussian(), Y = gaussian()),
+  bs = "tp",
+  correlation = corGaus(form = ~x + y, nugget = TRUE, value = c(1, 0.25)),
   addTitle = TRUE,
   n_points_grid = 600,
-  Gamm = TRUE,
+  Gamm = FALSE,
+  gamMethod = "REML",
   ...
 )
 

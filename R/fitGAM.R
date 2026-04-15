@@ -15,7 +15,11 @@
 #' @seealso \link[mgcv]{gam},\link[mgcv]{s}
 #' @inheritParams fitGP
 fitGAM <- function(df, outcome, family = gaussian(), offset = NULL, Gamm, correlation, gamMethod, bs) {
-    Form <- as.formula(paste0(outcome, " ~ s(x, y, k = -1, bs = '", bs, "')"))
+    #Form <- as.formula(paste0(outcome, " ~ s(x, y, k = -1, bs = '", bs, "')"))
+    Form <- if(bs=="gp")
+        as.formula(paste0(outcome, " ~ s(x, y, bs = 'tp', id = 'trend') + s(x, y, bs = 'gp', id = 'field')"))
+    else
+        as.formula(paste0(outcome, " ~ s(x, y, bs = 'tp', id = 'trend')"))
     fit <- if(Gamm){
         try(gamm(Form, correlation = correlation,
                 data = df, family = family,
@@ -27,7 +31,7 @@ fitGAM <- function(df, outcome, family = gaussian(), offset = NULL, Gamm, correl
     }
     if (is(fit, "try-error") && family$family == "Gamma") {
         fit <- fitGAM(
-            df = df, outcome = outcome, k = k, family = mgcv::nb(),
+            df = df, outcome = outcome, family = mgcv::nb(),
             offset = offset
         )
     }

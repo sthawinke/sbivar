@@ -8,7 +8,7 @@
 #'
 #' @returns A list named like Xl, containing all results
 GAMsMulti <- function(Xl, Yl, Cxl, Eyl, families, n_points_grid, verbose,
-                      includeGPsmooth, findVariances = FALSE) {
+    includeGPsmooth, findVariances = FALSE) {
     lapply(selfName(names(Xl)), function(nam) {
         if (verbose) {
             printIteration(nam, names(Xl))

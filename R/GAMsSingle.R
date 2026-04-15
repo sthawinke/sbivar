@@ -10,7 +10,7 @@
 #' @param includeGPsmooth Should a Gaussian random field smoother for stochastic neighbourhood similarity be included?
 #' @returns A named list of results
 #' @inheritParams MoransISingle
-GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX, bs,
+GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX,
     featuresY, includeGPsmooth, findVariances = TRUE) {
     if (verbose) {
         message("Fitting GAMs for first modality (", length(featuresX), " features) ...")

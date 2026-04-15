@@ -14,6 +14,7 @@
 #' a negative binomial fit is attempted instead
 #' @seealso \link[mgcv]{gam}, \link[mgcv]{s}
 #' @inheritParams fitGP
+#' @inheritParams GAMsSingle
 fitGAM <- function(df, outcome, family = gaussian(), offset = NULL, includeGPsmooth) {
     Form <- paste(outcome, "~ s(x, y, bs = 'tp', id = 'trend')")
     if (includeGPsmooth) {

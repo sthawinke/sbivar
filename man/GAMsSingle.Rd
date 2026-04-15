@@ -15,9 +15,7 @@ GAMsSingle(
   featuresX,
   bs,
   featuresY,
-  Gamm,
-  correlation,
-  gamMethod,
+  includeGPsmooth,
   findVariances = TRUE
 )
 }
@@ -37,7 +35,7 @@ evaluated on.}
 \item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization.}
 
-\item{Gamm}{Should an autocorrelation structure be included in the spline fit to achieve a GAMM model?}
+\item{includeGPsmooth}{Should a Gaussian random field smoother for stochastic neighbourhood similarity be included?}
 
 \item{findVariances}{Should variances be calculated? For internal use only}
 }

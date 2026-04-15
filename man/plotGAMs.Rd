@@ -53,8 +53,6 @@ for the outcome values. See details of \link{sbivarSingle}.}
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.}
 
-\item{Gamm}{Should an autocorrelation structure be included in the spline fit to achieve a GAMM model?}
-
 \item{...}{passed onto \link{fitGAM}}
 
 \item{results}{Result of a call to \link{sbivar} (single-image) or to

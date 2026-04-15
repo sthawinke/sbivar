@@ -13,11 +13,9 @@ sbivarSingle(
   normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
   pseudoCount = 1e-08,
-  bs = "gp",
   etas = c(5e-06, 2e-04, 0.02),
   findMaxW = FALSE,
   returnSEsMoransI = TRUE,
-  Gamm = FALSE,
   families = list(X = gaussian(), Y = gaussian()),
   featuresX = colnames(X),
   featuresY = colnames(Y),
@@ -28,7 +26,7 @@ sbivarSingle(
   cutoff = sqrt(2)/3,
   wo = c("Gauss", "nn"),
   numNNs = c(4, 8, 24),
-  gamMethod = "GCV.Cp",
+  includeGPsmooth = TRUE,
   GPmethod = c("REML", "ML"),
   gpParams,
   Quants = c(0.005, 0.5),
@@ -47,18 +45,16 @@ sbivarSingle(
 
 \item{normX, normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}
 
-\item{Gamm}{Should an autocorrelation structure be included in the spline fit to achieve a GAMM model?}
-
 \item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization.}
 
-\item{n_points_grid, families}{Passed onto \link{GAMsSingle}}
+\item{n_points_grid, families, includeGPsmooth}{Passed onto \link{GAMsSingle}}
 
 \item{verbose}{Should info on type of analysis be printed?}
 
 \item{wo, variogramModels, numNNs, etas, cutoff, width, returnSEsMoransI, findMaxW}{Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}}
 
-\item{GPmethod, Quants, numLscAlts, optControl, gpParams}{Passed onto \link{fitGP}}
+\item{GPmethod, Quants, numLscAlts, optControl, gpParams, correlation}{Passed onto \link{fitGP}}
 }
 \value{
 A list with at least the following components

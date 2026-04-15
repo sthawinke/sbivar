@@ -8,31 +8,21 @@
 #' spatial transcriptomic data, already on the scale of the regressor,
 #' so log-transformed for count models.
 #' @returns A fitted GAM model, or try-error when the fit fails
-#' @importFrom mgcv gam gamm s
+#' @importFrom mgcv gam s
 #' @import stats
 #' @details If a gamma fit is attempted and fails, which frequenlty happens for sparse data,
 #' a negative binomial fit is attempted instead
-#' @seealso \link[mgcv]{gam},\link[mgcv]{s}
+#' @seealso \link[mgcv]{gam}, \link[mgcv]{s}
 #' @inheritParams fitGP
-fitGAM <- function(df, outcome, family = gaussian(), offset = NULL, Gamm, correlation, gamMethod, bs) {
-    #Form <- as.formula(paste0(outcome, " ~ s(x, y, k = -1, bs = '", bs, "')"))
-    Form <- if(bs=="gp")
-        as.formula(paste0(outcome, " ~ s(x, y, bs = 'tp', id = 'trend') + s(x, y, bs = 'gp', id = 'field')"))
-    else
-        as.formula(paste0(outcome, " ~ s(x, y, bs = 'tp', id = 'trend')"))
-    fit <- if(Gamm){
-        try(gamm(Form, correlation = correlation,
-                data = df, family = family,
-                offset = offset)$gam, silent = TRUE)
-    } else {
-        try(gam(Form, method = gamMethod,
-        data = df, family = family,
+fitGAM <- function(df, outcome, family = gaussian(), offset = NULL, includeGPsmooth) {
+    Form <- paste(outcome, "~ s(x, y, bs = 'tp', id = 'trend')")
+    if(includeGPsmooth)
+        Form <- paste(Form, "+ s(x, y, bs = 'gp', id = 'field')")
+    fit <- try(gam(as.formula(Form), data = df, family = family,
         offset = offset), silent = TRUE)
-    }
     if (is(fit, "try-error") && family$family == "Gamma") {
-        fit <- fitGAM(
-            df = df, outcome = outcome, family = mgcv::nb(),
-            offset = offset
+        fit <- fitGAM(df = df, outcome = outcome, family = mgcv::nb(),
+            offset = offset, includeGPsmooth = includeGPsmooth
         )
     }
     return(fit)

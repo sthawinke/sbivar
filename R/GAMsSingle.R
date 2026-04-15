@@ -7,18 +7,21 @@
 #' for the outcome values. See details of \link{sbivarSingle}.
 #' @param n_points_grid The number of points in the new grid for the GAMs to be
 #' evaluated on.
+#' @param includeGPsmooth Should a Gaussian random field smoother for stochastic neighbourhood similarity be included?
 #' @returns A named list of results
 #' @inheritParams MoransISingle
 GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX, bs,
-                       featuresY, Gamm, correlation, gamMethod, findVariances = TRUE) {
+                       featuresY, includeGPsmooth, findVariances = TRUE) {
     if (verbose) {
         message("Fitting GAMs for first modality (", length(featuresX), " features) ...")
     }
-    gamsx <- fitManyGAMs(mat = X, coord = Cx, family = families[["X"]], modality = "X", features = featuresX, bs = bs, gamMethod = gamMethod, Gamm = Gamm, correlation = correlation)
+    gamsx <- fitManyGAMs(mat = X, coord = Cx, family = families[["X"]], modality = "X",
+                         features = featuresX, includeGPsmooth = includeGPsmooth)
     if (verbose) {
         message("Fitting GAMs for second modality (", length(featuresY), " features) ...")
     }
-    gamsy <- fitManyGAMs(mat = Y, coord = Ey, family = families[["Y"]], modality = "Y", features = featuresY, bs = bs, gamMethod = gamMethod, Gamm = Gamm, correlation = correlation)
+    gamsy <- fitManyGAMs(mat = Y, coord = Ey, family = families[["Y"]], modality = "Y",
+                         features = featuresY, includeGPsmooth = includeGPsmooth)
     ng <- buildNewGrid(Cx = Cx, Ey = Ey, n_points_grid = n_points_grid)
     if (verbose) {
         numTests <- length(gamsx) * length(gamsy)

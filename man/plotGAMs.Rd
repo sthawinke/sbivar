@@ -14,12 +14,9 @@ plotGAMs(
   offsets = list(),
   scaleFun = "scaleMinusOne",
   families = list(X = gaussian(), Y = gaussian()),
-  bs = "tp",
-  correlation = corGaus(form = ~x + y, nugget = TRUE, value = c(1, 0.25)),
   addTitle = TRUE,
   n_points_grid = 600,
-  Gamm = FALSE,
-  gamMethod = "REML",
+  includeGPsmooth = includeGPsmooth,
   ...
 )
 
@@ -52,6 +49,8 @@ for the outcome values. See details of \link{sbivarSingle}.}
 
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.}
+
+\item{includeGPsmooth}{Should a Gaussian random field smoother for stochastic neighbourhood similarity be included?}
 
 \item{...}{passed onto \link{fitGAM}}
 

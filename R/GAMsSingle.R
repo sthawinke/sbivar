@@ -11,17 +11,21 @@
 #' @returns A named list of results
 #' @inheritParams MoransISingle
 GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX, bs,
-                       featuresY, includeGPsmooth, findVariances = TRUE) {
+    featuresY, includeGPsmooth, findVariances = TRUE) {
     if (verbose) {
         message("Fitting GAMs for first modality (", length(featuresX), " features) ...")
     }
-    gamsx <- fitManyGAMs(mat = X, coord = Cx, family = families[["X"]], modality = "X",
-                         features = featuresX, includeGPsmooth = includeGPsmooth)
+    gamsx <- fitManyGAMs(
+        mat = X, coord = Cx, family = families[["X"]], modality = "X",
+        features = featuresX, includeGPsmooth = includeGPsmooth
+    )
     if (verbose) {
         message("Fitting GAMs for second modality (", length(featuresY), " features) ...")
     }
-    gamsy <- fitManyGAMs(mat = Y, coord = Ey, family = families[["Y"]], modality = "Y",
-                         features = featuresY, includeGPsmooth = includeGPsmooth)
+    gamsy <- fitManyGAMs(
+        mat = Y, coord = Ey, family = families[["Y"]], modality = "Y",
+        features = featuresY, includeGPsmooth = includeGPsmooth
+    )
     ng <- buildNewGrid(Cx = Cx, Ey = Ey, n_points_grid = n_points_grid)
     if (verbose) {
         numTests <- length(gamsx) * length(gamsy)

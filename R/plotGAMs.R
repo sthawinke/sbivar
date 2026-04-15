@@ -37,11 +37,9 @@
 #' )
 #' @import ggplot2
 #' @order 1
-plotGAMs <- function(
-      X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scaleMinusOne",
-      families = list("X" = gaussian(), "Y" = gaussian()), bs = "tp", correlation = corGaus(form = ~x + y, nugget = TRUE, value = c(1, 0.25)),
-      addTitle = TRUE, n_points_grid = 6e2, Gamm = FALSE, gamMethod = "REML", ...
-) {
+plotGAMs <- function(X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scaleMinusOne",
+    families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE,
+    n_points_grid = 6e2, includeGPsmooth = includeGPsmooth, ...) {
     stopifnot(
         is.numeric(n_points_grid), all(vapply(families, FUN.VALUE = TRUE, is, "family")),
         is.character(features)
@@ -52,8 +50,8 @@ plotGAMs <- function(
         foo <- checkInputMulti(X, Y, Cx, Ey)
         gamDfs <- lapply(names(X), function(nam) {
             df <- buildGamDf(
-                X[[nam]], Y[[nam]], Cx[[nam]], Ey[[nam]], bs = bs, correlation= correlation,
-                n_points_grid, families, features, scaleFun, Gamm = Gamm, gamMethod = gamMethod
+                X[[nam]], Y[[nam]], Cx[[nam]], Ey[[nam]], n_points_grid,
+                families, features, scaleFun, includeGPsmooth = includeGPsmooth
             )$df
             df$image <- nam
             df
@@ -62,7 +60,8 @@ plotGAMs <- function(
     } else {
         foo <- checkInputSingle(X, Y, Cx, Ey)
         df <- buildGamDf(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun,
-                         bs = bs, Gamm = Gamm, gamMethod = gamMethod, correlation = correlation)
+                         includeGPsmooth = includeGPsmooth
+        )
         corEst <- df$corEst
         df$df
     }
@@ -125,7 +124,7 @@ makeOffset <- function(X, family) {
     }
     return(out)
 }
-buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun,  ...) {
+buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun, ...) {
     if (families[["X"]]$family != "gaussian") {
         X <- X[idX <- (rowSums(X) > 0), ]
         Cx <- Cx[idX, ]

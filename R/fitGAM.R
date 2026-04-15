@@ -16,12 +16,16 @@
 #' @inheritParams fitGP
 fitGAM <- function(df, outcome, family = gaussian(), offset = NULL, includeGPsmooth) {
     Form <- paste(outcome, "~ s(x, y, bs = 'tp', id = 'trend')")
-    if(includeGPsmooth)
+    if (includeGPsmooth) {
         Form <- paste(Form, "+ s(x, y, bs = 'gp', id = 'field')")
-    fit <- try(gam(as.formula(Form), data = df, family = family,
-        offset = offset), silent = TRUE)
+    }
+    fit <- try(gam(as.formula(Form),
+        data = df, family = family,
+        offset = offset
+    ), silent = TRUE)
     if (is(fit, "try-error") && family$family == "Gamma") {
-        fit <- fitGAM(df = df, outcome = outcome, family = mgcv::nb(),
+        fit <- fitGAM(
+            df = df, outcome = outcome, family = mgcv::nb(),
             offset = offset, includeGPsmooth = includeGPsmooth
         )
     }

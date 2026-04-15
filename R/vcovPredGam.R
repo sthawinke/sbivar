@@ -16,12 +16,14 @@
 #' @inheritParams MoransISingle
 vcovPredGam <- function(model, newdata, findVariances = TRUE) {
     # Subset the full coefficient covariance matrix to the thin plate spline, known to be in first position
-    #idTpSmooth <- which(vapply(model$smooth, FUN.VALUE = TRUE, function(sm) sm$id == "trend"))
-    idThinPlate <- seq_len(model$smooth[[1]]$last.para)[-1] #Exclude intercep
+    # idTpSmooth <- which(vapply(model$smooth, FUN.VALUE = TRUE, function(sm) sm$id == "trend"))
+    idThinPlate <- seq_len(model$smooth[[1]]$last.para)[-1] # Exclude intercep
     coef_cov_matrix <- vcov.gam(model, unconditional = TRUE)[idThinPlate, idThinPlate]
     # Get the basis matrix for predictions
-    basis_matrix <- predict.gam(model, newdata = newdata, type = "lpmatrix",
-                                newdata.guaranteed = TRUE)[, idThinPlate]
+    basis_matrix <- predict.gam(model,
+        newdata = newdata, type = "lpmatrix",
+        newdata.guaranteed = TRUE
+    )[, idThinPlate]
     predOut <- c(basis_matrix %*% coef(model)[idThinPlate])
     # Same as predict(model, newdata = newdata, type = "response")
     predOut <- switch(model$family$link,

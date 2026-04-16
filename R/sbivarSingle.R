@@ -38,7 +38,7 @@ sbivarSingle <- function(
       normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
       etas = c(5e-6, 2e-4, 2e-2), findMaxW = FALSE, returnSEsMoransI = TRUE,
       families = list("X" = gaussian(), "Y" = gaussian()), featuresX = colnames(X), featuresY = colnames(Y),
-      n_points_grid = 6e2, verbose = TRUE,
+      n_points_grid = 6e2, verbose = TRUE, testSmooth = "trend",
       variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
       wo = c("Gauss", "nn"), numNNs = c(4, 8, 24), includeGPsmooth = TRUE,
       GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 5,
@@ -123,7 +123,7 @@ sbivarSingle <- function(
         ))$res
     } else if (method == "GAMs") {
         GAMsSingle(
-            X = X, Y = Y, Cx = Cx, Ey = Ey, families = families, n_points_grid = n_points_grid,
+            X = X, Y = Y, Cx = Cx, Ey = Ey, families = families, n_points_grid = n_points_grid, testSmooth = testSmooth,
             verbose = verbose, featuresX = featuresX, featuresY = featuresY, includeGPsmooth = includeGPsmooth
         )
     } else if (method == "GPs") {

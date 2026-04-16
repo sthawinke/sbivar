@@ -10,7 +10,7 @@
 #' @returns A fitted GAM model, or try-error when the fit fails
 #' @importFrom mgcv gam s
 #' @import stats
-#' @details If a gamma fit is attempted and fails, which frequenlty happens for sparse data,
+#' @details If a gamma fit is attempted and fails, which frequently happens for sparse data,
 #' a negative binomial fit is attempted instead
 #' @seealso \link[mgcv]{gam}, \link[mgcv]{s}
 #' @inheritParams fitGP

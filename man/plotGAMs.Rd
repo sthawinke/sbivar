@@ -17,6 +17,7 @@ plotGAMs(
   addTitle = TRUE,
   n_points_grid = 600,
   includeGPsmooth = TRUE,
+  smooth = "trend",
   ...
 )
 

@@ -12,7 +12,7 @@
 #' @inheritParams MoransISingle
 GAMsSingle <- function(
       X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX,
-      featuresY, includeGPsmooth, findVariances = TRUE
+      featuresY, includeGPsmooth, testSmooth, findVariances = TRUE
 ) {
     if (verbose) {
         message("Fitting GAMs for first modality (", length(featuresX), " features) ...")
@@ -35,12 +35,12 @@ GAMsSingle <- function(
     }
     Nrow <- if (findVariances) 3 else 1
     out <- vapply(selfName(names(gamsx)), function(featx) {
-        predx <- vcovPredGam(gamsx[[featx]], newdata = ng, findVariances = findVariances)
+        predx <- vcovPredGam(gamsx[[featx]], newdata = ng, findVariances = findVariances, testSmooth = testSmooth)
         out <- vapply(selfName(names(gamsy)), FUN.VALUE = double(Nrow), function(featy) {
             testGAM(
                 predx = predx, modely = gamsy[[featy]], modelx = gamsx[[featx]],
-                predy = vcovPredGam(gamsy[[featy]], newdata = ng, findVariances = findVariances),
-                findVariances = findVariances
+                predy = vcovPredGam(gamsy[[featy]], newdata = ng, findVariances = findVariances,
+                                    testSmooth = testSmooth), findVariances = findVariances
             )
         })
         printProgress(featx, featuresX, verbose)

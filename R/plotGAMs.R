@@ -40,7 +40,7 @@
 plotGAMs <- function(
       X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scaleMinusOne",
       families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE,
-      n_points_grid = 6e2, includeGPsmooth = TRUE, ...
+      n_points_grid = 6e2, includeGPsmooth = TRUE, smooth = "trend", ...
 ) {
     stopifnot(
         is.numeric(n_points_grid), all(vapply(families, FUN.VALUE = TRUE, is, "family")),
@@ -54,7 +54,7 @@ plotGAMs <- function(
             df <- buildGamDf(
                 X[[nam]], Y[[nam]], Cx[[nam]], Ey[[nam]], n_points_grid,
                 families, features, scaleFun,
-                includeGPsmooth = includeGPsmooth
+                includeGPsmooth = includeGPsmooth, smooth = smooth
             )$df
             df$image <- nam
             df
@@ -63,7 +63,7 @@ plotGAMs <- function(
     } else {
         foo <- checkInputSingle(X, Y, Cx, Ey)
         df <- buildGamDf(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun,
-            includeGPsmooth = includeGPsmooth
+            includeGPsmooth = includeGPsmooth, smooth = smooth
         )
         corEst <- df$corEst
         df$df
@@ -127,7 +127,7 @@ makeOffset <- function(X, family) {
     }
     return(out)
 }
-buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun, ...) {
+buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun, smooth, ...) {
     if (families[["X"]]$family != "gaussian") {
         X <- X[idX <- (rowSums(X) > 0), ]
         Cx <- Cx[idX, ]
@@ -146,8 +146,8 @@ buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun
         df = data.frame("value" = Y[, features[2]], Ey), family = families[["Y"]],
         offset = makeOffset(Y, families[["Y"]]), outcome = "value", ...
     )
-    predx <- vcovPredGam(modelx, newdata = newGrid)
-    predy <- vcovPredGam(modely, newdata = newGrid)
+    predx <- vcovPredGam(modelx, newdata = newGrid, testSmooth = smooth)
+    predy <- vcovPredGam(modely, newdata = newGrid, testSmooth = smooth)
     corContr <- (predx$pred - mean(predx$pred)) * (predy$pred - mean(predy$pred))
     corEst <- sum(corContr) / ((nrow(newGrid) - 1) * sd(predx$pred) * sd(predy$pred))
     dat <- rbind(

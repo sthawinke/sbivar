@@ -21,6 +21,7 @@ sbivarSingle(
   featuresY = colnames(Y),
   n_points_grid = 600,
   verbose = TRUE,
+  testSmooth = "trend",
   variogramModels = c("Exp", "Lin"),
   width = cutoff/15,
   cutoff = sqrt(2)/3,

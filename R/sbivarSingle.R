@@ -10,7 +10,7 @@
 #' @param Cx,Ey Corresponding coordinate matrices of dimension two
 #' @param method A character string, indicating which method to apply
 #' @param GPmethod,Quants,numLscAlts,optControl,gpParams,correlation Passed onto \link{fitGP}
-#' @param n_points_grid,families,includeGPsmooth Passed onto \link{GAMsSingle}
+#' @param n_points_grid,families,includeGPsmooth,testSmooth Passed onto \link{GAMsSingle}
 #' @param wo,variogramModels,numNNs,etas,cutoff,width,returnSEsMoransI,findMaxW Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}
 #' @param verbose Should info on type of analysis be printed?
 #' @param normX,normY,pseudoCount Normalization parameters, passed onto \link{normMat}
@@ -33,26 +33,24 @@
 #' @importFrom nlme corGaus lmeControl
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
 #' @seealso \link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle}, \link{GPsSingle}
-sbivarSingle <- function(
-      X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
-      normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
-      etas = c(5e-6, 2e-4, 2e-2), findMaxW = FALSE, returnSEsMoransI = TRUE,
-      families = list("X" = gaussian(), "Y" = gaussian()), featuresX = colnames(X), featuresY = colnames(Y),
-      n_points_grid = 6e2, verbose = TRUE, testSmooth = "trend",
-      variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
-      wo = c("Gauss", "nn"), numNNs = c(4, 8, 24), includeGPsmooth = TRUE,
-      GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 5,
-      optControl = lmeControl(
-          opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
-          niterEM = 1e3, msMaxEval = 1e3
-      ),
-      correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25))
-) {
+sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
+    normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
+    etas = c(5e-6, 2e-4, 2e-2), findMaxW = FALSE, returnSEsMoransI = TRUE,
+    families = list("X" = gaussian(), "Y" = gaussian()), featuresX = colnames(X), featuresY = colnames(Y),
+    n_points_grid = 6e2, verbose = TRUE, testSmooth = c("trend", "field"),
+    variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
+    wo = c("Gauss", "nn"), numNNs = c(4, 8, 24), includeGPsmooth = TRUE,
+    GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 5,
+    optControl = lmeControl(
+        opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
+        niterEM = 1e3, msMaxEval = 1e3
+    ),
+    correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25))) {
     stopifnot(
         is.numeric(n_points_grid), ncol(Cx) == 2, is.numeric(numNNs), all(numNNs > 0),
         all(vapply(families, FUN.VALUE = character(1), function(x) x$link) %in% c("identity", "log", "inverse")),
         all(vapply(families, FUN.VALUE = TRUE, is, "family")), is.list(optControl), !is.null(colnames(X)),
-        !is.null(colnames(Y)),
+        !is.null(colnames(Y)), is.logical(includeGPsmooth),
         inherits(correlation, "corGaus"), is.numeric(etas), all(featuresX %in% colnames(X)),
         all(featuresY %in% colnames(Y)), !anyDuplicated(featuresX), !anyDuplicated(featuresY),
         length(Quants) == 2, is.numeric(Quants), is.logical(verbose), is.logical(findMaxW)
@@ -61,6 +59,7 @@ sbivarSingle <- function(
     variogramModels <- match.arg(variogramModels, several.ok = TRUE)
     normX <- match.arg(normX)
     normY <- match.arg(normY)
+    testSmooth <- match.arg(testSmooth)
     GPmethod <- match.arg(GPmethod)
     foo <- checkInputSingle(X, Y, Cx, Ey)
     colnames(Cx) <- c("x", "y")

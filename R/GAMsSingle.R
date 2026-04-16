@@ -8,12 +8,12 @@
 #' @param n_points_grid The number of points in the new grid for the GAMs to be
 #' evaluated on.
 #' @param includeGPsmooth Should a Gaussian random field smoother for stochastic neighbourhood similarity be included?
+#' @param testSmooth A character string indicating which smooth factor should be tested for,
+#' either "trend" for a deterministic process or "field" for the Gaussian random field
 #' @returns A named list of results
 #' @inheritParams MoransISingle
-GAMsSingle <- function(
-      X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX,
-      featuresY, includeGPsmooth, testSmooth, findVariances = TRUE
-) {
+GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX,
+    featuresY, includeGPsmooth, testSmooth, findVariances = TRUE) {
     if (verbose) {
         message("Fitting GAMs for first modality (", length(featuresX), " features) ...")
     }
@@ -39,8 +39,10 @@ GAMsSingle <- function(
         out <- vapply(selfName(names(gamsy)), FUN.VALUE = double(Nrow), function(featy) {
             testGAM(
                 predx = predx, modely = gamsy[[featy]], modelx = gamsx[[featx]],
-                predy = vcovPredGam(gamsy[[featy]], newdata = ng, findVariances = findVariances,
-                                    testSmooth = testSmooth), findVariances = findVariances
+                predy = vcovPredGam(gamsy[[featy]],
+                    newdata = ng, findVariances = findVariances,
+                    testSmooth = testSmooth
+                ), findVariances = findVariances
             )
         })
         printProgress(featx, featuresX, verbose)

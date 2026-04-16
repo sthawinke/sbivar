@@ -21,7 +21,7 @@ sbivarSingle(
   featuresY = colnames(Y),
   n_points_grid = 600,
   verbose = TRUE,
-  testSmooth = "trend",
+  testSmooth = c("trend", "field"),
   variogramModels = c("Exp", "Lin"),
   width = cutoff/15,
   cutoff = sqrt(2)/3,
@@ -49,7 +49,7 @@ sbivarSingle(
 \item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization.}
 
-\item{n_points_grid, families, includeGPsmooth}{Passed onto \link{GAMsSingle}}
+\item{n_points_grid, families, includeGPsmooth, testSmooth}{Passed onto \link{GAMsSingle}}
 
 \item{verbose}{Should info on type of analysis be printed?}
 

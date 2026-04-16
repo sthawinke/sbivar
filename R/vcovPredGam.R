@@ -15,7 +15,7 @@
 #' @importFrom mgcv vcov.gam predict.gam
 #' @inheritParams MoransISingle
 vcovPredGam <- function(model, newdata, testSmooth, findVariances = TRUE) {
-    # Subset the full coefficient covariance matrix to the smooth factors
+    # Subset the full coefficient covariance matrix to the smooth factors of interest
     idSmooth <- which(vapply(model$smooth, FUN.VALUE = TRUE, function(sm) sm$id == testSmooth))
     idCoefs <- seq(model$smooth[[idSmooth]]$first.para, model$smooth[[idSmooth]]$last.para)
     coef_cov_matrix <- vcov.gam(model, unconditional = TRUE)[idCoefs, idCoefs]

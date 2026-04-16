@@ -37,6 +37,9 @@ while using the whole matrix to calculate library sizes as offset or for normali
 
 \item{includeGPsmooth}{Should a Gaussian random field smoother for stochastic neighbourhood similarity be included?}
 
+\item{testSmooth}{A character string indicating which smooth factor should be tested for,
+either "trend" for a deterministic process or "field" for the Gaussian random field}
+
 \item{findVariances}{Should variances be calculated? For internal use only}
 }
 \value{

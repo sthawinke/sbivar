@@ -35,3 +35,7 @@
 # 0.99.2
 
  - When Gamma fit fails, attempt negative binomial fit
+
+# 0.99.3
+
+ - Include Gaussian random field in GAM fitting to account for stochastic neighbour resemblance

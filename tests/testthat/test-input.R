@@ -4,6 +4,8 @@ test_that("SbivarSingle works for correct input", {
     expect_is(sbiRes, "list")
     sbiResNoGp <- sbivar(X, Y, Cx, Ey, method = "GAMs", includeGPsmooth = FALSE)
     expect_is(sbiResNoGp, "list")
+    sbiResGPtest <- sbivar(X, Y, Cx, Ey, method = "GAMs", testSmooth = "field")
+    expect_is(sbiResGPtest, "list")
     expect_message(sbiResMoran <- sbivar(X, Y, Cx, Ey, method = "Moran's I"))
     expect_message(sbiResMod <- sbivar(X, X, Cx, method = "Modified"))
     expect_true(all(c("pVal", "pAdj") %in% colnames(sbiResMoran$result)))
@@ -17,6 +19,7 @@ test_that("SbivarSingle throws errors for incorrect input", {
     expect_error(sbivar(X, Y, Cx, Ey + 10, method = "GAMs"))
     expect_error(sbivar(X, Y, Cx, method = "GAMs"))
     expect_error(sbivar(X, Y, Cx, Cx, method = "GAMs"))
+    expect_error(sbivar(X, Y, Cx, Ey, method = "GAMs", testSmooth = "all"))
     expect_error(sbivar(X, Y, Cx, Ey,
         method = "GAMs",
         families = list(gaussian(), gaussian())

@@ -20,13 +20,15 @@
 #' @inheritParams GAMsSingle
 #' @importFrom BiocParallel bpparam
 #' @seealso \link{fitLinModels}, \link{MoransIMulti}, \link{correlationsMulti}, \link{GAMsMulti}
-sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
-    method = c("Moran's I", "GAMs", "Correlation"), wo = c("Gauss", "nn"),
-    numNNs = c(4, 8, 24), etas = c(5e-6, 2e-4, 2e-2),
-    normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
-    variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
-    pseudoCount = 1e-8, n_points_grid = 6e2, verbose = TRUE, findVariances = FALSE,
-    findMaxW = TRUE, includeGPsmooth = TRUE) {
+sbivarMulti <- function(
+      Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
+      method = c("Moran's I", "GAMs", "Correlation"), wo = c("Gauss", "nn"),
+      numNNs = c(4, 8, 24), etas = c(5e-6, 2e-4, 2e-2),
+      normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
+      variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
+      pseudoCount = 1e-8, n_points_grid = 6e2, verbose = TRUE, findVariances = FALSE,
+      findMaxW = TRUE, includeGPsmooth = TRUE, testSmooth = "trend"
+) {
     method <- match.arg(method)
     wo <- match.arg(wo)
     normX <- match.arg(normX)
@@ -75,6 +77,7 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" 
         )
     } else if (method == "GAMs") {
         GAMsMulti(Xl, Yl, Cxl, Eyl,
+            testSmooth = testSmooth,
             includeGPsmooth = includeGPsmooth,
             families = families, findVariances = findVariances,
             n_points_grid = n_points_grid, verbose = verbose

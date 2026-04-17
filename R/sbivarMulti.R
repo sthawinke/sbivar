@@ -27,12 +27,13 @@ sbivarMulti <- function(
       normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
       variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
       pseudoCount = 1e-8, n_points_grid = 6e2, verbose = TRUE, findVariances = FALSE,
-      findMaxW = TRUE, includeGPsmooth = TRUE, testSmooth = "trend"
+      findMaxW = TRUE, includeGPsmooth = TRUE, testSmooth = c("trend", "field")
 ) {
     method <- match.arg(method)
     wo <- match.arg(wo)
     normX <- match.arg(normX)
     normY <- match.arg(normY)
+    testSmooth <- match.arg(testSmooth)
     stopifnot(
         is.numeric(numNNs), all(numNNs > 0), is.numeric(etas), is.numeric(n_points_grid), is.logical(verbose),
         is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family"))

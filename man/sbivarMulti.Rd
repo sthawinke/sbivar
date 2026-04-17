@@ -25,7 +25,7 @@ sbivarMulti(
   findVariances = FALSE,
   findMaxW = TRUE,
   includeGPsmooth = TRUE,
-  testSmooth = "trend"
+  testSmooth = c("trend", "field")
 )
 }
 \arguments{

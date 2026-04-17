@@ -53,6 +53,9 @@ evaluated on.}
 
 \item{includeGPsmooth}{Should a Gaussian random field smoother for stochastic neighbourhood similarity be included?}
 
+\item{smooth}{Which smooth to plot, either "trend" for the deterministic surface,
+or "field" for the Gaussian random field}
+
 \item{...}{passed onto \link{fitGAM}}
 
 \item{results}{Result of a call to \link{sbivar} (single-image) or to

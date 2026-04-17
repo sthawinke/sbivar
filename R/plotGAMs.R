@@ -19,6 +19,8 @@
 #' @param features The features to plot
 #' @param results Result of a call to \link{sbivar} (single-image) or to
 #' \link{fitLinModels} (multi-image)
+#' @param smooth Which smooth to plot, either "trend" for the deterministic surface,
+#' or "field" for the Gaussian random field
 #' @param ... passed onto \link{fitGAM}
 #'
 #' @returns A ggplot object

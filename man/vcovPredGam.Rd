@@ -11,6 +11,9 @@ vcovPredGam(model, newdata, testSmooth, findVariances = TRUE)
 
 \item{newdata}{The grid on which new predictions are made}
 
+\item{testSmooth}{A character string indicating which smooth factor should be tested for,
+either "trend" for a deterministic process or "field" for the Gaussian random field}
+
 \item{findVariances}{Should variances be calculated? For internal use only}
 }
 \value{

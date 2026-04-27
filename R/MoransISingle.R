@@ -178,7 +178,7 @@ matheronVariograms <- function(X, Cx, width, cutoff, variogramModels) {
 #' @returns A vector of covariances
 evalVariogram <- function(vg, distVec) {
     covMat <- vg[2, "psill"] * if (vg[2, "model"] == "Exp") {
-        exp(-distVec / vg[2, "range"])
+        exp(-(distVec / vg[2, "range"]))
     } else if (vg[2, "model"] == "Lin") {
         tmp <- numeric(length(distVec))
         id <- distVec < vg[2, "range"]

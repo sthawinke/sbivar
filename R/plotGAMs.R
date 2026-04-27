@@ -35,7 +35,7 @@
 #' data(Vicari)
 #' plotGAMs(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
 #'     Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
-#'     features = c("Gm42418", "X576.20502")
+#'     features = c("mt.Co1", "X288.1186")
 #' )
 #' @import ggplot2
 #' @order 1

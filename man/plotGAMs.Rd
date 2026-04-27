@@ -90,6 +90,6 @@ plotGAMsTopResults(resGAMs, X, Y, Cx = Cx, Ey = Ey)
 data(Vicari)
 plotGAMs(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
     Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
-    features = c("Gm42418", "X576.20502")
+    features = c("mt.Co1", "X288.1186")
 )
 }

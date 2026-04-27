@@ -102,7 +102,7 @@ data(Vicari)
 names(Vicari)
 ```
 
-This object consists of four lists of length six: _TranscriptCoords_ and _MetaboliteCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. Only the 10 most abundant features per modality are included in the package. The _sbivar_ package assumes that the data have been pre-aligned, hence it is always a good idea to check the alignment visually:
+This object consists of four lists of length six: _TranscriptCoords_ and _MetaboliteCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. Only the 5 most abundant features per modality are included in the package. The _sbivar_ package assumes that the data have been pre-aligned, hence it is always a good idea to check the alignment visually:
 
 ```{r plotcoordsVicari, fig.height = 7}
 par(mfrow = c(2, 3))

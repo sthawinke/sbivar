@@ -4,3 +4,5 @@
 ^README_files
 ^doc$
 ^Meta$
+^\.positai$
+^\.claude$

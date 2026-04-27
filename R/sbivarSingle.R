@@ -7,7 +7,7 @@
 #' If true, a joint analysis is run, with a warning.
 #'
 #' @param X,Y Matrices of omics measurements
-#' @param Cx,Ey Corresponding coordinate matrices of dimension two
+#' @param Cx,Ey Coordinate matrices of dimension two, belonging to X and Y respectively
 #' @param method A character string, indicating which method to apply
 #' @param GPmethod,Quants,numLscAlts,optControl,gpParams,correlation Passed onto \link{fitGP}
 #' @param n_points_grid,families,includeGPsmooth,testSmooth Passed onto \link{GAMsSingle}

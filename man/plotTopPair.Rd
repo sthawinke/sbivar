@@ -71,7 +71,7 @@ The default is the intercept, i.e. the overall effect.}
 
 \item{Y}{Matrix or SpatialExperiment object of second modality}
 
-\item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
+\item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y respectively}
 
 \item{features}{Feature vector of length 2 to be plotted}
 

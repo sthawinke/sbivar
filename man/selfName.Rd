@@ -7,10 +7,10 @@
 selfName(x)
 }
 \arguments{
-\item{x}{The vector to be names}
+\item{x}{The vector to be named}
 }
 \value{
-the named vector
+The named vector
 }
 \description{
 Name a character vector after itself

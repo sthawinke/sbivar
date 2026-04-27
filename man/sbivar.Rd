@@ -25,7 +25,7 @@ sbivar(X, ...)
 
 \item{Y}{Matrix or SpatialExperiment object of second modality}
 
-\item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
+\item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y respectively}
 
 \item{assayX, assayY}{Assay names to be used in the analysis,
 see \link[SummarizedExperiment]{assay}}

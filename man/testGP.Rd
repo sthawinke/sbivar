@@ -9,7 +9,7 @@ testGP(x, y, Cx, Ey, altSigmas, distMat, solXonly, solYonly, sx)
 \arguments{
 \item{x, y}{outcome vectors}
 
-\item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
+\item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y respectively}
 
 \item{altSigmas}{A prepared series of bivariate association matrices}
 

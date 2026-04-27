@@ -10,7 +10,7 @@ plotCoords(Cx, Ey, pchX = 1, pchY = 3, cex = 0.8, ...)
 plotCoordsMulti(Cxl, Eyl, ...)
 }
 \arguments{
-\item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
+\item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y respectively}
 
 \item{pchX, pchY}{Point shapes for x and y}
 

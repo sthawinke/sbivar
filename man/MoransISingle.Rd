@@ -27,7 +27,7 @@ MoransISingle(
 \arguments{
 \item{X, Y}{Matrices of omics measurements}
 
-\item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
+\item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y respectively}
 
 \item{wo}{type of weight parameter, passed onto \link{buildWeightMat}}
 

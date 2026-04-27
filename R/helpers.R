@@ -1,6 +1,6 @@
 #' Name a character vector after itself
-#' @param x The vector to be names
-#' @return the named vector
+#' @param x The vector to be named
+#' @return The named vector
 #' @export
 #' @examples
 #' selfName(LETTERS[1:5])

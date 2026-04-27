@@ -40,7 +40,7 @@ sbivarSingle(
 \arguments{
 \item{X, Y}{Matrices of omics measurements}
 
-\item{Cx, Ey}{Corresponding coordinate matrices of dimension two}
+\item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y respectively}
 
 \item{method}{A character string, indicating which method to apply}
 

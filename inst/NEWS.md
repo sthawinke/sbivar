@@ -39,3 +39,8 @@
 # 0.99.3
 
  - Include Gaussian random field in GAM fitting to account for stochastic neighbour resemblance
+
+# 0.99.4
+
+ - Fix bugs in testGAM
+ - Update Github readme

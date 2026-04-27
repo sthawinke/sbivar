@@ -21,7 +21,7 @@ Normalize to relative expression, and potentially add pseudocount and log-normal
 }
 \details{
 norm = "none" is pass-through, norm = "rel" divides by sample sums,
-"log" adds a pseudocount, divides by sample sums and log-normalizes. At the end, dimnames are added.
+"log" adds a pseudocount, divides by sample sums and log-normalizes.
 }
 \examples{
 mat <- matrix(rpois(2000, lambda = 3), 40, 50)

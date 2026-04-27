@@ -31,7 +31,7 @@ from a call to the \link{sbivar} function with multiple images}
 
 \item{inverseWeigh}{A boolean, should estimates be inverse weighed by variance for GAMs and Moran's I?}
 
-\item{scaleByMax}{A boolean, should Moran's I be scaled by maximum values before plugging into the linear model}
+\item{scaleByMax}{A boolean, should Moran's I be scaled by maximum values before plugging into the linear model?}
 
 \item{Control}{A control list for lmerTest::lmer}
 
@@ -62,8 +62,7 @@ data(Vicari)
 VicariMultiTest <- lapply(Vicari, function(x) lapply(x[1:5], function(y) y[1:500, ]))
 VicariRes <- sbivar(VicariMultiTest$TranscriptOutcomes, VicariMultiTest$MetaboliteOutcomes,
     VicariMultiTest$TranscriptCoords, VicariMultiTest$MetaboliteCoords,
-    normX = "rel", normY = "rel",
-    method = "GAM"
+    normX = "rel", normY = "rel", method = "GAM"
 )
 mouse <- substr(names(Vicari$TranscriptOutcomes)[1:5], 1, 10)
 designDf <- data.frame("mouse" = mouse) # The design matrix

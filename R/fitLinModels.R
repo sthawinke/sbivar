@@ -10,7 +10,7 @@
 #' @param Formula A formula for the linear model to be fitted, can contain random effects.
 #' @param Control A control list for lmerTest::lmer
 #' @param inverseWeigh A boolean, should estimates be inverse weighed by variance for GAMs and Moran's I?
-#' @param scaleByMax A boolean, should Moran's I be scaled by maximum values before plugging into the linear model
+#' @param scaleByMax A boolean, should Moran's I be scaled by maximum values before plugging into the linear model?
 #' @param verbose Should a message with number of linear models and cores be printed?
 #' @returns For fitLinModels(), a list of linear models
 #' @export
@@ -24,8 +24,7 @@
 #' VicariMultiTest <- lapply(Vicari, function(x) lapply(x[1:5], function(y) y[1:500, ]))
 #' VicariRes <- sbivar(VicariMultiTest$TranscriptOutcomes, VicariMultiTest$MetaboliteOutcomes,
 #'     VicariMultiTest$TranscriptCoords, VicariMultiTest$MetaboliteCoords,
-#'     normX = "rel", normY = "rel",
-#'     method = "GAM"
+#'     normX = "rel", normY = "rel", method = "GAM"
 #' )
 #' mouse <- substr(names(Vicari$TranscriptOutcomes)[1:5], 1, 10)
 #' designDf <- data.frame("mouse" = mouse) # The design matrix

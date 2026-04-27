@@ -30,11 +30,11 @@ As example dataset, we use the one by [Vicari et al. (2024)](https://doi.org/10.
 data(Vicari)
 ```
 
-This object consists of four lists of length six: _MetaboliteCoords_ and _TranscriptCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. A first sanity check is to look at the alignment of the coordinates:
+This object consists of four lists of length six: _MetaboliteCoords_ and _TranscriptCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. Have a look at the aligned coordinates:
 
 ```{r plotvicari, fig.width = 8.5}
 par(mfrow = c(2, 3))
-plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.2)
+plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.1)
 par(mfrow = c(1, 1))
 ```
 
@@ -52,7 +52,7 @@ singleMet <- Vicari$MetaboliteOutcomes[[singleSample]]
 
 Now analyse this single sample using bivariate Moran's I.
 
-```{r multithread, eval = FALSE}
+```{r multithread}
 library(BiocParallel)
 register(MulticoreParam(2))
 ```

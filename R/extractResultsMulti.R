@@ -96,7 +96,9 @@ extractResultsMulti <- function(result, designDf, method = "BH") {
         }
     })
     fixResOut <- lapply(selfName(names(outout[[1]])), function(ii) {
-        tmpMat <- t(vapply(outout, FUN.VALUE = outout[[1]][[ii]], function(x) x[[ii]]))
+        tmpMat <- t(vapply(outout, FUN.VALUE = outout[[1]][[ii]], function(x) {
+            if(is.null(x[[ii]])) c("Estimate" = NA, "SE" = NA, "pVal" = NA) else x[[ii]]
+            }))
         tmpMat <- tmpMat[order(tmpMat[, "pVal"]), ]
         cbind(tmpMat, "pAdj" = p.adjust(tmpMat[, "pVal"], method = method))
     })

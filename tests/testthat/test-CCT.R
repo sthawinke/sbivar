@@ -6,6 +6,6 @@ test_that("Cauchy combination rule works as expected", {
     expect_true((cctP <= 1) && (cctP >= 0))
     expect_warning(CCT(c(1, pVals)))
     expect_is(c(cctP, 1e-20), "numeric")
-    expect_equal(c(NA, 0.1,0,2), 1)
-    expect_equal(c(0, 0.1,0,2), 0)
+    expect_equal(CCT(c(NA, 0.1,0.2)), 1)
+    expect_equal(CCT(c(0, 0.1,0.2)), 0)
 })

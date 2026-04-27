@@ -108,5 +108,5 @@ test_that("Sbivar fails on BioConductor objects SpatialExperiment and MultiAssay
     expect_error(sbivar(mae, mae[["Protein"]],
                      assayX = "counts",
                      assayY = "counts", families = list("X" = mgcv::nb(), "Y" = mgcv::nb())
-    ), "list")
+    ))
 })

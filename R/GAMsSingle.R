@@ -12,8 +12,10 @@
 #' either "trend" for a deterministic process or "field" for the Gaussian random field
 #' @returns A named list of results
 #' @inheritParams MoransISingle
-GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX,
-    featuresY, includeGPsmooth, testSmooth, findVariances = TRUE) {
+GAMsSingle <- function(
+      X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX,
+      featuresY, includeGPsmooth, testSmooth, findVariances = TRUE
+) {
     if (verbose) {
         message("Fitting GAMs for first modality (", length(featuresX), " features) ...")
     }

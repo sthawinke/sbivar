@@ -12,7 +12,7 @@ framework as obtained from alignment is considered given.
 The package can be installed from GitHub as follows:
 
 ``` r
-devtools::install_github("sthawinke/sbivar", build_vignettes = TRUE)
+remotes::install_github("sthawinke/sbivar", build_vignettes = TRUE)
 ```
 
 Once installed, you can load the package
@@ -33,12 +33,12 @@ data(Vicari)
 
 This object consists of four lists of length six: *MetaboliteCoords* and
 *TranscriptCoords* for the coordinates, and *TranscriptOutcomes* and
-*MetaboliteOutcomes* for the feature measurements. A first sanity check
-is to look at the alignment of the coordinates:
+*MetaboliteOutcomes* for the feature measurements. Have a look at the
+aligned coordinates:
 
 ``` r
 par(mfrow = c(2, 3))
-plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.2)
+plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.1)
 ```
 
 ![](README_files/figure-gfm/plotvicari-1.png)<!-- -->
@@ -74,7 +74,7 @@ moranRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
 )
 ```
 
-    ## Starting sbivar analysis of a single image on 10 computing cores
+    ## Starting sbivar analysis of a single image on 2 computing cores
 
     ## Testing significance of bivariate Moran's I for 100 feature pairs
 
@@ -164,7 +164,7 @@ multiGAMRes <- sbivar(
 )
 ```
 
-    ## Starting sbivar analysis (GAMs) of 6 images on 10 computing cores
+    ## Starting sbivar analysis (GAMs) of 6 images on 2 computing cores
 
     ## Image 1 of 6
 
@@ -186,7 +186,7 @@ design <- data.frame("mouse" = mouse)
 multiGAMLmms <- fitLinModels(multiGAMRes, design, Formula = ~ (1 | mouse))
 ```
 
-    ## Fitting 100 mixed effects models on 10 cores
+    ## Fitting 100 mixed effects models on 2 cores
 
 Extract the results for the desired parameter (the intercept)
 
@@ -195,13 +195,13 @@ multiGAMLmmsRes <- extractResultsMulti(multiGAMLmms, design)
 head(multiGAMLmmsRes$result$Intercept)
 ```
 
-    ##                       Estimate         SE        pVal      pAdj
-    ## Fth1__X426.13386    -0.4933606 0.08125198 0.001750079 0.1750079
-    ## mt.Atp6__X426.13386  0.3744655 0.08421578 0.006724141 0.3362071
-    ## Fth1__X523.19829    -0.3106654 0.09923639 0.025941054 0.6898147
-    ## Fth1__X573.21671     0.3320684 0.12996033 0.050945903 0.6898147
-    ## Gm42418__X555.20345  0.1925448 0.07737820 0.055272014 0.6898147
-    ## mt.Co1__X573.21671  -0.3337184 0.13590704 0.057546663 0.6898147
+    ##                         Estimate          SE       pVal      pAdj
+    ## mt.Nd2__X576.20502   0.113286238 0.041491150 0.04126204 0.9014878
+    ## Fth1__X555.20713    -0.004059947 0.001738176 0.06673187 0.9014878
+    ## mt.Nd4__X573.21671   0.064716265 0.032712328 0.10479963 0.9014878
+    ## mt.Nd2__X524.20138  -0.142992590 0.080147167 0.13447853 0.9014878
+    ## mt.Nd4__X576.20502   0.130552292 0.078507055 0.15721191 0.9014878
+    ## mt.Cytb__X523.19829 -0.167542935 0.108243039 0.18233800 0.9014878
 
 No features are significantly associated after multiplicity correction.
 For illustration, we plot the feature pair with the smallest p-values

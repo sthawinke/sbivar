@@ -63,8 +63,6 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
     GPmethod <- match.arg(GPmethod)
     foo <- checkInputSingle(X, Y, Cx, Ey)
     colnames(Cx) <- c("x", "y")
-    colnames(X) <- make.names(colnames(X))
-    colnames(Y) <- make.names(colnames(Y))
     X <- normMat(X, normX, pseudoCount)
     Y <- normMat(Y, normY, pseudoCount)
     Cx <- Cx[rownames(X), ] # Match coordinates to observations through rownames

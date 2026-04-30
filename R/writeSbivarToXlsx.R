@@ -60,14 +60,14 @@ writeSbivarToXlsx <- function(results, file, overwrite = FALSE, digits = 3,
             for (i in c("pVal", "pAdj")) {
                 mat[, i] <- signif(mat[, i], digits)
             }
-            for (i in setdiff(colnames(mat), c("pVal", "pAdj"))) {
+            for (i in setdiff(colnames(mat), c("pVal", "pAdj", "Modality_X", "Modality_Y"))) {
                 mat[, i] <- round(mat[, i], digits)
             }
             sheetName <- if (nam == "Intercept") "Baseline" else nam
             addWorksheet(wb, sheetName) # Create sheet and write data to it
             writeData(wb,
                 sheet = sheetName, x = data.frame(mat), colNames = TRUE,
-                rowNames = TRUE
+                rowNames = FALSE
             )
         }
     }

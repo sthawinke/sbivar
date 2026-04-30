@@ -92,7 +92,7 @@ scaleHelpFun <- function(X, feat) {
         rep(NA, nrow(X))
     }
 }
-#' Normalize a data matrix
+#' Normalize a data matrix, and ensure correct column names
 #'
 #' Normalize to relative expression, and potentially add pseudocount and log-normalize.
 #' @param x The matrix
@@ -122,6 +122,7 @@ normMat <- function(x, norm, pseudoCount = 1e-8) {
         }
         dimnames(out) <- dn
     }
+    colnames(out) <- make.names(colnames(out))
     return(out)
 }
 #' Split a string

@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers.R
 \name{normMat}
 \alias{normMat}
-\title{Normalize a data matrix}
+\title{Normalize a data matrix, and ensure correct column names}
 \usage{
 normMat(x, norm, pseudoCount = 1e-08)
 }

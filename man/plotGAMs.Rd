@@ -15,6 +15,8 @@ plotGAMs(
   scaleFun = "scaleMinusOne",
   families = list(X = gaussian(), Y = gaussian()),
   addTitle = TRUE,
+  normX = c("none", "rel", "log"),
+  normY = c("none", "rel", "log"),
   n_points_grid = 600,
   includeGPsmooth = TRUE,
   smooth = "trend",
@@ -47,6 +49,9 @@ plotGAMsTopResults(
 for the outcome values. See details of \link{sbivarSingle}.}
 
 \item{addTitle}{A boolean, should a title be plotted}
+
+\item{normX, normY}{Character strings, indicating what normalization is required
+for X and Y matrices, respectively, before plotting, see details.}
 
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.}

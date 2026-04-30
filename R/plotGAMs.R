@@ -39,14 +39,18 @@
 #' )
 #' @import ggplot2
 #' @order 1
-plotGAMs <- function(X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scaleMinusOne",
-    families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE,
-    n_points_grid = 6e2, includeGPsmooth = TRUE, smooth = "trend", ...) {
+plotGAMs <- function(
+      X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scaleMinusOne",
+      families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE, normX = c("none", "rel", "log"),
+      normY = c("none", "rel", "log"), n_points_grid = 6e2, includeGPsmooth = TRUE, smooth = "trend", ...
+) {
     stopifnot(
         is.numeric(n_points_grid), all(vapply(families, FUN.VALUE = TRUE, is, "family")),
         all(vapply(features, FUN.VALUE = TRUE, is.character))
     )
     features <- make.names(features)
+    normX <- match.arg(normX)
+    normY <- match.arg(normY)
     scaleFun <- get(as.character(scaleFun), mode = "function", getNamespace("sbivar"))
     gamDf <- if (multi <- is.list(X)) {
         foo <- checkInputMulti(X, Y, Cx, Ey)
@@ -54,6 +58,7 @@ plotGAMs <- function(X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scale
             df <- buildGamDf(
                 X[[nam]], Y[[nam]], Cx[[nam]], Ey[[nam]], n_points_grid,
                 families, features, scaleFun,
+                normX = normX, normY = normY,
                 includeGPsmooth = includeGPsmooth, smooth = smooth
             )$df
             df$image <- nam
@@ -63,7 +68,7 @@ plotGAMs <- function(X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scale
     } else {
         foo <- checkInputSingle(X, Y, Cx, Ey)
         df <- buildGamDf(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun,
-            includeGPsmooth = includeGPsmooth, smooth = smooth
+            normX = normX, normY = normY, includeGPsmooth = includeGPsmooth, smooth = smooth
         )
         corEst <- df$corEst
         df$df
@@ -91,10 +96,8 @@ plotGAMs <- function(X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scale
 #' @rdname plotGAMs
 #' @order 2
 #' @inheritParams plotTopPair
-plotGAMsTopResults <- function(
-      results, X, Y, Cx, Ey, topRank = 1,
-      parameter = "Intercept", ...
-) {
+plotGAMsTopResults <- function(results, X, Y, Cx, Ey, topRank = 1,
+    parameter = "Intercept", ...) {
     stopifnot(is.numeric(topRank))
     topFeats <- (
         if (results$multi) {
@@ -108,7 +111,7 @@ plotGAMsTopResults <- function(
     Y <- getX(Y, results$assayY)
     plotGAMs(
         X = X, Y = Y, features = topFeats, Cx = Cx, Ey = Ey,
-        multi = results$multi, ...
+        multi = results$multi, normX = results$normX, normY = results$normY, ...
     )
 }
 #' Make a list of offsets
@@ -126,7 +129,7 @@ makeOffset <- function(X, family) {
     }
     return(out)
 }
-buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun, smooth, ...) {
+buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun, smooth, normX, normY, ...) {
     if (families[["X"]]$family != "gaussian") {
         X <- X[idX <- (rowSums(X) > 0), ]
         Cx <- Cx[idX, ]
@@ -135,8 +138,8 @@ buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun
         Y <- Y[idY <- (rowSums(Y) > 0), ]
         Ey <- Ey[idY, ]
     }
-    colnames(X) <- make.names(colnames(X))
-    colnames(Y) <- make.names(colnames(Y))
+    X <- normMat(X, normX)
+    Y <- normMat(Y, normY)
     colnames(Cx) <- colnames(Ey) <- c("x", "y")
     newGrid <- buildNewGrid(Cx = Cx, Ey = Ey, n_points_grid = n_points_grid)
     modelx <- fitGAM(

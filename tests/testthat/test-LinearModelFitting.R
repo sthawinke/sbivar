@@ -27,7 +27,7 @@ test_that("fitLinModels works for GAM input", {
         names(resGams <- extractResultsMulti(multiFitGams, designDf = toyDesign)$result),
         c("Intercept", "covariate", "cofactor")
     )
-    expect_identical(colnames(resGams$Intercept), c("Estimate", "SE", "pVal", "pAdj"))
+    expect_identical(colnames(resGams$Intercept), c("Modality_X", "Modality_Y", "Estimate", "SE", "pVal", "pAdj"))
     expect_warning(
         resGams3 <- extractResultsMulti(multiFitGams3)$result,
     )

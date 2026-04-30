@@ -149,7 +149,7 @@ plotTopPair(moransIRes,
 
 We see a clear negative relationship.
 
-In addition, we employ generalized additive models (GAMs), with a negative binomial outcome distribution for the transcriptome data, and a gamma outcome distribution for the metabolome data. A log-link is used in both cases.
+In addition, we employ generalized additive models (GAMs), with a negative binomial outcome distribution for the transcriptome data, and a gamma outcome distribution for the metabolome data. A log-link is used in both cases. For non-normal data, such as spatial transcriptomics and metabolomics data, this approach is usually preferable to the bivariate Moran's I, as this latter one fails to account for heteroskedasticity,
 
 ```{r fitgam}
 FamiliesVicari <- list("X" = mgcv::nb(), "Y" = Gamma(lin = "log"))

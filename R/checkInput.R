@@ -27,6 +27,9 @@ checkInputSingle <- function(X, Y, Cx, Ey) {
     if (is.null(rownames(Y))) {
         stop("Feature matrix Y lacks row names!")
     }
+    if (!identical(sort(rownames(X)), sort(rownames(Cx)))) {
+        stop("Rownames of X and Cx do not match")
+    }
     if (missing(Ey)) {
         if (n != m) {
             stop("Only one coordinate matrix Cx supplied, and dimensions of X and Y do not match.
@@ -49,9 +52,6 @@ checkInputSingle <- function(X, Y, Cx, Ey) {
     if (findDoubleUnderScore(c(colnames(X), colnames(Y)))) {
         stop("Double underscores found in feature names. Please change the names,
              as the double underscore is used in this package to separate feature pairs!")
-    }
-    if (!identical(sort(rownames(X)), sort(rownames(Cx)))) {
-        stop("Rownames of X and Cx do not match")
     }
 }
 checkInputMulti <- function(Xl, Yl, Cxl, Eyl, checkCoords = TRUE) {

@@ -39,11 +39,9 @@
 #' )
 #' @import ggplot2
 #' @order 1
-plotGAMs <- function(
-      X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scaleMinusOne",
-      families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE,
-      n_points_grid = 6e2, includeGPsmooth = TRUE, smooth = "trend", ...
-) {
+plotGAMs <- function(X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scaleMinusOne",
+    families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE,
+    n_points_grid = 6e2, includeGPsmooth = TRUE, smooth = "trend", ...) {
     stopifnot(
         is.numeric(n_points_grid), all(vapply(families, FUN.VALUE = TRUE, is, "family")),
         all(vapply(features, FUN.VALUE = TRUE, is.character))
@@ -64,8 +62,6 @@ plotGAMs <- function(
         Reduce(gamDfs, f = rbind)
     } else {
         foo <- checkInputSingle(X, Y, Cx, Ey)
-        colnames(X) <- make.names(colnames(X))
-        colnames(Y) <- make.names(colnames(Y))
         df <- buildGamDf(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun,
             includeGPsmooth = includeGPsmooth, smooth = smooth
         )
@@ -95,16 +91,17 @@ plotGAMs <- function(
 #' @rdname plotGAMs
 #' @order 2
 #' @inheritParams plotTopPair
-plotGAMsTopResults <- function(results, X, Y, Cx, Ey, topRank = 1,
-    parameter = "Intercept", ...) {
+plotGAMsTopResults <- function(
+      results, X, Y, Cx, Ey, topRank = 1,
+      parameter = "Intercept", ...
+) {
     stopifnot(is.numeric(topRank))
     topFeats <- (
         if (results$multi) {
             results$result[[parameter]]
         } else {
             results$result
-        }
-    )[topRank,  c("Modality_X", "Modality_Y")]
+        })[topRank, c("Modality_X", "Modality_Y")]
     Cx <- getSpatialCoords(X, Cx)
     X <- getX(X, results$assayX)
     Ey <- getSpatialCoords(Y, Ey)
@@ -138,6 +135,8 @@ buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun
         Y <- Y[idY <- (rowSums(Y) > 0), ]
         Ey <- Ey[idY, ]
     }
+    colnames(X) <- make.names(colnames(X))
+    colnames(Y) <- make.names(colnames(Y))
     colnames(Cx) <- colnames(Ey) <- c("x", "y")
     newGrid <- buildNewGrid(Cx = Cx, Ey = Ey, n_points_grid = n_points_grid)
     modelx <- fitGAM(

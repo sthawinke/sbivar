@@ -66,8 +66,8 @@ m <- 1e2
 p <- 4
 k <- 3
 rna_counts <- matrix(rpois(n * p, lambda = 5),
-                     nrow = p, ncol = n,
-                     dimnames = list(paste0("rnaSpot", seq_len(p)), paste0("Gene", seq_len(n)))
+    nrow = p, ncol = n,
+    dimnames = list(paste0("rnaSpot", seq_len(p)), paste0("Gene", seq_len(n)))
 )
 rna_coords <- cbind("x" = runif(n, 0, 1), "y" = runif(n, 0, 1))
 rownames(rna_coords) <- colnames(rna_counts)
@@ -77,8 +77,8 @@ spe_rna <- SpatialExperiment(
 )
 # --- Protein data ---
 prot_counts <- matrix(rpois(m * k, lambda = 10),
-                      nrow = k, ncol = m,
-                      dimnames = list(paste0("protSpot", seq_len(k)), paste0("Protein", seq_len(m)))
+    nrow = k, ncol = m,
+    dimnames = list(paste0("protSpot", seq_len(k)), paste0("Protein", seq_len(m)))
 )
 prot_coords <- cbind("x" = runif(m, 0, 1), "y" = runif(m, 0, 1))
 rownames(prot_coords) <- colnames(prot_counts)
@@ -101,12 +101,12 @@ test_that("Sbivar works on BioConductor objects SpatialExperiment and MultiAssay
 })
 test_that("Sbivar fails on BioConductor objects SpatialExperiment and MultiAssayExperiment where appropriate", {
     expect_error(sbivar(mae,
-                     experimentX = "RNA", experimentY = "Protein", assayX = "counts",
-                     families = list("X" = mgcv::nb(), "Y" = mgcv::nb())
+        experimentX = "RNA", experimentY = "Protein", assayX = "counts",
+        families = list("X" = mgcv::nb(), "Y" = mgcv::nb())
     ))
     # Provide separate SpatialExperiment objects
     expect_error(sbivar(mae, mae[["Protein"]],
-                     assayX = "counts",
-                     assayY = "counts", families = list("X" = mgcv::nb(), "Y" = mgcv::nb())
+        assayX = "counts",
+        assayY = "counts", families = list("X" = mgcv::nb(), "Y" = mgcv::nb())
     ))
 })

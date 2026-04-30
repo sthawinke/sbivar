@@ -43,10 +43,8 @@
 #'     Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
 #'     normX = "log", normY = "log", features = c("mt.Nd2", "X555.20713")
 #' )
-plotTopPair <- function(
-      results, ..., normX = results$normX, normY = results$normY,
-      topRank = 1, parameter = "Intercept"
-) {
+plotTopPair <- function(results, ..., normX = results$normX, normY = results$normY,
+    topRank = 1, parameter = "Intercept") {
     stopifnot(is.numeric(topRank))
     if (!results$multi) {
         topFeats <- results$result[topRank, c("Modality_X", "Modality_Y")]
@@ -114,8 +112,10 @@ plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "
 #' @rdname plotTopPair
 #' @export
 #' @order 2
-plotPairSingle <- function(X, Y, Cx, Ey, features, normX = c("none", "rel", "log"),
-    normY = c("none", "rel", "log"), assayX, assayY, ...) {
+plotPairSingle <- function(
+      X, Y, Cx, Ey, features, normX = c("none", "rel", "log"),
+      normY = c("none", "rel", "log"), assayX, assayY, ...
+) {
     stopifnot(length(features) == 2)
     if (inherits(X, "SpatialExperiment")) {
         Cx <- SpatialExperiment::spatialCoords(X)
@@ -126,8 +126,6 @@ plotPairSingle <- function(X, Y, Cx, Ey, features, normX = c("none", "rel", "log
         Y <- assayT(Y, assayY)
     }
     features <- make.names(features)
-    colnames(X) <- make.names(colnames(X))
-    colnames(Y) <- make.names(colnames(Y))
     foo <- checkInputSingle(X, Y, Cx, Ey)
     normX <- match.arg(normX)
     normY <- match.arg(normY)

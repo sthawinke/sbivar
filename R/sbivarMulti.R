@@ -87,7 +87,7 @@ sbivarMulti <- function(
         correlationsMulti(Xl, Yl, verbose = verbose)
     }
     out <- list(
-        "estimates" = out, "method" = method, "multi" = TRUE,
+        "estimates" = addFeatureColumn(out), "method" = method, "multi" = TRUE,
         "normX" = normX, "normY" = normY
     )
     if (method == "GAMs") {

@@ -254,3 +254,13 @@ printProgress <- function(feat, allFeats, verbose) {
         }
     }
 }
+#' Add columns with feature names, and remove rownames
+#'
+#' @param x A results matrix
+#'
+#' @returns The matrix extended with two columns of feature names in front
+addFeatureColumn <- function(x){
+    featureMet <- t(vapply(rownames(x), FUN.VALUE = character(2), sund))
+    dimnames(featureMet) <- list(NULL, c("feature_modalityX", "feature_modalityY"))
+    cbind(featureMet, x)
+}

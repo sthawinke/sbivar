@@ -139,7 +139,7 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
             Cx = Cx[sharedNames, ], verbose = verbose
         )
     }
-    out <- cbind(out, "pAdj" = p.adjust(out[, "pVal"], method = "BH"))
+    out <- cbind(addFeatureColumn(out), "pAdj" = p.adjust(out[, "pVal"], method = "BH"))
     result <- out[order(out[, "pVal"]), ]
     lis <- list(
         "result" = result, "method" = method,

@@ -5,19 +5,15 @@
 \title{Scale to [0,1] range}
 \usage{
 scaleZeroOne(y, na.rm = TRUE)
-
-scaleZeroOne(y, na.rm = TRUE)
 }
 \arguments{
-\item{y}{The variable to scale}
+\item{y}{The vector to be scaled}
 
-\item{na.rm}{Should NA values be removed}
+\item{na.rm}{passed onto \link[base]{min} and \link[base]{range}}
 }
 \value{
 The scaled vector
-
-scaled variable
 }
 \description{
-Scale variables to comparable ranges for plotting reasons
+Scale to [0,1] range
 }

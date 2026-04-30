@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers.R
 \name{addFeatureColumn}
 \alias{addFeatureColumn}
-\title{Add columns with feature names, and remove rownames}
+\title{Add columns with feature names to a matrix by splitting rownames, and remove rownames}
 \usage{
 addFeatureColumn(x)
 }
@@ -13,5 +13,5 @@ addFeatureColumn(x)
 The matrix extended with two columns of feature names in front
 }
 \description{
-Add columns with feature names, and remove rownames
+Add columns with feature names to a matrix by splitting rownames, and remove rownames
 }

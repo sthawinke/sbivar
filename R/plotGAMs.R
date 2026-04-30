@@ -96,13 +96,13 @@ plotGAMs <- function(
 plotGAMsTopResults <- function(results, X, Y, Cx, Ey, topRank = 1,
     parameter = "Intercept", ...) {
     stopifnot(is.numeric(topRank))
-    topFeats <- sund(rownames(
+    topFeats <- (
         if (results$multi) {
             results$result[[parameter]]
         } else {
             results$result
         }
-    )[topRank])
+    )[topRank,  c("Modality_X", "Modality_Y")]
     Cx <- getSpatialCoords(X, Cx)
     X <- getX(X, results$assayX)
     Ey <- getSpatialCoords(Y, Ey)

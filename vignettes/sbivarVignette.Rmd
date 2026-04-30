@@ -67,11 +67,11 @@ All the user needs to do, is choose the number of cores:
 nCores <- 2 # The number of CPUs
 ```
 
-and prepare the parallel backend. The code is different for windows or unix-based systems, but is taken care of by the following code snippet:
+and prepare the parallel backend. The code is different for windows or unix-based systems (linux and macOS), but is taken care of by the following code snippet:
 
 ```{r nonwindows}
 if (.Platform$OS.type == "unix") {
-    # On unix-based systems, use MulticoreParam
+    # On unix-based systems (linux and macOS), use MulticoreParam
     register(MulticoreParam(nCores))
 } else {
     # On windows, use makeCluster
@@ -89,7 +89,7 @@ For serial calculations, for instance if memory is limiting, choose instead
 register(SerialParam())
 ```
 
-Furthermore, it is highly recommended to install a matrix library such as OpenBLAS \url{http://www.openmathlib.org/OpenBLAS/}, that employs threading for key matrix manipulations used throughout the package.
+Furthermore, it is highly recommended to install a matrix library such as OpenBLAS \url{http://www.openmathlib.org/OpenBLAS/}, Intel MKL \url{https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-download.html} or Apple's accelerate \url{https://developer.apple.com/documentation/accelerate}, that employ threading for key matrix manipulations used throughout the package.
 
 # Example analysis on data by Vicari et al. (2024)
 
@@ -102,7 +102,7 @@ data(Vicari)
 names(Vicari)
 ```
 
-This object consists of four lists of length six: _TranscriptCoords_ and _MetaboliteCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. Only the 5 most abundant features per modality are included in the package. The _sbivar_ package assumes that the data have been pre-aligned, hence it is always a good idea to check the alignment visually:
+This object consists of four lists of length six: _TranscriptCoords_ and _MetaboliteCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. Only the 5 most abundant features per modality are included in the package, for real datasets we also recommend to filter on the most abundant featurs, or apply the method to the entire dataset. The _sbivar_ package assumes that the data have been pre-aligned, hence it is always a good idea to check the alignment visually:
 
 ```{r plotcoordsVicari, fig.height = 7}
 par(mfrow = c(2, 3))

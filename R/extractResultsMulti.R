@@ -100,7 +100,7 @@ extractResultsMulti <- function(result, designDf, method = "BH") {
             if (is.null(x[[ii]])) c("Estimate" = NA, "SE" = NA, "pVal" = NA) else x[[ii]]
         }))
         tmpMat <- tmpMat[order(tmpMat[, "pVal"]), ]
-        cbind(tmpMat, "pAdj" = p.adjust(tmpMat[, "pVal"], method = method))
+        addFeatureColumn(cbind(tmpMat, "pAdj" = p.adjust(tmpMat[, "pVal"], method = method)))
     })
     return(c(list("result" = fixResOut), result[intersect(
         names(result),

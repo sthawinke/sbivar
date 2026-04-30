@@ -76,35 +76,15 @@ moranRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
 
     ## Starting sbivar analysis of a single image on 2 computing cores
 
-    ## Testing significance of bivariate Moran's I for 100 feature pairs
+    ## Testing significance of bivariate Moran's I for 25 feature pairs
 
     ## Calculating bivariate Moran's I statistics ...
 
-    ## Fitting variograms for first modality (10 features) ...
+    ## Fitting variograms for first modality (5 features) ...
 
-    ## Fitting variograms for second modality (10 features) ...
+    ## Fitting variograms for second modality (5 features) ...
 
     ## Calculating variances of bivariate Moran's I statistics ...
-
-    ## 10% of tests completed
-
-    ## 20% of tests completed
-
-    ## 30% of tests completed
-
-    ## 40% of tests completed
-
-    ## 50% of tests completed
-
-    ## 60% of tests completed
-
-    ## 70% of tests completed
-
-    ## 80% of tests completed
-
-    ## 90% of tests completed
-
-    ## 100% of tests completed
 
 Have a look at the results:
 
@@ -112,20 +92,20 @@ Have a look at the results:
 head(moranRes$result)
 ```
 
-    ##                        Ixy_5e-06     Ixy_2e-04      Ixy_0.02 SE(Ixy)_5e-06
-    ## Fth1__X426.13386   -9.958962e-05 -1.318836e-04 -4.699044e-05  4.884710e-05
-    ## Fth1__X573.21671    1.116778e-04  1.238469e-04  6.206438e-05  4.682860e-05
-    ## mt.Co1__X426.13386  1.246730e-04  9.255068e-05  1.971629e-05  5.275410e-05
-    ## Fth1__X537.21448   -8.479378e-05 -8.609003e-05 -5.844255e-05  4.597603e-05
-    ## Fth1__X573.23369    2.839504e-05  4.140745e-05  1.660062e-05  2.663718e-05
-    ## mt.Co3__X426.13386  1.090300e-04  7.631569e-05  1.983539e-05  5.517525e-05
-    ##                    SE(Ixy)_2e-04 SE(Ixy)_0.02        pVal      pAdj
-    ## Fth1__X426.13386    4.492210e-05 3.122381e-05 0.009042104 0.4648595
-    ## Fth1__X573.21671    4.302256e-05 3.443858e-05 0.009297191 0.4648595
-    ## mt.Co1__X426.13386  4.908292e-05 3.874747e-05 0.042207509 0.9942020
-    ## Fth1__X537.21448    4.226008e-05 3.725381e-05 0.062735162 0.9942020
-    ## Fth1__X573.23369    1.932606e-05 1.610441e-05 0.082076392 0.9942020
-    ## mt.Co3__X426.13386  5.170858e-05 4.130072e-05 0.111022300 0.9942020
+    ##   Modality_X Modality_Y     Ixy_5e.06     Ixy_2e.04      Ixy_0.02 SE.Ixy._5e.06
+    ## 1     mt.Co1 X555.20345 -9.984208e-05 -6.517426e-05 -1.209285e-05  5.899893e-05
+    ## 2     mt.Co1 X555.20713 -1.000362e-04 -6.434524e-05 -1.153149e-05  5.937060e-05
+    ## 3     mt.Co3 X573.23369 -2.717639e-05 -2.516587e-05 -1.028394e-05  3.074321e-05
+    ## 4     mt.Co1 X573.23369 -2.185709e-05 -2.581689e-05 -7.749194e-06  2.965036e-05
+    ## 5     mt.Co2 X573.23369 -2.291890e-05 -2.431242e-05 -1.010922e-05  3.094869e-05
+    ## 6    mt.Atp6 X573.23369 -1.998723e-05 -2.527243e-05 -9.727530e-06  3.043709e-05
+    ##   SE.Ixy._2e.04 SE.Ixy._0.02      pVal     pAdj
+    ## 1  5.612845e-05 5.320337e-05 0.2571320 0.993726
+    ## 2  5.652231e-05 5.363631e-05 0.2700359 0.993726
+    ## 3  2.462482e-05 2.209417e-05 0.4345555 0.993726
+    ## 4  2.318742e-05 2.065942e-05 0.4718203 0.993726
+    ## 5  2.484135e-05 2.243004e-05 0.4774986 0.993726
+    ## 6  2.423177e-05 2.168803e-05 0.4808390 0.993726
 
 Plot the most significantly spatially associated gene-metabolite pair :
 
@@ -186,7 +166,7 @@ design <- data.frame("mouse" = mouse)
 multiGAMLmms <- fitLinModels(multiGAMRes, design, Formula = ~ (1 | mouse))
 ```
 
-    ## Fitting 100 mixed effects models on 2 cores
+    ## Fitting 25 mixed effects models on 2 cores
 
 Extract the results for the desired parameter (the intercept)
 
@@ -195,13 +175,13 @@ multiGAMLmmsRes <- extractResultsMulti(multiGAMLmms, design)
 head(multiGAMLmmsRes$result$Intercept)
 ```
 
-    ##                         Estimate          SE       pVal      pAdj
-    ## mt.Nd2__X576.20502   0.113286238 0.041491150 0.04126204 0.9014878
-    ## Fth1__X555.20713    -0.004059947 0.001738176 0.06673187 0.9014878
-    ## mt.Nd4__X573.21671   0.064716265 0.032712328 0.10479963 0.9014878
-    ## mt.Nd2__X524.20138  -0.142992590 0.080147167 0.13447853 0.9014878
-    ## mt.Nd4__X576.20502   0.130552292 0.078507055 0.15721191 0.9014878
-    ## mt.Cytb__X523.19829 -0.167542935 0.108243039 0.18233800 0.9014878
+    ##   Modality_X Modality_Y    Estimate         SE      pVal      pAdj
+    ## 1     mt.Co3 X523.19829 -0.10048418 0.05975443 0.1534708 0.9158535
+    ## 2     mt.Co1 X523.19829  0.11585824 0.06982157 0.1579411 0.9158535
+    ## 3     mt.Co1 X555.20713  0.03733817 0.03145645 0.2885510 0.9158535
+    ## 4    mt.Cytb X555.20713 -0.02968372 0.02758507 0.3310510 0.9158535
+    ## 5    mt.Atp6 X555.20713  0.05759791 0.03349672 0.3353404 0.9158535
+    ## 6     mt.Co2 X573.23369  0.08397566 0.05757616 0.3826185 0.9158535
 
 No features are significantly associated after multiplicity correction.
 For illustration, we plot the feature pair with the smallest p-values

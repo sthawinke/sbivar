@@ -78,19 +78,6 @@ tr <- function(x, dim = c(1, 2)) {
 getDiscreteVars <- function(df) {
     colnames(df)[!vapply(df, FUN.VALUE = TRUE, is.numeric)]
 }
-#' Scale variables to the [0,1] or [-1,1] range
-#'
-#' Scale variables to comparable ranges for plotting reasons
-#' @param y The variable to scale
-#' @param na.rm Should NA values be removed
-#'
-#' @returns scaled variable
-scaleZeroOne <- function(y, na.rm = TRUE) {
-    (y - min(y, na.rm = na.rm)) / diff(range(y, na.rm = na.rm))
-}
-scaleMinusOne <- function(y, na.rm = TRUE) {
-    (y - min(y, na.rm = na.rm)) / diff(range(y, na.rm = na.rm)) * 2 - 1
-}
 #' Wrapper to normalize, select feature and scale
 #'
 #' @details Returns vector of NA if feature not found, leading to grey in the plots

@@ -61,12 +61,14 @@ singleMetCoords <- Vicari$MetaboliteCoords[[singleSample]]
 singleMet <- Vicari$MetaboliteOutcomes[[singleSample]]
 ```
 
-Now analyse this single sample using bivariate Moran’s I.
+Prepare multithreading
 
 ``` r
 library(BiocParallel)
 register(MulticoreParam(2))
 ```
+
+Now analyse this single sample using bivariate Moran’s I.
 
 ``` r
 moranRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,

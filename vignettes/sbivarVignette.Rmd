@@ -89,7 +89,7 @@ For serial calculations, for instance if memory is limiting, choose instead
 register(SerialParam())
 ```
 
-Furthermore, it is highly recommended to install a matrix library such as OpenBLAS \url{http://www.openmathlib.org/OpenBLAS/}, Intel MKL \url{https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-download.html} or Apple's accelerate \url{https://developer.apple.com/documentation/accelerate}, that employ threading for key matrix manipulations used throughout the package.
+Furthermore, it is highly recommended to install a matrix library such as ["OpenBLAS"](http://www.openmathlib.org/OpenBLAS/), ["Intel MKL"](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-download.html) or ["Apple's accelerate"](https://developer.apple.com/documentation/accelerate), that employ threading for key matrix manipulations used throughout the package.
 
 # Example analysis on data by Vicari et al. (2024)
 
@@ -106,7 +106,7 @@ This object consists of four lists of length six: _TranscriptCoords_ and _Metabo
 
 ```{r plotcoordsVicari, fig.height = 7}
 par(mfrow = c(2, 3))
-plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.2)
+plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.1)
 par(mfrow = c(1, 1))
 ```
 

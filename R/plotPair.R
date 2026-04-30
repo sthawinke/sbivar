@@ -49,7 +49,7 @@ plotTopPair <- function(
 ) {
     stopifnot(is.numeric(topRank))
     if (!results$multi) {
-        # topFeats <- results$result[topRank, c("Modality_X", "Modality_Y")]
+        topFeats <- results$result[topRank, c("Modality_X", "Modality_Y")]
         plotPairSingle(
             features = topFeats, assayX = results$assayX,
             assayY = results$assayY, normX = normX, normY = normY, ...

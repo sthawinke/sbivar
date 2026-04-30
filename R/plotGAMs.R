@@ -46,7 +46,7 @@ plotGAMs <- function(
 ) {
     stopifnot(
         is.numeric(n_points_grid), all(vapply(families, FUN.VALUE = TRUE, is, "family")),
-        is.character(features)
+        all(vapply(features, FUN.VALUE = TRUE, is.character))
     )
     features <- make.names(features)
     scaleFun <- get(as.character(scaleFun), mode = "function", getNamespace("sbivar"))
@@ -64,6 +64,8 @@ plotGAMs <- function(
         Reduce(gamDfs, f = rbind)
     } else {
         foo <- checkInputSingle(X, Y, Cx, Ey)
+        colnames(X) <- make.names(colnames(X))
+        colnames(Y) <- make.names(colnames(Y))
         df <- buildGamDf(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun,
             includeGPsmooth = includeGPsmooth, smooth = smooth
         )

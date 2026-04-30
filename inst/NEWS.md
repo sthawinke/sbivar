@@ -44,3 +44,8 @@
 
  - Fix bugs in testGAM
  - Update Github readme
+
+# 0.99.5
+
+ - Fix bugs in plotGAM
+ - Add feature names as columns in results

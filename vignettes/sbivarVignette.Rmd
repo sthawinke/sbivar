@@ -214,7 +214,7 @@ multiMoranRes <- sbivar(VicariMultiTest$TranscriptOutcomes, VicariMultiTest$Meta
 )
 ```
 
-Next we plug the calculated Moran's I values into a linear model, with random effects for the individual mice, and adding a bogus fixed variable for illustrative purposes:
+Note that for this analysis, we only calculate the bivariate Moran's I statistics and their maxima, but not their variances, as we will quantify variability across replicates. Next we plug the calculated Moran's I values into a linear model, with random effects for the individual mice, and adding a bogus fixed variable for illustrative purposes:
 
 ```{r multiLmms}
 designDf <- data.frame("mouse" = mouse, "bogus" = factor(c(1, 2, 1, 2, 1, 2)))

@@ -15,11 +15,11 @@ Description: The sbivar package implements a suite of tests for Spatial BIVARiat
 License: GPL-2
 Encoding: UTF-8
 RdMacros: Rdpack
-RoxygenNote: 7.3.3
 biocViews: Transcriptomics, Spatial, Proteomics, Metabolomics
 Depends: R (>= 4.5.0)
 Imports: lme4,reformulas,lmerTest,mgcv,ggplot2,concaveman,MultiAssayExperiment,BiocParallel,Rdpack,SpatialPack,stats,sf,Matrix,smoppix(>= 1.1.8),spatstat.geom,methods,abind,nlme,sp,gstat,SummarizedExperiment,openxlsx
-Suggests:testthat,knitr,rmarkdown,doParallel,htmltools,zellkonverter,anndata,RANN,SpatialExperiment
+Suggests: testthat,knitr,rmarkdown,doParallel,htmltools,zellkonverter,anndata,RANN,SpatialExperiment
 VignetteBuilder: knitr
 BugReports: https://github.com/sthawinke/sbivar/issues
 URL: https://github.com/sthawinke/sbivar
+Config/roxygen2/version: 8.0.0

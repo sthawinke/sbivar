@@ -79,7 +79,7 @@ plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "
     normX <- match.arg(normX)
     normY <- match.arg(normY)
     theme_set(theme)
-    dfList <- Reduce(f = rbind, lapply(names(Xl), function(nam) {
+    dfList <- do.call(rbind, lapply(names(Xl), function(nam) {
         X <- normMat(Xl[[nam]], normX)
         Y <- normMat(Yl[[nam]], normY)
         coordMat <- rbind(Cxl[[nam]][rownames(X), ], Eyl[[nam]][rownames(Y), ])

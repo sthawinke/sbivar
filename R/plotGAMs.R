@@ -64,7 +64,7 @@ plotGAMs <- function(
             df$image <- nam
             df
         })
-        Reduce(gamDfs, f = rbind)
+        do.call(rbind, gamDfs)
     } else {
         foo <- checkInputSingle(X, Y, Cx, Ey)
         df <- buildGamDf(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun,

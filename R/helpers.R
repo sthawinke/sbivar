@@ -110,13 +110,13 @@ normMat <- function(x, norm, pseudoCount = 1e-8) {
     if (norm == "none") {
         out <- x
     } else {
-        if (any(x < 0)) {
+        if (min(x) < 0) {
             warning("Normalization '", norm, "'is not recommended for real valued data!")
         }
-        x <- x[rowSums(x) > 0, , drop = FALSE]
+        x <- x[(rs <- rowSums(x)) > 0, , drop = FALSE]
         dn <- dimnames(x)
         out <- if (norm == "rel") {
-            x / rowSums(x)
+            x / rs
         } else if (norm == "log") {
             log((x + pseudoCount) / rowSums(x))
         }

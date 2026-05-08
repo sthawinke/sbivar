@@ -131,7 +131,7 @@ data(Vicari)
 # Plot an arbitrary feature pair
 plotPairMulti(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
     Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
-    normX = "log", normY = "log", features = c("mt.Nd2", "X555.20713")
+    normX = "log", normY = "log", features = c("Gnas", "Tocopherol")
 )
 }
 \seealso{

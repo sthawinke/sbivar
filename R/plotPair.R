@@ -41,10 +41,12 @@
 #' # Plot an arbitrary feature pair
 #' plotPairMulti(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
 #'     Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
-#'     normX = "log", normY = "log", features = c("mt.Nd2", "X555.20713")
+#'     normX = "log", normY = "log", features = c("Gnas", "Tocopherol")
 #' )
-plotTopPair <- function(results, ..., normX = results$normX, normY = results$normY,
-    topRank = 1, parameter = "Intercept") {
+plotTopPair <- function(
+      results, ..., normX = results$normX, normY = results$normY,
+      topRank = 1, parameter = "Intercept"
+) {
     stopifnot(is.numeric(topRank))
     if (!results$multi) {
         topFeats <- results$result[topRank, c("Modality_X", "Modality_Y")]
@@ -67,8 +69,10 @@ plotTopPair <- function(results, ..., normX = results$normX, normY = results$nor
 #' @inheritParams plotPairSingle
 #' @order 3
 #' @param theme the ggplot2 theme
-plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "log"),
-    normY = c("none", "rel", "log"), size = 1.25, assayX, assayY, theme = theme_bw()) {
+plotPairMulti <- function(
+      Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "log"),
+      normY = c("none", "rel", "log"), size = 1.25, assayX, assayY, theme = theme_bw()
+) {
     Xl <- getX(Xl, assayX)
     Yl <- getX(Yl, assayY)
     Cxl <- getSpatialCoords(Xl, Cxl)
@@ -112,10 +116,8 @@ plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "
 #' @rdname plotTopPair
 #' @export
 #' @order 2
-plotPairSingle <- function(
-      X, Y, Cx, Ey, features, normX = c("none", "rel", "log"),
-      normY = c("none", "rel", "log"), assayX, assayY, ...
-) {
+plotPairSingle <- function(X, Y, Cx, Ey, features, normX = c("none", "rel", "log"),
+    normY = c("none", "rel", "log"), assayX, assayY, ...) {
     stopifnot(length(features) == 2)
     if (inherits(X, "SpatialExperiment")) {
         Cx <- SpatialExperiment::spatialCoords(X)
@@ -142,10 +144,8 @@ plotPairSingle <- function(
 #' appearing in the strip text of the columns. For plotTopPair() and
 #' plotPairSingle(), the feature names are used.
 #' @order 4
-plotPairSingleVectors <- function(
-      x, y, Cx, Ey, size = 1.25,
-      modalityNames = c("Modality X", "Modality Y"), theme = theme_bw(), ...
-) {
+plotPairSingleVectors <- function(x, y, Cx, Ey, size = 1.25,
+    modalityNames = c("Modality X", "Modality Y"), theme = theme_bw(), ...) {
     theme_set(theme)
     stopifnot(length(x) == nrow(Cx), length(y) == nrow(Ey), ncol(Ey) == 2, ncol(Cx) == 2)
     coordMat <- rbind(Cx, Ey)
@@ -153,7 +153,8 @@ plotPairSingleVectors <- function(
     plotDf <- data.frame(
         "outcome" = c(x, y), coordMat,
         "feature" = factor(rep(modalityNames, times = c(length(x), length(y))),
-                               levels = modalityNames, ordered = TRUE)
+            levels = modalityNames, ordered = TRUE
+        )
     )
     ggplot(data = plotDf, aes(x = x, y = y, col = outcome)) +
         geom_point(size = size) +

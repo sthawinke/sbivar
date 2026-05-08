@@ -23,7 +23,7 @@ htmltools::img(
 ```
 
 ```{r setup, include=FALSE, echo=FALSE}
-knitr::opts_chunk$set(fig.heigh = 7, fig.width = 7)
+knitr::opts_chunk$set(fig.height = 2.5, fig.width = 7.5)
 ```
 
 # Introduction
@@ -104,7 +104,7 @@ names(Vicari)
 
 This object consists of four lists of length six: _TranscriptCoords_ and _MetaboliteCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. Only the 5 most abundant features per modality are included in the package, for real datasets we also recommend to filter on the most abundant features, or apply the method to the entire dataset. The _sbivar_ package assumes that the data have been pre-aligned, hence it is always a good idea to check the alignment visually:
 
-```{r plotcoordsVicari, fig.height = 7}
+```{r plotcoordsVicari, fig.height = 5}
 par(mfrow = c(2, 3))
 plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.1)
 par(mfrow = c(1, 1))
@@ -140,7 +140,7 @@ head(moransIRes$result)
 
 Plot the most significantly spatially associated gene-metabolite pair `r gpMoran <- rownames(moransIRes$result)[1]`:
 
-```{r plottoppairmoran, fig.height = 4.5}
+```{r plottoppairmoran}
 plotTopPair(moransIRes,
     X = singleStx, Y = singleMet, Cx = singleStxCoords,
     Ey = singleMetCoords
@@ -160,7 +160,7 @@ gamRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
 
 Plot the most significant pair (normalized data are shown, the original analysis is on raw data):
 
-```{r plottoppairgam, fig.height = 4.5}
+```{r plottoppairgam}
 plotTopPair(gamRes,
     X = singleStx, Y = singleMet, Cx = singleStxCoords,
     Ey = singleMetCoords, normX = "rel", normY = "rel"

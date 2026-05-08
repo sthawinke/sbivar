@@ -49,3 +49,9 @@
 
  - Fix bugs in plotGAM
  - Add feature names as columns in results
+
+# 0.99.6
+
+ - Switch to common names for metabolites in Vicari data
+ - Switch off GP smoother in GAMs as default
+ - In plotGAMsTopResults, use provided families as default

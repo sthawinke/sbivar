@@ -24,7 +24,7 @@ sbivarMulti(
   verbose = TRUE,
   findVariances = FALSE,
   findMaxW = TRUE,
-  includeGPsmooth = TRUE,
+  includeGPsmooth = FALSE,
   testSmooth = c("trend", "field")
 )
 }

@@ -152,7 +152,8 @@ plotPairSingleVectors <- function(
     colnames(coordMat) <- c("x", "y")
     plotDf <- data.frame(
         "outcome" = c(x, y), coordMat,
-        "feature" = rep(modalityNames, times = c(length(x), length(y)))
+        "feature" = factor(rep(modalityNames, times = c(length(x), length(y))),
+                               levels = modalityNames, ordered = TRUE)
     )
     ggplot(data = plotDf, aes(x = x, y = y, col = outcome)) +
         geom_point(size = size) +

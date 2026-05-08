@@ -114,10 +114,10 @@ The alignment seems successful, notice that some tissue areas are only covered b
 
 ## Single-image analysis
 
-The Vicari data consist of six images which can be analysed jointly, but for didactical purposes we first analyse a single image here, the sample "V11L12-109_A1".
+The Vicari data consist of six images which can be analysed jointly, but for didactical purposes we first analyse a single image here, the sample "V11T16-085_A1".
 
 ```{r getsinglesample}
-singleSample <- "V11L12-109_A1"
+singleSample <- "V11T16-085_A1"
 singleStxCoords <- Vicari$TranscriptCoords[[singleSample]]
 singleStx <- Vicari$TranscriptOutcomes[[singleSample]]
 singleMetCoords <- Vicari$MetaboliteCoords[[singleSample]]
@@ -167,12 +167,12 @@ plotTopPair(gamRes,
 )
 ```
 
-An other feature is found most significant by GAMs, again with a negative relationship. For GAMs, we can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes$result[gpGam<- rownames(gamRes$result)[1], "corxy"], 3)`:
+An other feature is found most significant by GAMs, now with a positive relationship. For GAMs, we can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes$result[gpGam<- rownames(gamRes$result)[1], "corxy"], 3)`:
 
 ```{r plotGAM}
 plotGAMsTopResults(gamRes,
     X = singleStx, Y = singleMet, Cx = singleStxCoords,
-    Ey = singleMetCoords, families = FamiliesVicari
+    Ey = singleMetCoords
 )
 ```
 

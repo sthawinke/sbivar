@@ -31,6 +31,7 @@ plotGAMsTopResults(
   Ey,
   topRank = 1,
   parameter = "Intercept",
+  families = results$families,
   ...
 )
 }

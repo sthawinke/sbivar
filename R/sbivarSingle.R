@@ -40,7 +40,7 @@ sbivarSingle <- function(
       families = list("X" = gaussian(), "Y" = gaussian()), featuresX = colnames(X), featuresY = colnames(Y),
       n_points_grid = 6e2, verbose = TRUE, testSmooth = c("trend", "field"),
       variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
-      wo = c("Gauss", "nn"), numNNs = c(4, 8, 24), includeGPsmooth = TRUE,
+      wo = c("Gauss", "nn"), numNNs = c(4, 8, 24), includeGPsmooth = FALSE,
       GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 5,
       optControl = lmeControl(
           opt = "optim", maxIter = 5e2, msMaxIter = 5e2,

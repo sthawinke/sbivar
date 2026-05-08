@@ -97,7 +97,7 @@ plotGAMs <- function(
 #' @order 2
 #' @inheritParams plotTopPair
 plotGAMsTopResults <- function(results, X, Y, Cx, Ey, topRank = 1,
-    parameter = "Intercept", ...) {
+    parameter = "Intercept", families = results$families, ...) {
     stopifnot(is.numeric(topRank))
     topFeats <- (
         if (results$multi) {
@@ -110,7 +110,7 @@ plotGAMsTopResults <- function(results, X, Y, Cx, Ey, topRank = 1,
     Ey <- getSpatialCoords(Y, Ey)
     Y <- getX(Y, results$assayY)
     plotGAMs(
-        X = X, Y = Y, features = topFeats, Cx = Cx, Ey = Ey,
+        X = X, Y = Y, features = topFeats, Cx = Cx, Ey = Ey, families = families,
         multi = results$multi, normX = results$normX, normY = results$normY, ...
     )
 }

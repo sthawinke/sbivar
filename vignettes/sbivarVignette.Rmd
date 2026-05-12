@@ -389,6 +389,7 @@ We suggest converting it to a _SingleCellExperiment_ object from the eponymous R
 ```{r anndata}
 if (reqadzk) {
     sceStx <- AnnData2SCE(annDataObj, X_name = "X")
+    reducedDims(sceStx) <- annDataObj$obsm
 }
 ```
 

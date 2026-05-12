@@ -38,7 +38,7 @@ arma::vec evalVariogramCpp(
 
 //' Batch-compute lower triangles and traces of \eqn{W_i^T \Sigma_X W_i}
 //'
-//' For each weight-matrix slice \eqn{W_i} of the \eqn{n \times m \times \text{numWs}}
+//' For each weight-matrix slice \eqn{W_i} of the \eqn{n \times m \times numWs}
 //' array \code{W}, constructs the spatial covariance matrix \eqn{\Sigma_X} from
 //' pre-evaluated lower-triangle covariance values and computes
 //' \eqn{W_i^T \Sigma_X W_i} (\eqn{m \times m}), returning its lower triangle and
@@ -52,13 +52,13 @@ arma::vec evalVariogramCpp(
 //' @param vgVals Covariance values for the strictly lower triangle of
 //'   \eqn{\Sigma_X}, in column-major order (length \eqn{n(n-1)/2}).
 //'   The diagonal is set to 1 (unit variance after standardisation).
-//' @param W \eqn{n \times m \times \text{numWs}} array of weight matrices
+//' @param W \eqn{n \times m \times numWs} array of weight matrices
 //' @return A list with
 //'   \describe{
-//'     \item{sigXws}{\eqn{mm2 \times \text{numWs}} matrix, where \eqn{mm2 = m(m-1)/2};
+//'     \item{sigXws}{\eqn{mm2 \times numWs} matrix, where \eqn{mm2 = m(m-1)/2};
 //'       column \eqn{i} holds the lower-triangle entries of \eqn{W_i^T \Sigma_X W_i}
 //'       in column-major order.}
-//'     \item{traces}{Length-\text{numWs} vector of \eqn{\text{tr}(W_i^T \Sigma_X W_i)}.}
+//'     \item{traces}{Length-numWs vector of \eqn{tr(W_i^T \Sigma_X W_i)}.}
 //'   }
 //' @keywords internal
 // [[Rcpp::export]]

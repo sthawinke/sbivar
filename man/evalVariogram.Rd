@@ -7,7 +7,7 @@
 evalVariogram(vg, distVec)
 }
 \arguments{
-\item{vg}{The variogram model (a \link[gstat]{variogramModel})}
+\item{vg}{The variogram model resulting from a call to \link[gstat]{fit.variogram})}
 
 \item{distVec}{A vector of pairwise distances}
 }

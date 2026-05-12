@@ -162,7 +162,7 @@ matheronVariograms <- function(X, Cx, width, cutoff, variogramModels) {
 }
 #' Evaluate a variogram on a set of distances
 #'
-#' @param vg The variogram model (a \link[gstat]{variogramModel})
+#' @param vg The variogram model resulting from a call to \link[gstat]{fit.variogram})
 #' @param distVec A vector of pairwise distances
 #' @returns A vector of covariances
 evalVariogram <- function(vg, distVec) {

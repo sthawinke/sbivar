@@ -2,14 +2,14 @@
 % Please edit documentation in R/vcovPredGam.R
 \name{vcovPredGam}
 \alias{vcovPredGam}
-\title{Return predictions of a gam, along with their variance-covariance matrix}
+\title{Return predictions of a GAM, along with the factored coefficient covariance}
 \usage{
 vcovPredGam(model, newdata, testSmooth, findVariances = TRUE)
 }
 \arguments{
-\item{model}{The gam model}
+\item{model}{The fitted GAM}
 
-\item{newdata}{The grid on which new predictions are made}
+\item{newdata}{The grid on which predictions are made}
 
 \item{testSmooth}{A character string indicating which smooth factor should be tested for,
 either "trend" for a deterministic process or "field" for the Gaussian random field}
@@ -18,15 +18,19 @@ either "trend" for a deterministic process or "field" for the Gaussian random fi
 }
 \value{
 A list with components
-\item{pred}{A vector of predictions}
-\item{vcov}{Variance-covariance matrix of the predictions}
+\item{pred}{A vector of predictions on the response scale}
+\item{basis}{\eqn{N_\text{grid} \times q} basis matrix for the smooth of interest}
+\item{coef_cov}{\eqn{q \times q} unconditional covariance matrix of the
+  smooth coefficients}
 }
 \description{
-The spline predictions are found as X *coef with X the spline basis and coef the spline coefficients.
-The covariance matrix of the predictions is found using the formula:
-Cov(pred) = X * Var(coef) * X',
-where X is the basis matrix (design matrix for smooth terms), and Var(coef)
-is the covariance matrix of the coefficients.
+Spline predictions are \eqn{B \beta}, where \eqn{B} is the basis (design) matrix
+and \eqn{\beta} are the spline coefficients.  Rather than materialising the full
+\eqn{N_\text{grid} \times N_\text{grid}} prediction covariance
+\eqn{B \, \text{Var}(\beta) \, B^T}, only \eqn{B} (\eqn{N_\text{grid} \times q})
+and \eqn{\text{Var}(\beta)} (\eqn{q \times q}) are returned.  The quadratic form
+\eqn{v^T B \, \text{Var}(\beta) B^T v = (B^T v)^T \text{Var}(\beta) (B^T v)}
+is then computed cheaply in \eqn{q} dimensions by \link{getApproxVar}.
 }
 \seealso{
 \link[mgcv]{vcov.gam}, \link[mgcv]{predict.gam}

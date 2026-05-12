@@ -2,18 +2,18 @@
 % Please edit documentation in R/MoransISingle.R
 \name{evalVariogram}
 \alias{evalVariogram}
-\title{Evaluate a variogram on a set of covariances}
+\title{Evaluate a variogram on a set of distances}
 \usage{
 evalVariogram(vg, distVec)
 }
 \arguments{
-\item{vg}{The variogram}
+\item{vg}{The variogram model (a \link[gstat]{variogramModel})}
 
-\item{distVec}{A vector of distances}
+\item{distVec}{A vector of pairwise distances}
 }
 \value{
 A vector of covariances
 }
 \description{
-Evaluate a variogram on a set of covariances
+Evaluate a variogram on a set of distances
 }

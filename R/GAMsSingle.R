@@ -34,15 +34,18 @@ GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX
         message("Performing ", numTests, " pairwise tests on fitted GAMs ...")
     }
     Nrow <- if (findVariances) 3 else 1
+    # Precompute all Y predictions once; reused for every X feature
+    predsY <- lapply(selfName(names(gamsy)), function(featy) {
+        vcovPredGam(gamsy[[featy]], newdata = ng, findVariances = findVariances,
+                    testSmooth = testSmooth)
+    })
     out <- vapply(selfName(names(gamsx)), function(featx) {
-        predx <- vcovPredGam(gamsx[[featx]], newdata = ng, findVariances = findVariances, testSmooth = testSmooth)
+        predx <- vcovPredGam(gamsx[[featx]], newdata = ng, findVariances = findVariances,
+                             testSmooth = testSmooth)
         out <- vapply(selfName(names(gamsy)), FUN.VALUE = double(Nrow), function(featy) {
             testGAM(
                 predx = predx, modely = gamsy[[featy]], modelx = gamsx[[featx]],
-                predy = vcovPredGam(gamsy[[featy]],
-                    newdata = ng, findVariances = findVariances,
-                    testSmooth = testSmooth
-                ), findVariances = findVariances
+                predy = predsY[[featy]], findVariances = findVariances
             )
         })
         printProgress(featx, featuresX, verbose)

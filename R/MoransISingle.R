@@ -19,7 +19,6 @@
 #' \insertAllCited{}
 #' @importFrom Rdpack reprompt
 #' @importFrom stats dist
-#' @importFrom Matrix forceSymmetric
 #'
 #' @details By default, a number of range parameters and corresponding weight matrices are screened for spatial association,
 #' and their p-value combined using the Cauchy combination rule by \insertCite{Liu2020}{sbivar}.
@@ -86,25 +85,17 @@ MoransISingle <- function(X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose
         if (verbose) {
             message("Calculating variances of bivariate Moran's I statistics ...")
         }
-        # Variances
-        mm2 <- m * (m - 1) / 2 # For colSums
-        diagMatX <- diag(n)
-        ltriX <- which(lower.tri(diagMatX))
-        ltriY <- which(lower.tri(diag(m)))
+        mm2 <- m * (m - 1) / 2
+        # Precompute all Y variogram evaluations as a mm2 x k matrix outside the X loop
+        vgY_mat <- vapply(selfName(featuresY), FUN.VALUE = double(mm2), function(featy) {
+            evalVariogram(variogramsY[[featy]], distY)
+        })
         varIxy <- vapply(selfName(featuresX), FUN.VALUE = matrix(0, numWs, k), function(featx) {
-            diagMatX[ltriX] <- evalVariogram(variogramsX[[featx]], distX)
-            diagMatX <- forceSymmetric(diagMatX, uplo = "L")
-            sigXws0 <- lapply(seq_len(numWs), function(i) {
-                crossprod(Ws[, , i], diagMatX %*% Ws[, , i])
-            }) # BLAS may use multithreading here
-            sigXws <- vapply(seq_len(numWs), FUN.VALUE = double(mm2), function(i) {
-                sigXws0[[i]][ltriY]
-            })
-            out <- 2 * vapply(selfName(featuresY), FUN.VALUE = double(numWs), function(featy) {
-                vgy <- evalVariogram(variogramsY[[featy]], distY)
-                .colSums(sigXws * vgy, mm2, numWs) # Fast tr(W^t Sigma_x W Sigma_y)
-            }) + vapply(sigXws0, FUN.VALUE = double(1), tr)
-            # Diagonal plus two times lower diagonal, exploiting symmetry
+            # C++: build Sigma_X and batch-compute t(W[,,i]) Sigma_X W[,,i] for all i,
+            # returning lower-triangle columns (sigXws, mm2 x numWs) and traces
+            sigRes <- computeSigXws(evalVariogram(variogramsX[[featx]], distX), Ws)
+            # Replace inner Y loop with a single BLAS crossprod
+            out <- 2 * crossprod(sigRes$sigXws, vgY_mat) + sigRes$traces
             printProgress(featx, featuresX, verbose)
             return(out)
         })
@@ -169,19 +160,15 @@ matheronVariograms <- function(X, Cx, width, cutoff, variogramModels) {
     })
     return(variograms)
 }
-#' Evaluate a variogram on a set of covariances
+#' Evaluate a variogram on a set of distances
 #'
-#' @param vg The variogram
-#' @param distVec A vector of distances
+#' @param vg The variogram model (a \link[gstat]{variogramModel})
+#' @param distVec A vector of pairwise distances
 #' @returns A vector of covariances
 evalVariogram <- function(vg, distVec) {
-    covMat <- vg[2, "psill"] * if (vg[2, "model"] == "Exp") {
-        exp(-(distVec / vg[2, "range"]))
-    } else if (vg[2, "model"] == "Lin") {
-        tmp <- numeric(length(distVec))
-        id <- distVec < vg[2, "range"]
-        tmp[id] <- 1 - distVec[id] / vg[2, "range"]
-        tmp
-    }
-    return(covMat)
+    evalVariogramCpp(distVec,
+        psill    = vg[2, "psill"],
+        range_   = vg[2, "range"],
+        modelExp = vg[2, "model"] == "Exp"
+    )
 }

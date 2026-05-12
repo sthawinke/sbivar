@@ -16,8 +16,8 @@ testGAM <- function(modelx, modely, predx, predy, findVariances) {
     corxy <- cxy / denom
     # Its standard error, exploit block diagonality
     if (findVariances) {
-        se <- sqrt(getApproxVar(predx$vcov, cen2, predx$pred, modelx$family$link) +
-            getApproxVar(predy$vcov, cen1, predy$pred, modely$family$link))
+        se <- sqrt(getApproxVar(predx, cen2, predx$pred, modelx$family$link) +
+            getApproxVar(predy, cen1, predy$pred, modely$family$link))
         if (is.na(corxy) || is.infinite(corxy) || is.na(se)) {
             return(c("corxy" = NA, "se.corxy" = NA, "pVal" = NA))
         } else {

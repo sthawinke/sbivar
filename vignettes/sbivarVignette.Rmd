@@ -125,7 +125,6 @@ singleMet <- Vicari$MetaboliteOutcomes[[singleSample]]
 ```
 
 We analyse this single sample using bivariate Moran's I. We choose to normalize both modalities to relative abundances (see ?normMat). 
-
 ```{r testmoran}
 moransIRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
     method = "Moran's I", normX = "rel", normY = "rel"

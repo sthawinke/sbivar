@@ -85,20 +85,15 @@ Rcpp::List computeSigXws(
         }
     }
 
-    // Batch: SigmaX * W_all in one DGEMM call (n x m*nWs)
-    // Access the cube's contiguous memory as a flat matrix (no copy)
-    const arma::mat W_mat(const_cast<double*>(W.memptr()), n, m * nWs, false, true);
-    arma::mat SigW = SigmaX * W_mat;  // n x (m * nWs)
-
     arma::mat sigXws(mm2, nWs);
     // Use Rcpp::NumericVector so traces comes back as a plain R vector, not a matrix
     Rcpp::NumericVector traces(nWs);
 
+    // Process one W slice at a time, avoiding the n x (m * nWs) intermediate SigW.
+    // Peak additional memory is one n x m scratch matrix (SWi) instead of n x (m * nWs).
     for (int wi = 0; wi < nWs; wi++) {
-        // Views into pre-allocated memory (no copy)
-        const arma::mat Wi (const_cast<double*>(W.slice_memptr(wi)),   n, m, false, true);
-        const arma::mat SWi(SigW.colptr(wi * m),                       n, m, false, true);
-
+        const arma::mat Wi(const_cast<double*>(W.slice_memptr(wi)), n, m, false, true);
+        arma::mat SWi = SigmaX * Wi;   // n x m  — reused each iteration
         arma::mat tmp = Wi.t() * SWi;  // m x m
 
         // Extract strictly lower triangle in column-major order,

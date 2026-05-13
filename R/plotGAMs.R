@@ -40,9 +40,11 @@
 #' @import ggplot2
 #' @importFrom smoppix loadBalanceBplapply
 #' @order 1
-plotGAMs <- function(X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scaleMinusOne",
-    families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE, normX = c("none", "rel", "log"),
-    normY = c("none", "rel", "log"), n_points_grid = 6e2, includeGPsmooth = TRUE, smooth = "trend", ...) {
+plotGAMs <- function(
+      X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scaleMinusOne",
+      families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE, normX = c("none", "rel", "log"),
+      normY = c("none", "rel", "log"), n_points_grid = 6e2, includeGPsmooth = TRUE, smooth = "trend", ...
+) {
     stopifnot(
         is.numeric(n_points_grid), all(vapply(families, FUN.VALUE = TRUE, is, "family")),
         all(vapply(features, FUN.VALUE = TRUE, is.character))

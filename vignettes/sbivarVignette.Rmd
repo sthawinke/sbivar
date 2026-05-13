@@ -291,25 +291,22 @@ plotTopPair(resSpatExp, X = StxSE, Y = MetSE, topRank = 2, size = 0.4)
 Now we construct a _MultiAssayExperiment_ object
 
 ```{r makeMAE}
-if (reqmae <- require(MultiAssayExperiment)) {
-    MAE <- MultiAssayExperiment(experiments = list(
-        "Stx" = StxSE,
-        "Msi" = MetSE
-    ))
-    MAE
-}
+library(MultiAssayExperiment)
+MAE <- MultiAssayExperiment(experiments = list(
+    "Stx" = StxSE,
+    "Msi" = MetSE
+))
+MAE
 ```
 
 We run a the same analysis, now providing the experiment names on top of the assay names (since a _MultiAssayExperiment_ can contain more than two modalities):
 
 ```{r analyseMAE, eval = FALSE}
-if (reqmae) {
-    resMAE <- sbivar(MAE,
-        assayX = "transcripts", assayY = "metabolites",
-        experimentX = "Stx", experimentY = "Msi",
-        families = FamiliesVicari, method = "GAMs", normX = "rel", normY = "rel"
-    )
-}
+resMAE <- sbivar(MAE,
+    assayX = "transcripts", assayY = "metabolites",
+    experimentX = "Stx", experimentY = "Msi",
+    families = FamiliesVicari, method = "GAMs", normX = "rel", normY = "rel"
+)
 ```
 
 ### Multi-image

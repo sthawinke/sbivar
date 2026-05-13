@@ -17,9 +17,9 @@ Encoding: UTF-8
 RdMacros: Rdpack
 biocViews: Transcriptomics, Spatial, Proteomics, Metabolomics
 Depends: R (>= 4.6.0)
-Imports: lme4,reformulas,lmerTest,mgcv,ggplot2,concaveman,BiocParallel,Rdpack,SpatialPack,stats,sf,Matrix,smoppix(>= 1.1.8),spatstat.geom,methods,abind,nlme,sp,gstat,SummarizedExperiment,openxlsx,Rcpp
+Imports: lme4,reformulas,lmerTest,mgcv,ggplot2,concaveman,BiocParallel,Rdpack,SpatialPack,stats,sf,Matrix,smoppix(>= 1.1.8),spatstat.geom,methods,abind,nlme,sp,gstat,SummarizedExperiment,openxlsx,Rcpp,MultiAssayExperiment
 LinkingTo: Rcpp,RcppArmadillo
-Suggests: testthat,knitr,rmarkdown,doParallel,htmltools,zellkonverter,anndata,RANN,SpatialExperiment,MultiAssayExperiment
+Suggests: testthat,knitr,rmarkdown,doParallel,htmltools,zellkonverter,anndata,RANN,SpatialExperiment
 VignetteBuilder: knitr
 BugReports: https://github.com/sthawinke/sbivar/issues
 URL: https://github.com/sthawinke/sbivar

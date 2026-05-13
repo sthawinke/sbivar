@@ -27,7 +27,7 @@ sbivarSingle(
   cutoff = sqrt(2)/3,
   wo = c("Gauss", "nn"),
   numNNs = c(4, 8, 24),
-  includeGPsmooth = FALSE,
+  includeGPsmooth = TRUE,
   GPmethod = c("REML", "ML"),
   gpParams,
   Quants = c(0.005, 0.5),

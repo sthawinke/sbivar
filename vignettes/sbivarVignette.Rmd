@@ -167,7 +167,7 @@ plotTopPair(gamRes,
 )
 ```
 
-An other feature is found most significant by GAMs, now with a positive relationship. For GAMs, we can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes$result[gpGam<- rownames(gamRes$result)[1], "corxy"], 3)`:
+An other feature is found most significant by GAMs, now with a positive relationship. For GAMs, we can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes$result[1, "corxy"], 3)`:
 
 ```{r plotGAM}
 plotGAMsTopResults(gamRes,

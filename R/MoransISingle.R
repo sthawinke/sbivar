@@ -88,16 +88,14 @@ MoransISingle <- function(
             message("Calculating variances of bivariate Moran's I statistics ...")
         }
         mm2 <- m * (m - 1) / 2
-        # Precompute all Y variogram evaluations as a mm2 x k matrix outside the X loop
-        vgY_mat <- vapply(selfName(featuresY), FUN.VALUE = double(mm2), function(featy) {
-            evalVariogram(variogramsY[[featy]], distY)
-        })
         varIxy <- vapply(selfName(featuresX), FUN.VALUE = matrix(0, numWs, k), function(featx) {
             # C++: build Sigma_X and batch-compute t(W[,,i]) Sigma_X W[,,i] for all i,
             # returning lower-triangle columns (sigXws, mm2 x numWs) and traces
             sigRes <- computeSigXws(evalVariogram(variogramsX[[featx]], distX), Ws)
-            # Replace inner Y loop with a single BLAS crossprod
-            out <- 2 * crossprod(sigRes$sigXws, vgY_mat) + sigRes$traces
+            # Precomputing evalVariogram for all Y's is too much memory, so repeat it at a speed cost
+            out <- sigRes$traces + 2 * vapply(selfName(featuresY), FUN.VALUE = double(numWs), function(featy) {
+                crossprod(sigRes$sigXws, evalVariogram(variogramsY[[featy]], distY))
+                })
             printProgress(featx, featuresX, verbose)
             return(out)
         })

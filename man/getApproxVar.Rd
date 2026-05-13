@@ -2,22 +2,26 @@
 % Please edit documentation in R/vcovPredGam.R
 \name{getApproxVar}
 \alias{getApproxVar}
-\title{Get approximate variance of the}
+\title{Approximate variance of the spatial covariance numerator}
 \usage{
-getApproxVar(vcovMat, cen, x, link)
+getApproxVar(predInfo, cen, x, link)
 }
 \arguments{
-\item{vcovMat}{Variance-covariance matrix of spline predictions}
+\item{predInfo}{List returned by \link{vcovPredGam} (must contain
+\code{basis} and \code{coef_cov})}
 
-\item{cen}{Centered observations}
+\item{cen}{Centered predictions of the \emph{other} modality}
 
-\item{x}{Observations}
+\item{x}{Raw predictions (needed for non-identity links)}
 
-\item{link}{Link function}
+\item{link}{Link function name}
 }
 \value{
-Variance-covariance matrix of the spline predictions
+Scalar approximate variance
 }
 \description{
-Get approximate variance of the
+Computes \eqn{v^T \text{Cov}(\hat{f}) \, v} using the factored form
+\eqn{(B^T v)^T C (B^T v)}, where \eqn{B} is the basis matrix and
+\eqn{C = \text{Var}(\beta)}.  This avoids materialising the
+\eqn{N_\text{grid} \times N_\text{grid}} prediction covariance matrix.
 }

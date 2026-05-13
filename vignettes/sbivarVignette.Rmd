@@ -178,7 +178,7 @@ plotGAMsTopResults(gamRes,
 Another available analysis for single images are Gaussian processes (GPs). Yet fitting GPs and calculating the score tests statistics can be computation and memory intensive! Hence the code is shown, but not run:
 
 ```{r gp, eval = FALSE}
-gpRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, method = "GPs")
+gpRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, method = "GPs", normX = "rel", normY = "rel")
 head(gpRes$result)
 ```
 

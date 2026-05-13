@@ -37,10 +37,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// scoreTestInternals_cpp
+Rcpp::List scoreTestInternals_cpp(const arma::mat& P, const arma::cube& crossBlocks, const arma::cube& derivX, const arma::cube& derivY, const arma::vec& vecPos);
+RcppExport SEXP _sbivar_scoreTestInternals_cpp(SEXP PSEXP, SEXP crossBlocksSEXP, SEXP derivXSEXP, SEXP derivYSEXP, SEXP vecPosSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type P(PSEXP);
+    Rcpp::traits::input_parameter< const arma::cube& >::type crossBlocks(crossBlocksSEXP);
+    Rcpp::traits::input_parameter< const arma::cube& >::type derivX(derivXSEXP);
+    Rcpp::traits::input_parameter< const arma::cube& >::type derivY(derivYSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type vecPos(vecPosSEXP);
+    rcpp_result_gen = Rcpp::wrap(scoreTestInternals_cpp(P, crossBlocks, derivX, derivY, vecPos));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_sbivar_evalVariogramCpp", (DL_FUNC) &_sbivar_evalVariogramCpp, 4},
     {"_sbivar_computeSigXws", (DL_FUNC) &_sbivar_computeSigXws, 2},
+    {"_sbivar_scoreTestInternals_cpp", (DL_FUNC) &_sbivar_scoreTestInternals_cpp, 5},
     {NULL, NULL, 0}
 };
 

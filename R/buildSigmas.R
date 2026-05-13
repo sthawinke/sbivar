@@ -1,31 +1,29 @@
-#' Construct a series of covariance matrices with cross-modality correlations, for different length scales.
+#' Construct cross-blocks of alternative covariance matrices at different length scales
 #'
-#' These matrices are used to test for bivariate association at different length scales
+#' These matrices are used to test for bivariate association at different length scales.
+#' Each alternative covariance matrix has the block structure
+#' \eqn{\Sigma_{alt,l} = \begin{bmatrix} I_n & C_l \\ C_l^T & I_m \end{bmatrix}}
+#' where \eqn{C_l} is the Gaussian cross-covariance kernel evaluated at length scale \eqn{l}.
+#' Only the \eqn{n \times m} cross-blocks are returned; the identity diagonal is implicit.
 #'
 #' @inheritParams testGP
-#' @param numLscAlts Number of length scales (and thus number of covariance matrices to be tested)
+#' @param numLscAlts Number of length scales (and thus number of cross-blocks to be built)
 #' @param Quants Most extreme quantiles of the distance distribution to be used as length scales.
 #' @param idN,idM indices for x and y in the distance matrix
 #'
-#' @returns A list of covariance matrices
+#' @returns An \eqn{n \times m \times L} array of cross-blocks \eqn{C_l}
 #' @importFrom stats quantile
-#' @importFrom Matrix sparseMatrix
 buildAltSigmas <- function(distMat, numLscAlts, Quants, idN, idM) {
     rangeDist <- {
         tmp <- distMat[upper.tri(distMat)]
         quantile(tmp[tmp != 0], probs = Quants)
     }
     lscAlts <- exp(seq(log(rangeDist[1]), log(rangeDist[2]), length.out = numLscAlts))
-    n <- length(idN)
-    m <- length(idM)
-    vapply(lscAlts, FUN.VALUE = distMat, function(lscAlt) {
-        # No sigma needed here, just the skeleton
-        mat <- sparseMatrix(
-            i = rep(idN, times = m), j = rep(idM, each = n), dims = c(n + m, n + m),
-            symmetric = TRUE, x = c(GaussKernel(distMat[idN, idM], lscAlt))
-        )
-        diag(mat) <- 1
-        return(as.matrix(mat))
+    crossDist <- distMat[idN, idM]   # n x m sub-matrix of distances
+    # Return only the off-diagonal cross-blocks C_l = GaussKernel(crossDist, lscAlt_l)
+    # Result is an n x m x L array; the diagonal identity blocks are implicit.
+    vapply(lscAlts, FUN.VALUE = crossDist, function(lscAlt) {
+        GaussKernel(crossDist, lscAlt)
     })
 }
 #' Build the SAC matrix for a Gaussian process

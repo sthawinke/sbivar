@@ -47,3 +47,28 @@ computeSigXws <- function(vgVals, W) {
     .Call(`_sbivar_computeSigXws`, vgVals, W)
 }
 
+#' Compute Itautau, Itautheta and score statistics for the GP score test
+#'
+#' For each length-scale slice \eqn{l}, exploits the block structure of
+#' \eqn{\Sigma_{alt,l} = I + \begin{bmatrix}0 & C_l \\ C_l^T & 0\end{bmatrix}}
+#' to compute \eqn{P \Sigma_{alt,l}} block-wise without materialising the full
+#' \eqn{(n+m)^2 \times L} intermediate array.
+#'
+#' @param P \eqn{(n+m) \times (n+m)} projection matrix
+#' @param crossBlocks \eqn{n \times m \times L} array of cross-blocks \eqn{C_l}
+#'   (the off-diagonal blocks of each \eqn{\Sigma_{alt,l}})
+#' @param derivX \eqn{n \times n \times 3} covariance-parameter derivative arrays for X
+#' @param derivY \eqn{m \times m \times 3} covariance-parameter derivative arrays for Y
+#' @param vecPos \eqn{(n+m)} score vector (\eqn{\Omega^{-1}(z - \mu)} for the positive direction)
+#' @return A list with
+#'   \describe{
+#'     \item{Itautau}{Length-\eqn{L} vector of \eqn{0.5\,\|P\Sigma_{alt,l}\|_F^2}}
+#'     \item{Itautheta}{\eqn{L \times 6} matrix of trace cross-products with derivative matrices}
+#'     \item{UPos}{Length-\eqn{L} vector of score statistics for the positive direction}
+#'     \item{UNeg}{Length-\eqn{L} vector of score statistics for the negative direction}
+#'   }
+#' @keywords internal
+scoreTestInternals_cpp <- function(P, crossBlocks, derivX, derivY, vecPos) {
+    .Call(`_sbivar_scoreTestInternals_cpp`, P, crossBlocks, derivX, derivY, vecPos)
+}
+

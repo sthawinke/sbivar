@@ -2,22 +2,27 @@
 % Please edit documentation in R/buildSigmas.R
 \name{buildAltSigmas}
 \alias{buildAltSigmas}
-\title{Construct a series of covariance matrices with cross-modality correlations, for different length scales.}
+\title{Construct cross-blocks of alternative covariance matrices at different length scales}
 \usage{
 buildAltSigmas(distMat, numLscAlts, Quants, idN, idM)
 }
 \arguments{
-\item{distMat}{The complete distance matrix of Cx and Ey stacked}
+\item{distMat}{The complete distance matrix of Cx and Ey stacked. Only needed when
+\code{sx}, \code{sy}, \code{derivX}, or \code{derivY} are not supplied.}
 
-\item{numLscAlts}{Number of length scales (and thus number of covariance matrices to be tested)}
+\item{numLscAlts}{Number of length scales (and thus number of cross-blocks to be built)}
 
 \item{Quants}{Most extreme quantiles of the distance distribution to be used as length scales.}
 
 \item{idN, idM}{indices for x and y in the distance matrix}
 }
 \value{
-A list of covariance matrices
+An \eqn{n \times m \times L} array of cross-blocks \eqn{C_l}
 }
 \description{
-These matrices are used to test for bivariate association at different length scales
+These matrices are used to test for bivariate association at different length scales.
+Each alternative covariance matrix has the block structure
+\eqn{\Sigma_{alt,l} = \begin{bmatrix} I_n & C_l \\ C_l^T & I_m \end{bmatrix}}
+where \eqn{C_l} is the Gaussian cross-covariance kernel evaluated at length scale \eqn{l}.
+Only the \eqn{n \times m} cross-blocks are returned; the identity diagonal is implicit.
 }

@@ -12,6 +12,7 @@
 #' with rownames "mean", "nugget", "range" and "sigma", and column names as in X and Y.
 #' This argument allows to pass parameters of the Gaussian processes estimated with other software
 #' (e.g. with GPU acceleration) to perform the score test.
+#' @importFrom abind abind
 GPsSingle <- function(
       X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
       correlation, optControl, verbose, featuresX, featuresY
@@ -42,8 +43,8 @@ GPsSingle <- function(
     n <- nrow(X)
     m <- nrow(Y)
     idN <- seq_len(n)
-    idM <- n + seq_len(m) # Indices for x and y
-    altSigmas <- buildAltSigmas(distMat,
+    idM <- n + seq_len(m)
+    crossBlocks <- buildAltSigmas(distMat,
         numLscAlts = numLscAlts, Quants = Quants,
         idN = idN, idM = idM
     )
@@ -53,12 +54,25 @@ GPsSingle <- function(
             " pairwise score tests on fitted GPs ..."
         )
     }
+    # Precompute sy and derivY once per y-feature (k times) rather than p*k times
+    syList    <- lapply(selfName(featuresY), function(featy) {
+        base::solve(buildSigmaGp(gpsy[, featy], distMat = distMat[idM, idM]))
+    })
+    derivListY <- lapply(selfName(featuresY), function(featy) {
+        buildDerivArray(gpsy[, featy], distMat[idM, idM], "Y")
+    })
+
     out <- vapply(selfName(featuresX), function(featx) {
-        sx <- base::solve(buildSigmaGp(gpsx[, featx], distMat = distMat[idN, idN]))
+        # Precompute sx and derivX once per x-feature (p times total)
+        sx     <- base::solve(buildSigmaGp(gpsx[, featx], distMat = distMat[idN, idN]))
+        derivX <- buildDerivArray(gpsx[, featx], distMat[idN, idN], "X")
         out <- vapply(selfName(featuresY), FUN.VALUE = double(2), function(featy) {
             testGP(
-                distMat = distMat, x = X[, featx], y = Y[, featy], altSigmas = altSigmas,
-                solXonly = gpsx[, featx], solYonly = gpsy[, featy]
+                x = X[, featx], y = Y[, featy],
+                crossBlocks = crossBlocks,
+                solXonly = gpsx[, featx], solYonly = gpsy[, featy],
+                sx = sx,               sy = syList[[featy]],
+                derivX = derivX,       derivY = derivListY[[featy]]
             )
         })
         printProgress(featx, featuresX, verbose)

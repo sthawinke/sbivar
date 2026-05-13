@@ -7,7 +7,8 @@
 GaussKernel(distMat, range)
 }
 \arguments{
-\item{distMat}{The complete distance matrix of Cx and Ey stacked}
+\item{distMat}{The complete distance matrix of Cx and Ey stacked. Only needed when
+\code{sx}, \code{sy}, \code{derivX}, or \code{derivY} are not supplied.}
 
 \item{range}{Range (or length-scale) parameter of the Gaussian covariance kernel}
 }

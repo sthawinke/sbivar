@@ -6,54 +6,81 @@
 #'
 #' @inheritParams sbivarSingle
 #' @param x,y outcome vectors
-#' @param altSigmas A prepared series of bivariate association matrices
-#' @param distMat The complete distance matrix of Cx and Ey stacked
+#' @param crossBlocks An \eqn{n \times m \times L} array of cross-blocks \eqn{C_l} from
+#'   \code{\link{buildAltSigmas}}
+#' @param distMat The complete distance matrix of Cx and Ey stacked. Only needed when
+#'   \code{sx}, \code{sy}, \code{derivX}, or \code{derivY} are not supplied.
 #' @param solXonly,solYonly Parameters of the Gaussian processes of x and y
-#' @param sx Inverse of the covariance matrix of x. Will be calculated if missing.
+#' @param sx,sy Inverses of the covariance matrices of x and y respectively.
+#'   Computed from \code{distMat} and \code{solXonly}/\code{solYonly} when missing.
+#' @param derivX,derivY \eqn{n \times n \times 3} / \eqn{m \times m \times 3} arrays of
+#'   covariance-parameter derivative matrices. Computed when missing.
 #' @inheritParams buildAltSigmas
-#' @details To tests are performed, one for positive and one for negative association,
-#' and two times the smallest p-value to achieve a two-sided test. The sign indicates which direction was most significant.
+#' @details Two tests are performed, one for positive and one for negative association,
+#' and two times the smallest p-value to achieve a two-sided test. The sign indicates
+#' which direction was most significant.
 #'
 #' @returns A vector of length 2: a p-value and an indicator of the sign:
 #' +1 for positive association, -1 for negative
-#' @importFrom stats pchisq dist
+#' @importFrom stats pchisq
 #' @importFrom abind abind
 #' @importFrom Matrix bdiag
 #' @references
 #' \insertAllCited{}
-testGP <- function(x, y, Cx, Ey, altSigmas, distMat, solXonly, solYonly, sx) {
-    n <- length(x)
-    m <- length(y)
+testGP <- function(x, y, crossBlocks, solXonly, solYonly,
+                   sx, sy, derivX, derivY, distMat) {
+    n <- dim(crossBlocks)[1]
+    m <- dim(crossBlocks)[2]
     idN <- seq_len(n)
-    idM <- n + seq_len(m) # Indices for x and y
-    regMat <- cbind(1, c(rep(0, n), rep(1, m))) # Regression matrix accounting for mean differences
-    out <- c(x, y)
-    muVec <- rep(c(solXonly["mean"], solYonly["mean"]), times = c(n, m))
-    diffVec <- cbind(out - muVec)
+    idM <- n + seq_len(m)
 
-    # Exploit block diagonality
+    # ---- Compute missing precomputed quantities from distMat ----
     if (missing(sx)) {
         sx <- base::solve(buildSigmaGp(solXonly, distMat = distMat[idN, idN]))
     }
-    invW <- as.matrix(bdiag(sx, base::solve(buildSigmaGp(solYonly, distMat = distMat[idM, idM]))))
-    P <- invW - (invW %*% regMat %*% solve(crossprod(regMat, invW %*% regMat), crossprod(regMat, invW)))
-    # Need derivatives for the efficient information
-    derivList <- list(
-        "X" = abind(
-            "sigmaX" = arrayDeriv(solXonly, distMat[idN, idN], what = "sigma"),
-            "rangeX" = arrayDeriv(solXonly, distMat[idN, idN], what = "range"),
-            "nuggetX" = arrayDeriv(solXonly, distMat[idN, idN], what = "nugget"), along = 3
-        ),
-        "Y" = abind(
-            "sigmaY" = arrayDeriv(solYonly, distMat[idM, idM], what = "sigma"),
-            "rangeY" = arrayDeriv(solYonly, distMat[idM, idM], what = "range"),
-            "nuggetY" = arrayDeriv(solYonly, distMat[idM, idM], what = "nugget"), along = 3
-        )
-    )
-    # Make two arrays out of this list
+    if (missing(sy)) {
+        sy <- base::solve(buildSigmaGp(solYonly, distMat = distMat[idM, idM]))
+    }
+    if (missing(derivX)) {
+        derivX <- buildDerivArray(solXonly, distMat[idN, idN], "X")
+    }
+    if (missing(derivY)) {
+        derivY <- buildDerivArray(solYonly, distMat[idM, idM], "Y")
+    }
+
+    # ---- Data vectors ----
+    diffVec <- c(x, y) - rep(c(solXonly["mean"], solYonly["mean"]), times = c(n, m))
+
+    # ---- Block-wise projection matrix P (avoids forming the full invW) ----
+    # invW = bdiag(sx, sy), regMat = cbind(1, c(rep(0,n), rep(1,m)))
+    # P = invW - invW*regMat * solve(regMat^T*invW*regMat) * regMat^T*invW
+    # Using invW block structure: invW*regMat[:,1] = [sx*1; sy*1], invW*regMat[:,2] = [0; sy*1]
+    sx_1  <- as.vector(sx %*% rep(1, n))   # = rowSums(sx), n-vector
+    sy_1  <- as.vector(sy %*% rep(1, m))   # = rowSums(sy), m-vector
+    a     <- sum(sx_1)                      # 1^T sx 1
+    b     <- sum(sy_1)                      # 1^T sy 1
+    Binv  <- solve(matrix(c(a + b, b, b, b), 2L, 2L))
+    A_top <- cbind(sx_1, 0)                 # n x 2  (invW*regMat top rows)
+    A_bot <- cbind(sy_1, sy_1)             # m x 2  (invW*regMat bottom rows)
+    AB_top <- A_top %*% Binv               # n x 2
+    AB_bot <- A_bot %*% Binv               # m x 2
+    # P blocks
+    P_nn <- sx - tcrossprod(AB_top, A_top)  # n x n
+    P_mm <- sy - tcrossprod(AB_bot, A_bot)  # m x m
+    P_nm <- -tcrossprod(AB_top, A_bot)      # n x m
+    P    <- rbind(cbind(P_nn, P_nm), cbind(t(P_nm), P_mm))  # (n+m) x (n+m)
+
+    # ---- e = 0.5 * tr(P) ----
+    e <- 0.5 * (sum(diag(P_nn)) + sum(diag(P_mm)))
+
+    # ---- invW*diffVec using block structure (no full invW needed) ----
+    invWDiffVec <- c(as.vector(sx %*% diffVec[idN]),
+                     as.vector(sy %*% diffVec[idM]))
+
+    # ---- Efficient Fisher information for nuisance parameters ----
     derivListP <- list(
-        "X" = arrayMatProd(M = P[idN, idN], A = derivList[["X"]]),
-        "Y" = arrayMatProd(M = P[idM, idM], A = derivList[["Y"]])
+        "X" = arrayMatProd(M = P_nn, A = derivX),
+        "Y" = arrayMatProd(M = P_mm, A = derivY)
     )
     Ithetatheta <- 0.5 * bdiagn(
         arrayProdTr(derivListP$X, derivListP$X),
@@ -63,40 +90,58 @@ testGP <- function(x, y, Cx, Ey, altSigmas, distMat, solXonly, solYonly, sx) {
     idItt <- colnames(sitt)
     if (inherits(sitt, "try-error")) {
         idItt <- grep("range", colnames(Ithetatheta), invert = TRUE)
-        sitt <- try(solve(Ithetatheta[idItt, idItt]), silent = TRUE)
-    } # If singular, ignore range parameter,
+        sitt  <- try(solve(Ithetatheta[idItt, idItt]), silent = TRUE)
+    }
     if (inherits(sitt, "try-error")) {
         idItt <- grep("sigma", colnames(Ithetatheta))
-        sitt <- try(solve(Ithetatheta[idItt, idItt]), silent = TRUE)
-    } # If singular, ignore range and sigma parameters
-    invWDiffVec <- invWDiffVecNeg <- invW %*% diffVec # Prepare matrix
-    invWDiffVecNeg[idM] <- -invWDiffVecNeg[idM] # Prepare matrix
-    e <- 0.5 * tr(P)
-    pSigma <- arrayMatProd(M = P, A = altSigmas)
-    Itautau <- 0.5 * colSums(pSigma^2, dims = 2)
-    pSigma <- arrayMatProd(M = P, A = pSigma)
-    Itautheta <- 0.5 * t(rbind(
-        arrayProd2tr(A = pSigma[idN, idN, ], B = derivList$X),
-        arrayProd2tr(A = pSigma[idM, idM, ], B = derivList$Y)
-    ))
-    ItautauTilde <- Itautau - rowSums((Itautheta[, idItt] %*% sitt) * Itautheta[, idItt])
+        sitt  <- try(solve(Ithetatheta[idItt, idItt]), silent = TRUE)
+    }
+
+    # ---- Score-test quantities via C++ (block-structure exploitation) ----
+    internals  <- scoreTestInternals_cpp(P, crossBlocks, derivX, derivY, invWDiffVec)
+    Itautau    <- internals$Itautau
+    Itautheta  <- internals$Itautheta
+    colnames(Itautheta) <- c(dimnames(derivX)[[3]], dimnames(derivY)[[3]])
+    UPos       <- internals$UPos
+    UNeg       <- internals$UNeg
+
+    ItautauTilde <- Itautau - rowSums(
+        (Itautheta[, idItt, drop = FALSE] %*% sitt) * Itautheta[, idItt, drop = FALSE]
+    )
     kappaEst <- ItautauTilde / (2 * e)
-    nu <- 2 * e^2 / ItautauTilde
-    pVals <- vapply(c(FALSE, TRUE), FUN.VALUE = double(dim(altSigmas)[3]), function(neg) {
-        vec <- c(if (neg) invWDiffVecNeg else invWDiffVec)
-        Usigma <- 0.5 * crossprod(colSums(vec * altSigmas), vec) ## The score statistic
-        pchisq(as.vector(Usigma / kappaEst), df = nu, lower.tail = FALSE)
-    })
-    # Cauchy combination rule
-    ps <- apply(pVals, 2, CCT)
+    nu       <- 2 * e^2 / ItautauTilde
+
+    pVals <- cbind(
+        pchisq(UPos / kappaEst, df = nu, lower.tail = FALSE),
+        pchisq(UNeg / kappaEst, df = nu, lower.tail = FALSE)
+    )
+    ps    <- apply(pVals, 2, CCT)
     idMin <- which.min(ps)
-    c("pVal" = min(2 * ps[idMin], 1), "sign" = if (idMin == 1) 1 else -1)
-    # two one-sided tests, multiply p-value by 2 to get two-sided test
+    c("pVal" = min(2 * ps[idMin], 1), "sign" = if (idMin == 1L) 1L else -1L)
 }
+
+#' Build a 3-slice array of covariance-parameter derivatives
+#'
+#' @param fittedGP The fitted Gaussian process (vector of 4 parameters)
+#' @param distMat Distance matrix for the relevant modality
+#' @param suffix Character suffix to append to parameter names ("X" or "Y")
+#' @return An \eqn{n \times n \times 3} array with 3rd-dim names
+#'   \code{c("sigma<suffix>", "range<suffix>", "nugget<suffix>")}
+#' @importFrom abind abind
+buildDerivArray <- function(fittedGP, distMat, suffix) {
+    arr <- abind(
+        arrayDeriv(fittedGP, distMat, what = "sigma"),
+        arrayDeriv(fittedGP, distMat, what = "range"),
+        arrayDeriv(fittedGP, distMat, what = "nugget"),
+        along = 3
+    )
+    dimnames(arr)[[3]] <- paste0(c("sigma", "range", "nugget"), suffix)
+    arr
+}
+
 #' Construct the nxnxg/2 array of derivatives for a nxn matrix to the g/2 covariance matrix parameters.
 #'
 #' @param fittedGP The fitted Gaussian process (vector of 4 parameters)
-#' @inheritParams testGP
 #' @param what For which parameter is the derivative required?
 #' @return The matrix of derivatives
 arrayDeriv <- function(fittedGP, distMat, what) {

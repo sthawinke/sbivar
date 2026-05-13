@@ -9,6 +9,11 @@ X <- matrix(rnorm(n * p), n, p, dimnames = list(paste0("sampleX", seq_len(n)), p
 Y <- matrix(rnorm(m * k), m, k, dimnames = list(paste0("sampleY", seq_len(m)), paste0("Y", seq_len(k))))
 Cx <- matrix(runif(n * 2), n, 2, dimnames = list(rownames(X), c("x", "y")))
 Ey <- matrix(runif(m * 2), m, 2, dimnames = list(rownames(Y), c("x", "y")))
+k <- 3
+X <- matrix(rnorm(n * p), n, p, dimnames = list(paste0("sampleX", seq_len(n)), paste0("X", seq_len(p))))
+Y <- matrix(rnorm(m * k), m, k, dimnames = list(paste0("sampleY", seq_len(m)), paste0("Y", seq_len(k))))
+Cx <- matrix(runif(n * 2), n, 2, dimnames = list(rownames(X), c("x", "y")))
+Ey <- matrix(runif(m * 2), m, 2, dimnames = list(rownames(Y), c("x", "y")))
 # Multiple images
 ims <- 6
 Xl <- lapply(selfName(seq_len(ims)), function(i) {

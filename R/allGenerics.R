@@ -34,17 +34,18 @@
 #' )
 #' resModtTestJoint <- sbivar(X, Y2, Cx, method = "Modified")
 #' # Single image analysis on synthetic data, converted to SpatialExperiment
-#' library(SpatialExperiment)
-#' seX <- SpatialExperiment(
-#'     assays = list("transcripts" = t(X)),
-#'     spatialCoords = Cx
-#' )
-#' seY <- SpatialExperiment(
-#'     assays = list("metabolites" = t(Y)),
-#'     spatialCoords = Ey
-#' )
-#' resModtGPs <- sbivar(seX, seY,
-#'     assayX = "transcripts", assayY = "metabolites",
-#'     method = "GPs"
-#' )
+#' if (require(SpatialExperiment)) {
+#'     seX <- SpatialExperiment(
+#'         assays = list("transcripts" = t(X)),
+#'         spatialCoords = Cx
+#'     )
+#'     seY <- SpatialExperiment(
+#'         assays = list("metabolites" = t(Y)),
+#'         spatialCoords = Ey
+#'     )
+#'     resModtGPs <- sbivar(seX, seY,
+#'         assayX = "transcripts", assayY = "metabolites",
+#'         method = "GPs"
+#'     )
+#' }
 setGeneric("sbivar", function(X, ...) standardGeneric("sbivar"))

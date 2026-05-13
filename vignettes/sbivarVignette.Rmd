@@ -167,7 +167,7 @@ plotTopPair(gamRes,
 )
 ```
 
-An other feature is found most significant by GAMs, now with a positive relationship. For GAMs, we can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes$result[gpGam<- rownames(gamRes$result)[1], "corxy"], 3)`:
+An other feature is found most significant by GAMs, now with a positive relationship. For GAMs, we can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes$result[1, "corxy"], 3)`:
 
 ```{r plotGAM}
 plotGAMsTopResults(gamRes,
@@ -291,22 +291,25 @@ plotTopPair(resSpatExp, X = StxSE, Y = MetSE, topRank = 2, size = 0.4)
 Now we construct a _MultiAssayExperiment_ object
 
 ```{r makeMAE}
-library(MultiAssayExperiment)
-MAE <- MultiAssayExperiment(experiments = list(
-    "Stx" = StxSE,
-    "Msi" = MetSE
-))
-MAE
+if (reqmae <- require(MultiAssayExperiment)) {
+    MAE <- MultiAssayExperiment(experiments = list(
+        "Stx" = StxSE,
+        "Msi" = MetSE
+    ))
+    MAE
+}
 ```
 
 We run a the same analysis, now providing the experiment names on top of the assay names (since a _MultiAssayExperiment_ can contain more than two modalities):
 
 ```{r analyseMAE, eval = FALSE}
-resMAE <- sbivar(MAE,
-    assayX = "transcripts", assayY = "metabolites",
-    experimentX = "Stx", experimentY = "Msi",
-    families = FamiliesVicari, method = "GAMs", normX = "rel", normY = "rel"
-)
+if (reqmae) {
+    resMAE <- sbivar(MAE,
+        assayX = "transcripts", assayY = "metabolites",
+        experimentX = "Stx", experimentY = "Msi",
+        families = FamiliesVicari, method = "GAMs", normX = "rel", normY = "rel"
+    )
+}
 ```
 
 ### Multi-image

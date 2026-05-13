@@ -12,8 +12,10 @@
 #' either "trend" for a deterministic process or "field" for the Gaussian random field
 #' @returns A named list of results
 #' @inheritParams MoransISingle
-GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX,
-    featuresY, includeGPsmooth, testSmooth, findVariances = TRUE) {
+GAMsSingle <- function(
+      X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX,
+      featuresY, includeGPsmooth, testSmooth, findVariances = TRUE
+) {
     if (verbose) {
         message("Fitting GAMs for first modality (", length(featuresX), " features) ...")
     }
@@ -36,12 +38,16 @@ GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX
     Nrow <- if (findVariances) 3 else 1
     # Precompute all Y predictions once; reused for every X feature
     predsY <- lapply(selfName(names(gamsy)), function(featy) {
-        vcovPredGam(gamsy[[featy]], newdata = ng, findVariances = findVariances,
-                    testSmooth = testSmooth)
+        vcovPredGam(gamsy[[featy]],
+            newdata = ng, findVariances = findVariances,
+            testSmooth = testSmooth
+        )
     })
     out <- vapply(selfName(names(gamsx)), function(featx) {
-        predx <- vcovPredGam(gamsx[[featx]], newdata = ng, findVariances = findVariances,
-                             testSmooth = testSmooth)
+        predx <- vcovPredGam(gamsx[[featx]],
+            newdata = ng, findVariances = findVariances,
+            testSmooth = testSmooth
+        )
         out <- vapply(selfName(names(gamsy)), FUN.VALUE = double(Nrow), function(featy) {
             testGAM(
                 predx = predx, modely = gamsy[[featy]], modelx = gamsx[[featx]],

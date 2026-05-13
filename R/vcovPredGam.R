@@ -21,10 +21,14 @@
 #' @inheritParams GAMsSingle
 vcovPredGam <- function(model, newdata, testSmooth, findVariances = TRUE) {
     # Identify the smooth of interest and its coefficient indices
-    idSmooth <- which(vapply(model$smooth, FUN.VALUE = TRUE,
-                             function(sm) sm$id == testSmooth))
-    idCoefs <- seq(model$smooth[[idSmooth]]$first.para,
-                   model$smooth[[idSmooth]]$last.para)
+    idSmooth <- which(vapply(model$smooth,
+        FUN.VALUE = TRUE,
+        function(sm) sm$id == testSmooth
+    ))
+    idCoefs <- seq(
+        model$smooth[[idSmooth]]$first.para,
+        model$smooth[[idSmooth]]$last.para
+    )
 
     # Basis matrix B (N_grid x q) — shared by prediction and variance computation
     basis_matrix <- predict.gam(model,

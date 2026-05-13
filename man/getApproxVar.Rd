@@ -22,6 +22,6 @@ Scalar approximate variance
 \description{
 Computes \eqn{v^T \text{Cov}(\hat{f}) \, v} using the factored form
 \eqn{(B^T v)^T C (B^T v)}, where \eqn{B} is the basis matrix and
-\eqn{C = \text{Var}(\beta)}.  This avoids materialising the
+\eqn{C = \text{Var}(\beta)}. This avoids materialising the
 \eqn{N_\text{grid} \times N_\text{grid}} prediction covariance matrix.
 }

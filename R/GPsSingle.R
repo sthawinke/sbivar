@@ -13,10 +13,8 @@
 #' This argument allows to pass parameters of the Gaussian processes estimated with other software
 #' (e.g. with GPU acceleration) to perform the score test.
 #' @importFrom abind abind
-GPsSingle <- function(
-      X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
-      correlation, optControl, verbose, featuresX, featuresY
-) {
+GPsSingle <- function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
+    correlation, optControl, verbose, featuresX, featuresY) {
     p <- length(featuresX)
     k <- length(featuresY)
     if (missing(gpParams)) {
@@ -54,25 +52,17 @@ GPsSingle <- function(
             " pairwise score tests on fitted GPs ..."
         )
     }
-    # Precompute sy and derivY once per y-feature (k times) rather than p*k times
-    syList    <- lapply(selfName(featuresY), function(featy) {
-        base::solve(buildSigmaGp(gpsy[, featy], distMat = distMat[idM, idM]))
-    })
-    derivListY <- lapply(selfName(featuresY), function(featy) {
-        buildDerivArray(gpsy[, featy], distMat[idM, idM], "Y")
-    })
-
     out <- vapply(selfName(featuresX), function(featx) {
         # Precompute sx and derivX once per x-feature (p times total)
-        sx     <- base::solve(buildSigmaGp(gpsx[, featx], distMat = distMat[idN, idN]))
+        sx <- base::solve(buildSigmaGp(gpsx[, featx], distMat = distMat[idN, idN]))
         derivX <- buildDerivArray(gpsx[, featx], distMat[idN, idN], "X")
         out <- vapply(selfName(featuresY), FUN.VALUE = double(2), function(featy) {
             testGP(
                 x = X[, featx], y = Y[, featy],
                 crossBlocks = crossBlocks,
                 solXonly = gpsx[, featx], solYonly = gpsy[, featy],
-                sx = sx,               sy = syList[[featy]],
-                derivX = derivX,       derivY = derivListY[[featy]]
+                sx = sx, sy = base::solve(buildSigmaGp(gpsy[, featy], distMat = distMat[idM, idM])),
+                derivX = derivX, derivY = buildDerivArray(gpsy[, featy], distMat[idM, idM], "Y")
             )
         })
         printProgress(featx, featuresX, verbose)

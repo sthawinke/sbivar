@@ -19,7 +19,7 @@ buildAltSigmas <- function(distMat, numLscAlts, Quants, idN, idM) {
         quantile(tmp[tmp != 0], probs = Quants)
     }
     lscAlts <- exp(seq(log(rangeDist[1]), log(rangeDist[2]), length.out = numLscAlts))
-    crossDist <- distMat[idN, idM]   # n x m sub-matrix of distances
+    crossDist <- distMat[idN, idM] # n x m sub-matrix of distances
     # Return only the off-diagonal cross-blocks C_l = GaussKernel(crossDist, lscAlt_l)
     # Result is an n x m x L array; the diagonal identity blocks are implicit.
     vapply(lscAlts, FUN.VALUE = crossDist, function(lscAlt) {

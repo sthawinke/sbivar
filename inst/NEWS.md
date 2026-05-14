@@ -55,3 +55,8 @@
  - Switch to common names for metabolites in Vicari data
  - Switch off GP smoother in GAMs as default
  - In plotGAMsTopResults, use provided families as default
+ 
+# 0.99.7
+
+ - Rearrange matrix multiplications for GAMs to save memory
+ - C++ speed-ups for GPs and Moran's I

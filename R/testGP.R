@@ -143,6 +143,7 @@ buildDerivArray <- function(fittedGP, distMat, suffix) {
 #'
 #' @param fittedGP The fitted Gaussian process (vector of 4 parameters)
 #' @param what For which parameter is the derivative required?
+#' @param distMat The distance matrix
 #' @return The matrix of derivatives
 arrayDeriv <- function(fittedGP, distMat, what) {
     switch(what,

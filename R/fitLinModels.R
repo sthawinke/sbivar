@@ -106,7 +106,7 @@ fitLinModels <- function(result, designDf, Formula, verbose = TRUE, inverseWeigh
     # Replace outcome variable by "out"
     MM <- length(findbars(Formula)) > 0
     fixedVars <- all.vars(nobars(Formula)[[3]])
-    baseDf <- data.frame("out" = NA, centerNumeric(designDf))
+    baseDf <- data.frame("out" = 0, centerNumeric(designDf))
     if (is.null(fixedVars)) {
         contrasts <- NULL
     } else {

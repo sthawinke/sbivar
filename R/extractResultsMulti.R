@@ -31,7 +31,7 @@ extractResultsMulti <- function(result, designDf, method = "BH") {
         })
         out <- if (!any(id)) {
             # warning("No lmerModLmerTest or lm models found!")
-            return(list("Intercept" = NULL, "fixedEffects" = NULL))
+            return(NULL)
         } else {
             Summaries <- lapply(res[id], function(x) summary(x)$coef)
             ints <- t(vapply(Summaries, FUN.VALUE = double(3), function(x) {
@@ -95,6 +95,7 @@ extractResultsMulti <- function(result, designDf, method = "BH") {
             c(list("Intercept" = intRes), fixRes)
         }
     })
+    outout <- outout[!vapply(outout, FUN.VALUE = TRUE, is.null)]
     fixResOut <- lapply(selfName(names(outout[[1]])), function(ii) {
         tmpMat <- t(vapply(outout, FUN.VALUE = outout[[1]][[ii]], function(x) {
             if (is.null(x[[ii]])) rep(NA, length(outout[[1]][[ii]])) else x[[ii]]

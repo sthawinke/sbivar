@@ -80,7 +80,7 @@ fitLinModels <- function(result, designDf, Formula, verbose = TRUE, inverseWeigh
         1
     })
     # Prepare arrays of outcomes and weights
-    outArr <- array(0,
+    outArr <- array(NA,
         dim = c(nrow(designDf), length(Features), length(iter)),
         dimnames = list(names(measures), Features, names(iter))
     )
@@ -106,7 +106,7 @@ fitLinModels <- function(result, designDf, Formula, verbose = TRUE, inverseWeigh
     # Replace outcome variable by "out"
     MM <- length(findbars(Formula)) > 0
     fixedVars <- all.vars(nobars(Formula)[[3]])
-    baseDf <- data.frame("out" = 0, centerNumeric(designDf))
+    baseDf <- data.frame("out" = NA, centerNumeric(designDf))
     if (is.null(fixedVars)) {
         contrasts <- NULL
     } else {

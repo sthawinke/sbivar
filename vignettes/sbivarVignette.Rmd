@@ -310,7 +310,7 @@ resMAE <- sbivar(MAE,
 
 ### Multi-image
 
-For the multi-image case, there are several options. One is to provide a list of _SpatialExperiment_ objects to the _sbivar_ function. We construct such list here for illustrative purposes, and fit GAMs:
+For the multi-image case, there are several options. One is to provide two lists of _SpatialExperiment_ objects to the _sbivar_ function. We construct such list here for illustrative purposes, and fit GAMs:
 
 ```{r multiListSE}
 StxSElist <- lapply(selfName(names(Vicari$TranscriptOutcomes)), function(nam) {

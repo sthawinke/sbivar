@@ -31,6 +31,7 @@
 #' @importFrom stats p.adjust
 #' @importFrom methods is
 #' @importFrom nlme corGaus lmeControl
+#' @importFrom BiocParallel bpparam bpworkers
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
 #' @seealso \link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle}, \link{GPsSingle}
 sbivarSingle <- function(
@@ -110,7 +111,7 @@ sbivarSingle <- function(
     if (verbose) {
         message(
             "Starting sbivar analysis of a single image on ",
-            bpparam()$workers, " computing cores"
+            bpworkers(bpparam()), " computing cores"
         )
     }
     out <- if (method == "Moran's I") {

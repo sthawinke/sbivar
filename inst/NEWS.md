@@ -62,3 +62,7 @@
  - C++ speed-ups for GPs and Moran's I
  - Fixing some potential issues in fitLinModels and extractResultsMulti
  - Add Makevars for C++ Windows installation
+
+# 0.99.8
+
+ - Use bpworkers(bpparam()) to retreive number of registered cores rahter than bpparam()$workers

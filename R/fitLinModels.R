@@ -38,7 +38,7 @@
 #' @importFrom reformulas findbars nobars
 #' @importFrom methods is
 #' @importFrom smoppix centerNumeric named.contr.sum loadBalanceBplapply
-#' @importFrom BiocParallel bplapply bpparam
+#' @importFrom BiocParallel bplapply bpparam bpworkers
 #' @seealso \link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}, \link[stats]{p.adjust}
 #' @order 1
 fitLinModels <- function(result, designDf, Formula, verbose = TRUE, inverseWeigh = FALSE, scaleByMax = TRUE,
@@ -126,7 +126,7 @@ fitLinModels <- function(result, designDf, Formula, verbose = TRUE, inverseWeigh
     if (verbose) {
         message(
             "Fitting ", length(Features), if (MM) " mixed" else " fixed",
-            " effects models on ", bpparam()$workers, " cores"
+            " effects models on ", bpworkers(bpparam()), " cores"
         )
     }
     models <- loadBalanceBplapply(Features, function(feat) {

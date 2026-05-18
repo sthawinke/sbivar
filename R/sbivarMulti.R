@@ -18,7 +18,7 @@
 #' @inheritParams buildWeightMat
 #' @inheritParams MoransISingle
 #' @inheritParams GAMsSingle
-#' @importFrom BiocParallel bpparam
+#' @importFrom BiocParallel bpparam bpworkers
 #' @seealso \link{fitLinModels}, \link{MoransIMulti}, \link{correlationsMulti}, \link{GAMsMulti}
 sbivarMulti <- function(
       Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
@@ -68,7 +68,7 @@ sbivarMulti <- function(
     if (verbose) {
         message(
             "Starting sbivar analysis (", method, ") of ", length(Xl), " images on ",
-            bpparam()$workers, " computing cores"
+            bpworkers(bpparam()), " computing cores"
         )
     }
     out <- if (method == "Moran's I") {

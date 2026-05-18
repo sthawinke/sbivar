@@ -7,3 +7,5 @@ sbivar.Rproj
 /Meta/
 .positai
 *.html
+*.o
+*.so

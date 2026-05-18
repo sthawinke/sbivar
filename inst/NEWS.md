@@ -61,3 +61,4 @@
  - Rearrange matrix multiplications for GAMs to save memory
  - C++ speed-ups for GPs and Moran's I
  - Fixing some potential issues in fitLinModels and extractResultsMulti
+ - Add Makevars for C++ Windows installation

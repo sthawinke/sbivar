@@ -66,3 +66,7 @@
 # 0.99.8
 
  - Use bpworkers(bpparam()) to retreive number of registered cores rahter than bpparam()$workers
+ 
+# 0.99.9
+
+ - Call gsat:variogram and gstat::vgm explicitly

@@ -70,3 +70,7 @@
 # 0.99.9
 
  - Call gsat:variogram and gstat::vgm explicitly
+ 
+# 0.99.10
+
+ - Switch to SnowParam for multithreading on windows

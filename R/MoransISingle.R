@@ -143,9 +143,9 @@ matheronVariograms <- function(X, Cx, width, cutoff, variogramModels) {
     # Compute empirical semivariogram using Matheron’s estimator
     variograms <- loadBalanceBplapply(selfName(colnames(X)), function(nm) {
         Cx$z <- X[, nm]
-        vg <- gstat::variogram(z ~ 1, Cx, width = width, cutoff = cutoff)
+        vg <- variogram(z ~ 1, Cx, width = width, cutoff = cutoff)
         fvgs <- lapply(variogramModels, function(vv) {
-            try(gstat::fit.variogram(vg, gstat::vgm(model = vv, nugget = NA)), silent = TRUE) # Include nugget variance
+            try(fit.variogram(vg, vgm(model = vv, nugget = NA)), silent = TRUE) # Include nugget variance
         })
         fvgs <- fvgs[vapply(fvgs, FUN.VALUE = TRUE, is, "variogramModel")]
         fvg <- fvgs[[which.min(vapply(fvgs, FUN.VALUE = double(1), attr, "SSErr"))]]

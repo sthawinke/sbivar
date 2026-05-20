@@ -40,14 +40,11 @@ toyDesign <- data.frame(
 # Register the parallel backend
 nCores <- 2
 if (.Platform$OS.type == "unix") {
-    # On unix-based systems, use MulticoreParam
+    # On unix-based systems (linux and macOS), use MulticoreParam
     register(MulticoreParam(nCores))
 } else {
-    # On windows, use makeCluster
-    library(doParallel)
-    Clus <- makeCluster(nCores)
-    registerDoParallel(Clus)
-    register(DoparParam(), default = TRUE)
+    # On windows, use SnowParam
+    register(SnowParam(workers = nCores, type = "SOCK"))
 }
 # register(SerialParam()) # Switch on when mapping test coverage
 resMoranTest <- sbivar(X, Y, Cx, Ey, method = "Moran")

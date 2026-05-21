@@ -69,7 +69,7 @@
  
 # 0.99.9
 
- - Call gsat:variogram and gstat::vgm explicitly
+ - Call gtsat:variogram and gstat::vgm explicitly
  
 # 0.99.10
 

@@ -136,13 +136,20 @@ buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun
     if (families[["X"]]$family != "gaussian") {
         X <- X[idX <- (rowSums(X) > 0), ]
         Cx <- Cx[idX, ]
+        if (families[["X"]] == "Gamma") {
+            X <- X + pseudoCount
+        }
     }
     if (families[["Y"]]$family != "gaussian") {
         Y <- Y[idY <- (rowSums(Y) > 0), ]
         Ey <- Ey[idY, ]
+        if (families[["Y"]] == "Gamma") {
+            Y <- Y + pseudoCount
+        }
     }
     X <- normMat(X, normX)
     Y <- normMat(Y, normY)
+
     colnames(Cx) <- colnames(Ey) <- c("x", "y")
     newGrid <- buildNewGrid(Cx = Cx, Ey = Ey, n_points_grid = n_points_grid)
     modelx <- fitGAM(

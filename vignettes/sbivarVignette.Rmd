@@ -74,8 +74,10 @@ if (.Platform$OS.type == "unix") {
     # On unix-based systems (linux and macOS), use MulticoreParam
     register(MulticoreParam(nCores))
 } else {
-    # On windows, use SnowParam
-    register(SnowParam(workers = nCores, type = "SOCK"))
+    # On windows, we could use SnowParam
+    # register(SnowParam(workers = nCores, type = "SOCK"))
+    # But to avoid vignette problems, we do
+    SerialParam()
 }
 ```
 

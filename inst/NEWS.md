@@ -78,3 +78,7 @@
 # 0.99.10
  
  - No more multithreading in vignette building on windows
+ 
+# 0.99.11
+
+ - Add pseudocount for gamma gamily in plotGAM

@@ -132,18 +132,18 @@ makeOffset <- function(X, family) {
     }
     return(out)
 }
-buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun, smooth, normX, normY, ...) {
+buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun, smooth, normX, normY, pseudoCount = 1e-8, ...) {
     if (families[["X"]]$family != "gaussian") {
         X <- X[idX <- (rowSums(X) > 0), ]
         Cx <- Cx[idX, ]
-        if (families[["X"]] == "Gamma") {
+        if (families[["X"]]$family == "Gamma") {
             X <- X + pseudoCount
         }
     }
     if (families[["Y"]]$family != "gaussian") {
         Y <- Y[idY <- (rowSums(Y) > 0), ]
         Ey <- Ey[idY, ]
-        if (families[["Y"]] == "Gamma") {
+        if (families[["Y"]]$family == "Gamma") {
             Y <- Y + pseudoCount
         }
     }

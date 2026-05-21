@@ -74,3 +74,7 @@
 # 0.99.10
 
  - Switch to SnowParam for multithreading on windows
+ 
+# 0.99.10
+ 
+ - No more multithreading in vignette building on windows

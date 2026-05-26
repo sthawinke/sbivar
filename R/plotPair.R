@@ -44,8 +44,10 @@
 #'     Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
 #'     normX = "rel", normY = "rel", features = c("Gnas", "Tocopherol")
 #' )
-plotTopPair <- function(results, ..., normX = results$normX, normY = results$normY,
-    topRank = 1, parameter = "Intercept", scaleBySampleSums = FALSE) {
+plotTopPair <- function(
+      results, ..., normX = results$normX, normY = results$normY,
+      topRank = 1, parameter = "Intercept", scaleBySampleSums = FALSE
+) {
     stopifnot(is.numeric(topRank), topRank >= 1, is.logical(scaleBySampleSums), is.character(parameter))
     if (!results$multi) {
         topFeats <- results$result[topRank, c("Modality_X", "Modality_Y")]
@@ -68,8 +70,10 @@ plotTopPair <- function(results, ..., normX = results$normX, normY = results$nor
 #' @inheritParams plotPairSingle
 #' @order 3
 #' @param theme the ggplot2 theme
-plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "log"), scaleBySampleSums = FALSE,
-    normY = c("none", "rel", "log"), size = 1.25, assayX, assayY, theme = theme_bw()) {
+plotPairMulti <- function(
+      Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "log"), scaleBySampleSums = FALSE,
+      normY = c("none", "rel", "log"), size = 1.25, assayX, assayY, theme = theme_bw()
+) {
     Xl <- getX(Xl, assayX)
     Yl <- getX(Yl, assayY)
     Cxl <- getSpatialCoords(Xl, Cxl)
@@ -114,10 +118,8 @@ plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "
 #' @rdname plotTopPair
 #' @export
 #' @order 2
-plotPairSingle <- function(
-      X, Y, Cx, Ey, features, normX = c("none", "rel", "log"),
-      normY = c("none", "rel", "log"), assayX, assayY, scaleBySampleSums = TRUE, size = 1.5, ...
-) {
+plotPairSingle <- function(X, Y, Cx, Ey, features, normX = c("none", "rel", "log"),
+    normY = c("none", "rel", "log"), assayX, assayY, scaleBySampleSums = TRUE, size = 1.5, ...) {
     stopifnot(length(features) == 2, is.numeric(size), is.logical(scaleBySampleSums))
     if (inherits(X, "SpatialExperiment")) {
         Cx <- SpatialExperiment::spatialCoords(X)

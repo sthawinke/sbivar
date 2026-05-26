@@ -145,7 +145,6 @@ buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun
     }
     X <- normMat(X, normX)
     Y <- normMat(Y, normY)
-
     colnames(Cx) <- colnames(Ey) <- c("x", "y")
     newGrid <- buildNewGrid(Cx = Cx, Ey = Ey, n_points_grid = n_points_grid)
     modelx <- fitGAM(

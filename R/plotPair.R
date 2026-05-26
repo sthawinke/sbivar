@@ -74,6 +74,7 @@ plotPairMulti <- function(
       Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "log"), scaleBySampleSums = FALSE,
       normY = c("none", "rel", "log"), size = 1.25, assayX, assayY, theme = theme_bw()
 ) {
+    stopifnot(is.logical(scaleBySampleSums), is.numeric(size))
     Xl <- getX(Xl, assayX)
     Yl <- getX(Yl, assayY)
     Cxl <- getSpatialCoords(Xl, Cxl)

@@ -9,10 +9,11 @@ framework as obtained from alignment is considered given.
 
 <!-- % As introduced in our [preprint](). -->
 
-The package can be installed from GitHub as follows:
+The package can be installed from GitHub (with suggested packages
+through dependencies = TRUE) as follows:
 
 ``` r
-remotes::install_github("sthawinke/sbivar", build_vignettes = TRUE)
+remotes::install_github("sthawinke/sbivar", build_vignettes = TRUE, dependencies = TRUE)
 ```
 
 Once installed, you can load the package
@@ -65,7 +66,14 @@ Prepare multithreading
 
 ``` r
 library(BiocParallel)
-register(MulticoreParam(2))
+nCores <- 2
+if (.Platform$OS.type == "unix") {
+    # On unix-based systems (linux and macOS), use MulticoreParam
+    register(MulticoreParam(nCores))
+} else {
+    # On windows, use SnowParam
+    register(SnowParam(workers = nCores, type = "SOCK"))
+}
 ```
 
 Now analyse this single sample using bivariate Moran’s I.

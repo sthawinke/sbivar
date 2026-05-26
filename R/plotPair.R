@@ -5,6 +5,7 @@
 #' The default is the intercept, i.e. the overall effect.
 #' @param topRank An integer, the feature pair with the rank-th smallest p-value is plotted
 #' @param ... passed onto lower level functions
+#' @param scaleBySampleSums A boolean, should the size of the spots be scaled by their sample sum, e.g. library size or total ion count? Recommended to reflect differences in certainty depending on sample sums.
 #' @inheritParams sbivarMulti
 #' @inheritParams plotPairSingle
 #' @seealso \link{extractResultsMulti}, \link{fitLinModels}
@@ -41,17 +42,15 @@
 #' # Plot an arbitrary feature pair
 #' plotPairMulti(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
 #'     Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
-#'     normX = "log", normY = "log", features = c("Gnas", "Tocopherol")
+#'     normX = "rel", normY = "rel", features = c("Gnas", "Tocopherol")
 #' )
-plotTopPair <- function(
-      results, ..., normX = results$normX, normY = results$normY,
-      topRank = 1, parameter = "Intercept"
-) {
-    stopifnot(is.numeric(topRank))
+plotTopPair <- function(results, ..., normX = results$normX, normY = results$normY,
+    topRank = 1, parameter = "Intercept", scaleBySampleSums = TRUE) {
+    stopifnot(is.numeric(topRank), is.logical(scaleBySampleSums))
     if (!results$multi) {
         topFeats <- results$result[topRank, c("Modality_X", "Modality_Y")]
         plotPairSingle(
-            features = topFeats, assayX = results$assayX,
+            features = topFeats, assayX = results$assayX, scaleBySampleSums = scaleBySampleSums,
             assayY = results$assayY, normX = normX, normY = normY, ...
         )
     } else {
@@ -59,7 +58,7 @@ plotTopPair <- function(
         topFeats <- results$result[[parameter]][topRank, c("Modality_X", "Modality_Y")]
         plotPairMulti(
             features = topFeats, assayX = results$assayX,
-            assayY = results$assayY, normX = normX,
+            assayY = results$assayY, normX = normX, scaleBySampleSums = scaleBySampleSums,
             normY = normY, ...
         )
     }
@@ -69,10 +68,8 @@ plotTopPair <- function(
 #' @inheritParams plotPairSingle
 #' @order 3
 #' @param theme the ggplot2 theme
-plotPairMulti <- function(
-      Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "log"),
-      normY = c("none", "rel", "log"), size = 1.25, assayX, assayY, theme = theme_bw()
-) {
+plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "log"), scaleBySampleSums = TRUE,
+    normY = c("none", "rel", "log"), size = 1.25, assayX, assayY, theme = theme_bw()) {
     Xl <- getX(Xl, assayX)
     Yl <- getX(Yl, assayY)
     Cxl <- getSpatialCoords(Xl, Cxl)
@@ -84,6 +81,7 @@ plotPairMulti <- function(
     normY <- match.arg(normY)
     theme_set(theme)
     dfList <- do.call(rbind, lapply(names(Xl), function(nam) {
+        size <- getSizes(Xl[[nam]], Yl[[nam]], normX, normY, scaleBySampleSums, size = size)
         X <- normMat(Xl[[nam]], normX)
         Y <- normMat(Yl[[nam]], normY)
         coordMat <- rbind(Cxl[[nam]][rownames(X), ], Eyl[[nam]][rownames(Y), ])
@@ -93,7 +91,7 @@ plotPairMulti <- function(
                 scaleHelpFun(X, feat = features[1]),
                 scaleHelpFun(Y, feat = features[2])
             ),
-            "image" = nam, coordMat,
+            "size" = size, "image" = nam, coordMat,
             "feature" = rep(features, times = c(nrow(X), nrow(Y)))
         )
     }))
@@ -116,9 +114,11 @@ plotPairMulti <- function(
 #' @rdname plotTopPair
 #' @export
 #' @order 2
-plotPairSingle <- function(X, Y, Cx, Ey, features, normX = c("none", "rel", "log"),
-    normY = c("none", "rel", "log"), assayX, assayY, ...) {
-    stopifnot(length(features) == 2)
+plotPairSingle <- function(
+      X, Y, Cx, Ey, features, normX = c("none", "rel", "log"),
+      normY = c("none", "rel", "log"), assayX, assayY, scaleBySampleSums = TRUE, size = 1.25, ...
+) {
+    stopifnot(length(features) == 2, is.numeric(size), is.logical(scaleBySampleSums))
     if (inherits(X, "SpatialExperiment")) {
         Cx <- SpatialExperiment::spatialCoords(X)
         X <- assayT(X, assayX)
@@ -131,10 +131,11 @@ plotPairSingle <- function(X, Y, Cx, Ey, features, normX = c("none", "rel", "log
     foo <- checkInputSingle(X, Y, Cx, Ey)
     normX <- match.arg(normX)
     normY <- match.arg(normY)
+    size <- getSizes(X, Y, normX, normY, scaleBySampleSums, size = size)
     X <- normMat(X, normX)
     Y <- normMat(Y, normY)
     plotPairSingleVectors(
-        x = scaleHelpFun(feat = features[1], X),
+        x = scaleHelpFun(feat = features[1], X), size = size[c(rownames(X), rownames(Y))],
         y = scaleHelpFun(feat = features[2], Y),
         Cx = Cx[rownames(X), ], Ey = Ey[rownames(Y), ], modalityNames = features, ...
     )
@@ -144,8 +145,10 @@ plotPairSingle <- function(X, Y, Cx, Ey, features, normX = c("none", "rel", "log
 #' appearing in the strip text of the columns. For plotTopPair() and
 #' plotPairSingle(), the feature names are used.
 #' @order 4
-plotPairSingleVectors <- function(x, y, Cx, Ey, size = 1.25,
-    modalityNames = c("Modality X", "Modality Y"), theme = theme_bw(), ...) {
+plotPairSingleVectors <- function(
+      x, y, Cx, Ey, size,
+      modalityNames = c("Modality X", "Modality Y"), theme = theme_bw(), ...
+) {
     theme_set(theme)
     stopifnot(length(x) == nrow(Cx), length(y) == nrow(Ey), ncol(Ey) == 2, ncol(Cx) == 2)
     coordMat <- rbind(Cx, Ey)
@@ -154,7 +157,8 @@ plotPairSingleVectors <- function(x, y, Cx, Ey, size = 1.25,
         "outcome" = c(x, y), coordMat,
         "feature" = factor(rep(modalityNames, times = c(length(x), length(y))),
             levels = modalityNames, ordered = TRUE
-        )
+        ),
+        "size" = size
     )
     ggplot(data = plotDf, aes(x = x, y = y, col = outcome)) +
         geom_point(size = size) +

@@ -83,7 +83,7 @@ register(param)
 On windows, once the package has been built, for multithreading use
 
 ```{r multiThreadWindows, eval = FALSE}
-register(SnowParam(workers = nCores, type = "SOCK")) #or doParallel
+register(SnowParam(workers = nCores, type = "SOCK")) # or doParallel
 ```
 
 Wherever applicable, the registered backend will be used throughout the analysis.

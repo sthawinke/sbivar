@@ -83,3 +83,7 @@
 
  - Add pseudocount for gamma family in plotGAM
  
+# 0.99.12
+
+ - Add option to scale point sizes to library sizes in case of normalization or offset modelling
+ 

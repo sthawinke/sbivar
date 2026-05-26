@@ -13,7 +13,8 @@ plotTopPair(
   normX = results$normX,
   normY = results$normY,
   topRank = 1,
-  parameter = "Intercept"
+  parameter = "Intercept",
+  scaleBySampleSums = TRUE
 )
 
 plotPairSingle(
@@ -26,6 +27,8 @@ plotPairSingle(
   normY = c("none", "rel", "log"),
   assayX,
   assayY,
+  scaleBySampleSums = TRUE,
+  size = 1.25,
   ...
 )
 
@@ -48,7 +51,7 @@ plotPairSingleVectors(
   y,
   Cx,
   Ey,
-  size = 1.25,
+  size,
   modalityNames = c("Modality X", "Modality Y"),
   theme = theme_bw(),
   ...
@@ -78,11 +81,11 @@ The default is the intercept, i.e. the overall effect.}
 \item{assayX, assayY}{Assay names to be used in the analysis,
 see \link[SummarizedExperiment]{assay}}
 
+\item{size}{Point size}
+
 \item{Xl, Yl}{Lists of matrices of omics measurements}
 
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
-
-\item{size}{Point size}
 
 \item{theme}{the ggplot2 theme}
 
@@ -131,7 +134,7 @@ data(Vicari)
 # Plot an arbitrary feature pair
 plotPairMulti(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
     Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
-    normX = "log", normY = "log", features = c("Gnas", "Tocopherol")
+    normX = "rel", normY = "rel", features = c("Gnas", "Tocopherol")
 )
 }
 \seealso{

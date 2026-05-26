@@ -266,3 +266,20 @@ addFeatureColumn <- function(x) {
     rownames(x) <- NULL
     data.frame(featureMet, x)
 }
+#' Construct the size variable
+#'
+#' @inheritParams sbivarSingle
+#' @inheritParams plotPairSingle
+#' @param size The maximum output size
+#'
+#' @returns The final point size
+getSize <- function(X, Y, normX, normY, size, scaleBySampleSums) {
+    size <- if (scaleBySampleSums && ((normX != "none") && (normY != "none"))) {
+        rsx <- rowSums(X)
+        rsy <- rowSums(Y)
+        c(rsx / max(rsx), rsy / max(rsy)) * size
+    } else {
+        size
+    }
+    return(size)
+}

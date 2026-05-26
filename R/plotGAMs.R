@@ -40,11 +40,9 @@
 #' @import ggplot2
 #' @importFrom smoppix loadBalanceBplapply
 #' @order 1
-plotGAMs <- function(
-      X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scaleMinusOne",
-      families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE, normX = c("none", "rel", "log"),
-      normY = c("none", "rel", "log"), n_points_grid = 6e2, includeGPsmooth = TRUE, smooth = "trend", ...
-) {
+plotGAMs <- function(X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scaleMinusOne",
+    families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE, normX = c("none", "rel", "log"),
+    normY = c("none", "rel", "log"), n_points_grid = 6e2, includeGPsmooth = TRUE, smooth = "trend", ...) {
     stopifnot(
         is.numeric(n_points_grid), all(vapply(families, FUN.VALUE = TRUE, is, "family")),
         all(vapply(features, FUN.VALUE = TRUE, is.character))
@@ -97,10 +95,8 @@ plotGAMs <- function(
 #' @rdname plotGAMs
 #' @order 2
 #' @inheritParams plotTopPair
-plotGAMsTopResults <- function(
-      results, X, Y, Cx, Ey, topRank = 1,
-      parameter = "Intercept", families = results$families, ...
-) {
+plotGAMsTopResults <- function(results, X, Y, Cx, Ey, topRank = 1,
+    parameter = "Intercept", families = results$families, ...) {
     stopifnot(is.numeric(topRank))
     topFeats <- (
         if (results$multi) {

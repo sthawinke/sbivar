@@ -81,4 +81,5 @@
  
 # 0.99.11
 
- - Add pseudocount for gamma gamily in plotGAM
+ - Add pseudocount for gamma family in plotGAM
+ 

@@ -161,11 +161,11 @@ gamRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
 )
 ```
 
-Plot the most significant pair (normalized data are shown, the original analysis is on raw data):
+Plot the most significant pair. Normalized data are shown, while the original analysis is on raw data, but we scale the size of the spots by the sample sums to reflect their higher weight in the analysis:
 
 ```{r plottoppairgam}
 plotTopPair(gamRes,
-    X = singleStx, Y = singleMet, Cx = singleStxCoords,
+    X = singleStx, Y = singleMet, Cx = singleStxCoords, scaleBySampleSums = TRUE,
     Ey = singleMetCoords, normX = "rel", normY = "rel"
 )
 ```

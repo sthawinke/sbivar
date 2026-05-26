@@ -279,7 +279,9 @@ getSize <- function(X, Y, normX, normY, size, scaleBySampleSums) {
         rsy <- rowSums(Y)
         c(rsx / max(rsx), rsy / max(rsy)) * size
     } else {
-        size
+        tmp <- rep(size, nrow(X) + nrow(Y))
+        names(tmp) <- c(rownames(X), rownames(Y))
+        tmp
     }
     return(size)
 }

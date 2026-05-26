@@ -45,8 +45,8 @@
 #'     normX = "rel", normY = "rel", features = c("Gnas", "Tocopherol")
 #' )
 plotTopPair <- function(results, ..., normX = results$normX, normY = results$normY,
-    topRank = 1, parameter = "Intercept", scaleBySampleSums = TRUE) {
-    stopifnot(is.numeric(topRank), is.logical(scaleBySampleSums))
+    topRank = 1, parameter = "Intercept", scaleBySampleSums = FALSE) {
+    stopifnot(is.numeric(topRank), topRank >= 1, is.logical(scaleBySampleSums), is.character(parameter))
     if (!results$multi) {
         topFeats <- results$result[topRank, c("Modality_X", "Modality_Y")]
         plotPairSingle(
@@ -68,7 +68,7 @@ plotTopPair <- function(results, ..., normX = results$normX, normY = results$nor
 #' @inheritParams plotPairSingle
 #' @order 3
 #' @param theme the ggplot2 theme
-plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "log"), scaleBySampleSums = TRUE,
+plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "log"), scaleBySampleSums = FALSE,
     normY = c("none", "rel", "log"), size = 1.25, assayX, assayY, theme = theme_bw()) {
     Xl <- getX(Xl, assayX)
     Yl <- getX(Yl, assayY)
@@ -81,7 +81,7 @@ plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "
     normY <- match.arg(normY)
     theme_set(theme)
     dfList <- do.call(rbind, lapply(names(Xl), function(nam) {
-        size <- getSizes(Xl[[nam]], Yl[[nam]], normX, normY, scaleBySampleSums, size = size)
+        size <- getSize(Xl[[nam]], Yl[[nam]], normX, normY, scaleBySampleSums, size = size)
         X <- normMat(Xl[[nam]], normX)
         Y <- normMat(Yl[[nam]], normY)
         coordMat <- rbind(Cxl[[nam]][rownames(X), ], Eyl[[nam]][rownames(Y), ])
@@ -91,7 +91,7 @@ plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "
                 scaleHelpFun(X, feat = features[1]),
                 scaleHelpFun(Y, feat = features[2])
             ),
-            "size" = size, "image" = nam, coordMat,
+            "size" = size[c(rownames(X), rownames(Y))], "image" = nam, coordMat,
             "feature" = rep(features, times = c(nrow(X), nrow(Y)))
         )
     }))
@@ -116,7 +116,7 @@ plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "
 #' @order 2
 plotPairSingle <- function(
       X, Y, Cx, Ey, features, normX = c("none", "rel", "log"),
-      normY = c("none", "rel", "log"), assayX, assayY, scaleBySampleSums = TRUE, size = 1.25, ...
+      normY = c("none", "rel", "log"), assayX, assayY, scaleBySampleSums = TRUE, size = 1.5, ...
 ) {
     stopifnot(length(features) == 2, is.numeric(size), is.logical(scaleBySampleSums))
     if (inherits(X, "SpatialExperiment")) {
@@ -131,7 +131,7 @@ plotPairSingle <- function(
     foo <- checkInputSingle(X, Y, Cx, Ey)
     normX <- match.arg(normX)
     normY <- match.arg(normY)
-    size <- getSizes(X, Y, normX, normY, scaleBySampleSums, size = size)
+    size <- getSize(X, Y, normX, normY, scaleBySampleSums, size = size)
     X <- normMat(X, normX)
     Y <- normMat(Y, normY)
     plotPairSingleVectors(

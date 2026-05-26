@@ -14,7 +14,7 @@ plotTopPair(
   normY = results$normY,
   topRank = 1,
   parameter = "Intercept",
-  scaleBySampleSums = TRUE
+  scaleBySampleSums = FALSE
 )
 
 plotPairSingle(
@@ -28,7 +28,7 @@ plotPairSingle(
   assayX,
   assayY,
   scaleBySampleSums = TRUE,
-  size = 1.25,
+  size = 1.5,
   ...
 )
 
@@ -39,6 +39,7 @@ plotPairMulti(
   Eyl,
   features,
   normX = c("none", "rel", "log"),
+  scaleBySampleSums = FALSE,
   normY = c("none", "rel", "log"),
   size = 1.25,
   assayX,
@@ -69,6 +70,8 @@ for X and Y matrices, respectively, before plotting, see details.}
 
 \item{parameter}{The linear model parameter used to find the feature with the strongest effect.
 The default is the intercept, i.e. the overall effect.}
+
+\item{scaleBySampleSums}{A boolean, should the size of the spots be scaled by their sample sum, e.g. library size or total ion count? Recommended to reflect differences in certainty depending on sample sums.}
 
 \item{X}{the input object, containing measurements of the first modality, see methods('sbivar')}
 

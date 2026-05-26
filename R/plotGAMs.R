@@ -153,8 +153,8 @@ buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun
         family = families[["X"]], offset = makeOffset(X, families[["X"]]), ...
     )
     modely <- fitGAM(
-        df = data.frame("value" = Y[, features[2]], Ey), family = families[["Y"]],
-        offset = makeOffset(Y, families[["Y"]]), outcome = "value", ...
+        df = data.frame("value" = Y[, features[2]], Ey), outcome = "value",
+        family = families[["Y"]], offset = makeOffset(Y, families[["Y"]]), ...
     )
     predx <- vcovPredGam(modelx, newdata = newGrid, testSmooth = smooth)
     predy <- vcovPredGam(modely, newdata = newGrid, testSmooth = smooth)

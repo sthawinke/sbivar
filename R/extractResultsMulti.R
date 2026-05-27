@@ -85,7 +85,7 @@ extractResultsMulti <- function(result, designDf, method = "BH") {
                 intRes <- c(ints[, "Estimate"], "pVal" = CCT(ints[, "pVal"]))
                 fixRes <- lapply(fixedOut, function(x) {
                     coefs <- c(x[, colnames(x) != "pVal"])
-                    names(coefs) <- makeNames(colnames(x)[colnames(x) != "pVal"], rownames(x))
+                    names(coefs) <- makeNames(rownames(x), colnames(x)[colnames(x) != "pVal"])
                     c(coefs, "pVal" = CCT(x[, "pVal"]))
                 })
             } else {

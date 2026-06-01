@@ -56,7 +56,7 @@ GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX
         return(out)
     }, FUN.VALUE = matrix(0, nrow = Nrow, ncol = length(gamsy)))
     # Reformat to long format
-    t(matrix(c(out), Nrow, length(gamsx) * length(gamsy),
+    out <- t(matrix(c(out), Nrow, length(gamsx) * length(gamsy),
         dimnames = list(
             c("corxy", if (findVariances) c("se.corxy", "pVal")),
             paste(rep(names(gamsx), each = length(gamsy)), rep(names(gamsy), times = length(gamsx)),
@@ -64,4 +64,5 @@ GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX
             )
         )
     ))
+    out[is.finite(out[, "corxy"]),,drop = FALSE]
 }

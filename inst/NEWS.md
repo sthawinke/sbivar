@@ -91,3 +91,6 @@
 
  - Fix naming bug in extractResultsMulti
  
+# 0.99.14
+
+ - Keep finite correlation estimates 

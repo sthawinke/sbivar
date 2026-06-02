@@ -64,5 +64,6 @@ GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX
             )
         )
     ))
-    out[is.finite(out[, "corxy"]),,drop = FALSE]
+    out[is.infinite(out[, "corxy"]) | is.infinite(out[, "se.corxy"]),"pVal"] <- 1
+    return(out)
 }

@@ -162,7 +162,7 @@ buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun
     dat <- rbind(
         data.frame(newGrid, Value = scaleFun(predx$pred), feature = "x"),
         data.frame(newGrid, Value = scaleFun(predy$pred), feature = "y"),
-        data.frame(newGrid, Value = scaleFun(corContr), feature = "cor")
+        data.frame(newGrid, Value = corContr/max(abs(corContr), na.rm = TRUE), feature = "cor")
     )
     dat$feature <- factor(dat$feature,
         levels = c("x", "y", "cor"),

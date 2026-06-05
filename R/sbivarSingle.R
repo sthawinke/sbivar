@@ -1,6 +1,6 @@
 #' Test for bivariate spatial association in a single image
 #'
-#' The tests can be applied to either disjoint or joint coordinate sets.
+#' The tests can be applied to either joint or disjoint coordinate sets.
 #'
 #' @details If only Cx is supplied and X and Y have the same number of rows, a joint analysis is performed
 #' If Cx and Ey are provided, and X and Y have the same number of rows, equality of Cx and Ey is checked.

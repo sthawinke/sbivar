@@ -94,3 +94,7 @@
 # 0.99.14
 
  - Keep finite correlation estimates 
+ 
+# 0.99.15
+
+ - Scale contributions to correlation by maximum absolute value in plotGAMs

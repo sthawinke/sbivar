@@ -4,10 +4,13 @@
 \alias{correlationsMulti}
 \title{Find all cross-correlations for a list of matrices}
 \usage{
-correlationsMulti(Xl, Yl, verbose)
+correlationsMulti(Xl, Yl, featuresX, featuresY, verbose)
 }
 \arguments{
 \item{Xl, Yl}{Lists of matrices of omics measurements}
+
+\item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
+while using the whole matrix to calculate library sizes as offset or for normalization.}
 
 \item{verbose}{Should progress be printed?}
 }

@@ -66,7 +66,7 @@ Benjamini-Hochberg adjusted p-value ("pAdj"), sorted by increasing p-value.}
 \item{families,wo,wParams}{Optional, as provided. wParams are either etas or numNNs}
 }
 \description{
-The tests can be applied to either disjoint or joint coordinate sets.
+The tests can be applied to either joint or disjoint coordinate sets.
 }
 \details{
 If only Cx is supplied and X and Y have the same number of rows, a joint analysis is performed

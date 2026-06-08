@@ -22,7 +22,7 @@
 #' @seealso \link{fitLinModels}, \link{MoransIMulti}, \link{correlationsMulti}, \link{GAMsMulti}
 sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
     method = c("Moran's I", "GAMs", "Correlation"), wo = c("Gauss", "nn"),
-    numNNs = c(4, 8, 24), etas = c(5e-6, 2e-4, 2e-2),
+    numNNs = c(4, 8, 24), etas = c(5e-6, 2e-4, 2e-2), featuresX = getFeaturesList(Xl), featuresY = getFeaturesList(Yl),
     normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
     variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
     pseudoCount = 1e-8, n_points_grid = 6e2, verbose = TRUE, findVariances = FALSE,
@@ -34,7 +34,7 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" 
     testSmooth <- match.arg(testSmooth)
     stopifnot(
         is.numeric(numNNs), all(numNNs > 0), is.numeric(etas), is.numeric(n_points_grid), is.logical(verbose),
-        is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family"))
+        is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family")), is.character(featuresX), is.character(featuresY)
     )
     foo <- checkInputMulti(Xl, Yl, Cxl, Eyl, checkCoords = ccs <- (method != "Correlation"))
     if (ccs) {
@@ -70,19 +70,18 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" 
         )
     }
     out <- if (method == "Moran's I") {
-        MoransIMulti(Xl, Yl, Cxl, Eyl,
+        MoransIMulti(Xl, Yl, Cxl, Eyl, featuresX = featuresX, featuresY = featuresY,
             wo = wo, numNNs = numNNs, verbose = verbose, findVariances = findVariances, findMaxW = findMaxW,
             etas = etas, variogramModels = variogramModels, width = width, cutoff = cutoff
         )
     } else if (method == "GAMs") {
-        GAMsMulti(Xl, Yl, Cxl, Eyl,
-            testSmooth = testSmooth,
-            includeGPsmooth = includeGPsmooth,
+        GAMsMulti(Xl, Yl, Cxl, Eyl, featuresX = featuresX, featuresY = featuresY,
+            testSmooth = testSmooth, includeGPsmooth = includeGPsmooth,
             families = families, findVariances = findVariances,
             n_points_grid = n_points_grid, verbose = verbose
         )
     } else if (method == "Correlation") {
-        correlationsMulti(Xl, Yl, verbose = verbose)
+        correlationsMulti(Xl, Yl, featuresX = featuresX, featuresY = featuresY, verbose = verbose)
     }
     out <- list(
         "estimates" = out, "method" = method, "multi" = TRUE,

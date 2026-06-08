@@ -14,6 +14,8 @@ GAMsMulti(
   verbose,
   includeGPsmooth,
   testSmooth,
+  featuresX,
+  featuresY,
   findVariances = FALSE
 )
 }
@@ -25,6 +27,9 @@ GAMsMulti(
 \item{families, n_points_grid, includeGPsmooth, testSmooth}{See \link{GAMsSingle}}
 
 \item{verbose}{Should info on type of analysis be printed?}
+
+\item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
+while using the whole matrix to calculate library sizes as offset or for normalization.}
 
 \item{findVariances}{Should variances be calculated? For internal use only}
 }

@@ -14,6 +14,8 @@ sbivarMulti(
   wo = c("Gauss", "nn"),
   numNNs = c(4, 8, 24),
   etas = c(5e-06, 2e-04, 0.02),
+  featuresX = getFeaturesList(Xl),
+  featuresY = getFeaturesList(Yl),
   normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
   variogramModels = c("Exp", "Lin"),
@@ -38,6 +40,9 @@ sbivarMulti(
 \item{method}{A character string, indicating which method to apply}
 
 \item{wo, numNNs, etas}{Passed onto \link{MoransISingle}}
+
+\item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
+while using the whole matrix to calculate library sizes as offset or for normalization.}
 
 \item{normX, normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}
 

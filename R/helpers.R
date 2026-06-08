@@ -285,3 +285,11 @@ getSize <- function(X, Y, normX, normY, size, scaleBySampleSums) {
     }
     return(size)
 }
+#' Return feature names from a list
+#'
+#' @param Xl A list of feature matrices
+#'
+#' @returns A vector of feature names
+getFeaturesList = function(Xl){
+    make.names(unique(unlist(lapply(Xl, colnames))))
+}

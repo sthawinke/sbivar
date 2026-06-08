@@ -4,7 +4,18 @@
 \alias{MoransIMulti}
 \title{Find all Moran's I statistics for a list of matrices}
 \usage{
-MoransIMulti(Xl, Yl, Cxl, Eyl, findVariances, verbose, findMaxW, ...)
+MoransIMulti(
+  Xl,
+  Yl,
+  Cxl,
+  Eyl,
+  findVariances,
+  verbose,
+  featuresX,
+  featuresY,
+  findMaxW,
+  ...
+)
 }
 \arguments{
 \item{Xl, Yl}{Lists of matrices of omics measurements}
@@ -14,6 +25,9 @@ MoransIMulti(Xl, Yl, Cxl, Eyl, findVariances, verbose, findMaxW, ...)
 \item{findVariances}{Should variances be calculated? For internal use only}
 
 \item{verbose}{Should info on type of analysis be printed?}
+
+\item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
+while using the whole matrix to calculate library sizes as offset or for normalization.}
 
 \item{findMaxW}{Is the maximum bivariate Moran's I needed?}
 

@@ -98,3 +98,7 @@
 # 0.99.15
 
  - Scale contributions to correlation by maximum absolute value in plotGAMs
+ 
+# 0.99.16
+
+ - Provide featuresX and featuresY to sbivarMulti

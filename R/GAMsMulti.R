@@ -8,15 +8,15 @@
 #'
 #' @returns A list named like Xl, containing all results
 GAMsMulti <- function(Xl, Yl, Cxl, Eyl, families, n_points_grid, verbose,
-    includeGPsmooth, testSmooth, findVariances = FALSE) {
+    includeGPsmooth, testSmooth, featuresX, featuresY, findVariances = FALSE) {
     lapply(selfName(names(Xl)), function(nam) {
         if (verbose) {
             printIteration(nam, names(Xl))
         }
         out <- GAMsSingle(Xl[[nam]], Yl[[nam]], Cxl[[nam]], Eyl[[nam]],
             families = families, n_points_grid = n_points_grid, includeGPsmooth = includeGPsmooth,
-            verbose = FALSE, findVariances = findVariances, featuresX = colnames(Xl[[nam]]),
-            featuresY = colnames(Yl[[nam]]), testSmooth = testSmooth
+            verbose = FALSE, findVariances = findVariances, featuresX = intersect(featuresX, colnames(Xl[[nam]])),
+            featuresY = intersect(featuresY, colnames(Yl[[nam]])), testSmooth = testSmooth
         )
         return(list("res" = out[, c("corxy", if (findVariances) "se.corxy"), drop = FALSE]))
     })

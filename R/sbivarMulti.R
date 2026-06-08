@@ -20,13 +20,15 @@
 #' @inheritParams GAMsSingle
 #' @importFrom BiocParallel bpparam bpworkers
 #' @seealso \link{fitLinModels}, \link{MoransIMulti}, \link{correlationsMulti}, \link{GAMsMulti}
-sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
-    method = c("Moran's I", "GAMs", "Correlation"), wo = c("Gauss", "nn"),
-    numNNs = c(4, 8, 24), etas = c(5e-6, 2e-4, 2e-2), featuresX = getFeaturesList(Xl), featuresY = getFeaturesList(Yl),
-    normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
-    variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
-    pseudoCount = 1e-8, n_points_grid = 6e2, verbose = TRUE, findVariances = FALSE,
-    findMaxW = TRUE, includeGPsmooth = TRUE, testSmooth = c("trend", "field")) {
+sbivarMulti <- function(
+      Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
+      method = c("Moran's I", "GAMs", "Correlation"), wo = c("Gauss", "nn"),
+      numNNs = c(4, 8, 24), etas = c(5e-6, 2e-4, 2e-2), featuresX = getFeaturesList(Xl), featuresY = getFeaturesList(Yl),
+      normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
+      variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
+      pseudoCount = 1e-8, n_points_grid = 6e2, verbose = TRUE, findVariances = FALSE,
+      findMaxW = TRUE, includeGPsmooth = TRUE, testSmooth = c("trend", "field")
+) {
     method <- match.arg(method)
     wo <- match.arg(wo)
     normX <- match.arg(normX)
@@ -70,12 +72,14 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" 
         )
     }
     out <- if (method == "Moran's I") {
-        MoransIMulti(Xl, Yl, Cxl, Eyl, featuresX = featuresX, featuresY = featuresY,
+        MoransIMulti(Xl, Yl, Cxl, Eyl,
+            featuresX = featuresX, featuresY = featuresY,
             wo = wo, numNNs = numNNs, verbose = verbose, findVariances = findVariances, findMaxW = findMaxW,
             etas = etas, variogramModels = variogramModels, width = width, cutoff = cutoff
         )
     } else if (method == "GAMs") {
-        GAMsMulti(Xl, Yl, Cxl, Eyl, featuresX = featuresX, featuresY = featuresY,
+        GAMsMulti(Xl, Yl, Cxl, Eyl,
+            featuresX = featuresX, featuresY = featuresY,
             testSmooth = testSmooth, includeGPsmooth = includeGPsmooth,
             families = families, findVariances = findVariances,
             n_points_grid = n_points_grid, verbose = verbose

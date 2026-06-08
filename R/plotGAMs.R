@@ -40,9 +40,11 @@
 #' @import ggplot2
 #' @importFrom smoppix loadBalanceBplapply
 #' @order 1
-plotGAMs <- function(X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scaleMinusOne",
-    families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE, normX = c("none", "rel", "log"),
-    normY = c("none", "rel", "log"), n_points_grid = 6e2, includeGPsmooth = TRUE, smooth = "trend", ...) {
+plotGAMs <- function(
+      X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scaleMinusOne",
+      families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE, normX = c("none", "rel", "log"),
+      normY = c("none", "rel", "log"), n_points_grid = 6e2, includeGPsmooth = TRUE, smooth = "trend", ...
+) {
     stopifnot(
         is.numeric(n_points_grid), all(vapply(families, FUN.VALUE = TRUE, is, "family")),
         all(vapply(features, FUN.VALUE = TRUE, is.character))
@@ -95,8 +97,10 @@ plotGAMs <- function(X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scale
 #' @rdname plotGAMs
 #' @order 2
 #' @inheritParams plotTopPair
-plotGAMsTopResults <- function(results, X, Y, Cx, Ey, topRank = 1,
-    parameter = "Intercept", families = results$families, ...) {
+plotGAMsTopResults <- function(
+      results, X, Y, Cx, Ey, topRank = 1,
+      parameter = "Intercept", families = results$families, ...
+) {
     stopifnot(is.numeric(topRank))
     topFeats <- (
         if (results$multi) {
@@ -162,7 +166,7 @@ buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun
     dat <- rbind(
         data.frame(newGrid, Value = scaleFun(predx$pred), feature = "x"),
         data.frame(newGrid, Value = scaleFun(predy$pred), feature = "y"),
-        data.frame(newGrid, Value = corContr/max(abs(corContr), na.rm = TRUE), feature = "cor")
+        data.frame(newGrid, Value = corContr / max(abs(corContr), na.rm = TRUE), feature = "cor")
     )
     dat$feature <- factor(dat$feature,
         levels = c("x", "y", "cor"),

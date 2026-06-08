@@ -25,10 +25,8 @@
 #' @importFrom Matrix bdiag
 #' @references
 #' \insertAllCited{}
-testGP <- function(
-      x, y, crossBlocks, solXonly, solYonly,
-      sx, sy, derivX, derivY, distMat
-) {
+testGP <- function(x, y, crossBlocks, solXonly, solYonly,
+    sx, sy, derivX, derivY, distMat) {
     n <- dim(crossBlocks)[1]
     m <- dim(crossBlocks)[2]
     idN <- seq_len(n)

@@ -13,8 +13,10 @@ correlationsMulti <- function(Xl, Yl, featuresX, featuresY, verbose) {
         }
         commonNames <- intersect(rownames(Xl[[nam]]), rownames(Yl[[nam]]))
         # Ensure same dimensions
-        out <- c(cor(Xl[[nam]][commonNames, featuresX <- intersect(featuresX, colnames(Xl[[nam]]))],
-                     Yl[[nam]][commonNames, featuresY <- intersect(featuresY, colnames(Yl[[nam]]))]))
+        out <- c(cor(
+            Xl[[nam]][commonNames, featuresX <- intersect(featuresX, colnames(Xl[[nam]]))],
+            Yl[[nam]][commonNames, featuresY <- intersect(featuresY, colnames(Yl[[nam]]))]
+        ))
         names(out) <- makeNames(featuresX, featuresY)
         return(list("res" = out))
     })

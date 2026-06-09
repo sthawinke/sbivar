@@ -55,7 +55,7 @@ plotGAMs <- function(
     scaleFun <- get(as.character(scaleFun), mode = "function", getNamespace("sbivar"))
     gamDf <- if (multi <- is.list(X)) {
         foo <- checkInputMulti(X, Y, Cx, Ey)
-        gamDfs <- loadBalanceBplapply(names(X), function(nam) {
+        gamDfs <- lapply(names(X), function(nam) {
             df <- buildGamDf(
                 X[[nam]], Y[[nam]], Cx[[nam]], Ey[[nam]], n_points_grid,
                 families, features, scaleFun,

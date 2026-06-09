@@ -107,3 +107,7 @@
 
 - Added r-universe github build
 - Switch to tempfile for illustrating writeSbivarToXlsx()
+
+# 0.99.18
+
+ - Switch to lapply for buildGams

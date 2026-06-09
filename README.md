@@ -121,7 +121,7 @@ Plot the most significantly spatially associated gene-metabolite pair
 Pcp4–Dopamine:
 
 ``` r
-plotTopPair(moranRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
+plotTopPair(moranRes, singleStx, singleMet, singleStxCoords, singleMetCoords, size = 1)
 ```
 
 ![](README_files/figure-gfm/toppairsingle-1.png)<!-- -->

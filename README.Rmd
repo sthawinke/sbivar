@@ -84,7 +84,7 @@ head(moranRes$result)
 Plot the most significantly spatially associated gene-metabolite pair `r paste(c(moranRes$result[1, 1:2]), collapse = "--")`:
 
 ```{r toppairsingle, fig.height = 2.5}
-plotTopPair(moranRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
+plotTopPair(moranRes, singleStx, singleMet, singleStxCoords, singleMetCoords, size = 1)
 ```
 
 Write the results to a spreadsheet

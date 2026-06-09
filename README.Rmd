@@ -81,7 +81,7 @@ Have a look at the results:
 head(moranRes$result)
 ```
 
-Plot the most significantly spatially associated gene-metabolite pair `r c(moranRes$result[1, 1:2])`:
+Plot the most significantly spatially associated gene-metabolite pair `r paste(c(moranRes$result[1, 1:2]), collapse = "--")`:
 
 ```{r toppairsingle, fig.height = 2.5}
 plotTopPair(moranRes, singleStx, singleMet, singleStxCoords, singleMetCoords)

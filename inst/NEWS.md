@@ -102,3 +102,8 @@
 # 0.99.16
 
  - Provide featuresX and featuresY to sbivarMulti
+ 
+# 0.99.17
+
+- Added r-universe github build
+- Switch to tempfile for illustrating writeSbivarToXlsx()

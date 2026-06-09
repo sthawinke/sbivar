@@ -189,7 +189,7 @@ head(gpRes$result)
 The analysis results can be written to an external spreadsheet using the following one-liner, e.g. for the GAM results.
 
 ```{r sbivarSingleOut, eval = FALSE}
-writeSbivarToXlsx(gamRes, file = tmpFile <- tempfile(ext = ".xlsx"))
+writeSbivarToXlsx(gamRes, file = tmpFile <- tempfile(fileext = ".xlsx"))
 ```
 
 ## Multi-image analysis

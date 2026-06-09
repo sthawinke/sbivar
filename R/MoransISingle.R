@@ -69,14 +69,14 @@ MoransISingle <- function(X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose
         if (verbose) {
             message("Fitting variograms for first modality (", p, " features) ...")
         }
-        variogramsX <- matheronVariograms(X, Cx,
+        variogramsX <- matheronVariograms(X[, featuresX, drop = FALSE], Cx,
             width = width, cutoff = cutoff,
             variogramModels = variogramModels, ...
         )
         if (verbose) {
             message("Fitting variograms for second modality (", k, " features) ...")
         }
-        variogramsY <- matheronVariograms(Y, Ey,
+        variogramsY <- matheronVariograms(Y[, featuresY, drop = FALSE], Ey,
             width = width, cutoff = cutoff,
             variogramModels = variogramModels, ...
         )

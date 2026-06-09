@@ -111,3 +111,7 @@
 # 0.99.18
 
  - Switch to lapply for buildGams
+ 
+# 0.99.19
+
+ - Estimate variograms only for features to be tested

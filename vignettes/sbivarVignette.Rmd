@@ -33,7 +33,7 @@ This vignette demonstrates the use of the _sbivar_ package: Spatial BIVARiate as
 \setcounter{tocdepth}{5}
 \tableofcontents
 
-# Installation instructions
+# Installation
 
 The package can be installed from Bioconductor as follows:
 
@@ -189,7 +189,7 @@ head(gpRes$result)
 The analysis results can be written to an external spreadsheet using the following one-liner, e.g. for the GAM results.
 
 ```{r sbivarSingleOut, eval = FALSE}
-writeSbivarToXlsx(gamRes, file = "myfile.xlsx")
+writeSbivarToXlsx(gamRes, file = tmpFile <- tempfile(ext = ".xlsx"))
 ```
 
 ## Multi-image analysis

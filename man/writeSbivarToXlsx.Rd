@@ -45,8 +45,8 @@ example(sbivar, "sbivar")
 # The significance level is set to 1 here for illustration,
 # meaning that all feature pairs will be written to the spreadsheet.
 # Single result
-writeSbivarToXlsx(resGAMs, file = "tmpFile", sigLevel = 1)
-file.remove("tmpFile.xlsx") # Clean up after you, omit this in a real analysis
+writeSbivarToXlsx(resGAMs, file = tmpFile <- tempfile(ext = ".xlsx"), sigLevel = 1)
+file.exists(tmpFile)
 }
 \seealso{
 \link[openxlsx]{createWorkbook}

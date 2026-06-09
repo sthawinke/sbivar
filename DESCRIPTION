@@ -24,3 +24,4 @@ VignetteBuilder: knitr
 BugReports: https://github.com/sthawinke/sbivar/issues
 URL: https://github.com/sthawinke/sbivar
 Config/roxygen2/version: 8.0.0
+BiocType: Software

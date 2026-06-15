@@ -141,7 +141,7 @@ sbivarSingle <- function(
         )
     }
     out <- cbind(out, "pAdj" = p.adjust(out[, "pVal"], method = "BH"))
-    out <- addFeatureColumn(out[order(out[, "pVal"]), ])
+    out <- addFeatureColumn(out[order(out[, "pVal"]), ,drop = FALSE])
     lis <- list(
         "result" = out, "method" = method,
         "multi" = FALSE, "normX" = normX, "normY" = normY

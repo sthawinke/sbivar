@@ -10,6 +10,7 @@ test_that("SbivarSingle works for correct input", {
     expect_false(is.unsorted(sbiRes$result[, "pVal"]))
     expect_silent(sbivar(X, Y, Cx, Ey, method = "GAMs", verbose = FALSE))
     expect_is(sbivar(X, Y, Cx, Ey, method = "GPs"), "list")
+    expect_is(sbivar(X, Y, Cx, Ey, method = "Moran", featuresX = "X1", featuresY = "Y1"), "list")
 })
 test_that("SbivarSingle throws errors for incorrect input", {
     expect_error(sbivar(X, Y, cbind(Cx, Cx), Ey, method = "GAMs"))

@@ -115,3 +115,7 @@
 # 0.99.19
 
  - Estimate variograms only for features to be tested
+ 
+# 0.99.20
+
+ - Bug fixes when only one feature pair is tested

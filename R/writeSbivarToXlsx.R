@@ -57,11 +57,8 @@ writeSbivarToXlsx <- function(results, file, overwrite = FALSE, digits = 3,
         mat <- mat[mat[, "pAdj"] <= sigLevel, , drop = FALSE]
         if (nrow(mat)) { # Only add sheet when significant findings
             # Rounding
-            for (i in c("pVal", "pAdj")) {
+            for (i in setdiff(colnames(mat), c("Modality_X", "Modality_Y"))) {
                 mat[, i] <- signif(mat[, i], digits)
-            }
-            for (i in setdiff(colnames(mat), c("pVal", "pAdj", "Modality_X", "Modality_Y"))) {
-                mat[, i] <- round(mat[, i], digits)
             }
             sheetName <- if (nam == "Intercept") "Baseline" else nam
             addWorksheet(wb, sheetName) # Create sheet and write data to it

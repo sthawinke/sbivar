@@ -119,3 +119,7 @@
 # 0.99.20
 
  - Bug fixes when only one feature pair is tested
+ 
+# 0.99.21
+
+ - Round to significant digits in writeSbivarToXlsx()

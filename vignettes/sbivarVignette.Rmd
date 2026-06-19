@@ -179,17 +179,17 @@ plotGAMsTopResults(gamRes,
 )
 ```
 
+The analysis results can be written to an external spreadsheet using the following one-liner, e.g. for the GAM results.
+
+```{r sbivarSingleOut, eval = FALSE}
+writeSbivarToXlsx(gamRes, file = tmpFile <- tempfile(fileext = ".xlsx"))
+```
+
 Another available analysis for single images are bivariate Gaussian processes (GPs). Yet fitting GPs and calculating the score tests statistics can be computation and memory intensive! Hence the code is shown, but not run:
 
 ```{r gp, eval = FALSE}
 gpRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, method = "GPs", normX = "rel", normY = "rel")
 head(gpRes$result)
-```
-
-The analysis results can be written to an external spreadsheet using the following one-liner, e.g. for the GAM results.
-
-```{r sbivarSingleOut, eval = FALSE}
-writeSbivarToXlsx(gamRes, file = tmpFile <- tempfile(fileext = ".xlsx"))
 ```
 
 ## Multi-image analysis

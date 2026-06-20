@@ -404,7 +404,7 @@ if (reqadzk) {
 }
 ```
 
-Note that a _SingleCellExperiment_ object can only contain one modality at the time, here the transcriptomics. From there on, it is only a small step to a _SpatialExperiment_ object as accepted by _sbivar_. The only tricky part are the spatial coordinates, which have no fixed slot in the _AnnData_ object. Here, they have been stored in the "obsm" slot of the _AnnData_ object, which means they have ended up in the "reducedDims" slot of the _SingleCellExperiment_ object. In addition, we create a _SpatialExperiment_ object for the metabolomics data, which has oddly been stored in the unstructured ("uns") slot of the _AnnData_ object. To keep build times of this vignette low, we again only look at a subset of 10 features
+Note that a _SingleCellExperiment_ object can only contain one modality at the time, here the transcriptomics. From there on, it is only a small step to a _SpatialExperiment_ object as accepted by _sbivar_. The only tricky part are the spatial coordinates, which have no fixed slot in the _AnnData_ object. Here, they have been stored in the "obsm" slot of the _AnnData_ object, which means they have ended up in the "reducedDims" slot of the _SingleCellExperiment_ object. In addition, we create a _SpatialExperiment_ object for the metabolomics data, which has oddly been stored in the unstructured ("uns") slot of the _AnnData_ object. To keep build times of this vignette low, we again only look at a subset of 10 features.
 
 ```{r scetospe}
 if (reqadzk) {

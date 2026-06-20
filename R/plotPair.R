@@ -117,7 +117,7 @@ plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "
 #' @order 2
 plotPairSingle <- function(
       X, Y, Cx, Ey, features, normX = c("none", "rel", "log"),
-      normY = c("none", "rel", "log"), assayX, assayY, scaleBySampleSums = TRUE, size = 1.5, ...
+      normY = c("none", "rel", "log"), assayX, assayY, scaleBySampleSums = FALSE, size = 1.5, ...
 ) {
     stopifnot(length(features) == 2, is.numeric(size), is.logical(scaleBySampleSums))
     if (inherits(X, "SpatialExperiment")) {

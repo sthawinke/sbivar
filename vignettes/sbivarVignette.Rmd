@@ -93,7 +93,7 @@ For serial calculations, for instance if memory is limiting, choose instead
 register(SerialParam())
 ```
 
-Furthermore, it is highly recommended to install a matrix library such as ["OpenBLAS"](http://www.openmathlib.org/OpenBLAS/), ["Intel MKL"](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-download.html) or ["Apple's accelerate"](https://developer.apple.com/documentation/accelerate), that employ threading for key matrix manipulations used throughout the package.
+Furthermore, it is highly recommended to install a matrix library such as ["OpenBLAS"](http://www.openmathlib.org/OpenBLAS/), ["Intel MKL"](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-download.html) or ["Apple's accelerate"](https://developer.apple.com/documentation/accelerate), that employ threading and optimal memory usage for key matrix manipulations used throughout the package. Further instructions for OpenBLAS for windows users can be found ["in this repo"](https://github.com/david-cortes/R-openblas-in-windows).
 
 # Example analysis on data by Vicari et al. (2024)
 
@@ -429,6 +429,18 @@ if (reqadzk) {
 
 # Troubleshooting
 
+## Sbivar takes forever
+
+If _sbivar_ runs a long time for small datasets, check that you have OpenBLAS or equivalent installed, \textit{and that your R uses it}. Check with
+
+```{r sessionInfo, eval = FALSE, echo = TRUE}
+sessionInfo()
+```
+
+and look for the BLAS field. It should mention "openblas" or equivalent somewhere. Switching to OpenBLAS comes with a 20-50x speed increase for the rate-limiting steps in the _sbivar_ package.
+
+## Job did not deliver a result
+
 An error like 
 
 > Error in reducer$value.cache[[as.character(idx)]] <- values : 
@@ -439,6 +451,29 @@ An error like
 
 often indicates insufficient memory. Try reducing the number of cores requested with _MultiCoreParam()_,
 or switch to serial processing with _register(SerialParam())_.
+ 
+## Warnings
+
+### Variogram fitting
+
+The following warning
+
+> In fit.variogram(vg, vgm(model = vv, nugget = NA)) :
+> No convergence after 200 iterations: try different initial values?
+
+indicate variogram fitting did not reach convergence, but since this is just a nuisance quantity, a rough estimate is sufficient for inference and this warning can be safely ignored.
+
+### GAM fitting
+
+The following warning often recurs a couple of times when fitting many GAMS:
+
+> step size truncated due to divergence 
+
+It indicates that the _mgcv::gam()_ function had trouble modelling the spatial trend in the data for one or more features. This could, but need not always, lead to odd results. Always inspect significant pairs visually.
+
+## gfortran not found on Mac
+
+Mac users often encounter trouble installing the _sbivar_ package because of a missing _gfortran_ dependency. This is a common issue on Mac, unrelated to _sbivar_. Many solutions are available online, e.g. in [this blogpost](https://stackoverflow.com/questions/77836548/library-gfortran-not-found-when-installing-r-packages).
  
 # Session info
 

@@ -123,3 +123,9 @@
 # 0.99.21
 
  - Round to significant digits in writeSbivarToXlsx()
+ 
+# 0.99.22
+
+ - Extend troubleshooting section in vignette
+ - scaleBySampleSums default FALSE in plotPairSingle
+ - New function for plotting the spatial distribution of the spot-wise sums

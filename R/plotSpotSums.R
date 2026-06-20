@@ -1,10 +1,10 @@
-#' Plot the spot-wise sums of the two modalities across the slice
+#' Plot the spot-wise sums of the two modalities across the slices
 #'
 #' This is an important exploratory plot to visualize spot-wise sums
-#' (library sizes , total ion counts etc.) spatially
+#' (library sizes, total ion counts etc.) spatially
 #'
 #' @inheritParams sbivarMulti
-#' @param viewNamesThe names of the views, showed in the column names
+#' @param viewNames The names of the views, showed in the column names
 #' @param pointSize The point size for geom_point()
 #' @param stripTextSize The size of the text in the strips (grey panels)
 #'
@@ -38,6 +38,6 @@ plotSpotSums <- function(Xl, Yl, Cxl, Eyl, viewNames = c("Transcriptomics", "Met
             low = "yellow", high = "blue",
             name = "Log10(sample sum)"
         ) +
-        coord_fixed
+        coord_fixed()
     return(p)
 }

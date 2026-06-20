@@ -114,7 +114,14 @@ plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.1)
 par(mfrow = c(1, 1))
 ```
 
-The alignment seems successful, notice that some tissue areas are only covered by one modality though.
+The alignment seems successful, notice that some tissue areas are only covered by one modality though. Next we explore the spatial distributions of the spot-wise sums, in our case these are the library sizes for the transcriptomics data and the total ion counts for the metabolomics data.
+
+```{r plotSpotSums}
+plotSpotSums(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
+Vicari$TranscriptCoords, Vicari$MetaboliteCoords)
+```
+
+These spot sums are usually considered to be technical artefacts, but since they can affect the statistical analysis it is good to be aware of them and their spatial distribution.
 
 ## Single-image analysis
 
@@ -129,6 +136,7 @@ singleMet <- Vicari$MetaboliteOutcomes[[singleSample]]
 ```
 
 We analyse this single sample using bivariate Moran's I. We choose to normalize both modalities to relative abundances (see ?normMat). 
+
 ```{r testmoran}
 moransIRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
     method = "Moran's I", normX = "rel", normY = "rel"
@@ -433,7 +441,7 @@ if (reqadzk) {
 
 If _sbivar_ runs a long time for small datasets, check that you have OpenBLAS or equivalent installed, \textit{and that your R uses it}. Check with
 
-```{r sessionInfo, eval = FALSE, echo = TRUE}
+```{r sessionInfoopenblas, eval = FALSE, echo = TRUE}
 sessionInfo()
 ```
 

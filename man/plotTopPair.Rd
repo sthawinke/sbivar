@@ -27,7 +27,7 @@ plotPairSingle(
   normY = c("none", "rel", "log"),
   assayX,
   assayY,
-  scaleBySampleSums = TRUE,
+  scaleBySampleSums = FALSE,
   size = 1.5,
   ...
 )

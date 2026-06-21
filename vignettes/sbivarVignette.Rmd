@@ -117,8 +117,10 @@ par(mfrow = c(1, 1))
 The alignment seems successful, notice that some tissue areas are only covered by one modality though. Next we explore the spatial distributions of the spot-wise sums, in our case these are the library sizes for the transcriptomics data and the total ion counts for the metabolomics data.
 
 ```{r plotSpotSums}
-plotSpotSums(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
-Vicari$TranscriptCoords, Vicari$MetaboliteCoords)
+plotSpotSums(
+    Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
+    Vicari$TranscriptCoords, Vicari$MetaboliteCoords
+)
 ```
 
 These spot sums are usually considered to be technical artefacts, but since they can affect the statistical analysis it is good to be aware of them and their spatial distribution.

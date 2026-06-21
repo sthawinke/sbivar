@@ -129,3 +129,7 @@
  - Extend troubleshooting section in vignette
  - scaleBySampleSums default FALSE in plotPairSingle
  - New function for plotting the spatial distribution of the spot-wise sums
+ 
+# 0.99.23
+ 
+ - Bug in plotSpotSums

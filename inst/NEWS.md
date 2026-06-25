@@ -133,3 +133,7 @@
 # 0.99.23
  
  - Bug in plotSpotSums
+ 
+# 0.99.24
+
+ - Citation file and reference to preprint

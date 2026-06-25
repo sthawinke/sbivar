@@ -1,0 +1,14 @@
+note <- sprintf("R package version %s", meta$Version)
+
+bibentry(bibtype = "Misc",
+         author = c(person("Stijn", "Hawinkel"),
+                    person("Wangjun", "Hu"),
+                    person("Britta", "Velten"),
+                    person("Steven", "Maere")
+                    ),
+                    title = "Statistical tests for bivariate spatial association across multi-omics data with disjoint coordinates,
+                    journal      = "bioRxiv",
+                    publisher    = "Cold Spring Harbor Laboratory",
+                    doi          = "10.64898/2026.06.19.732250",
+                    year  = "2026",
+                    header = "To cite sbivar in publications please use:")

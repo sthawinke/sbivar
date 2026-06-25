@@ -5,9 +5,9 @@ sets<img src='inst/Sbivar.png' align='right' height='20%' width='20%'/>
 This repo provides code for performing bivariate association tests
 between different spatial modalities measured on the same or consecutive
 slices, possibly with disjoint coordinate sets. A common coordinate
-framework as obtained from alignment is considered given.
-
-<!-- % As introduced in our [preprint](). -->
+framework as obtained from alignment is considered given. An extensive
+description of the methods is available in our
+[preprint](https://www.biorxiv.org/content/10.64898/2026.06.19.732250v1).
 
 The package can be installed from GitHub (with suggested packages
 through dependencies = TRUE) as follows:

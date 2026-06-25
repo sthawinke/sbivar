@@ -6,7 +6,7 @@ bibentry(bibtype = "Misc",
                     person("Britta", "Velten"),
                     person("Steven", "Maere")
                     ),
-                    title = "Statistical tests for bivariate spatial association across multi-omics data with disjoint coordinates,
+                    title = "Statistical tests for bivariate spatial association across multi-omics data with disjoint coordinates",
                     journal      = "bioRxiv",
                     publisher    = "Cold Spring Harbor Laboratory",
                     doi          = "10.64898/2026.06.19.732250",

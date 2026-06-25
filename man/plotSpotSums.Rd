@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotSpotSums.R
 \name{plotSpotSums}
 \alias{plotSpotSums}
-\title{Plot the spot-wise sums of the two modalities across the slice}
+\title{Plot the spot-wise sums of the two modalities across the slices}
 \usage{
 plotSpotSums(
   Xl,
@@ -30,7 +30,7 @@ A ggplot2 object
 }
 \description{
 This is an important exploratory plot to visualize spot-wise sums
-(library sizes , total ion counts etc.) spatially
+(library sizes, total ion counts etc.) spatially
 }
 \examples{
 data(Vicari)

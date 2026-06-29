@@ -13,7 +13,6 @@
 #' @inheritParams GAMsSingle
 #' @param X,Y Matrices of omics measurements, or lists thereof
 #' @param Cx,Ey Corresponding coordinate matrices of dimension two, or lists thereof
-#' @param offsets List of length two with offsets
 #' @param scaleFun The scaling function to be applied before plotting
 #' @param addTitle A boolean, should a title be plotted
 #' @param features The features to plot
@@ -40,7 +39,7 @@
 #' @import ggplot2
 #' @importFrom smoppix loadBalanceBplapply
 #' @order 1
-plotGAMs <- function(X, Y, Cx, Ey, features, offsets = list(), scaleFun = "scaleMinusOne",
+plotGAMs <- function(X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
     families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE, normX = c("none", "rel", "log"),
     normY = c("none", "rel", "log"), n_points_grid = 6e2, includeGPsmooth = TRUE, smooth = "trend", ...) {
     stopifnot(

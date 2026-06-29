@@ -11,7 +11,6 @@ plotGAMs(
   Cx,
   Ey,
   features,
-  offsets = list(),
   scaleFun = "scaleMinusOne",
   families = list(X = gaussian(), Y = gaussian()),
   addTitle = TRUE,
@@ -41,8 +40,6 @@ plotGAMsTopResults(
 \item{Cx, Ey}{Corresponding coordinate matrices of dimension two, or lists thereof}
 
 \item{features}{The features to plot}
-
-\item{offsets}{List of length two with offsets}
 
 \item{scaleFun}{The scaling function to be applied before plotting}
 

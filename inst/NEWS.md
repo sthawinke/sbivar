@@ -137,3 +137,7 @@
 # 0.99.24
 
  - Citation file and reference to preprint
+ 
+# 0.99.25
+
+ - Remove unused offsets argument

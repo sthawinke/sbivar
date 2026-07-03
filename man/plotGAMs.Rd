@@ -17,7 +17,7 @@ plotGAMs(
   normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
   n_points_grid = 600,
-  includeGPsmooth = TRUE,
+  includeGPsmooth = FALSE,
   smooth = "trend",
   ...
 )

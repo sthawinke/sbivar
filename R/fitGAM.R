@@ -13,13 +13,8 @@
 #' @details If a gamma fit is attempted and fails, which frequently happens for sparse data,
 #' a negative binomial fit is attempted instead
 #' @seealso \link[mgcv]{gam}, \link[mgcv]{s}
-#' @inheritParams fitGP
-#' @inheritParams GAMsSingle
-fitGAM <- function(df, outcome, family = gaussian(), offset = NULL, includeGPsmooth) {
+fitGAM <- function(df, outcome, family = gaussian(), offset = NULL) {
     Form <- paste(outcome, "~ s(x, y, bs = 'tp', id = 'trend')")
-    if (includeGPsmooth) {
-        Form <- paste(Form, "+ s(x, y, bs = 'gp', id = 'field')")
-    }
     fit <- try(gam(as.formula(Form),
         data = df, family = family,
         offset = offset
@@ -27,7 +22,7 @@ fitGAM <- function(df, outcome, family = gaussian(), offset = NULL, includeGPsmo
     if (is(fit, "try-error") && family$family == "Gamma") {
         fit <- fitGAM(
             df = df, outcome = outcome, family = mgcv::nb(),
-            offset = offset, includeGPsmooth = includeGPsmooth
+            offset = offset
         )
     }
     return(fit)

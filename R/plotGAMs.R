@@ -18,8 +18,6 @@
 #' @param features The features to plot
 #' @param results Result of a call to \link{sbivar} (single-image) or to
 #' \link{fitLinModels} (multi-image)
-#' @param smooth Which smooth to plot, either "trend" for the deterministic surface,
-#' or "field" for the Gaussian random field
 #' @param ... passed onto \link{fitGAM}
 #'
 #' @returns A ggplot object
@@ -41,7 +39,7 @@
 #' @order 1
 plotGAMs <- function(X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
     families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE, normX = c("none", "rel", "log"),
-    normY = c("none", "rel", "log"), n_points_grid = 6e2, includeGPsmooth = FALSE, smooth = "trend", ...) {
+    normY = c("none", "rel", "log"), n_points_grid = 6e2, ...) {
     stopifnot(
         is.numeric(n_points_grid), all(vapply(families, FUN.VALUE = TRUE, is, "family")),
         all(vapply(features, FUN.VALUE = TRUE, is.character))
@@ -56,8 +54,7 @@ plotGAMs <- function(X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
             df <- buildGamDf(
                 X[[nam]], Y[[nam]], Cx[[nam]], Ey[[nam]], n_points_grid,
                 families, features, scaleFun,
-                normX = normX, normY = normY,
-                includeGPsmooth = includeGPsmooth, smooth = smooth
+                normX = normX, normY = normY
             )$df
             df$image <- nam
             df
@@ -66,7 +63,7 @@ plotGAMs <- function(X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
     } else {
         foo <- checkInputSingle(X, Y, Cx, Ey)
         df <- buildGamDf(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun,
-            normX = normX, normY = normY, includeGPsmooth = includeGPsmooth, smooth = smooth
+            normX = normX, normY = normY
         )
         corEst <- df$corEst
         df$df
@@ -127,7 +124,7 @@ makeOffset <- function(X, family) {
     }
     return(out)
 }
-buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun, smooth, normX, normY, pseudoCount = 1e-8, ...) {
+buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun, normX, normY, pseudoCount = 1e-8, ...) {
     if (families[["X"]]$family != "gaussian") {
         X <- X[idX <- (rowSums(X) > 0), ]
         Cx <- Cx[idX, ]
@@ -154,8 +151,8 @@ buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun
         df = data.frame("value" = Y[, features[2]], Ey), outcome = "value",
         family = families[["Y"]], offset = makeOffset(Y, families[["Y"]]), ...
     )
-    predx <- vcovPredGam(modelx, newdata = newGrid, testSmooth = smooth)
-    predy <- vcovPredGam(modely, newdata = newGrid, testSmooth = smooth)
+    predx <- vcovPredGam(modelx, newdata = newGrid)
+    predy <- vcovPredGam(modely, newdata = newGrid)
     corContr <- (predx$pred - mean(predx$pred)) * (predy$pred - mean(predy$pred))
     corEst <- sum(corContr) / ((nrow(newGrid) - 1) * sd(predx$pred) * sd(predy$pred))
     dat <- rbind(

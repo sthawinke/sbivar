@@ -12,8 +12,6 @@ GAMsMulti(
   families,
   n_points_grid,
   verbose,
-  includeGPsmooth,
-  testSmooth,
   featuresX,
   featuresY,
   findVariances = FALSE

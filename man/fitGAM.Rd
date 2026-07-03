@@ -4,7 +4,7 @@
 \alias{fitGAM}
 \title{Fit a GAM model to a single variable}
 \usage{
-fitGAM(df, outcome, family = gaussian(), offset = NULL, includeGPsmooth)
+fitGAM(df, outcome, family = gaussian(), offset = NULL)
 }
 \arguments{
 \item{df}{The dataframe containing outcome and coordinates}
@@ -16,8 +16,6 @@ fitGAM(df, outcome, family = gaussian(), offset = NULL, includeGPsmooth)
 \item{offset}{A numeric vector with the offset, e.g. the library sizes for
 spatial transcriptomic data, already on the scale of the regressor,
 so log-transformed for count models.}
-
-\item{includeGPsmooth}{Should a Gaussian random field smoother for stochastic neighbourhood similarity be included?}
 }
 \value{
 A fitted GAM model, or try-error when the fit fails

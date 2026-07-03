@@ -25,9 +25,7 @@ sbivarMulti(
   n_points_grid = 600,
   verbose = TRUE,
   findVariances = FALSE,
-  findMaxW = TRUE,
-  includeGPsmooth = FALSE,
-  testSmooth = c("trend", "field")
+  findMaxW = TRUE
 )
 }
 \arguments{
@@ -56,11 +54,6 @@ Currently, only "Exp" and "Lin" are implemented for computational reasons.}
 \item{findVariances}{Should variances be calculated? For internal use only}
 
 \item{findMaxW}{Is the maximum bivariate Moran's I needed?}
-
-\item{includeGPsmooth}{Should a Gaussian random field smoother for stochastic neighbourhood similarity be included?}
-
-\item{testSmooth}{A character string indicating which smooth factor should be tested for,
-either "trend" for a deterministic process or "field" for the Gaussian random field}
 }
 \value{
 A list containing

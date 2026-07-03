@@ -7,9 +7,6 @@
 #' for the outcome values. See details of \link{sbivarSingle}.
 #' @param n_points_grid The number of points in the new grid for the GAMs to be
 #' evaluated on.
-#' @param includeGPsmooth Should a Gaussian random field smoother for stochastic neighbourhood similarity be included?
-#' @param testSmooth A character string indicating which smooth factor should be tested for,
-#' either "trend" for a deterministic process or "field" for the Gaussian random field
 #' @returns A named list of results
 #' @inheritParams MoransISingle
 GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX,
@@ -19,14 +16,14 @@ GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX
     }
     gamsx <- fitManyGAMs(
         mat = X, coord = Cx, family = families[["X"]], modality = "X",
-        features = featuresX, includeGPsmooth = includeGPsmooth
+        features = featuresX
     )
     if (verbose) {
         message("Fitting GAMs for second modality (", length(featuresY), " features) ...")
     }
     gamsy <- fitManyGAMs(
         mat = Y, coord = Ey, family = families[["Y"]], modality = "Y",
-        features = featuresY, includeGPsmooth = includeGPsmooth
+        features = featuresY
     )
     ng <- buildNewGrid(Cx = Cx, Ey = Ey, n_points_grid = n_points_grid)
     if (verbose) {
@@ -37,14 +34,12 @@ GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX
     # Precompute all Y predictions once; reused for every X feature
     predsY <- lapply(selfName(names(gamsy)), function(featy) {
         vcovPredGam(gamsy[[featy]],
-            newdata = ng, findVariances = findVariances,
-            testSmooth = testSmooth
+            newdata = ng, findVariances = findVariances
         )
     })
     out <- vapply(selfName(names(gamsx)), function(featx) {
         predx <- vcovPredGam(gamsx[[featx]],
-            newdata = ng, findVariances = findVariances,
-            testSmooth = testSmooth
+            newdata = ng, findVariances = findVariances
         )
         out <- vapply(selfName(names(gamsy)), FUN.VALUE = double(Nrow), function(featy) {
             testGAM(

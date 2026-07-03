@@ -19,11 +19,11 @@
 #' @importFrom mgcv vcov.gam predict.gam
 #' @inheritParams MoransISingle
 #' @inheritParams GAMsSingle
-vcovPredGam <- function(model, newdata, testSmooth, findVariances = TRUE) {
+vcovPredGam <- function(model, newdata, findVariances = TRUE) {
     # Identify the smooth of interest and its coefficient indices
     idSmooth <- which(vapply(model$smooth,
         FUN.VALUE = TRUE,
-        function(sm) sm$id == testSmooth
+        function(sm) sm$id == "trend"
     ))
     idCoefs <- seq(
         model$smooth[[idSmooth]]$first.para,

@@ -2,7 +2,7 @@ context("Unit tests for input errors")
 test_that("SbivarSingle works for correct input", {
     sbiRes <- sbivar(X, Y, Cx, Ey, method = "GAMs")
     expect_is(sbiRes, "list")
-    sbiResGPtest <- sbivar(X, Y, Cx, Ey, method = "GAMs", includeGPsmooth = TRUE, testSmooth = "field")
+    sbiResGPtest <- sbivar(X, Y, Cx, Ey, method = "GAMs")
     expect_is(sbiResGPtest, "list")
     expect_message(sbiResMoran <- sbivar(X, Y, Cx, Ey, method = "Moran's I"))
     expect_message(sbiResMod <- sbivar(X, X, Cx, method = "Modified"))
@@ -19,7 +19,6 @@ test_that("SbivarSingle throws errors for incorrect input", {
     expect_error(sbivar(X, Y, Cx, Ey + 10, method = "GAMs"))
     expect_error(sbivar(X, Y, Cx, method = "GAMs"))
     expect_error(sbivar(X, Y, Cx, Cx, method = "GAMs"))
-    expect_error(sbivar(X, Y, Cx, Ey, method = "GAMs", testSmooth = "all"))
     expect_error(sbivar(X, Y, Cx, Ey,
         method = "GAMs",
         families = list(gaussian(), gaussian())

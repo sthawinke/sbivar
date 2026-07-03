@@ -17,8 +17,6 @@ plotGAMs(
   normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
   n_points_grid = 600,
-  includeGPsmooth = FALSE,
-  smooth = "trend",
   ...
 )
 
@@ -53,11 +51,6 @@ for X and Y matrices, respectively, before plotting, see details.}
 
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.}
-
-\item{includeGPsmooth}{Should a Gaussian random field smoother for stochastic neighbourhood similarity be included?}
-
-\item{smooth}{Which smooth to plot, either "trend" for the deterministic surface,
-or "field" for the Gaussian random field}
 
 \item{...}{passed onto \link{fitGAM}}
 

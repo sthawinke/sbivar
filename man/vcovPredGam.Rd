@@ -4,15 +4,12 @@
 \alias{vcovPredGam}
 \title{Return predictions of a GAM, along with the factored coefficient covariance}
 \usage{
-vcovPredGam(model, newdata, testSmooth, findVariances = TRUE)
+vcovPredGam(model, newdata, findVariances = TRUE)
 }
 \arguments{
 \item{model}{The fitted GAM}
 
 \item{newdata}{The grid on which predictions are made}
-
-\item{testSmooth}{A character string indicating which smooth factor should be tested for,
-either "trend" for a deterministic process or "field" for the Gaussian random field}
 
 \item{findVariances}{Should variances be calculated? For internal use only}
 }

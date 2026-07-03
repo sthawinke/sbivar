@@ -141,3 +141,7 @@
 # 0.99.25
 
  - Remove unused offsets argument
+ 
+# 0.99.26
+
+ - Switch off GP smooth by default, it is too concurve with the other smooth after all

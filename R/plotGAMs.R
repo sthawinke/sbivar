@@ -41,7 +41,7 @@
 #' @order 1
 plotGAMs <- function(X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
     families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE, normX = c("none", "rel", "log"),
-    normY = c("none", "rel", "log"), n_points_grid = 6e2, includeGPsmooth = TRUE, smooth = "trend", ...) {
+    normY = c("none", "rel", "log"), n_points_grid = 6e2, includeGPsmooth = FALSE, smooth = "trend", ...) {
     stopifnot(
         is.numeric(n_points_grid), all(vapply(families, FUN.VALUE = TRUE, is, "family")),
         all(vapply(features, FUN.VALUE = TRUE, is.character))

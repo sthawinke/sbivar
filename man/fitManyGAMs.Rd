@@ -28,6 +28,10 @@ For debugging purposes mainly}
 
 \item{features}{Features to be fit, others are only used to estimate the offset}
 
+\item{Gamm}{A boolean, should a gamm with Gaussian covariance kernel be fitted? See \link[mgcv]{gamm}}
+
+\item{correlation}{Correlation structure, passed onto \link{fitGP} or \link{fitGAM}}
+
 \item{pseudoCount}{Pseudocount added to avoid zeroes for gamma distribution}
 
 \item{...}{Passed onto \link{fitGAM}}

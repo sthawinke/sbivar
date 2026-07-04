@@ -20,7 +20,7 @@
 #' @inheritParams MoransISingle
 #' @inheritParams GAMsSingle
 vcovPredGam <- function(model, newdata, findVariances = TRUE) {
-# Basis matrix B (N_grid x q) — shared by prediction and variance computation
+    # Basis matrix B (N_grid x q) — shared by prediction and variance computation
     basis_matrix <- predict.gam(model,
         newdata = newdata, type = "lpmatrix",
         newdata.guaranteed = TRUE

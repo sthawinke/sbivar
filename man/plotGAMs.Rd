@@ -17,6 +17,7 @@ plotGAMs(
   normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
   n_points_grid = 600,
+  Gamm = FALSE,
   ...
 )
 
@@ -51,6 +52,8 @@ for X and Y matrices, respectively, before plotting, see details.}
 
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.}
+
+\item{Gamm}{A boolean, should a gamm with Gaussian covariance kernel be fitted? See \link[mgcv]{gamm}}
 
 \item{...}{passed onto \link{fitGAM}}
 

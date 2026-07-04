@@ -13,6 +13,10 @@ fitGAM(df, outcome, family = gaussian(), Gamm, correlation, offset = NULL)
 
 \item{family}{A character string indicating the family, see \link[stats]{family}.}
 
+\item{Gamm}{A boolean, should a gamm with Gaussian covariance kernel be fitted? See \link[mgcv]{gamm}}
+
+\item{correlation}{Correlation structure, passed onto \link{fitGP} or \link{fitGAM}}
+
 \item{offset}{A numeric vector with the offset, e.g. the library sizes for
 spatial transcriptomic data, already on the scale of the regressor,
 so log-transformed for count models.}

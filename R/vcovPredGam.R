@@ -20,23 +20,12 @@
 #' @inheritParams MoransISingle
 #' @inheritParams GAMsSingle
 vcovPredGam <- function(model, newdata, findVariances = TRUE) {
-    # Identify the smooth of interest and its coefficient indices
-    idSmooth <- which(vapply(model$smooth,
-        FUN.VALUE = TRUE,
-        function(sm) sm$id == "trend"
-    ))
-    idCoefs <- seq(
-        model$smooth[[idSmooth]]$first.para,
-        model$smooth[[idSmooth]]$last.para
-    )
-
-    # Basis matrix B (N_grid x q) — shared by prediction and variance computation
+# Basis matrix B (N_grid x q) — shared by prediction and variance computation
     basis_matrix <- predict.gam(model,
         newdata = newdata, type = "lpmatrix",
         newdata.guaranteed = TRUE
-    )[, idCoefs]
-
-    predOut <- c(basis_matrix %*% coef(model)[idCoefs])
+    )
+    predOut <- c(basis_matrix %*% coef(model))
     predOut <- switch(model$family$link,
         "identity" = predOut,
         "inverse"  = 1 / predOut,
@@ -45,7 +34,7 @@ vcovPredGam <- function(model, newdata, findVariances = TRUE) {
 
     if (findVariances) {
         # q x q covariance of smooth coefficients — much smaller than N_grid x N_grid
-        coef_cov <- vcov.gam(model, unconditional = TRUE)[idCoefs, idCoefs]
+        coef_cov <- vcov.gam(model, unconditional = TRUE)
         return(list("pred" = predOut, "basis" = basis_matrix, "coef_cov" = coef_cov))
     }
     return(list("pred" = predOut))

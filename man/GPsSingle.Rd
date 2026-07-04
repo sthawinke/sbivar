@@ -34,8 +34,7 @@ GPsSingle(
 \item{GPmethod}{The method by which to fit the Gaussian processes,
 passed onto \link[nlme]{gls} as "method".}
 
-\item{correlation}{A corStruct object, see \link[nlme]{corStruct}.
-At this point, \link[nlme]{corGaus} is hard-coded,}
+\item{correlation}{Correlation structure, passed onto \link{fitGP} or \link{fitGAM}}
 
 \item{optControl}{List of control values, see \link[nlme]{glsControl}.}
 

@@ -14,6 +14,8 @@ GAMsSingle(
   verbose,
   featuresX,
   featuresY,
+  Gamm,
+  correlation,
   findVariances = TRUE
 )
 }
@@ -32,6 +34,10 @@ evaluated on.}
 
 \item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization.}
+
+\item{Gamm}{A boolean, should a gamm with Gaussian covariance kernel be fitted? See \link[mgcv]{gamm}}
+
+\item{correlation}{Correlation structure, passed onto \link{fitGP} or \link{fitGAM}}
 
 \item{findVariances}{Should variances be calculated? For internal use only}
 }

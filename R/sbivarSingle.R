@@ -9,8 +9,9 @@
 #' @param X,Y Matrices of omics measurements
 #' @param Cx,Ey Coordinate matrices of dimension two, belonging to X and Y respectively
 #' @param method A character string, indicating which method to apply
-#' @param GPmethod,Quants,numLscAlts,optControl,gpParams,correlation Passed onto \link{fitGP}
-#' @param n_points_grid,families Passed onto \link{GAMsSingle}
+#' @param GPmethod,Quants,numLscAlts,optControl,gpParams Passed onto \link{fitGP}
+#' @param correlation Correlation structure, passed onto \link{fitGP} or \link{fitGAM}
+#' @param n_points_grid,families,Gamm Passed onto \link{GAMsSingle}
 #' @param wo,variogramModels,numNNs,etas,cutoff,width,returnSEsMoransI,findMaxW Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}
 #' @param verbose Should info on type of analysis be printed?
 #' @param normX,normY,pseudoCount Normalization parameters, passed onto \link{normMat}
@@ -37,7 +38,7 @@
 sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
     normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
     etas = c(5e-6, 2e-4, 2e-2), findMaxW = FALSE, returnSEsMoransI = TRUE,
-    families = list("X" = gaussian(), "Y" = gaussian()), featuresX = colnames(X), featuresY = colnames(Y),
+    families = list("X" = gaussian(), "Y" = gaussian()), Gamm = FALSE, featuresX = colnames(X), featuresY = colnames(Y),
     n_points_grid = 6e2, verbose = TRUE,
     variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
     wo = c("Gauss", "nn"), numNNs = c(4, 8, 24),
@@ -51,7 +52,7 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
         is.numeric(n_points_grid), ncol(Cx) == 2, is.numeric(numNNs), all(numNNs > 0),
         all(vapply(families, FUN.VALUE = character(1), function(x) x$link) %in% c("identity", "log", "inverse")),
         all(vapply(families, FUN.VALUE = TRUE, is, "family")), is.list(optControl), !is.null(colnames(X)),
-        !is.null(colnames(Y)),
+        !is.null(colnames(Y)), is.logical(Gamm),
         inherits(correlation, "corGaus"), is.numeric(etas), all(featuresX %in% colnames(X)),
         all(featuresY %in% colnames(Y)), !anyDuplicated(featuresX), !anyDuplicated(featuresY),
         length(Quants) == 2, is.numeric(Quants), is.logical(verbose), is.logical(findMaxW)
@@ -121,7 +122,7 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
     } else if (method == "GAMs") {
         GAMsSingle(
             X = X, Y = Y, Cx = Cx, Ey = Ey, families = families, n_points_grid = n_points_grid,
-            verbose = verbose, featuresX = featuresX, featuresY = featuresY
+            verbose = verbose, featuresX = featuresX, featuresY = featuresY, Gamm = Gamm, correlation = correlation
         )
     } else if (method == "GPs") {
         GPsSingle(

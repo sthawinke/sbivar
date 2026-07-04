@@ -8,21 +8,27 @@
 #' spatial transcriptomic data, already on the scale of the regressor,
 #' so log-transformed for count models.
 #' @returns A fitted GAM model, or try-error when the fit fails
-#' @importFrom mgcv gam s
+#' @importFrom mgcv gam gamm s
 #' @import stats
 #' @details If a gamma fit is attempted and fails, which frequently happens for sparse data,
 #' a negative binomial fit is attempted instead
 #' @seealso \link[mgcv]{gam}, \link[mgcv]{s}
-fitGAM <- function(df, outcome, family = gaussian(), offset = NULL) {
-    Form <- paste(outcome, "~ s(x, y, bs = 'tp', id = 'trend')")
-    fit <- try(gam(as.formula(Form),
-        data = df, family = family,
-        offset = offset
+fitGAM <- function(df, outcome, family = gaussian(), Gamm, correlation, offset = NULL) {
+    Form <- paste(outcome, "~ s(x, y, bs = 'tp', id = 'trend')",
+                  if(Gamm && !is.null(df$Offset)) "+offset(Offset)")
+    fit <- if(Gamm){
+        try(gamm(as.formula(Form), correlation = correlation,
+                data = df, family = family
+        )$gam, silent = TRUE)
+        } else {
+            try(gam(as.formula(Form),
+        data = df, family = family, offset = df$Offset,
     ), silent = TRUE)
+        }
     if (is(fit, "try-error") && family$family == "Gamma") {
         fit <- fitGAM(
             df = df, outcome = outcome, family = mgcv::nb(),
-            offset = offset
+            Gamm = Gamm, correlation = correlation
         )
     }
     return(fit)
@@ -41,7 +47,8 @@ fitGAM <- function(df, outcome, family = gaussian(), offset = NULL) {
 #' @returns A list of GAM models
 #' @importFrom smoppix loadBalanceBplapply
 #' @importFrom BiocParallel bplapply
-fitManyGAMs <- function(mat, coord, family = gaussian(), modality, features, pseudoCount = 1e-8, ...) {
+fitManyGAMs <- function(mat, coord, family = gaussian(), modality, features,
+                        Gamm, correlation, pseudoCount = 1e-8, ...) {
     if (family$family == "Gamma") {
         mat <- mat + pseudoCount
     }
@@ -51,13 +58,13 @@ fitManyGAMs <- function(mat, coord, family = gaussian(), modality, features, pse
         df <- df[id <- (libSizes > 0), ]
         libSizes <- libSizes[id]
     }
-    offset <- switch(family$link,
+    df$Offset <- switch(family$link,
         "inverse" = 1 / libSizes,
         "log" = log(libSizes),
         NULL
     )
     fits <- loadBalanceBplapply(selfName(features), function(cn) {
-        fitGAM(df, outcome = cn, offset = offset, family = family, ...)
+        fitGAM(df, outcome = cn, family = family, Gamm = Gamm, correlation = correlation, ...)
     })
     if (!all(id <- vapply(fits, FUN.VALUE = TRUE, is, "gam"))) {
         warning(

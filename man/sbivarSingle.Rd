@@ -17,6 +17,7 @@ sbivarSingle(
   findMaxW = FALSE,
   returnSEsMoransI = TRUE,
   families = list(X = gaussian(), Y = gaussian()),
+  Gamm = FALSE,
   featuresX = colnames(X),
   featuresY = colnames(Y),
   n_points_grid = 600,
@@ -47,13 +48,15 @@ sbivarSingle(
 \item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization.}
 
-\item{n_points_grid, families}{Passed onto \link{GAMsSingle}}
+\item{n_points_grid, families, Gamm}{Passed onto \link{GAMsSingle}}
 
 \item{verbose}{Should info on type of analysis be printed?}
 
 \item{wo, variogramModels, numNNs, etas, cutoff, width, returnSEsMoransI, findMaxW}{Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}}
 
-\item{GPmethod, Quants, numLscAlts, optControl, gpParams, correlation}{Passed onto \link{fitGP}}
+\item{GPmethod, Quants, numLscAlts, optControl, gpParams}{Passed onto \link{fitGP}}
+
+\item{correlation}{Correlation structure, passed onto \link{fitGP} or \link{fitGAM}}
 }
 \value{
 A list with at least the following components

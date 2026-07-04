@@ -4,7 +4,7 @@
 \alias{fitGAM}
 \title{Fit a GAM model to a single variable}
 \usage{
-fitGAM(df, outcome, family = gaussian(), offset = NULL)
+fitGAM(df, outcome, family = gaussian(), Gamm, correlation, offset = NULL)
 }
 \arguments{
 \item{df}{The dataframe containing outcome and coordinates}

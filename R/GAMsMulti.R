@@ -14,7 +14,7 @@ GAMsMulti <- function(Xl, Yl, Cxl, Eyl, families, n_points_grid, verbose,
             printIteration(nam, names(Xl))
         }
         out <- GAMsSingle(Xl[[nam]], Yl[[nam]], Cxl[[nam]], Eyl[[nam]],
-            families = families, n_points_grid = n_points_grid,
+            families = families, n_points_grid = n_points_grid, Gamm = FALSE,
             verbose = FALSE, findVariances = findVariances, featuresX = intersect(featuresX, colnames(Xl[[nam]])),
             featuresY = intersect(featuresY, colnames(Yl[[nam]]))
         )

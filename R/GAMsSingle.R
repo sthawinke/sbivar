@@ -10,7 +10,7 @@
 #' @returns A named list of results
 #' @inheritParams MoransISingle
 GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX,
-    featuresY, includeGPsmooth, testSmooth, findVariances = TRUE) {
+    featuresY, findVariances = TRUE) {
     if (verbose) {
         message("Fitting GAMs for first modality (", length(featuresX), " features) ...")
     }

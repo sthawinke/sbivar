@@ -14,8 +14,6 @@ GAMsSingle(
   verbose,
   featuresX,
   featuresY,
-  includeGPsmooth,
-  testSmooth,
   findVariances = TRUE
 )
 }

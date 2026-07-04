@@ -22,7 +22,7 @@ GAMsMulti(
 
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
-\item{families, n_points_grid, includeGPsmooth, testSmooth}{See \link{GAMsSingle}}
+\item{families, n_points_grid}{See \link{GAMsSingle}}
 
 \item{verbose}{Should info on type of analysis be printed?}
 

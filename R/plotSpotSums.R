@@ -17,8 +17,10 @@
 #'     Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
 #'     Vicari$TranscriptCoords, Vicari$MetaboliteCoords
 #' )
-plotSpotSums <- function(Xl, Yl, Cxl, Eyl, viewNames = c("Transcriptomics", "Metabolomics"),
-    pointSize = 0.01, stripTextSize = 8.5) {
+plotSpotSums <- function(
+      Xl, Yl, Cxl, Eyl, viewNames = c("Transcriptomics", "Metabolomics"),
+      pointSize = 0.01, stripTextSize = 8.5
+) {
     baa <- checkInputMulti(Xl, Yl, Cxl, Eyl)
     foo <- base::do.call(rbind, lapply(names(Xl), function(x) {
         dfStx <- data.frame(Cxl[[x]], "log10_Library_size" = log10(rowSums(Xl[[x]])), what = "Transcriptomics")
@@ -36,7 +38,7 @@ plotSpotSums <- function(Xl, Yl, Cxl, Eyl, viewNames = c("Transcriptomics", "Met
         ylab("Coordinate 2") +
         scale_colour_gradient(
             low = "yellow", high = "blue",
-            name = "Log10(sample sum)"
+            name = "Log10(spot sum)"
         ) +
         coord_fixed()
     return(p)

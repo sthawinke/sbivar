@@ -148,17 +148,17 @@ buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun
     colnames(Cx) <- colnames(Ey) <- c("x", "y")
     newGrid <- buildNewGrid(Cx = Cx, Ey = Ey, n_points_grid = n_points_grid)
     modelx <- fitGAM(
-        df = data.frame("value" = X[, features[1]], Cx), outcome = "value",
-        family = families[["X"]], offset = makeOffset(X, families[["X"]]), ...
+        df = data.frame("value" = X[, features[1]], Cx, Offset = makeOffset(X, families[["X"]])), outcome = "value",
+        family = families[["X"]], ...
     )
     modely <- fitGAM(
-        df = data.frame("value" = Y[, features[2]], Ey), outcome = "value",
-        family = families[["Y"]], offset = makeOffset(Y, families[["Y"]]), ...
+        df = data.frame("value" = Y[, features[2]], Ey, Offset = makeOffset(Y, families[["Y"]])), outcome = "value",
+        family = families[["Y"]], ...
     )
     predx <- vcovPredGam(modelx, newdata = newGrid)
     predy <- vcovPredGam(modely, newdata = newGrid)
     corContr <- (predx$pred - mean(predx$pred)) * (predy$pred - mean(predy$pred))
-    corEst <- sum(corContr) / ((nrow(newGrid) - 1) * sd(predx$pred) * sd(predy$pred))
+    corEst <- sum(corContr) / ((length(predx$pred) - 1) * sd(predx$pred) * sd(predy$pred))
     dat <- rbind(
         data.frame(newGrid, Value = scaleFun(predx$pred), feature = "x"),
         data.frame(newGrid, Value = scaleFun(predy$pred), feature = "y"),

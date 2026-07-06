@@ -4,9 +4,6 @@
 #' @param df The dataframe containing outcome and coordinates
 #' @param outcome A character vector indicating the outcome variable
 #' @param family A character string indicating the family, see \link[stats]{family}.
-#' @param offset A numeric vector with the offset, e.g. the library sizes for
-#' spatial transcriptomic data, already on the scale of the regressor,
-#' so log-transformed for count models.
 #' @returns A fitted GAM model, or try-error when the fit fails
 #' @importFrom mgcv gam gamm s
 #' @import stats
@@ -14,7 +11,7 @@
 #' a negative binomial fit is attempted instead
 #' @seealso \link[mgcv]{gam}, \link[mgcv]{s}
 #' @inheritParams GAMsSingle
-fitGAM <- function(df, outcome, family = gaussian(), Gamm, correlation, offset = NULL) {
+fitGAM <- function(df, outcome, family = gaussian(), Gamm, correlation) {
     Form <- paste(
         outcome, "~ s(x, y, bs = 'tp', id = 'trend')",
         if (Gamm && !is.null(df$Offset)) "+offset(Offset)"

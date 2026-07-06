@@ -186,13 +186,13 @@ multiGAMLmmsRes <- extractResultsMulti(multiGAMLmms, design)
 head(multiGAMLmmsRes$result$Intercept)
 ```
 
-    ##   Modality_X Modality_Y    Estimate         SE      pVal      pAdj
-    ## 1       Pcp4  Histidine -0.13059902 0.07573758 0.1452431 0.9393934
-    ## 2       Pcp4 Tocopherol -0.09440682 0.04406096 0.2779911 0.9393934
-    ## 3       Gnas    Taurine -0.09714658 0.08080491 0.2830975 0.9393934
-    ## 4    mt.Atp6       GABA -0.10968234 0.05900753 0.3142181 0.9393934
-    ## 5       Pcp4   Dopamine  0.13036167 0.12926211 0.3594960 0.9393934
-    ## 6    mt.Atp6  Histidine  0.11528222 0.12280335 0.3909553 0.9393934
+    ##   Modality_X Modality_Y   Estimate         SE       pVal      pAdj
+    ## 1      Sparc Tocopherol -0.1969455 0.05512814 0.01600122 0.4000305
+    ## 2       Gnas Tocopherol  0.2058657 0.08376740 0.05739854 0.5648194
+    ## 3       Gnas       GABA  0.2549455 0.10973641 0.06777833 0.5648194
+    ## 4       Gnas  Histidine  0.2027837 0.11076368 0.12664093 0.7915058
+    ## 5       Fth1       GABA  0.4125944 0.19797769 0.28481526 0.9377581
+    ## 6       Gnas   Dopamine -0.2579455 0.15311234 0.34103084 0.9377581
 
 No features are significantly associated after multiplicity correction.
 For illustration, we plot the feature pair with the smallest p-values

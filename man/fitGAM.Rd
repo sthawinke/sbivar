@@ -4,7 +4,7 @@
 \alias{fitGAM}
 \title{Fit a GAM model to a single variable}
 \usage{
-fitGAM(df, outcome, family = gaussian(), Gamm, correlation, offset = NULL)
+fitGAM(df, outcome, family = gaussian(), Gamm, correlation)
 }
 \arguments{
 \item{df}{The dataframe containing outcome and coordinates}
@@ -16,10 +16,6 @@ fitGAM(df, outcome, family = gaussian(), Gamm, correlation, offset = NULL)
 \item{Gamm}{A boolean, should a gamm with Gaussian covariance kernel be fitted? See \link[mgcv]{gamm}}
 
 \item{correlation}{Correlation structure, passed onto \link{fitGP} or \link{fitGAM}}
-
-\item{offset}{A numeric vector with the offset, e.g. the library sizes for
-spatial transcriptomic data, already on the scale of the regressor,
-so log-transformed for count models.}
 }
 \value{
 A fitted GAM model, or try-error when the fit fails

@@ -116,7 +116,7 @@ par(mfrow = c(1, 1))
 
 The alignment seems successful, notice that some tissue areas are only covered by one modality though. Next we explore the spatial distributions of the spot-wise sums, in our case these are the library sizes for the transcriptomics data and the total ion counts for the metabolomics data.
 
-```{r plotSpotSums}
+```{r plotSpotSums, fig.height = 7}
 plotSpotSums(
     Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
     Vicari$TranscriptCoords, Vicari$MetaboliteCoords
@@ -156,7 +156,7 @@ Plot the most significantly spatially associated gene-metabolite pair `r gpMoran
 ```{r plottoppairmoran}
 plotTopPair(moransIRes,
     X = singleStx, Y = singleMet, Cx = singleStxCoords,
-    Ey = singleMetCoords
+    Ey = singleMetCoords, size = 1
 )
 ```
 
@@ -389,27 +389,26 @@ multiMoranLmmsResSingleSE <- extractResultsMulti(multiMoranLmmsSingleSE, designD
 
 ## AnnData
 
-AnnData is python data format often used to store spatial experiment results, which can also be read into R. An AnnData object is e.g. created by reading an '.h5ad' with the functionality of the _anndata_ R-package. Here we adapted one a file from the [study](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/GZFCWC) by @Godfrey2025, keeping its structure but subsetting it to only necessary components and the 10 most abundant features per modality. For illustration, this file is included in the _sbivar_ package and can be read in (if the _anndata_ and _zellkonverter_ packages are installed) as:
+AnnData is python data format often used to store spatial experiment results, which can also be read into R. An AnnData object is e.g. created by reading an '.h5ad' with the functionality of the _anndataR_ R-package. Here we adapted one a file from the [study](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/GZFCWC) by @Godfrey2025, keeping its structure but subsetting it to only necessary components and the 10 most abundant features per modality. For illustration, this file is included in the _sbivar_ package and can be read in (if the _anndataR_ package is installed) as:
 
 ```{r readh5ad, message = FALSE}
-if (reqadzk <- (require(anndata) && require(zellkonverter))) {
-    annDataObj <- read_h5ad(system.file("h5adData", "LC_170_subset.h5ad", package = "sbivar"))
+if (reqann <- require(anndataR)) {
+    annDataObj <- read_h5ad(system.file("h5adData", "LC_170_subset.h5ad", package = "sbivar"), as = "HDF5AnnData")
 }
 ```
 
-We suggest converting it to a _SingleCellExperiment_ object from the eponymous R-package using the _zellkonverter_ package:
+Next, convert it to a _SingleCellExperiment_ object from the eponymous R-package:
 
 ```{r anndata}
-if (reqadzk) {
-    sceStx <- AnnData2SCE(annDataObj, X_name = "X")
-    reducedDims(sceStx) <- annDataObj$obsm
+if (reqann) {
+    sceStx <- annDataObj$as_SingleCellExperiment()
 }
 ```
 
 Note that a _SingleCellExperiment_ object can only contain one modality at the time, here the transcriptomics. From there on, it is only a small step to a _SpatialExperiment_ object as accepted by _sbivar_. The only tricky part are the spatial coordinates, which have no fixed slot in the _AnnData_ object. Here, they have been stored in the "obsm" slot of the _AnnData_ object, which means they have ended up in the "reducedDims" slot of the _SingleCellExperiment_ object. In addition, we create a _SpatialExperiment_ object for the metabolomics data, which has oddly been stored in the unstructured ("uns") slot of the _AnnData_ object. To keep build times of this vignette low, we again only look at a subset of 10 features.
 
 ```{r scetospe}
-if (reqadzk) {
+if (reqann) {
     library(SpatialExperiment)
     speStx <- SpatialExperiment(list("Stx" = assay(sceStx, "X")[1:10, ]),
         colData = colData(sceStx),
@@ -420,7 +419,7 @@ if (reqadzk) {
         colData = colData(sceStx),
         spatialCoords = reducedDims(sceStx)$spatial
     )
-    rownames(speMet) <- annDataObj$uns[["mz_features"]][1:10]
+    rownames(speMet) <- make.names(annDataObj$uns[["mz_features"]][1:10])
     # Need to set column names manually
 }
 ```
@@ -428,7 +427,7 @@ if (reqadzk) {
 Note that in this example, the samples of the two modalities have been pre-matched (the "spatialCoords" slot is the same), which is in general not recommended. The above code chunks should not be applied thoughtlessly, as the _AnnData_ structure is not very strict on the data types it includes. The analysis is then run and plotted as:
 
 ```{r speanalyse}
-if (reqadzk) {
+if (reqann) {
     GodfreyRes <- sbivar(speStx, speMet,
         assayX = "Stx", assayY = "msi",
         normX = "rel", normY = "rel", verbose = FALSE

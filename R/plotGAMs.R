@@ -147,13 +147,15 @@ buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun
     Y <- normMat(Y, normY)
     colnames(Cx) <- colnames(Ey) <- c("x", "y")
     newGrid <- buildNewGrid(Cx = Cx, Ey = Ey, n_points_grid = n_points_grid)
+    dfx <- data.frame("value" = X[, features[1]], Cx)
+    dfx$Offset <- makeOffset(X, families[["X"]])
     modelx <- fitGAM(
-        df = data.frame("value" = X[, features[1]], Cx, Offset = makeOffset(X, families[["X"]])), outcome = "value",
-        family = families[["X"]], ...
+        df = dfx, outcome = "value", family = families[["X"]], ...
     )
+    dfy <- data.frame("value" = Y[, features[2]], Ey)
+    dfy$Offset <- makeOffset(Y, families[["Y"]])
     modely <- fitGAM(
-        df = data.frame("value" = Y[, features[2]], Ey, Offset = makeOffset(Y, families[["Y"]])), outcome = "value",
-        family = families[["Y"]], ...
+        df = dfy, outcome = "value", family = families[["Y"]], ...
     )
     predx <- vcovPredGam(modelx, newdata = newGrid)
     predy <- vcovPredGam(modely, newdata = newGrid)

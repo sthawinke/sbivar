@@ -18,6 +18,7 @@ plotGAMs(
   normY = c("none", "rel", "log"),
   n_points_grid = 600,
   Gamm = FALSE,
+  correlation = corGaus(form = ~x + y, nugget = TRUE, value = c(1, 0.25)),
   ...
 )
 
@@ -54,6 +55,8 @@ for X and Y matrices, respectively, before plotting, see details.}
 evaluated on.}
 
 \item{Gamm}{A boolean, should a gamm with Gaussian covariance kernel be fitted? See \link[mgcv]{gamm}}
+
+\item{correlation}{Correlation structure, passed onto \link{fitGP} or \link{fitGAM}}
 
 \item{...}{passed onto \link{fitGAM}}
 

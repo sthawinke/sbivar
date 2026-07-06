@@ -144,4 +144,5 @@
  
 # 0.99.26
 
- - Switch off GP smooth by default, it is too concurve with the other smooth after all
+ - Remove GP smooth, it is too concurve with the other smooth after all
+ - Add GP error structure with mgcv::gamm instead, as an option

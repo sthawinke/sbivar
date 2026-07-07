@@ -147,7 +147,7 @@
  - Remove GP smooth, it is too concurve with the other smooth after all
  - Add GP error structure with mgcv::gamm instead, as an option
 
-# 0.99.26
+# 0.99.27
 
  - Switch to anndataR package rather than anndata and zellkonverter for reading in h5ad files
- - Fix minor bu in plotGAMs
+ - Fix minor bug in plotGAMs

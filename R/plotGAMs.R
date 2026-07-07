@@ -37,11 +37,9 @@
 #' @import ggplot2
 #' @importFrom smoppix loadBalanceBplapply
 #' @order 1
-plotGAMs <- function(
-      X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
-      families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE, normX = c("none", "rel", "log"),
-      normY = c("none", "rel", "log"), n_points_grid = 6e2, Gamm = FALSE, correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25)), ...
-) {
+plotGAMs <- function(X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
+    families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE, normX = c("none", "rel", "log"),
+    normY = c("none", "rel", "log"), n_points_grid = 6e2, Gamm = FALSE, correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25)), ...) {
     stopifnot(
         is.numeric(n_points_grid), all(vapply(families, FUN.VALUE = TRUE, is, "family")),
         all(vapply(features, FUN.VALUE = TRUE, is.character))
@@ -56,6 +54,7 @@ plotGAMs <- function(
             df <- buildGamDf(
                 X[[nam]], Y[[nam]], Cx[[nam]], Ey[[nam]], n_points_grid,
                 families, features, scaleFun,
+                correlation = correlation,
                 normX = normX, normY = normY, Gamm = Gamm
             )$df
             df$image <- nam
@@ -65,7 +64,7 @@ plotGAMs <- function(
     } else {
         foo <- checkInputSingle(X, Y, Cx, Ey)
         df <- buildGamDf(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun,
-            normX = normX, normY = normY, Gamm = Gamm
+            normX = normX, normY = normY, correlation = correlation, Gamm = Gamm
         )
         corEst <- df$corEst
         df$df
@@ -78,7 +77,7 @@ plotGAMs <- function(
         facet_grid(if (multi) {
             image ~ feature
         } else {
-            ~feature
+            ~ feature
         }) +
         theme(axis.text.x = element_text(angle = 90)) +
         scale_fill_viridis_c(option = "H", name = "") +
@@ -93,10 +92,8 @@ plotGAMs <- function(
 #' @rdname plotGAMs
 #' @order 2
 #' @inheritParams plotTopPair
-plotGAMsTopResults <- function(
-      results, X, Y, Cx, Ey, topRank = 1,
-      parameter = "Intercept", families = results$families, ...
-) {
+plotGAMsTopResults <- function(results, X, Y, Cx, Ey, topRank = 1,
+    parameter = "Intercept", families = results$families, ...) {
     stopifnot(is.numeric(topRank))
     topFeats <- (
         if (results$multi) {
@@ -110,7 +107,7 @@ plotGAMsTopResults <- function(
     Y <- getX(Y, results$assayY)
     plotGAMs(
         X = X, Y = Y, features = topFeats, Cx = Cx, Ey = Ey, families = families,
-        multi = results$multi, normX = results$normX, normY = results$normY, ...
+        multi = results$multi, normX = results$normX, normY = results$normY, Gamm = !results$multi && results$Gamm, correlation = results$correlation, ...
     )
 }
 #' Make a list of offsets

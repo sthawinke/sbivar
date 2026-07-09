@@ -47,13 +47,13 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
         opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
         niterEM = 1e3, msMaxEval = 1e3
     ),
-    correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25))) {
+    correlation = corGaus(form = ~ x + y, nugget = TRUE, values = c(0.9*max(apply(Cx,2, range)), 0.25))) {
     stopifnot(
         is.numeric(n_points_grid), ncol(Cx) == 2, is.numeric(numNNs), all(numNNs > 0),
         all(vapply(families, FUN.VALUE = character(1), function(x) x$link) %in% c("identity", "log", "inverse")),
         all(vapply(families, FUN.VALUE = TRUE, is, "family")), is.list(optControl), !is.null(colnames(X)),
-        !is.null(colnames(Y)), is.logical(Gamm),
-        inherits(correlation, "corGaus"), is.numeric(etas), all(featuresX %in% colnames(X)),
+        !is.null(colnames(Y)), is.logical(Gamm), inherits(correlation, "corGaus") || (method!="GPs"),
+        inherits(correlation, "corSpatial"), is.numeric(etas), all(featuresX %in% colnames(X)),
         all(featuresY %in% colnames(Y)), !anyDuplicated(featuresX), !anyDuplicated(featuresY),
         length(Quants) == 2, is.numeric(Quants), is.logical(verbose), is.logical(findMaxW)
     )

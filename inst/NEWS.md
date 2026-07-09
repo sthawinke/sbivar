@@ -151,3 +151,7 @@
 
  - Switch to anndataR package rather than anndata and zellkonverter for reading in h5ad files
  - Fix minor bug in plotGAMs
+ 
+# 0.99.28
+
+  - More flexibility and better defaults for residual correlation structures

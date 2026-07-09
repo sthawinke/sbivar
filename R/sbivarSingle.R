@@ -47,7 +47,7 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
         opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
         niterEM = 1e3, msMaxEval = 1e3
     ),
-    correlation = corGaus(form = ~ x + y, nugget = TRUE, values = c(0.9*max(apply(Cx,2, range)), 0.25))) {
+    correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(0.9*max(apply(Cx,2, function(x) diff(range(x)))), 0.25))) {
     stopifnot(
         is.numeric(n_points_grid), ncol(Cx) == 2, is.numeric(numNNs), all(numNNs > 0),
         all(vapply(families, FUN.VALUE = character(1), function(x) x$link) %in% c("identity", "log", "inverse")),

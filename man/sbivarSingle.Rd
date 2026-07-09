@@ -33,8 +33,8 @@ sbivarSingle(
   numLscAlts = 5,
   optControl = lmeControl(opt = "optim", maxIter = 500, msMaxIter = 500, niterEM = 1000,
     msMaxEval = 1000),
-  correlation = corGaus(form = ~x + y, nugget = TRUE, values = c(0.9 * max(apply(Cx, 2,
-    range)), 0.25))
+  correlation = corGaus(form = ~x + y, nugget = TRUE, value = c(0.9 * max(apply(Cx, 2,
+    function(x) diff(range(x)))), 0.25))
 )
 }
 \arguments{

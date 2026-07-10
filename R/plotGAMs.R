@@ -37,9 +37,11 @@
 #' @import ggplot2
 #' @importFrom smoppix loadBalanceBplapply
 #' @order 1
-plotGAMs <- function(X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
-    families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE, normX = c("none", "rel", "log"),
-    normY = c("none", "rel", "log"), n_points_grid = 6e2, Gamm = FALSE, correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25)), ...) {
+plotGAMs <- function(
+      X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
+      families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE, normX = c("none", "rel", "log"),
+      normY = c("none", "rel", "log"), n_points_grid = 6e2, Gamm = FALSE, correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25)), ...
+) {
     stopifnot(
         is.numeric(n_points_grid), all(vapply(families, FUN.VALUE = TRUE, is, "family")),
         all(vapply(features, FUN.VALUE = TRUE, is.character))
@@ -77,7 +79,7 @@ plotGAMs <- function(X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
         facet_grid(if (multi) {
             image ~ feature
         } else {
-            ~ feature
+            ~feature
         }) +
         theme(axis.text.x = element_text(angle = 90)) +
         scale_fill_viridis_c(option = "H", name = "") +
@@ -92,8 +94,10 @@ plotGAMs <- function(X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
 #' @rdname plotGAMs
 #' @order 2
 #' @inheritParams plotTopPair
-plotGAMsTopResults <- function(results, X, Y, Cx, Ey, topRank = 1,
-    parameter = "Intercept", families = results$families, ...) {
+plotGAMsTopResults <- function(
+      results, X, Y, Cx, Ey, topRank = 1,
+      parameter = "Intercept", families = results$families, ...
+) {
     stopifnot(is.numeric(topRank))
     topFeats <- (
         if (results$multi) {

@@ -4,11 +4,11 @@
 #' @param df The dataframe containing outcome and coordinates
 #' @param outcome A character vector indicating the outcome variable
 #' @param family A character string indicating the family, see \link[stats]{family}.
-#' @returns A fitted GAM model, or try-error when the fit fails
+#' @returns A fitted GAM or GAMM model, or try-error when the fit fails
 #' @importFrom mgcv gam gamm s
 #' @import stats
-#' @details If a gamma fit is attempted and fails, which frequently happens for sparse data,
-#' a negative binomial fit is attempted instead
+#' @details If a GAMM fit is attempted and fails, a GAM is tried instead. If a gamma fit is attempted and fails, which frequently happens for sparse data,
+#' a negative binomial fit is attempted instead.
 #' @seealso \link[mgcv]{gam}, \link[mgcv]{s}
 #' @inheritParams GAMsSingle
 fitGAM <- function(df, outcome, family = gaussian(), Gamm, correlation) {
@@ -22,9 +22,15 @@ fitGAM <- function(df, outcome, family = gaussian(), Gamm, correlation) {
             data = df, family = family
         )$gam, silent = TRUE)
     } else {
-        try(gam(as.formula(Form),
+        fit <- try(gam(as.formula(Form),
             data = df, family = family, offset = df$Offset,
         ), silent = TRUE)
+    }
+    if (Gamm && is(fit, "try-error")) {
+        fit <- fitGAM(
+            df = df, outcome = outcome, family = family,
+            Gamm = FALSE
+        )
     }
     if (is(fit, "try-error") && family$family == "Gamma") {
         fit <- fitGAM(
@@ -48,8 +54,10 @@ fitGAM <- function(df, outcome, family = gaussian(), Gamm, correlation) {
 #' @returns A list of GAM models
 #' @importFrom smoppix loadBalanceBplapply
 #' @importFrom BiocParallel bplapply
-fitManyGAMs <- function(mat, coord, family = gaussian(), modality, features,
-    Gamm, correlation, pseudoCount = 1e-8, ...) {
+fitManyGAMs <- function(
+      mat, coord, family = gaussian(), modality, features,
+      Gamm, correlation, pseudoCount = 1e-8, ...
+) {
     if (family$family == "Gamma") {
         mat <- mat + pseudoCount
     }

@@ -155,3 +155,7 @@
 # 0.99.28
 
   - More flexibility and better defaults for residual correlation structures
+  
+# 0.99.29
+
+ - Catch fit errors for GAMMs and fit regular GAMMs instead

@@ -48,7 +48,7 @@ GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX
                 predy = predsY[[featy]], findVariances = findVariances
             )
         })
-        printProgress(featx, featuresX, verbose)
+        printProgress(featx, names(gamsx), verbose)
         return(out)
     }, FUN.VALUE = matrix(0, nrow = Nrow, ncol = length(gamsy)))
     # Reformat to long format

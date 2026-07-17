@@ -1,7 +1,7 @@
 context("Fitting single GAMs and GPs")
 test_that("Fitting GAMs and GPs on single outcomes works", {
     expect_s3_class(fitGAM(data.frame("out" = X[, 1], Cx), "out", Gamm = FALSE), "gam")
-    expect_s3_class(fitGAM(data.frame("out" = X[, 1], Cx), "out", correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25)), Gamm = TRUE), "gam")
+    expect_s3_class(fitGAM(data.frame("out" = X[, 1], Cx), "out", correlation = corExp(form = ~ x + y, nugget = TRUE, value = c(1, 0.25)), Gamm = TRUE), "gam")
     expect_identical(
         names(fitGP(X[, 1], Cx,
             GPmethod = "REML",

@@ -25,10 +25,8 @@
 #' @importFrom Matrix bdiag
 #' @references
 #' \insertAllCited{}
-testGP <- function(
-      x, y, crossBlocks, solXonly, solYonly,
-      sx, sy, derivX, derivY, distMat
-) {
+testGP <- function(x, y, crossBlocks, solXonly, solYonly,
+    sx, sy, derivX, derivY, distMat) {
     n <- dim(crossBlocks)[1]
     m <- dim(crossBlocks)[2]
     idN <- seq_len(n)
@@ -91,11 +89,11 @@ testGP <- function(
     sitt <- try(solve(Ithetatheta), silent = TRUE)
     idItt <- colnames(sitt)
     if (inherits(sitt, "try-error")) {
-        idItt <- grep("range", colnames(Ithetatheta), invert = TRUE)
+        idItt <- grep("range", colnames(Ithetatheta), invert = TRUE, fixed = TRUE)
         sitt <- try(solve(Ithetatheta[idItt, idItt]), silent = TRUE)
     }
     if (inherits(sitt, "try-error")) {
-        idItt <- grep("sigma", colnames(Ithetatheta))
+        idItt <- grep("sigma", colnames(Ithetatheta), fixed = TRUE)
         sitt <- try(solve(Ithetatheta[idItt, idItt]), silent = TRUE)
     }
 

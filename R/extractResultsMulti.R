@@ -29,10 +29,7 @@ extractResultsMulti <- function(result, designDf, method = "BH") {
         id <- vapply(res, FUN.VALUE = TRUE, function(x) {
             is(x, "lmerModLmerTest") || is(x, "lm")
         })
-        out <- if (!any(id)) {
-            # warning("No lmerModLmerTest or lm models found!")
-            return(NULL)
-        } else {
+        out <- if (any(id)) {
             Summaries <- lapply(res[id], function(x) summary(x)$coef)
             ints <- t(vapply(Summaries, FUN.VALUE = double(3), function(x) {
                 x["(Intercept)", c("Estimate", "Std. Error", "Pr(>|t|)")]
@@ -93,6 +90,8 @@ extractResultsMulti <- function(result, designDf, method = "BH") {
                 fixRes <- lapply(fixedOut, function(x) x[1, ])
             }
             c(list("Intercept" = intRes), fixRes)
+        } else {
+            return(NULL)
         }
     })
     outout <- outout[!vapply(outout, FUN.VALUE = TRUE, is.null)]

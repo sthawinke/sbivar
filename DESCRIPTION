@@ -1,13 +1,13 @@
 Package: sbivar
 Type: Package
 Title: Test for Spatial Bivariate Association Across Omics Types
-Version: 0.99.29
+Version: 0.99.30
 Authors@R: c(person(given = "Stijn", family = "Hawinkel", 
     email = "stijn.hawinkel@psb.ugent.be", 
     role=c("cre", "aut"), comment = c(ORCID = "0000-0002-4501-5180")),
     person(given = "Wangjun", family = "Hu", 
     role=c("aut")))
-Description: The sbivar package implements a suite of tests for Spatial BIVARiate
+Description: Sbivar implements a suite of tests for Spatial BIVARiate
     association across omics modalities, with possibly disjoint coordinate sets. Implemented
     tests are generalized additive models (GAMs), modified t-test, bivariate Moran's I 
     and Gaussian processes (GPs). Both single images and replicated experiments can be

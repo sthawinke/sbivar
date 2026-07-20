@@ -159,3 +159,7 @@
 # 0.99.29
 
  - Catch fit errors for GAMMs and fit regular GAMMs instead
+ 
+# 0.99.30
+
+ - Implemented some goodpractice suggestions

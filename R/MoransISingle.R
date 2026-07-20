@@ -26,10 +26,8 @@
 #' as it is computation intensive and not always needed.
 #' @note No multithreading is implemented for the variance calculation, as the matrix calculations involved
 #' may use inherent multithreading with OpenBLAS.
-MoransISingle <- function(
-      X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose,
-      findMaxW, variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...
-) {
+MoransISingle <- function(X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose,
+    findMaxW, variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...) {
     n <- nrow(X)
     m <- nrow(Y)
     p <- length(featuresX)
@@ -57,7 +55,7 @@ MoransISingle <- function(
     })
     Ws <- Ws[, , idW <- (colSums(Ws, dims = 2, na.rm = TRUE) > 0), drop = FALSE]
     numWs <- dim(Ws)[3]
-    if (any(!idW) && (wo == "Gauss")) {
+    if (!all(idW) && (wo == "Gauss")) {
         warning("Eta values ", etas[!idW], " yielded zero weight matrices and have been dropped!", immediate. = TRUE)
         etas <- etas[idW]
     }

@@ -44,24 +44,22 @@
 #'     Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
 #'     normX = "rel", normY = "rel", features = c("Gnas", "Tocopherol")
 #' )
-plotTopPair <- function(
-      results, ..., normX = results$normX, normY = results$normY,
-      topRank = 1, parameter = "Intercept", scaleBySampleSums = FALSE
-) {
+plotTopPair <- function(results, ..., normX = results$normX, normY = results$normY,
+    topRank = 1, parameter = "Intercept", scaleBySampleSums = FALSE) {
     stopifnot(is.numeric(topRank), topRank >= 1, is.logical(scaleBySampleSums), is.character(parameter))
-    if (!results$multi) {
-        topFeats <- results$result[topRank, c("Modality_X", "Modality_Y")]
-        plotPairSingle(
-            features = topFeats, assayX = results$assayX, scaleBySampleSums = scaleBySampleSums,
-            assayY = results$assayY, normX = normX, normY = normY, ...
-        )
-    } else {
+    if (results$multi) {
         stopifnot(parameter %in% names(results$result))
         topFeats <- results$result[[parameter]][topRank, c("Modality_X", "Modality_Y")]
         plotPairMulti(
             features = topFeats, assayX = results$assayX,
             assayY = results$assayY, normX = normX, scaleBySampleSums = scaleBySampleSums,
             normY = normY, ...
+        )
+    } else {
+        topFeats <- results$result[topRank, c("Modality_X", "Modality_Y")]
+        plotPairSingle(
+            features = topFeats, assayX = results$assayX, scaleBySampleSums = scaleBySampleSums,
+            assayY = results$assayY, normX = normX, normY = normY, ...
         )
     }
 }
@@ -70,10 +68,8 @@ plotTopPair <- function(
 #' @inheritParams plotPairSingle
 #' @order 3
 #' @param theme the ggplot2 theme
-plotPairMulti <- function(
-      Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "log"), scaleBySampleSums = FALSE,
-      normY = c("none", "rel", "log"), size = 1.25, assayX, assayY, theme = theme_bw()
-) {
+plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "log"), scaleBySampleSums = FALSE,
+    normY = c("none", "rel", "log"), size = 1.25, assayX, assayY, theme = theme_bw()) {
     stopifnot(is.logical(scaleBySampleSums), is.numeric(size))
     Xl <- getX(Xl, assayX)
     Yl <- getX(Yl, assayY)
@@ -119,8 +115,10 @@ plotPairMulti <- function(
 #' @rdname plotTopPair
 #' @export
 #' @order 2
-plotPairSingle <- function(X, Y, Cx, Ey, features, normX = c("none", "rel", "log"),
-    normY = c("none", "rel", "log"), assayX, assayY, scaleBySampleSums = FALSE, size = 1.5, ...) {
+plotPairSingle <- function(
+      X, Y, Cx, Ey, features, normX = c("none", "rel", "log"),
+      normY = c("none", "rel", "log"), assayX, assayY, scaleBySampleSums = FALSE, size = 1.5, ...
+) {
     stopifnot(length(features) == 2, is.numeric(size), is.logical(scaleBySampleSums))
     if (inherits(X, "SpatialExperiment")) {
         Cx <- SpatialExperiment::spatialCoords(X)
@@ -148,10 +146,8 @@ plotPairSingle <- function(X, Y, Cx, Ey, features, normX = c("none", "rel", "log
 #' appearing in the strip text of the columns. For plotTopPair() and
 #' plotPairSingle(), the feature names are used.
 #' @order 4
-plotPairSingleVectors <- function(
-      x, y, Cx, Ey, size,
-      modalityNames = c("Modality X", "Modality Y"), theme = theme_bw(), ...
-) {
+plotPairSingleVectors <- function(x, y, Cx, Ey, size,
+    modalityNames = c("Modality X", "Modality Y"), theme = theme_bw(), ...) {
     theme_set(theme)
     stopifnot(length(x) == nrow(Cx), length(y) == nrow(Ey), ncol(Ey) == 2, ncol(Cx) == 2)
     coordMat <- rbind(Cx, Ey)

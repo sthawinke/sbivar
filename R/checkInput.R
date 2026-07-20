@@ -94,7 +94,7 @@ checkInputMulti <- function(Xl, Yl, Cxl, Eyl, checkCoords = TRUE) {
         if (!identical(names(Xl), names(Yl)) || !identical(names(Yl), names(Cxl))) {
             stop("All names of Xl, Yl and Cxl must be identical")
         }
-        if (any(!mapply(Xl, Cxl, FUN = function(x, y) {
+        if (!all(mapply(Xl, Cxl, FUN = function(x, y) {
             identical(sort(rownames(x)), sort(rownames(y)))
         }))) {
             stop("Not all sample names are identical in Xl and Cxl!")
@@ -112,7 +112,7 @@ checkInputMulti <- function(Xl, Yl, Cxl, Eyl, checkCoords = TRUE) {
             if (!missing(Eyl) && !identical(names(Eyl), names(Xl))) {
                 stop("Eyl must be named identically to Xl, Yl and Cxl")
             }
-            if (any(!mapply(Yl, Eyl, FUN = function(x, y) {
+            if (!all(mapply(Yl, Eyl, FUN = function(x, y) {
                 identical(sort(rownames(x)), sort(rownames(y)))
             }))) {
                 stop("Not all sample names are identical in Yl and Eyl!")

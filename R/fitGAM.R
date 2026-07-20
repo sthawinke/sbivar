@@ -23,7 +23,7 @@ fitGAM <- function(df, outcome, family = gaussian(), Gamm, correlation) {
         )$gam, silent = TRUE)
     } else {
         fit <- try(gam(as.formula(Form),
-            data = df, family = family, offset = df$Offset,
+            data = df, family = family, offset = df$Offset
         ), silent = TRUE)
     }
     if (Gamm && is(fit, "try-error")) {
@@ -54,10 +54,8 @@ fitGAM <- function(df, outcome, family = gaussian(), Gamm, correlation) {
 #' @returns A list of GAM models
 #' @importFrom smoppix loadBalanceBplapply
 #' @importFrom BiocParallel bplapply
-fitManyGAMs <- function(
-      mat, coord, family = gaussian(), modality, features,
-      Gamm, correlation, pseudoCount = 1e-8, ...
-) {
+fitManyGAMs <- function(mat, coord, family = gaussian(), modality, features,
+    Gamm, correlation, pseudoCount = 1e-8, ...) {
     if (family$family == "Gamma") {
         mat <- mat + pseudoCount
     }

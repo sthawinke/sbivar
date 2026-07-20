@@ -1,7 +1,7 @@
 context("Unit tests for small auxiliary function")
 test_that("Helper functions do their job", {
     expect_identical(makePval(0), 1)
-    expect_identical(names(selfName("gene1")), "gene1")
+    expect_named(selfName("gene1"), "gene1")
     expect_true({
         foo <- range(scaleZeroOne(rnorm(20)))
         (foo[1] >= 0) && (foo[2] <= 1)

@@ -17,6 +17,6 @@ test_that("Writing to spreadsheets works as expected", {
         overwrite = TRUE
     ))
     library(openxlsx)
-    expect_identical(length(getSheetNames("tmpFile.xlsx")), 3L)
+    expect_length(getSheetNames("tmpFile.xlsx"), 3L)
     file.remove("tmpFile.xlsx")
 })

@@ -10,8 +10,10 @@
 #' evaluated on.
 #' @returns A named list of results
 #' @inheritParams MoransISingle
-GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX,
-    featuresY, Gamm, correlation, findVariances = TRUE) {
+GAMsSingle <- function(
+      X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX,
+      featuresY, Gamm, correlation, findVariances = TRUE
+) {
     if (verbose) {
         message("Fitting GAMs for first modality (", length(featuresX), " features) ...")
     }

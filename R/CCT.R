@@ -17,8 +17,7 @@ CCT <- function(pvals) {
     is.zero <- any(pvals == 0)
     is.one <- any(pvals == 1)
     if (is.zero && is.one) {
-        return(1)
-        # stop("Cannot have both 0 and 1 p-values!")
+        return(1) # stop("Cannot have both 0 and 1 p-values!")
     } else if (is.zero) {
         return(0)
     } else if (is.one) {

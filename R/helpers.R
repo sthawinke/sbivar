@@ -151,7 +151,7 @@ replaceLhs <- function(x, repl = "out") {
 #'
 #' @returns A boolean
 findDoubleUnderScore <- function(charVec) {
-    any(grepl("__", charVec))
+    any(grepl("__", charVec, fixed = TRUE))
 }
 #' Extract an assay, and transpose
 #'

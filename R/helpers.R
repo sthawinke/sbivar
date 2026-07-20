@@ -33,7 +33,7 @@ scaleZeroOne <- function(y, na.rm = TRUE) {
 #' @inheritParams scaleZeroOne
 #' @return The scaled vector
 scaleMinusOne <- function(y, na.rm = TRUE) {
-    scaleZeroOne(y, na.rm = na.rm) * 2 - 1
+    scaleZeroOne(y, na.rm = na.rm) *2 - 1
 }
 #' Make unique names
 #' @param featX,featY vectors of feature names

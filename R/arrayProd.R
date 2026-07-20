@@ -44,3 +44,26 @@ arrayProdTr <- function(A, B) {
     dimnames(C) <- dn
     C
 }
+#' Find traces of all inner products of matrices composing arrays A and B yielding a pxp matrix
+#' @description A faster version of \code{vapply(seq_len(p), FUN.VALUE = double(p), function(i)\{
+#' vapply(seq_len(p), FUN.VALUE = double(1), function(j)\{
+#'    tr(arr[,,i] \%*\% arr2[,,j])
+#'  \})
+#' \})}
+#'
+#' @param A,B mxmxp arrays
+#' @return pxp matrix of traces
+arrayProd2tr <- function(A, B) {
+    # High memory, but fast version
+    p <- dim(A)[3]
+    k <- dim(B)[3]
+    n <- dim(A)[1]
+    dn <- list(dimnames(B)[[3]], dimnames(A)[[3]])
+    # reshape: each slice becomes a column
+    A <- matrix(aperm(A, c(2, 1, 3)), n * n, p)
+    B <- matrix(B, n * n, k)
+    # big matrix multiplication gives all traces at once
+    C <- t(crossprod(A, B)) # k x p
+    dimnames(C) <- dn
+    C
+}

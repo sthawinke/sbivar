@@ -17,7 +17,7 @@ Encoding: UTF-8
 RdMacros: Rdpack
 biocViews: Transcriptomics, Spatial, Proteomics, Metabolomics
 Depends: R (>= 4.6.0)
-Imports: lme4,reformulas,lmerTest,mgcv,ggplot2,concaveman,BiocParallel,Rdpack,SpatialPack,stats,sf,Matrix,smoppix(>= 1.1.8),spatstat.geom,methods,abind,nlme,sp,gstat,SummarizedExperiment,openxlsx,Rcpp,MultiAssayExperiment
+Imports: lme4,reformulas,lmerTest,mgcv,ggplot2,concaveman,BiocParallel,Rdpack,SpatialPack,stats,sf,Matrix,smoppix(>= 1.1.8),spatstat.geom,methods,abind,nlme,gstat(>= 2.0.3),SummarizedExperiment,openxlsx,Rcpp,MultiAssayExperiment
 LinkingTo: Rcpp,RcppArmadillo
 Suggests: testthat,knitr,rmarkdown,htmltools,anndataR,RANN,SpatialExperiment,rhdf5
 VignetteBuilder: knitr

@@ -163,3 +163,4 @@
 # 0.99.30
 
  - Implemented some goodpractice suggestions
+ - remove dependence on sp in favour of sf

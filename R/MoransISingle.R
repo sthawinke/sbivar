@@ -130,7 +130,7 @@ MoransISingle <- function(X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose
 #' Estimate variograms using Matheron's binning estimator for many features at once, and evaluate
 #'
 #' @importFrom gstat variogram vgm fit.variogram
-#' @importFrom sp coordinates
+#' @importFrom sf st_as_sf
 #' @inheritParams sbivarSingle
 #' @inheritParams MoransISingle
 #' @param X Outcome matrix
@@ -138,8 +138,7 @@ MoransISingle <- function(X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose
 #' @return A list of evaluated variograms
 #' @details The best fitting variogram model, measured by the squared error, will be used.
 matheronVariograms <- function(X, Cx, width, cutoff, variogramModels) {
-    Cx <- data.frame(Cx)
-    sp::coordinates(Cx) <- ~ x + y
+    Cx <- st_as_sf(data.frame(Cx), coords = c("x", "y"))
     # Compute empirical semivariogram using Matheron’s estimator
     variograms <- loadBalanceBplapply(selfName(colnames(X)), function(nm) {
         Cx$z <- X[, nm]

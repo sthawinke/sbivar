@@ -41,10 +41,10 @@ toyDesign <- data.frame(
 nCores <- 2
 if (.Platform$OS.type == "unix") {
     # On unix-based systems (linux and macOS), use MulticoreParam
-    register(MulticoreParam(nCores))
+    register(MulticoreParam(nCores, stop.on.error = FALSE))
 } else {
     # On windows, use SnowParam
-    register(SnowParam(workers = nCores, type = "SOCK"))
+    register(SnowParam(workers = nCores, type = "SOCK", stop.on.error = FALSE))
 }
 # register(SerialParam()) # Switch on when mapping test coverage
 resMoranTest <- sbivar(X, Y, Cx, Ey, method = "Moran")

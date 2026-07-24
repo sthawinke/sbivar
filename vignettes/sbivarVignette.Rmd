@@ -72,10 +72,10 @@ and prepare the parallel backend. The code is different for windows or unix-base
 ```{r nonwindows}
 param <- if (.Platform$OS.type == "unix") {
     # On unix-based systems (linux and macOS), use MulticoreParam
-    MulticoreParam(nCores)
+    MulticoreParam(nCores, stop.on.error = FALSE)
 } else {
     # On windows, build vignette without multithreading
-    SerialParam()
+    SerialParam(stop.on.error = FALSE)
 }
 register(param)
 ```
@@ -83,14 +83,14 @@ register(param)
 On windows, once the package has been built, for multithreading use
 
 ```{r multiThreadWindows, eval = FALSE}
-register(SnowParam(workers = nCores, type = "SOCK")) # or doParallel
+register(SnowParam(workers = nCores, type = "SOCK", stop.on.error = FALSE)) # or doParallel
 ```
 
 Wherever applicable, the registered backend will be used throughout the analysis.
 For serial calculations, for instance if memory is limiting, choose instead
 
 ```{r registerserial, eval = FALSE}
-register(SerialParam())
+register(SerialParam(stop.on.error = FALSE))
 ```
 
 Furthermore, it is highly recommended to install a matrix library such as [OpenBLAS](http://www.openmathlib.org/OpenBLAS/), [Intel MKL](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-download.html) or [Apple's accelerate](https://developer.apple.com/documentation/accelerate), that employ threading and optimal memory usage for key matrix manipulations used throughout the package. Further instructions for OpenBLAS for windows users can be found [in this repo](https://github.com/david-cortes/R-openblas-in-windows).

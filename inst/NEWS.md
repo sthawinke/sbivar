@@ -163,4 +163,8 @@
 # 0.99.30
 
  - Implemented some goodpractice suggestions
- - remove dependence on sp in favour of sf
+ - Remove dependence on sp in favour of sf
+ 
+# 0.99.31
+
+ - In BiocParallel, set stop.on.error as default to skip over failed GAM fits

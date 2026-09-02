@@ -17,7 +17,7 @@
 #' @param verbose Should info on type of analysis be printed?
 #' @param normX,normY,pseudoCount Normalization parameters, passed onto \link{normMat}
 #' @param featuresX,featuresY Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
-#' while using the whole matrix to calculate library sizes as offset or for normalization.
+#' while using the whole matrix to calculate library sizes as offset or for normalization for Y.
 #'
 #' @details Ey must have rownames matching those in Y, and have two columns.
 #' For GAMs, usually no normalization is needed, as the non-gaussianity is taken care of by

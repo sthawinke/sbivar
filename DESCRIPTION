@@ -17,10 +17,10 @@ Encoding: UTF-8
 RdMacros: Rdpack
 biocViews: Transcriptomics, Spatial, Proteomics, Metabolomics
 Depends: R (>= 4.6.0)
-Imports: lme4,reformulas,lmerTest,mgcv,ggplot2,concaveman,BiocParallel,Rdpack,SpatialPack,stats,sf,Matrix,smoppix(>= 1.1.8),spatstat.geom,spatstat.model,methods,abind,nlme,gstat(>= 2.0.3),SummarizedExperiment,openxlsx,Rcpp,MultiAssayExperiment
+Imports: lme4,reformulas,lmerTest,mgcv,ggplot2,concaveman,BiocParallel,Rdpack,SpatialPack,stats,sf,Matrix,smoppix(>= 1.1.8),spatstat.geom,spatstat.model,methods,abind,nlme,gstat(>= 2.0.3),SummarizedExperiment,openxlsx,Rcpp,splines,MultiAssayExperiment
 LinkingTo: Rcpp,RcppArmadillo
 Suggests: testthat,knitr,rmarkdown,htmltools,anndataR,RANN,SpatialExperiment,rhdf5
 VignetteBuilder: knitr
 BugReports: https://github.com/sthawinke/sbivar/issues
 URL: https://github.com/sthawinke/sbivar
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.0

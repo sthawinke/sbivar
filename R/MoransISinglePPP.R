@@ -26,9 +26,10 @@
 #' as it is computation intensive and not always needed.
 #' @note No multithreading is implemented for the variance calculation, as the matrix calculations involved
 #' may use inherent multithreading with OpenBLAS.
-MoransISingle <- function(X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose,
+#' @importFrom spatstat.geom npoints coords
+MoransISinglePPP <- function(X, Y, Ey, wo, etas, numNNs, cutoff, width, verbose,
     findMaxW, variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...) {
-    n <- nrow(X)
+    n <- npoints(X)
     m <- nrow(Y)
     p <- length(featuresX)
     k <- length(featuresY)
@@ -36,11 +37,10 @@ MoransISingle <- function(X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose
         message("Testing significance of bivariate Moran's I for ", p * k, " feature pairs")
     }
     # Scale outcomes
-    X <- scale(X)
     Y <- scale(Y)
     # Move coordinates
-    movedCoords <- moveTwoCoords(Cx, Ey)
-    Cx <- movedCoords$Cx
+    movedCoords <- moveTwoCoords(coords(X), Ey)
+    coords(X) <- movedCoords$Cx
     Ey <- movedCoords$Ey
     prodFac <- (n - 1) * (m - 1)
     if (verbose) {
@@ -50,60 +50,54 @@ MoransISingle <- function(X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose
         "Gauss" = etas,
         "nn" = numNNs
     ))
-    Ws <- vapply(wParams, FUN.VALUE = matrix(0, n, m), function(iter) {
-        buildWeightMat(Cx = Cx, Ey = Ey, wo = wo, eta = iter, numNN = iter)
-    })
-    Ws <- Ws[, , idW <- (colSums(Ws, dims = 2, na.rm = TRUE) > 0), drop = FALSE]
-    numWs <- dim(Ws)[3]
-    if (!all(idW) && (wo == "Gauss")) {
-        warning("Eta values ", etas[!idW], " yielded zero weight matrices and have been dropped!", immediate. = TRUE)
-        etas <- etas[idW]
-    }
-    Ixys <- vapply(seq_len(numWs), FUN.VALUE = matrix(0, p, k), function(i) {
-        crossprod(X[, featuresX, drop = FALSE], Ws[, , i] %*% Y[, featuresY, drop = FALSE])
-    }) / sqrt(prodFac) # Normalize for matrix size
-    # Reformat to long format
-    out <- matrix(c(Ixys), ncol = numWs, dimnames = list(NULL, paste0("Ixy_", wParams)))
-    if (findVariances) {
-        # Estimate spatial autocorrelation
-        if (verbose) {
-            message("Fitting variograms for first modality (", p, " features) ...")
-        }
-        variogramsX <- matheronVariograms(X[, featuresX, drop = FALSE], Cx,
-            width = width, cutoff = cutoff,
-            variogramModels = variogramModels, ...
-        )
-        if (verbose) {
-            message("Fitting variograms for second modality (", k, " features) ...")
-        }
-        variogramsY <- matheronVariograms(Y[, featuresY, drop = FALSE], Ey,
-            width = width, cutoff = cutoff,
-            variogramModels = variogramModels, ...
-        )
-        distX <- as.vector(stats::dist(Cx))
-        distY <- as.vector(stats::dist(Ey))
-        if (verbose) {
-            message("Calculating variances of bivariate Moran's I statistics ...")
-        }
-        mm2 <- m * (m - 1) / 2
-        varIxy <- vapply(selfName(featuresX), FUN.VALUE = matrix(0, numWs, k), function(featx) {
-            # C++: build Sigma_X and batch-compute t(W[,,i]) Sigma_X W[,,i] for all i,
-            # returning lower-triangle columns (sigXws, mm2 x numWs) and traces
-            sigRes <- computeSigXws(evalVariogram(variogramsX[[featx]], distX), Ws)
-            # Precomputing evalVariogram for all Y's is too much memory, so repeat it at a speed cost
-            out <- sigRes$traces + 2 * vapply(selfName(featuresY), FUN.VALUE = double(numWs), function(featy) {
-                crossprod(sigRes$sigXws, evalVariogram(variogramsY[[featy]], distY))
-            })
-            printProgress(featx, featuresX, verbose)
-            return(out)
+    X = split.ppp(X, marks(X, drop = FALSE)$features)
+    res = lapply(featuresX, function(featx){
+        Cx = coords(X[[featx]])
+        Ws <- vapply(wParams, FUN.VALUE = matrix(0, n, m), function(iter) {
+            buildWeightMat(Cx = Cx, Ey = Ey, wo = wo, eta = iter, numNN = iter)
         })
-        varIxy <- aperm(varIxy, perm = 3:1) # Rearrange
-        for (i in seq_len(numWs)) { # If negative variance, fall back on independence
-            if (length(zeroId <- c(which(varIxy[, , i] <= 0), which(is.na(varIxy[, , i]))))) {
-                varIxy[, , i][zeroId] <- sum(Ws[, , i]^2) # tr(W^tW)
-            }
+        Ws <- Ws[, , idW <- (colSums(Ws, dims = 2, na.rm = TRUE) > 0), drop = FALSE]
+        numWs <- dim(Ws)[3]
+        if (!all(idW) && (wo == "Gauss")) {
+          etas <- etas[idW]
         }
-        varIxy <- varIxy / prodFac # Correct for matrix size
+        Ixys <- vapply(seq_len(numWs), FUN.VALUE = matrix(0, p, k), function(i) {
+            rowSums(crossprod(Ws[, , i] %*% Y[, featuresY, drop = FALSE]))
+        }) / sqrt(prodFac) # Normalize for matrix size
+        # Reformat to long format
+        out <- matrix(c(Ixys), ncol = numWs, dimnames = list(NULL, paste0("Ixy_", wParams)))
+        if (findVariances) {
+            # Estimate spatial autocorrelation
+            if (verbose) {
+                message("Fitting variograms for second modality (", k, " features) ...")
+            }
+            variogramsY <- matheronVariograms(Y[, featuresY, drop = FALSE], Ey,
+                width = width, cutoff = cutoff,
+                variogramModels = variogramModels, ...
+            )
+            distX <- as.vector(stats::dist(Cx))
+            distY <- as.vector(stats::dist(Ey))
+            if (verbose) {
+                message("Calculating variances of bivariate Moran's I statistics ...")
+            }
+            mm2 <- m * (m - 1) / 2
+            varIxy <- vapply(selfName(featuresY), FUN.VALUE = double(numWs), function(featy) {
+                # C++: build Sigma_X and batch-compute t(W[,,i]) Sigma_X W[,,i] for all i,
+                # returning lower-triangle columns (sigXws, mm2 x numWs) and traces
+                sigRes <- computeSigXws(evalVariogram(variogramsY[[featy]], distY), Ws)
+                # Precomputing evalVariogram for all Y's is too much memory, so repeat it at a speed cost
+               return(sigRes$traces)
+            })
+            varIxy <- aperm(varIxy, perm = 3:1) # Rearrange
+            for (i in seq_len(numWs)) { # If negative variance, fall back on independence
+                if (length(zeroId <- c(which(varIxy[, , i] <= 0), which(is.na(varIxy[, , i]))))) {
+                    varIxy[, , i][zeroId] <- sum(Ws[, , i]^2) # tr(W^tW)
+                }
+            }
+            varIxy <- varIxy / prodFac # Correct for matrix size
+        }
+            printProgress(featx, featuresX, verbose)
+        })
         # P-values
         IxyPvals <- makePval(Ixys / (seIxy <- sqrt(varIxy)))
         # CCT correction
@@ -115,57 +109,8 @@ MoransISingle <- function(X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose
             ))
         }
         out <- cbind(out, "pVal" = c(cctPvals))
-    }
     rownames(out) <- makeNames(featuresX, featuresY)
-    # Maximum values, if needed
-    maxIxy <- if (findMaxW) {
-        vapply(selfName(names(wParams)), FUN.VALUE = double(1), function(i) {
-            svd(Ws[, , i], nu = 0, nv = 0)$d[1]
-        })
-    }
     return(list(
-        "res" = out, "maxIxy" = maxIxy
+        "res" = res, "maxIxy" = maxIxy
     ))
-}
-#' Estimate variograms using Matheron's binning estimator for many features at once, and evaluate
-#'
-#' @importFrom gstat variogram vgm fit.variogram
-#' @importFrom sf st_as_sf
-#' @inheritParams sbivarSingle
-#' @inheritParams MoransISingle
-#' @param X Outcome matrix
-#' @param Cx Coordinate matrix
-#' @return A list of evaluated variograms
-#' @details The best fitting variogram model, measured by the squared error, will be used.
-matheronVariograms <- function(X, Cx, width, cutoff, variogramModels) {
-    Cx <- st_as_sf(data.frame(Cx), coords = c("x", "y"))
-    # Compute empirical semivariogram using Matheron’s estimator
-    variograms <- loadBalanceBplapply(selfName(colnames(X)), function(nm) {
-        Cx$z <- X[, nm]
-        vg <- variogram(z ~ 1, Cx, width = width, cutoff = cutoff)
-        fvgs <- lapply(variogramModels, function(vv) {
-            try(fit.variogram(vg, vgm(model = vv, nugget = NA)), silent = TRUE) # Include nugget variance
-        })
-        fvgs <- fvgs[vapply(fvgs, FUN.VALUE = TRUE, is, "variogramModel")]
-        fvg <- fvgs[[which.min(vapply(fvgs, FUN.VALUE = double(1), attr, "SSErr"))]]
-        if (fvg[2, "range"] < 0) {
-            fvg[2, "range"] <- 1e-10 # Catch negative ranges
-            fvg[2, "psill"] <- 0
-        }
-        fvg[, "psill"] <- fvg[, "psill"] / sum(fvg[, "psill"]) # Normalize to variance 1
-        return(fvg)
-    })
-    return(variograms)
-}
-#' Evaluate a variogram on a set of distances
-#'
-#' @param vg The variogram model resulting from a call to \link[gstat]{fit.variogram})
-#' @param distVec A vector of pairwise distances
-#' @returns A vector of covariances
-evalVariogram <- function(vg, distVec) {
-    evalVariogramCpp(distVec,
-        psill    = vg[2, "psill"],
-        range_   = vg[2, "range"],
-        modelExp = vg[2, "model"] == "Exp"
-    )
 }

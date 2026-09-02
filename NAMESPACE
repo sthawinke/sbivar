@@ -19,84 +19,116 @@ export(writeSbivarToXlsx)
 exportMethods(sbivar)
 import(ggplot2)
 import(stats)
-importFrom(BiocParallel,bplapply)
-importFrom(BiocParallel,bpparam)
-importFrom(BiocParallel,bpworkers)
-importFrom(Matrix,bdiag)
-importFrom(Matrix,diag)
-importFrom(Matrix,sparseMatrix)
+importFrom(BiocParallel,
+  bplapply,
+  bpparam,
+  bpworkers
+)
+importFrom(Matrix,
+  bdiag,
+  diag,
+  sparseMatrix
+)
 importFrom(MultiAssayExperiment,MultiAssayExperiment)
 importFrom(Rcpp,sourceCpp)
 importFrom(Rdpack,reprompt)
 importFrom(SpatialPack,modified.ttest)
-importFrom(SummarizedExperiment,assay)
-importFrom(SummarizedExperiment,colData)
+importFrom(SummarizedExperiment,
+  assay,
+  colData
+)
 importFrom(abind,abind)
 importFrom(concaveman,concaveman)
 importFrom(grDevices,palette)
-importFrom(graphics,legend)
-importFrom(graphics,lines)
-importFrom(graphics,points)
-importFrom(gstat,fit.variogram)
-importFrom(gstat,variogram)
-importFrom(gstat,vgm)
-importFrom(lme4,.makeCC)
-importFrom(lme4,isSingular)
-importFrom(lme4,lFormula)
-importFrom(lme4,lmerControl)
-importFrom(lme4,mkLmerDevfun)
-importFrom(lme4,mkMerMod)
-importFrom(lme4,mkReTrms)
-importFrom(lme4,optimizeLmer)
+importFrom(graphics,
+  legend,
+  lines,
+  points
+)
+importFrom(gstat,
+  fit.variogram,
+  variogram,
+  vgm
+)
+importFrom(lme4,
+  .makeCC,
+  isSingular,
+  lFormula,
+  lmerControl,
+  mkLmerDevfun,
+  mkMerMod,
+  mkReTrms,
+  optimizeLmer
+)
 importFrom(lmerTest,lmer)
-importFrom(methods,is)
-importFrom(methods,setGeneric)
-importFrom(methods,setMethod)
-importFrom(mgcv,gam)
-importFrom(mgcv,gamm)
-importFrom(mgcv,predict.gam)
-importFrom(mgcv,s)
-importFrom(mgcv,vcov.gam)
-importFrom(nlme,corExp)
-importFrom(nlme,corGaus)
-importFrom(nlme,corLin)
-importFrom(nlme,corRatio)
-importFrom(nlme,corSpher)
-importFrom(nlme,gls)
-importFrom(nlme,lmeControl)
-importFrom(openxlsx,addWorksheet)
-importFrom(openxlsx,createWorkbook)
-importFrom(openxlsx,getSheetNames)
-importFrom(openxlsx,saveWorkbook)
-importFrom(openxlsx,writeData)
-importFrom(reformulas,findbars)
-importFrom(reformulas,nobars)
-importFrom(sf,st_area)
-importFrom(sf,st_as_sf)
-importFrom(sf,st_coordinates)
-importFrom(sf,st_intersection)
-importFrom(sf,st_make_grid)
-importFrom(sf,st_polygon)
-importFrom(sf,st_sf)
-importFrom(sf,st_sfc)
-importFrom(sf,st_within)
-importFrom(smoppix,centerNumeric)
-importFrom(smoppix,lm_from_wfit)
-importFrom(smoppix,loadBalanceBplapply)
-importFrom(smoppix,named.contr.sum)
-importFrom(spatstat.geom,crossdist)
-importFrom(stats,anova)
-importFrom(stats,coef)
-importFrom(stats,cor)
-importFrom(stats,dist)
-importFrom(stats,formula)
-importFrom(stats,lm.fit)
-importFrom(stats,lm.wfit)
-importFrom(stats,model.matrix)
-importFrom(stats,p.adjust)
-importFrom(stats,pcauchy)
-importFrom(stats,pchisq)
-importFrom(stats,quantile)
-importFrom(stats,sigma)
-importFrom(stats,terms)
+importFrom(methods,
+  is,
+  setGeneric,
+  setMethod
+)
+importFrom(mgcv,
+  gam,
+  gamm,
+  predict.gam,
+  s,
+  vcov.gam
+)
+importFrom(nlme,
+  corExp,
+  corGaus,
+  corLin,
+  corRatio,
+  corSpher,
+  gls,
+  lmeControl
+)
+importFrom(openxlsx,
+  addWorksheet,
+  createWorkbook,
+  getSheetNames,
+  saveWorkbook,
+  writeData
+)
+importFrom(reformulas,
+  findbars,
+  nobars
+)
+importFrom(sf,
+  st_area,
+  st_as_sf,
+  st_coordinates,
+  st_intersection,
+  st_make_grid,
+  st_polygon,
+  st_sf,
+  st_sfc,
+  st_within
+)
+importFrom(smoppix,
+  centerNumeric,
+  lm_from_wfit,
+  loadBalanceBplapply,
+  named.contr.sum
+)
+importFrom(spatstat.geom,
+  coords,
+  crossdist,
+  npoints
+)
+importFrom(stats,
+  anova,
+  coef,
+  cor,
+  dist,
+  formula,
+  lm.fit,
+  lm.wfit,
+  model.matrix,
+  p.adjust,
+  pcauchy,
+  pchisq,
+  quantile,
+  sigma,
+  terms
+)
 useDynLib(sbivar, .registration = TRUE)

@@ -34,7 +34,7 @@
 #' @importFrom nlme corRatio corGaus corSpher corExp corLin lmeControl
 #' @importFrom BiocParallel bpparam bpworkers
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
-sbivarPPP <- function(
+sbivarSinglePPP <- function(
         X, Y, Cx, Ey, method = c("Moran's I", "GAMs"),
         normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
         etas = c(5e-6, 2e-4, 2e-2), findMaxW = FALSE, returnSEsMoransI = TRUE,
@@ -93,10 +93,7 @@ sbivarPPP <- function(
     if (method == "Moran's I") {
         lis$maxIxy <- moranRes$maxIxy
         lis$wo <- wo
-        lis$wParams <- switch(wo,
-                              "Gauss" = etas,
-                              "nn" = numNNs
-        )
+        lis$wParams <- switch(wo, "Gauss" = etas, "nn" = numNNs)
     }
     if (method == "GAMs") {
         lis$families <- families

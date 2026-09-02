@@ -168,3 +168,7 @@
 # 0.99.31
 
  - In BiocParallel, set stop.on.error as default to skip over failed GAM fits
+ 
+# 0.99.35
+
+ - Introducing point patterns as one of the modalities

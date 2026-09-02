@@ -92,3 +92,21 @@ setMethod("sbivar", "MultiAssayExperiment", function(
     }
     sbivar(X[[experimentX]], X[[experimentY]], assayX = assayX, assayY = assayY, ...)
 })
+#' @rdname sbivar
+#' @export
+#' @inheritParams sbivarSingle
+#' @param Y Matrix or SpatialExperiment object of second modality
+setMethod("sbivar", "ppp", function(X, Y, Ey, ...) {
+    if (!is.matrix(Y) || (!missing(Ey) && !is.matrix(Ey))) {
+        stop(
+            "Since X is a matrix or dataframe, Y, Cx and Ey must be so too!",
+            if (is.data.frame(Y) || is.data.frame(Cx) || (!missing(Ey) && is.data.frame(Ey))) {
+                "\nTry converting data frames with as.matrix()"
+            }
+        )
+    }
+    if(!("feature" %in% names(makrs(X)))){
+        stop("Since X is a ppp object, it must have a feature column in its marks!")
+    }
+    sbivarPPP(X, Y, Ey, ...)
+})

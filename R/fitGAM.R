@@ -42,7 +42,7 @@ fitGAM <- function(df, outcome, family = gaussian(), Gamm, correlation) {
 }
 #' Fit GAMs to all columns of a dataframe, as a wrapper for fitGAM
 #'
-#' @param mat The matrix of outcomes
+#' @param mat The matrix of outcomes, or a point pattern
 #' @param coord The coordinate matrix
 #' @param modality Character vector indicating which modality is being fit.
 #' For debugging purposes mainly
@@ -54,8 +54,13 @@ fitGAM <- function(df, outcome, family = gaussian(), Gamm, correlation) {
 #' @returns A list of GAM models
 #' @importFrom smoppix loadBalanceBplapply
 #' @importFrom BiocParallel bplapply
+#' @importFrom spatstat.geom split.ppp is.ppp
+#' @importFrom spatstat.model Poisson ppm
+#' @importFrom splines bs
+#' @importFrom stats poisson
 fitManyGAMs <- function(mat, coord, family = gaussian(), modality, features,
     Gamm, correlation, pseudoCount = 1e-8, ...) {
+    if(ism <- is.matrix(mat)){
     if (family$family == "Gamma") {
         mat <- mat + pseudoCount
     }
@@ -73,10 +78,17 @@ fitManyGAMs <- function(mat, coord, family = gaussian(), modality, features,
     fits <- loadBalanceBplapply(selfName(features), function(cn) {
         fitGAM(df, outcome = cn, family = family, Gamm = Gamm, correlation = correlation, ...)
     })
-    if (!all(id <- vapply(fits, FUN.VALUE = TRUE, is, "gam"))) {
+    } else if(is.ppp(mat)){
+        fits <- loadBalanceBplapply(split.ppp(mat, marks(mat, drop = FALSE)$features), function(PPP) {
+            xFit <- ppm(PPP ~ bs(x) * bs(y), interaction = Poisson())
+            xFit$family = poisson()
+            return(xFit)
+        })
+    }
+    if (!all(id <- vapply(fits, FUN.VALUE = TRUE, is, if(ism) "gam" else "ppm"))) {
         warning(
             immediate. = TRUE,
-            sum(!id), " GAM fits failed in modality ", modality,
+            sum(!id), " ", if(ism) "GAM" else ppm(), " fits failed in modality ", modality,
             ", please investigate cause! First failure:\n", fits[[which.min(id)]]
         )
     }

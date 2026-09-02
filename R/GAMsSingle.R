@@ -10,6 +10,7 @@
 #' evaluated on.
 #' @returns A named list of results
 #' @inheritParams MoransISingle
+#' @importFrom spatstat.geom coords
 GAMsSingle <- function(
       X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX,
       featuresY, Gamm, correlation, findVariances = TRUE

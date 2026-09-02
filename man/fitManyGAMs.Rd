@@ -17,7 +17,7 @@ fitManyGAMs(
 )
 }
 \arguments{
-\item{mat}{The matrix of outcomes}
+\item{mat}{The matrix of outcomes, or a point pattern}
 
 \item{coord}{The coordinate matrix}
 

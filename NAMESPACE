@@ -113,7 +113,9 @@ importFrom(smoppix,
 importFrom(spatstat.geom,
   coords,
   crossdist,
-  npoints
+  is.ppp,
+  npoints,
+  split.ppp
 )
 importFrom(stats,
   anova,
@@ -127,6 +129,7 @@ importFrom(stats,
   p.adjust,
   pcauchy,
   pchisq,
+  poisson,
   quantile,
   sigma,
   terms

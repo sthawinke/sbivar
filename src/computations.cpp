@@ -104,6 +104,7 @@ Rcpp::List computeSigXws(
                 sigXws(k++, wi) = tmp(i, j);
             }
         }
+        // Skip this step for point patterns
         traces[wi] = arma::trace(tmp);
     }
 

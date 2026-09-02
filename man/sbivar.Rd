@@ -6,6 +6,7 @@
 \alias{sbivar,list-method}
 \alias{sbivar,SpatialExperiment-method}
 \alias{sbivar,MultiAssayExperiment-method}
+\alias{sbivar,ppp-method}
 \title{Spatial bivariate association analysis}
 \usage{
 sbivar(X, ...)
@@ -17,6 +18,8 @@ sbivar(X, ...)
 \S4method{sbivar}{SpatialExperiment}(X, Y, assayX, assayY, sample_id_x, sample_id_y = sample_id_x, ...)
 
 \S4method{sbivar}{MultiAssayExperiment}(X, experimentX, experimentY, assayX, assayY, ...)
+
+\S4method{sbivar}{ppp}(X, Y, Ey, ...)
 }
 \arguments{
 \item{X}{the input object, containing measurements of the first modality, see methods('sbivar')}

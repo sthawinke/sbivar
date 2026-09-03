@@ -25,8 +25,10 @@
 #' @note No multithreading is implemented for the variance calculation, as the matrix calculations involved
 #' may use inherent multithreading with OpenBLAS.
 #' @importFrom spatstat.geom npoints coords split.ppp
-MoransISinglePPP <- function(X, Y, Ey, wo, etas, numNNs, cutoff, width, verbose,
-    variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...) {
+MoransISinglePPP <- function(
+      X, Y, Ey, wo, etas, numNNs, cutoff, width, verbose,
+      variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...
+) {
     n <- npoints(X)
     m <- nrow(Y)
     p <- length(featuresX)
@@ -38,7 +40,7 @@ MoransISinglePPP <- function(X, Y, Ey, wo, etas, numNNs, cutoff, width, verbose,
     Y <- scale(Y)
     # Move coordinates
     movedCoords <- moveTwoCoords(as.matrix(coords(X)), Ey)
-    Marks = marks(X, drop = FALSE)
+    Marks <- marks(X, drop = FALSE)
     coords(X) <- movedCoords$Cx
     Ey <- movedCoords$Ey
     if (verbose) {
@@ -57,13 +59,13 @@ MoransISinglePPP <- function(X, Y, Ey, wo, etas, numNNs, cutoff, width, verbose,
             message("Fitting variograms for second modality (", k, " features) ...")
         }
         variogramsY <- matheronVariograms(Y[, featuresY, drop = FALSE], Ey,
-                                          width = width, cutoff = cutoff,
-                                          variogramModels = variogramModels, ...
+            width = width, cutoff = cutoff,
+            variogramModels = variogramModels, ...
         )
     }
     res <- lapply(featuresX, function(featx) {
         Cx <- coords(X[[featx]])
-        n = nrow(Cx)
+        n <- nrow(Cx)
         prodFac <- (n - 1) * (m - 1)
         Ws <- vapply(wParams, FUN.VALUE = matrix(0, n, m), function(iter) {
             buildWeightMat(Cx = Cx, Ey = Ey, wo = wo, eta = iter, numNN = iter)

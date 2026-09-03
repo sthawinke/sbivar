@@ -58,37 +58,39 @@ fitGAM <- function(df, outcome, family = gaussian(), Gamm, correlation) {
 #' @importFrom spatstat.model Poisson ppm
 #' @importFrom splines bs
 #' @importFrom stats poisson
-fitManyGAMs <- function(mat, coord, family = gaussian(), modality, features,
-    Gamm, correlation, pseudoCount = 1e-8, ...) {
-    if(ism <- is.matrix(mat)){
-    if (family$family == "Gamma") {
-        mat <- mat + pseudoCount
-    }
-    df <- data.frame(as.matrix(mat), coord)
-    if (family$family != "gaussian") {
-        libSizes <- rowSums(mat)
-        df <- df[id <- (libSizes > 0), ]
-        libSizes <- libSizes[id]
-    }
-    df$Offset <- switch(family$link,
-        "inverse" = 1 / libSizes,
-        "log" = log(libSizes),
-        NULL
-    )
-    fits <- loadBalanceBplapply(selfName(features), function(cn) {
-        fitGAM(df, outcome = cn, family = family, Gamm = Gamm, correlation = correlation, ...)
-    })
-    } else if(is.ppp(mat)){
-        fits <- loadBalanceBplapply(split.ppp(mat, marks(mat, drop = FALSE)$features), function(PPP) {
+fitManyGAMs <- function(
+      mat, coord, family = gaussian(), modality, features,
+      Gamm, correlation, pseudoCount = 1e-8, ...
+) {
+    if (ism <- is.matrix(mat)) {
+        if (family$family == "Gamma") {
+            mat <- mat + pseudoCount
+        }
+        df <- data.frame(as.matrix(mat), coord)
+        if (family$family != "gaussian") {
+            libSizes <- rowSums(mat)
+            df <- df[id <- (libSizes > 0), ]
+            libSizes <- libSizes[id]
+        }
+        df$Offset <- switch(family$link,
+            "inverse" = 1 / libSizes,
+            "log" = log(libSizes),
+            NULL
+        )
+        fits <- loadBalanceBplapply(selfName(features), function(cn) {
+            fitGAM(df, outcome = cn, family = family, Gamm = Gamm, correlation = correlation, ...)
+        })
+    } else if (is.ppp(mat)) {
+        fits <- loadBalanceBplapply(split.ppp(subset(mat, features %in% features), marks(mat, drop = FALSE)$features), function(PPP) {
             xFit <- ppm(PPP ~ bs(x) * bs(y), interaction = Poisson())
-            xFit$family = poisson()
+            xFit$family <- poisson()
             return(xFit)
         })
     }
-    if (!all(id <- vapply(fits, FUN.VALUE = TRUE, is, if(ism) "gam" else "ppm"))) {
+    if (!all(id <- vapply(fits, FUN.VALUE = TRUE, is, if (ism) "gam" else "ppm"))) {
         warning(
             immediate. = TRUE,
-            sum(!id), " ", if(ism) "GAM" else ppm(), " fits failed in modality ", modality,
+            sum(!id), " ", if (ism) "GAM" else ppm(), " fits failed in modality ", modality,
             ", please investigate cause! First failure:\n", fits[[which.min(id)]]
         )
     }

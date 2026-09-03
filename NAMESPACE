@@ -117,6 +117,11 @@ importFrom(spatstat.geom,
   npoints,
   split.ppp
 )
+importFrom(spatstat.model,
+  Poisson,
+  ppm
+)
+importFrom(splines,bs)
 importFrom(stats,
   anova,
   coef,

@@ -20,16 +20,15 @@
 #' @inheritParams MoransISingle
 #' @inheritParams GAMsSingle
 vcovPredGam <- function(model, newdata, findVariances = TRUE) {
-
     # Basis matrix B (N_grid x q) — shared by prediction and variance computation
-    basis_matrix <- if(is(model, "GAM")){
+    basis_matrix <- if (is(model, "GAM")) {
         predict.gam(model,
             newdata = newdata, type = "lpmatrix",
             newdata.guaranteed = TRUE
-    )
-        } else if(is(model, "ppm")){
-            model.matrix(model, data = newdata)
-        }
+        )
+    } else if (is(model, "ppm")) {
+        model.matrix(model, data = newdata)
+    }
     predOut <- c(basis_matrix %*% coef(model))
     predOut <- switch(model$family$link,
         "identity" = predOut,
@@ -38,7 +37,7 @@ vcovPredGam <- function(model, newdata, findVariances = TRUE) {
     )
     if (findVariances) {
         # q x q covariance of smooth coefficients — much smaller than N_grid x N_grid
-        coef_cov <- if(is(model, "GAM")) vcov.gam(model, unconditional = TRUE) else if(is(model, "ppm")) vcov(model)
+        coef_cov <- if (is(model, "GAM")) vcov.gam(model, unconditional = TRUE) else if (is(model, "ppm")) vcov(model)
         return(list("pred" = predOut, "basis" = basis_matrix, "coef_cov" = coef_cov))
     }
     return(list("pred" = predOut))

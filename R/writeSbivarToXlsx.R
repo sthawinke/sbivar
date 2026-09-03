@@ -27,8 +27,10 @@
 #' # Single result
 #' writeSbivarToXlsx(resGAMs, file = tmpFile <- tempfile(fileext = ".xlsx"), sigLevel = 1)
 #' file.exists(tmpFile)
-writeSbivarToXlsx <- function(results, file, overwrite = FALSE, digits = 3,
-    sigLevel = 0.05) {
+writeSbivarToXlsx <- function(
+      results, file, overwrite = FALSE, digits = 3,
+      sigLevel = 0.05
+) {
     stopifnot(
         is.logical(overwrite), is.character(file), is.numeric(digits),
         is.numeric(sigLevel), is.list(results)

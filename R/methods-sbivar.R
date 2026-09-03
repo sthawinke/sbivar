@@ -92,6 +92,7 @@ setMethod("sbivar", "MultiAssayExperiment", function(X, experimentX, experimentY
 #' @export
 #' @inheritParams sbivarSingle
 #' @param Y Matrix or SpatialExperiment object of second modality
+#' @importFrom spatstat.geom marks
 setMethod("sbivar", "ppp", function(X, Y, Ey, ...) {
     if (!is.matrix(Y) || (!missing(Ey) && !is.matrix(Ey))) {
         stop(
@@ -101,8 +102,8 @@ setMethod("sbivar", "ppp", function(X, Y, Ey, ...) {
             }
         )
     }
-    if (!("feature" %in% names(makrs(X)))) {
+    if (!("feature" %in% names(marks(X, drop = FALSE)))) {
         stop("Since X is a ppp object, it must have a feature column in its marks!")
     }
-    sbivarPPP(X, Y, Ey, ...)
+    sbivarSinglePPP(X, Y, Ey, ...)
 })

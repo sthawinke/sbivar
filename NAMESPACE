@@ -114,6 +114,7 @@ importFrom(spatstat.geom,
   coords,
   crossdist,
   is.ppp,
+  marks,
   npoints,
   split.ppp
 )

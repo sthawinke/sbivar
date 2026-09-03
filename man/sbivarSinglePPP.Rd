@@ -10,15 +10,13 @@ sbivarSinglePPP(
   Cx,
   Ey,
   method = c("Moran's I", "GAMs"),
-  normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
   pseudoCount = 1e-08,
   etas = c(5e-06, 2e-04, 0.02),
-  findMaxW = FALSE,
   returnSEsMoransI = TRUE,
-  family = gaussian(),
+  families = list(Y = gaussian()),
   Gamm = FALSE,
-  featuresX = unique(marks(X, drop = FALSE)$features),
+  featuresX = getFeaturesX(X),
   featuresY = colnames(Y),
   n_points_grid = 600,
   verbose = TRUE,
@@ -40,8 +38,6 @@ sbivarSinglePPP(
 
 \item{method}{A character string, indicating which method to apply}
 
-\item{normX, normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}
-
 \item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization for Y.}
 
@@ -49,9 +45,11 @@ while using the whole matrix to calculate library sizes as offset or for normali
 
 \item{verbose}{Should info on type of analysis be printed?}
 
-\item{wo, variogramModels, numNNs, etas, cutoff, width, returnSEsMoransI, findMaxW}{Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}}
+\item{wo, variogramModels, numNNs, etas, cutoff, width, returnSEsMoransI}{Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}}
 
 \item{correlation}{Correlation structure, passed onto \link{fitGAM}}
+
+\item{normX, normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}
 }
 \value{
 A list with at least the following components

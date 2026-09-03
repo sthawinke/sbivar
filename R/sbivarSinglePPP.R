@@ -13,7 +13,7 @@
 #' @param method A character string, indicating which method to apply
 #' @param correlation Correlation structure, passed onto \link{fitGAM}
 #' @param n_points_grid,families,Gamm Passed onto \link{GAMsSingle} for the second modality fitting
-#' @param wo,variogramModels,numNNs,etas,cutoff,width,returnSEsMoransI,findMaxW Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}
+#' @param wo,variogramModels,numNNs,etas,cutoff,width,returnSEsMoransI Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}
 #' @param verbose Should info on type of analysis be printed?
 #' @param normX,normY,pseudoCount Normalization parameters, passed onto \link{normMat}
 #' @param featuresX,featuresY Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
@@ -35,24 +35,24 @@
 #' @importFrom BiocParallel bpparam bpworkers
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
 sbivarSinglePPP <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs"),
-    normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
-    etas = c(5e-6, 2e-4, 2e-2), findMaxW = FALSE, returnSEsMoransI = TRUE,
-    family = gaussian(), Gamm = FALSE, featuresX = unique(marks(X, drop = FALSE)$features), featuresY = colnames(Y),
+    normY = c("none", "rel", "log"), pseudoCount = 1e-8,
+    etas = c(5e-6, 2e-4, 2e-2), returnSEsMoransI = TRUE,
+    families = list("Y" = gaussian()), Gamm = FALSE, featuresX = getFeaturesX(X), featuresY = colnames(Y),
     n_points_grid = 6e2, verbose = TRUE,
     variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
     wo = c("Gauss", "nn"), numNNs = c(4, 8, 24),
     correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(0.9 * max(apply(Ey, 2, function(x) diff(range(x)))), 0.25))) {
     stopifnot(
         is.numeric(n_points_grid), ncol(Cx) == 2, is.numeric(numNNs), all(numNNs > 0),
-        is(family$link, "family"), family$link %in% c("identity", "log", "inverse"),
+        names(families) == "Y",
+        is(families[["Y"]], "family"), families[["Y"]]$link %in% c("identity", "log", "inverse"),
         !is.null(colnames(Y)), is.logical(Gamm), inherits(correlation, "corSpatial"),
-        is.numeric(etas), all(featuresX %in% unique(marks(X, drop = FALSE)$features)),
+        is.numeric(etas), all(featuresX %in% getFeaturesX(X)),
         all(featuresY %in% colnames(Y)), !anyDuplicated(featuresX), !anyDuplicated(featuresY),
-        is.logical(verbose), is.logical(findMaxW)
+        is.logical(verbose)
     )
     method <- match.arg(method)
     variogramModels <- match.arg(variogramModels, several.ok = TRUE)
-    normX <- match.arg(normX)
     normY <- match.arg(normY)
     foo <- checkInputSingle(X, Y, Cx, Ey)
     Y <- normMat(Y, normY, pseudoCount)
@@ -73,7 +73,7 @@ sbivarSinglePPP <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs"),
         (moranRes <- MoransISinglePPP(
             X = X, Y = Y, Ey = Ey, wo = wo, numNNs = selfName(numNNs),
             variogramModels = variogramModels, etas = selfName(etas), width = width,
-            returnSEsMoransI = returnSEsMoransI, verbose = verbose, cutoff = cutoff, findMaxW = findMaxW,
+            returnSEsMoransI = returnSEsMoransI, verbose = verbose, cutoff = cutoff,
             featuresX = featuresX, featuresY = featuresY
         ))$res
     } else if (method == "GAMs") {
@@ -86,7 +86,7 @@ sbivarSinglePPP <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs"),
     out <- addFeatureColumn(out[order(out[, "pVal"]), , drop = FALSE])
     lis <- list(
         "result" = out, "method" = method,
-        "multi" = FALSE, "normX" = normX, "normY" = normY
+        "multi" = FALSE, "normY" = normY
     )
     if (method == "Moran's I") {
         lis$maxIxy <- moranRes$maxIxy

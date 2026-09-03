@@ -293,3 +293,16 @@ getSize <- function(X, Y, normX, normY, size, scaleBySampleSums) {
 getFeaturesList <- function(Xl) {
     make.names(unique(unlist(lapply(Xl, colnames))))
 }
+#' Retreive unique features names from a matrix or ppp
+#'
+#' @param X the matrix or ppp object
+#'
+#' @returns A vector of unique features
+#' @importFrom spatstat.geom is.ppp marks
+getFeaturesX <- function(X) {
+    if (is.matrix(X)) {
+        colnames(X)
+    } else if (is.ppp(X)) {
+        unique(marks(X, drop = FALSE)$feature)
+    }
+}

@@ -6,34 +6,43 @@
 #' @inheritParams sbivarMulti
 #'
 #' @returns Throws error when a fault is found with the input, otherwise finishes silently
+#' @importFrom spatstat.geom coords is.ppp npoints
 checkInputSingle <- function(X, Y, Cx, Ey) {
-    n <- nrow(X)
+    n <- if (ismx <- is.matrix(X)) nrow(X) else if (ispppx <- is.ppp(X)) npoints(X)
     m <- nrow(Y)
-    if (n != nrow(Cx)) {
-        stop("Dimensions of X and its coordinates Cx do not match!")
-    }
-    if (ncol(Cx) != 2) {
-        stop("Coordinate matrices must be of dimension 2!")
-    }
-    if (is.null(colnames(X))) {
-        stop("Feature matrix X lacks column names!")
+    if (ismx) {
+        if (n != nrow(Cx)) {
+            stop("Dimensions of X and its coordinates Cx do not match!")
+        }
+        if (ncol(Cx) != 2) {
+            stop("Coordinate matrices must be of dimension 2!")
+        }
+        if (is.null(colnames(X))) {
+            stop("Feature matrix X lacks column names!")
+        }
+        if (is.null(rownames(X))) {
+            stop("Feature matrix X lacks row names!")
+        }
+        if (!identical(sort(rownames(X)), sort(rownames(Cx)))) {
+            stop("Rownames of X and Cx do not match")
+        }
+    } else if (ispppx) {
+        Cx <- coords(X)
     }
     if (is.null(colnames(Y))) {
         stop("Feature matrix Y lacks column names!")
     }
-    if (is.null(rownames(X))) {
-        stop("Feature matrix X lacks row names!")
-    }
     if (is.null(rownames(Y))) {
         stop("Feature matrix Y lacks row names!")
     }
-    if (!identical(sort(rownames(X)), sort(rownames(Cx)))) {
-        stop("Rownames of X and Cx do not match")
-    }
     if (missing(Ey)) {
-        if (n != m) {
-            stop("Only one coordinate matrix Cx supplied, and dimensions of X and Y do not match.
+        if (ismx) {
+            if (n != m) {
+                stop("Only one coordinate matrix Cx supplied, and dimensions of X and Y do not match.
                  Please provide the coordinates of Y too through the Ey argument.")
+            }
+        } else if (ispppx) {
+            stop("Ey cannot be missing when X is a point pattern")
         }
     } else {
         if (m != nrow(Ey)) {
@@ -49,7 +58,7 @@ checkInputSingle <- function(X, Y, Cx, Ey) {
             stop("No overlap of the coordinates found! Have the samples been aligned?")
         }
     }
-    if (findDoubleUnderScore(c(colnames(X), colnames(Y)))) {
+    if (findDoubleUnderScore(c(getFeaturesX(X), colnames(Y)))) {
         stop("Double underscores found in feature names. Please change the names,
              as the double underscore is used in this package to separate feature pairs!")
     }

@@ -1,6 +1,6 @@
-#' Calculate bivariate Moran's I between two modality matrix, with variance and p-value
+#' Calculate bivariate Moran's I between a point pattern and a quantitative modality, with variance and p-value
 #'
-#' The variance calculation requires estimation of the spatial autocorrelation structure of every feature separately, using Matheron's variogram estimator \insertCite{Matheron1963}{sbivar}.
+#' The variance calculation requires estimation of the spatial autocorrelation structure of every feature of the second modality, using Matheron's variogram estimator \insertCite{Matheron1963}{sbivar}.
 #'
 #' @inheritParams sbivarSinglePPP
 #' @param variogramModels A character vector, indicating the variogram model passed onto \link[gstat]{vgm}.
@@ -8,7 +8,6 @@
 #' @param numNNs,etas Vectors of weight matrix parameters, whose elements are passed onto \link{buildWeightMat}
 #' @param wo type of weight parameter, passed onto \link{buildWeightMat}
 #' @param cutoff,width Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}
-#' @param findMaxW Is the maximum bivariate Moran's I needed?
 #' @param returnSEsMoransI A boolean, are standard errors of Moran's I to be returned?
 #' @param findVariances Should variances be calculated? For internal use only
 #' @param ... passed onto \link[gstat]{variogram}
@@ -22,15 +21,12 @@
 #'
 #' @details By default, a number of range parameters and corresponding weight matrices are screened for spatial association,
 #' and their p-value combined using the Cauchy combination rule by \insertCite{Liu2020}{sbivar}.
-#' The maximum value of the bivariate Moran's I statistics are returned conditionally,
-#' as it is computation intensive and not always needed.
+#' The maximum value of the bivariate Moran's I statistics are different for every gene pair unlike for \link{MoransISingle} as the weight matrix is random. As this presents too much computation, no maximum values are calculated.
 #' @note No multithreading is implemented for the variance calculation, as the matrix calculations involved
 #' may use inherent multithreading with OpenBLAS.
 #' @importFrom spatstat.geom npoints coords split.ppp
-MoransISinglePPP <- function(
-      X, Y, Ey, wo, etas, numNNs, cutoff, width, verbose,
-      findMaxW, variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...
-) {
+MoransISinglePPP <- function(X, Y, Ey, wo, etas, numNNs, cutoff, width, verbose,
+    variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...) {
     n <- npoints(X)
     m <- nrow(Y)
     p <- length(featuresX)
@@ -41,10 +37,10 @@ MoransISinglePPP <- function(
     # Scale outcomes
     Y <- scale(Y)
     # Move coordinates
-    movedCoords <- moveTwoCoords(coords(X), Ey)
+    movedCoords <- moveTwoCoords(as.matrix(coords(X)), Ey)
+    Marks = marks(X, drop = FALSE)
     coords(X) <- movedCoords$Cx
     Ey <- movedCoords$Ey
-    prodFac <- (n - 1) * (m - 1)
     if (verbose) {
         message("Calculating bivariate Moran's I statistics ...")
     }
@@ -52,9 +48,23 @@ MoransISinglePPP <- function(
         "Gauss" = etas,
         "nn" = numNNs
     ))
-    X <- split.ppp(X, marks(X, drop = FALSE)$features)
+    X <- split.ppp(X, Marks$feature)
+    mm2 <- m * (m - 1) / 2
+    distY <- as.vector(stats::dist(Ey))
+    if (findVariances) {
+        # Estimate spatial autocorrelation
+        if (verbose) {
+            message("Fitting variograms for second modality (", k, " features) ...")
+        }
+        variogramsY <- matheronVariograms(Y[, featuresY, drop = FALSE], Ey,
+                                          width = width, cutoff = cutoff,
+                                          variogramModels = variogramModels, ...
+        )
+    }
     res <- lapply(featuresX, function(featx) {
         Cx <- coords(X[[featx]])
+        n = nrow(Cx)
+        prodFac <- (n - 1) * (m - 1)
         Ws <- vapply(wParams, FUN.VALUE = matrix(0, n, m), function(iter) {
             buildWeightMat(Cx = Cx, Ey = Ey, wo = wo, eta = iter, numNN = iter)
         })
@@ -63,26 +73,10 @@ MoransISinglePPP <- function(
         if (!all(idW) && (wo == "Gauss")) {
             etas <- etas[idW]
         }
-        Ixys <- vapply(seq_len(numWs), FUN.VALUE = matrix(0, p, k), function(i) {
+        Ixys <- vapply(seq_len(numWs), FUN.VALUE = double(k), function(i) {
             rowSums(crossprod(Ws[, , i] %*% Y[, featuresY, drop = FALSE]))
         }) / sqrt(prodFac) # Normalize for matrix size
-        # Reformat to long format
-        out <- matrix(c(Ixys), ncol = numWs, dimnames = list(NULL, paste0("Ixy_", wParams)))
         if (findVariances) {
-            # Estimate spatial autocorrelation
-            if (verbose) {
-                message("Fitting variograms for second modality (", k, " features) ...")
-            }
-            variogramsY <- matheronVariograms(Y[, featuresY, drop = FALSE], Ey,
-                width = width, cutoff = cutoff,
-                variogramModels = variogramModels, ...
-            )
-            distX <- as.vector(stats::dist(Cx))
-            distY <- as.vector(stats::dist(Ey))
-            if (verbose) {
-                message("Calculating variances of bivariate Moran's I statistics ...")
-            }
-            mm2 <- m * (m - 1) / 2
             varIxy <- vapply(selfName(featuresY), FUN.VALUE = double(numWs), function(featy) {
                 # C++: build Sigma_X and batch-compute t(W[,,i]) Sigma_X W[,,i] for all i,
                 # returning lower-triangle columns (sigXws, mm2 x numWs) and traces

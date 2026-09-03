@@ -2,7 +2,7 @@
 % Please edit documentation in R/MoransISinglePPP.R
 \name{MoransISinglePPP}
 \alias{MoransISinglePPP}
-\title{Calculate bivariate Moran's I between two modality matrix, with variance and p-value}
+\title{Calculate bivariate Moran's I between a point pattern and a quantitative modality, with variance and p-value}
 \usage{
 MoransISinglePPP(
   X,
@@ -14,7 +14,6 @@ MoransISinglePPP(
   cutoff,
   width,
   verbose,
-  findMaxW,
   variogramModels,
   returnSEsMoransI,
   featuresX,
@@ -38,8 +37,6 @@ MoransISinglePPP(
 
 \item{verbose}{Should info on type of analysis be printed?}
 
-\item{findMaxW}{Is the maximum bivariate Moran's I needed?}
-
 \item{variogramModels}{A character vector, indicating the variogram model passed onto \link[gstat]{vgm}.
 Currently, only "Exp" and "Lin" are implemented for computational reasons.}
 
@@ -57,13 +54,12 @@ A dataframe of results sorted by p-value, also containing the estimated Moran's 
 In addition, the maximum value of the Moran's I statistic, and the parameters of the weight matrix
 }
 \description{
-The variance calculation requires estimation of the spatial autocorrelation structure of every feature separately, using Matheron's variogram estimator \insertCite{Matheron1963}{sbivar}.
+The variance calculation requires estimation of the spatial autocorrelation structure of every feature of the second modality, using Matheron's variogram estimator \insertCite{Matheron1963}{sbivar}.
 }
 \details{
 By default, a number of range parameters and corresponding weight matrices are screened for spatial association,
 and their p-value combined using the Cauchy combination rule by \insertCite{Liu2020}{sbivar}.
-The maximum value of the bivariate Moran's I statistics are returned conditionally,
-as it is computation intensive and not always needed.
+The maximum value of the bivariate Moran's I statistics are different for every gene pair unlike for \link{MoransISingle} as the weight matrix is random. As this presents too much computation, no maximum values are calculated.
 }
 \note{
 No multithreading is implemented for the variance calculation, as the matrix calculations involved

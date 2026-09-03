@@ -58,10 +58,8 @@ fitGAM <- function(df, outcome, family = gaussian(), Gamm, correlation) {
 #' @importFrom spatstat.model Poisson ppm
 #' @importFrom splines bs
 #' @importFrom stats poisson
-fitManyGAMs <- function(
-      mat, coord, family = gaussian(), modality, features,
-      Gamm, correlation, pseudoCount = 1e-8, ...
-) {
+fitManyGAMs <- function(mat, coord, family = gaussian(), modality, features,
+    Gamm, correlation, pseudoCount = 1e-8, ...) {
     if (ism <- is.matrix(mat)) {
         if (family$family == "Gamma") {
             mat <- mat + pseudoCount

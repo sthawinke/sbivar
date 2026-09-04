@@ -78,17 +78,18 @@ fitManyGAMs <- function(mat, coord, family = gaussian(), modality, features,
         fits <- loadBalanceBplapply(selfName(features), function(cn) {
             fitGAM(df, outcome = cn, family = family, Gamm = Gamm, correlation = correlation, ...)
         })
-    } else if (is.ppp(mat)) {
-        fits <- loadBalanceBplapply(split.ppp(subset(mat, features %in% features), marks(mat, drop = FALSE)$features), function(PPP) {
-            xFit <- ppm(PPP ~ bs(x) * bs(y), interaction = Poisson())
+    } else if (isp <- is.ppp(mat)) {
+        X <- split.ppp(mat, marks(mat, drop = FALSE)$feature)
+        fits <- loadBalanceBplapply(selfName(features), function(feat) {
+            xFit <- ppm(X[[feat]] ~ bs(x) * bs(y), interaction = Poisson())
             xFit$family <- poisson()
             return(xFit)
         })
     }
-    if (!all(id <- vapply(fits, FUN.VALUE = TRUE, is, if (ism) "gam" else "ppm"))) {
+    if (!all(id <- vapply(fits, FUN.VALUE = TRUE, is, if (ism) "gam" else if(isp) "ppm"))) {
         warning(
             immediate. = TRUE,
-            sum(!id), " ", if (ism) "GAM" else ppm(), " fits failed in modality ", modality,
+            sum(!id), " ", if (ism) "GAM" else if(isp) "ppm", " fits failed in modality ", modality,
             ", please investigate cause! First failure:\n", fits[[which.min(id)]]
         )
     }

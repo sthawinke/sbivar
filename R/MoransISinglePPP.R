@@ -97,7 +97,7 @@ MoransISinglePPP <- function(X, Y, Ey, wo, etas, numNNs, cutoff, width, verbose,
         return(out)
     })
     Ixy <- do.call(what = rbind, lapply(res, function(x) x$Ixys))
-    colnames(seIxy) <- paste0("Ixy_", wParams)
+    colnames(Ixy) <- paste0("Ixy_", wParams)
     if (findVariances) {
         seIxy <- do.call(what = rbind, lapply(res, function(x) x$seIxy))
         colnames(seIxy) <- paste0("SE(Ixy)_", wParams)

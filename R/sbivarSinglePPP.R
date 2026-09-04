@@ -79,7 +79,7 @@ sbivarSinglePPP <- function(
             featuresX = featuresX, featuresY = featuresY
         ))$res
     } else if (method == "GAMs") {
-        GAMsSinglePPP(
+        GAMsSingle(
             X = X, Y = Y, Ey = Ey, families = families, n_points_grid = n_points_grid,
             verbose = verbose, featuresX = featuresX, featuresY = featuresY, Gamm = Gamm, correlation = correlation
         )

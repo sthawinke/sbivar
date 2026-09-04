@@ -48,7 +48,7 @@ MoransISinglePPP <- function(X, Y, Ey, wo, etas, numNNs, cutoff, width, verbose,
         "Gauss" = etas,
         "nn" = numNNs
     ))
-    X <- split.ppp(X, PPP$feature)
+    X <- split.ppp(X, factor(Marks$feature))
     mm2 <- m * (m - 1) / 2
     distY <- as.vector(stats::dist(Ey))
     if (findVariances) {
@@ -73,13 +73,13 @@ MoransISinglePPP <- function(X, Y, Ey, wo, etas, numNNs, cutoff, width, verbose,
         if (!all(idW) && (wo == "Gauss")) {
             etas <- etas[idW]
         }
-        Ixys <- vapply(seq_len(numWs), FUN.VALUE = double(k), function(i) {
-            rowSums(crossprod(Ws[, , i] %*% Y[, featuresY, drop = FALSE]))
-        }) / sqrt(prodFac) # Normalize for matrix size
+        Ixys <- t(t(vapply(seq_len(numWs), FUN.VALUE = double(k), function(i) {
+            colSums(Ws[, , i] %*% Y[, featuresY, drop = FALSE])
+        })) / sqrt(prodFac)) # Normalize for matrix size
         out <- if (findVariances) {
             varIxy <- t(vapply(selfName(featuresY), FUN.VALUE = double(numWs), function(featy) {
                 # C++: build Sigma_X and batch-compute t(W[,,i]) Sigma_X W[,,i] for all i,
-                # returning lower-triangle columns (sigXws, mm2 x numWs) and traces
+                # returning their traces
                 sigRes <- computeSigXws(evalVariogram(variogramsY[[featy]], distY), Ws, findSigXws = FALSE)
                 # Precomputing evalVariogram for all Y's is too much memory, so repeat it at a speed cost
                 return(sigRes$traces)
@@ -107,7 +107,7 @@ MoransISinglePPP <- function(X, Y, Ey, wo, etas, numNNs, cutoff, width, verbose,
     } else {
         out <- Ixy
     }
-    rownames(out) <- makeNames(featuresX, featuresY)
+    rownames(out) <- make.names(apply(expand.grid(featuresY, featuresX)[,2:1], 1, paste, collapse = "__"))
     return(list(
         "res" = out
     ))

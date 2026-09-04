@@ -79,7 +79,7 @@ fitManyGAMs <- function(mat, coord, family = gaussian(), modality, features,
             fitGAM(df, outcome = cn, family = family, Gamm = Gamm, correlation = correlation, ...)
         })
     } else if (isp <- is.ppp(mat)) {
-        X <- split.ppp(mat, "feature")
+        X <- split.ppp(mat, marks(mat, drop = FALSE)$feature)
         fits <- loadBalanceBplapply(selfName(features), function(feat) {
             xFit <- ppm(X[[feat]] ~ bs(x) * bs(y), interaction = Poisson())
             xFit$family <- poisson()

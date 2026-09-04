@@ -10,6 +10,8 @@ test_that("SbivarSingle works for correct input", {
     expect_false(is.unsorted(sbiRes$result[, "pVal"]))
     expect_silent(sbivar(X, Y, Cx, Ey, method = "GAMs", verbose = FALSE))
     expect_is(sbivar(X, Y, Cx, Ey, method = "Moran", featuresX = "X1", featuresY = "Y1"), "list")
+    sbiResPPP <- sbivar(PPP, Y, Ey = Ey, method = "GAMs")
+    expect_is(sbiResPPP, "list")
 })
 test_that("SbivarSingle throws errors for incorrect input", {
     expect_error(sbivar(X, Y, cbind(Cx, Cx), Ey, method = "GAMs"))
@@ -38,6 +40,11 @@ test_that("SbivarSingle throws errors for incorrect input", {
     Xunnamed <- X
     rownames(Xunnamed) <- NULL
     expect_error(sbivar(Xunnamed, Y, Cx, Ey, method = "GAMs"))
+    expect_error(sbivar(Y, PPP, Ey = Ey, method = "Moran"))
+    PPPunmarked <- rpoispp(lambda, win = owin(c(0, 1), c(0, 1)))
+    expect_error(sbivar(PPPunmarked, Y, Ey = Ey, method = "Moran"))
+    PPPcharacterMarks <- rmpoispp(lambda, types = paste0("gene", seq_len(p)), win = owin(c(0, 1), c(0, 1)))
+    expect_error(sbivar(PPPcharacterMarks, Y, Ey = Ey, method = "Moran"))
 })
 test_that("sbivarMulti works for correct input", {
     gamList <- sbivar(Xl, Yl, Cxl, Eyl, method = "GAMs")

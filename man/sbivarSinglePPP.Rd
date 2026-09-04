@@ -63,10 +63,6 @@ This test is meant for the combination of a point pattern with a quantitative ou
 For two quantitative omics types, see \link{sbivarSingle}. For testing between point patterns, see e.g. \link[smoppix]{smoppix}
 }
 \details{
-If only Cx is supplied and X and Y have the same number of rows, a joint analysis is performed
-If Cx and Ey are provided, and X and Y have the same number of rows, equality of Cx and Ey is checked.
-If true, a joint analysis is run, with a warning.
-
 Ey must have rownames matching those in Y, and have two columns.
 For GAMs, usually no normalization is needed, as the non-gaussianity is taken care of by
 the outcome distribution, offset and link functions. Currently, identity, inverse and log-link are implemented.

@@ -48,7 +48,7 @@ MoransISinglePPP <- function(X, Y, Ey, wo, etas, numNNs, cutoff, width, verbose,
         "Gauss" = etas,
         "nn" = numNNs
     ))
-    X <- split.ppp(X, "feature")
+    X <- split.ppp(X, PPP$feature)
     mm2 <- m * (m - 1) / 2
     distY <- as.vector(stats::dist(Ey))
     if (findVariances) {

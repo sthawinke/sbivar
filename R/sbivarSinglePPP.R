@@ -3,10 +3,6 @@
 #' This test is meant for the combination of a point pattern with a quantitative outcome with fixed grid location.
 #' For two quantitative omics types, see \link{sbivarSingle}. For testing between point patterns, see e.g. \link[smoppix]{smoppix}
 #'
-#' @details If only Cx is supplied and X and Y have the same number of rows, a joint analysis is performed
-#' If Cx and Ey are provided, and X and Y have the same number of rows, equality of Cx and Ey is checked.
-#' If true, a joint analysis is run, with a warning.
-#'
 #' @param X A marked point pattern of class \link[spatstat.geom]{ppp}
 #' @param Y Matrix of omics measurements for the second, quantitative modality
 #' @param Ey Coordinate matrix of dimension two, belonging to Y
@@ -45,7 +41,7 @@ sbivarSinglePPP <- function(
       correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(0.9 * max(apply(Ey, 2, function(x) diff(range(x)))), 0.25))
 ) {
     stopifnot(
-        is.numeric(n_points_grid), ncol(Cx) == 2, is.numeric(numNNs), all(numNNs > 0),
+        is.numeric(n_points_grid), is.numeric(numNNs), all(numNNs > 0),
         names(families) == "Y",
         is(families[["Y"]], "family"), families[["Y"]]$link %in% c("identity", "log", "inverse"),
         !is.null(colnames(Y)), is.logical(Gamm), inherits(correlation, "corSpatial"),
@@ -56,7 +52,7 @@ sbivarSinglePPP <- function(
     method <- match.arg(method)
     variogramModels <- match.arg(variogramModels, several.ok = TRUE)
     normY <- match.arg(normY)
-    foo <- checkInputSingle(X, Y, Cx, Ey)
+    foo <- checkInputSingle(X, Y, Cx = NULL, Ey)
     Y <- normMat(Y, normY, pseudoCount)
     featuresX <- make.names(featuresX)
     featuresY <- make.names(featuresY)

@@ -85,7 +85,7 @@ if (require(SpatialExperiment)) {
     )
 }
 # Single image analysis on synthetic point pattern + quantitative modality
-library(spatstat)
+library(spatstat.random)
 lambda <- 8e1
 p <- 3
 PPP <- rmpoispp(lambda, types = paste0("gene", seq_len(p)), win = owin(c(0, 1), c(0, 1)))

@@ -11,8 +11,10 @@
 #' @returns A named list of results
 #' @inheritParams MoransISingle
 #' @importFrom spatstat.geom coords is.ppp
-GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX,
-    featuresY, Gamm, correlation, findVariances = TRUE) {
+GAMsSingle <- function(
+      X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX,
+      featuresY, Gamm, correlation, findVariances = TRUE
+) {
     if (verbose) {
         message("Fitting GAMs for first modality (", length(featuresX), " features) ...")
     }
@@ -27,8 +29,10 @@ GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX
         mat = Y, coord = Ey, family = families[["Y"]], modality = "Y",
         features = featuresY, Gamm = Gamm, correlation = correlation
     )
-    ng <- buildNewGrid(Cx = if(is.matrix(X)) Cx else if(is.ppp(X)) as.matrix(coords(X)), Ey = Ey,
-                       n_points_grid = n_points_grid)
+    ng <- buildNewGrid(
+        Cx = if (is.matrix(X)) Cx else if (is.ppp(X)) as.matrix(coords(X)), Ey = Ey,
+        n_points_grid = n_points_grid
+    )
     if (verbose) {
         numTests <- length(gamsx) * length(gamsy)
         message("Performing ", numTests, " pairwise tests on fitted GAMs ...")

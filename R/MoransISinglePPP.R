@@ -25,8 +25,10 @@
 #' @note No multithreading is implemented for the variance calculation, as the matrix calculations involved
 #' may use inherent multithreading with OpenBLAS.
 #' @importFrom spatstat.geom npoints coords split.ppp coords<-
-MoransISinglePPP <- function(X, Y, Ey, wo, etas, numNNs, cutoff, width, verbose,
-    variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...) {
+MoransISinglePPP <- function(
+      X, Y, Ey, wo, etas, numNNs, cutoff, width, verbose,
+      variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...
+) {
     n <- npoints(X)
     m <- nrow(Y)
     p <- length(featuresX)
@@ -107,7 +109,7 @@ MoransISinglePPP <- function(X, Y, Ey, wo, etas, numNNs, cutoff, width, verbose,
     } else {
         out <- Ixy
     }
-    rownames(out) <- make.names(apply(expand.grid(featuresY, featuresX)[,2:1], 1, paste, collapse = "__"))
+    rownames(out) <- make.names(apply(expand.grid(featuresY, featuresX)[, 2:1], 1, paste, collapse = "__"))
     return(list(
         "res" = out
     ))

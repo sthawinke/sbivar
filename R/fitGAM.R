@@ -58,8 +58,10 @@ fitGAM <- function(df, outcome, family = gaussian(), Gamm, correlation) {
 #' @importFrom spatstat.model Poisson ppm
 #' @importFrom splines bs
 #' @importFrom stats poisson
-fitManyGAMs <- function(mat, coord, family = gaussian(), modality, features,
-    Gamm, correlation, pseudoCount = 1e-8, ...) {
+fitManyGAMs <- function(
+      mat, coord, family = gaussian(), modality, features,
+      Gamm, correlation, pseudoCount = 1e-8, ...
+) {
     if (ism <- is.matrix(mat)) {
         if (family$family == "Gamma") {
             mat <- mat + pseudoCount
@@ -86,10 +88,10 @@ fitManyGAMs <- function(mat, coord, family = gaussian(), modality, features,
             return(xFit)
         })
     }
-    if (!all(id <- vapply(fits, FUN.VALUE = TRUE, is, if (ism) "gam" else if(isp) "ppm"))) {
+    if (!all(id <- vapply(fits, FUN.VALUE = TRUE, is, if (ism) "gam" else if (isp) "ppm"))) {
         warning(
             immediate. = TRUE,
-            sum(!id), " ", if (ism) "GAM" else if(isp) "ppm", " fits failed in modality ", modality,
+            sum(!id), " ", if (ism) "GAM" else if (isp) "ppm", " fits failed in modality ", modality,
             ", please investigate cause! First failure:\n", fits[[which.min(id)]]
         )
     }

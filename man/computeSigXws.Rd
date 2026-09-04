@@ -4,7 +4,7 @@
 \alias{computeSigXws}
 \title{Batch-compute lower triangles and traces of \eqn{W_i^T \Sigma_X W_i}}
 \usage{
-computeSigXws(vgVals, W)
+computeSigXws(vgVals, W, findSigXws)
 }
 \arguments{
 \item{vgVals}{Covariance values for the strictly lower triangle of

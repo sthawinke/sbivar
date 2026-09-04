@@ -26,10 +26,8 @@
 #' as it is computation intensive and not always needed.
 #' @note No multithreading is implemented for the variance calculation, as the matrix calculations involved
 #' may use inherent multithreading with OpenBLAS.
-MoransISingle <- function(
-      X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose,
-      findMaxW, variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...
-) {
+MoransISingle <- function(X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose,
+    findMaxW, variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...) {
     n <- nrow(X)
     m <- nrow(Y)
     p <- length(featuresX)
@@ -91,7 +89,7 @@ MoransISingle <- function(
         varIxy <- vapply(selfName(featuresX), FUN.VALUE = matrix(0, numWs, k), function(featx) {
             # C++: build Sigma_X and batch-compute t(W[,,i]) Sigma_X W[,,i] for all i,
             # returning lower-triangle columns (sigXws, mm2 x numWs) and traces
-            sigRes <- computeSigXws(evalVariogram(variogramsX[[featx]], distX), Ws)
+            sigRes <- computeSigXws(evalVariogram(variogramsX[[featx]], distX), Ws, findSigXws = TRUE)
             # Precomputing evalVariogram for all Y's is too much memory, so repeat it at a speed cost
             out <- sigRes$traces + 2 * vapply(selfName(featuresY), FUN.VALUE = double(numWs), function(featy) {
                 crossprod(sigRes$sigXws, evalVariogram(variogramsY[[featy]], distY))

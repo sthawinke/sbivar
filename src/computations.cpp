@@ -64,7 +64,8 @@ arma::vec evalVariogramCpp(
 // [[Rcpp::export]]
 Rcpp::List computeSigXws(
     const arma::vec& vgVals,
-    const arma::cube& W
+    const arma::cube& W,
+    bool findSigXws
 ) {
     int n   = W.n_rows;
     int m   = W.n_cols;
@@ -98,10 +99,12 @@ Rcpp::List computeSigXws(
 
         // Extract strictly lower triangle in column-major order,
         // matching which(lower.tri(diag(m))) in R
-        arma::uword k = 0;
-        for (int j = 0; j < m - 1; j++) {
-            for (int i = j + 1; i < m; i++) {
-                sigXws(k++, wi) = tmp(i, j);
+        if(findSigXws){
+            arma::uword k = 0;
+            for (int j = 0; j < m - 1; j++) {
+                for (int i = j + 1; i < m; i++) {
+                    sigXws(k++, wi) = tmp(i, j);
+                }
             }
         }
         // Skip this step for point patterns

@@ -89,7 +89,7 @@ library(spatstat)
 lambda <- 8e1
 p <- 3
 PPP <- rmpoispp(lambda, types = paste0("gene", seq_len(p)), win = owin(c(0, 1), c(0, 1)))
-marks(PPP, drop = FALSE) <- data.frame(feature = marks(PPP)) # Make sur marks is a dataframe
+marks(PPP, drop = FALSE) <- data.frame(feature = marks(PPP)) # Make sure marks is a dataframe
 resMoransI <- sbivar(X = PPP, Y, Cx, Ey, method = "Moran's I")
 resGAMs <- sbivar(X = PPP, Y, Cx, Ey, method = "GAMs")
 }

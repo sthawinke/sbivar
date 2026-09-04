@@ -26,14 +26,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // computeSigXws
-Rcpp::List computeSigXws(const arma::vec& vgVals, const arma::cube& W);
-RcppExport SEXP _sbivar_computeSigXws(SEXP vgValsSEXP, SEXP WSEXP) {
+Rcpp::List computeSigXws(const arma::vec& vgVals, const arma::cube& W, bool findSigXws);
+RcppExport SEXP _sbivar_computeSigXws(SEXP vgValsSEXP, SEXP WSEXP, SEXP findSigXwsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::vec& >::type vgVals(vgValsSEXP);
     Rcpp::traits::input_parameter< const arma::cube& >::type W(WSEXP);
-    rcpp_result_gen = Rcpp::wrap(computeSigXws(vgVals, W));
+    Rcpp::traits::input_parameter< bool >::type findSigXws(findSigXwsSEXP);
+    rcpp_result_gen = Rcpp::wrap(computeSigXws(vgVals, W, findSigXws));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -55,7 +56,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_sbivar_evalVariogramCpp", (DL_FUNC) &_sbivar_evalVariogramCpp, 4},
-    {"_sbivar_computeSigXws", (DL_FUNC) &_sbivar_computeSigXws, 2},
+    {"_sbivar_computeSigXws", (DL_FUNC) &_sbivar_computeSigXws, 3},
     {"_sbivar_scoreTestInternals_cpp", (DL_FUNC) &_sbivar_scoreTestInternals_cpp, 5},
     {NULL, NULL, 0}
 };

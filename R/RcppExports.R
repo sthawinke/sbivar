@@ -43,8 +43,8 @@ evalVariogramCpp <- function(distVec, psill, range_, modelExp) {
 #'     \item{traces}{Length-numWs vector of \eqn{tr(W_i^T \Sigma_X W_i)}.}
 #'   }
 #' @keywords internal
-computeSigXws <- function(vgVals, W) {
-    .Call(`_sbivar_computeSigXws`, vgVals, W)
+computeSigXws <- function(vgVals, W, findSigXws) {
+    .Call(`_sbivar_computeSigXws`, vgVals, W, findSigXws)
 }
 
 #' Compute Itautau, Itautheta and score statistics for the GP score test

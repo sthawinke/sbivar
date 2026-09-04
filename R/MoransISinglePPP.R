@@ -25,10 +25,8 @@
 #' @note No multithreading is implemented for the variance calculation, as the matrix calculations involved
 #' may use inherent multithreading with OpenBLAS.
 #' @importFrom spatstat.geom npoints coords split.ppp
-MoransISinglePPP <- function(
-      X, Y, Ey, wo, etas, numNNs, cutoff, width, verbose,
-      variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...
-) {
+MoransISinglePPP <- function(X, Y, Ey, wo, etas, numNNs, cutoff, width, verbose,
+    variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...) {
     n <- npoints(X)
     m <- nrow(Y)
     p <- length(featuresX)
@@ -78,37 +76,39 @@ MoransISinglePPP <- function(
         Ixys <- vapply(seq_len(numWs), FUN.VALUE = double(k), function(i) {
             rowSums(crossprod(Ws[, , i] %*% Y[, featuresY, drop = FALSE]))
         }) / sqrt(prodFac) # Normalize for matrix size
-        if (findVariances) {
-            varIxy <- vapply(selfName(featuresY), FUN.VALUE = double(numWs), function(featy) {
+        out <- if (findVariances) {
+            varIxy <- t(vapply(selfName(featuresY), FUN.VALUE = double(numWs), function(featy) {
                 # C++: build Sigma_X and batch-compute t(W[,,i]) Sigma_X W[,,i] for all i,
                 # returning lower-triangle columns (sigXws, mm2 x numWs) and traces
-                sigRes <- computeSigXws(evalVariogram(variogramsY[[featy]], distY), Ws)
+                sigRes <- computeSigXws(evalVariogram(variogramsY[[featy]], distY), Ws, findSigXws = FALSE)
                 # Precomputing evalVariogram for all Y's is too much memory, so repeat it at a speed cost
                 return(sigRes$traces)
-            })
-            varIxy <- aperm(varIxy, perm = 3:1) # Rearrange
+            }))
             for (i in seq_len(numWs)) { # If negative variance, fall back on independence
-                if (length(zeroId <- c(which(varIxy[, , i] <= 0), which(is.na(varIxy[, , i]))))) {
-                    varIxy[, , i][zeroId] <- sum(Ws[, , i]^2) # tr(W^tW)
+                if (length(zeroId <- c(which(varIxy[, i] <= 0), which(is.na(varIxy[, i]))))) {
+                    varIxy[zeroId, i] <- sum(Ws[, , i]^2) # tr(W^tW)
                 }
             }
-            varIxy <- varIxy / prodFac # Correct for matrix size
+            list("Ixys" = Ixys, "seIxy" = sqrt(varIxy / prodFac))
+        } else {
+            list("Ixys" = Ixys)
         }
         printProgress(featx, featuresX, verbose)
+        return(out)
     })
-    # P-values
-    IxyPvals <- makePval(Ixys / (seIxy <- sqrt(varIxy)))
-    # CCT correction
-    cctPvals <- apply(IxyPvals, c(1, 2), CCT)
-    if (returnSEsMoransI) {
-        out <- cbind(out, matrix(c(seIxy),
-            ncol = numWs,
-            dimnames = list(NULL, paste0("SE(Ixy)_", wParams))
-        ))
+    Ixy <- do.call(what = rbind, lapply(res, function(x) x$Ixys))
+    colnames(seIxy) <- paste0("Ixy_", wParams)
+    if (findVariances) {
+        seIxy <- do.call(what = rbind, lapply(res, function(x) x$seIxy))
+        colnames(seIxy) <- paste0("SE(Ixy)_", wParams)
+        IxyPvals <- makePval(Ixy / seIxy)
+        cctPvals <- apply(IxyPvals, 1, CCT) # CCT correction
+        out <- cbind(Ixy, if (returnSEsMoransI) seIxy, "pVal" = cctPvals)
+    } else {
+        out <- Ixy
     }
-    out <- cbind(out, "pVal" = c(cctPvals))
     rownames(out) <- makeNames(featuresX, featuresY)
     return(list(
-        "res" = res, "maxIxy" = maxIxy
+        "res" = out
     ))
 }

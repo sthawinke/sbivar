@@ -7,7 +7,6 @@
 sbivarSinglePPP(
   X,
   Y,
-  Cx,
   Ey,
   method = c("Moran's I", "GAMs"),
   normY = c("none", "rel", "log"),
@@ -30,13 +29,15 @@ sbivarSinglePPP(
 )
 }
 \arguments{
-\item{X}{A marked point pattern of class \link[spatstat]{ppp}}
+\item{X}{A marked point pattern of class \link[spatstat.geom]{ppp}}
 
 \item{Y}{Matrix of omics measurements for the second, quantitative modality}
 
 \item{Ey}{Coordinate matrix of dimension two, belonging to Y}
 
 \item{method}{A character string, indicating which method to apply}
+
+\item{normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}
 
 \item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization for Y.}
@@ -48,8 +49,6 @@ while using the whole matrix to calculate library sizes as offset or for normali
 \item{wo, variogramModels, numNNs, etas, cutoff, width, returnSEsMoransI}{Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}}
 
 \item{correlation}{Correlation structure, passed onto \link{fitGAM}}
-
-\item{normX, normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}
 }
 \value{
 A list with at least the following components

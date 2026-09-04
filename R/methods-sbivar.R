@@ -94,10 +94,10 @@ setMethod("sbivar", "MultiAssayExperiment", function(X, experimentX, experimentY
 #' @param Y Matrix or SpatialExperiment object of second modality
 #' @importFrom spatstat.geom marks
 setMethod("sbivar", "ppp", function(X, Y, Ey, ...) {
-    if (!is.matrix(Y) || (!missing(Ey) && !is.matrix(Ey))) {
+    if (!is.matrix(Y) || !is.matrix(Ey)) {
         stop(
-            "Since X is a matrix or dataframe, Y, Cx and Ey must be so too!",
-            if (is.data.frame(Y) || is.data.frame(Cx) || (!missing(Ey) && is.data.frame(Ey))) {
+            "Since X is a point pattern (ppp), Y and Ey must be matrices!",
+            if (is.data.frame(Y) || is.data.frame(Ey)) {
                 "\nTry converting data frames with as.matrix()"
             }
         )

@@ -1,7 +1,7 @@
 library(testthat)
 library(sbivar)
 library(BiocParallel)
-library(spatstat)
+library(spatstat.random)
 n <- 8e1
 m <- 1e2
 p <- 4
@@ -12,7 +12,7 @@ Cx <- matrix(runif(n * 2), n, 2, dimnames = list(rownames(X), c("x", "y")))
 Ey <- matrix(runif(m * 2), m, 2, dimnames = list(rownames(Y), c("x", "y")))
 lambda <- 8e1
 PPP <- rmpoispp(lambda, types = paste0("gene", seq_len(p)), win = owin(c(0, 1), c(0, 1)))
-marks(PPP, drop = FALSE) <- data.frame(feature = marks(PPP)) # Make sure marks is a dataframe
+marks(PPP, drop = FALSE) <- data.frame("feature" = marks(PPP)) # Make sure marks is a dataframe
 # Multiple images
 ims <- 6
 Xl <- lapply(selfName(seq_len(ims)), function(i) {
@@ -49,7 +49,7 @@ if (.Platform$OS.type == "unix") {
 resMoranTest <- sbivar(X, Y, Cx, Ey, method = "Moran")
 resGAMsSingle <- sbivar(X, Y, Cx, Ey, method = "GAM")
 resMoranTestPPP <- sbivar(PPP, Y, Ey = Ey, method = "Moran")
-resGAMsSinglePPP <- sbivar(XXX, Y, Ey = Ey, method = "GAM")
+resGAMsSinglePPP <- sbivar(PPP, Y, Ey = Ey, method = "GAM")
 estGAMs <- sbivar(Xl, Yl, Cxl, Eyl, method = "GAMs", findVariances = TRUE)
 estMoran <- sbivar(Xl, Yl, Cxl, Eyl, method = "Moran", wo = "nn", findVariances = TRUE)
 estMultiCor <- sbivar(Xl, Xl, Cxl, method = "Correlation")

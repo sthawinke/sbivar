@@ -23,7 +23,7 @@ MoransISinglePPP(
 )
 }
 \arguments{
-\item{X}{A marked point pattern of class \link[spatstat]{ppp}}
+\item{X}{A marked point pattern of class \link[spatstat.geom]{ppp}}
 
 \item{Y}{Matrix of omics measurements for the second, quantitative modality}
 

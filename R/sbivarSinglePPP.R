@@ -7,7 +7,7 @@
 #' If Cx and Ey are provided, and X and Y have the same number of rows, equality of Cx and Ey is checked.
 #' If true, a joint analysis is run, with a warning.
 #'
-#' @param X A marked point pattern of class \link[spatstat]{ppp}
+#' @param X A marked point pattern of class \link[spatstat.geom]{ppp}
 #' @param Y Matrix of omics measurements for the second, quantitative modality
 #' @param Ey Coordinate matrix of dimension two, belonging to Y
 #' @param method A character string, indicating which method to apply
@@ -15,7 +15,7 @@
 #' @param n_points_grid,families,Gamm Passed onto \link{GAMsSingle} for the second modality fitting
 #' @param wo,variogramModels,numNNs,etas,cutoff,width,returnSEsMoransI Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}
 #' @param verbose Should info on type of analysis be printed?
-#' @param normX,normY,pseudoCount Normalization parameters, passed onto \link{normMat}
+#' @param normY,pseudoCount Normalization parameters, passed onto \link{normMat}
 #' @param featuresX,featuresY Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
 #' while using the whole matrix to calculate library sizes as offset or for normalization for Y.
 #'
@@ -35,7 +35,7 @@
 #' @importFrom BiocParallel bpparam bpworkers
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
 sbivarSinglePPP <- function(
-      X, Y, Cx, Ey, method = c("Moran's I", "GAMs"),
+      X, Y, Ey, method = c("Moran's I", "GAMs"),
       normY = c("none", "rel", "log"), pseudoCount = 1e-8,
       etas = c(5e-6, 2e-4, 2e-2), returnSEsMoransI = TRUE,
       families = list("Y" = gaussian()), Gamm = FALSE, featuresX = getFeaturesX(X), featuresY = colnames(Y),

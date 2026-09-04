@@ -24,7 +24,7 @@
 #' The maximum value of the bivariate Moran's I statistics are different for every gene pair unlike for \link{MoransISingle} as the weight matrix is random. As this presents too much computation, no maximum values are calculated.
 #' @note No multithreading is implemented for the variance calculation, as the matrix calculations involved
 #' may use inherent multithreading with OpenBLAS.
-#' @importFrom spatstat.geom npoints coords split.ppp
+#' @importFrom spatstat.geom npoints coords split.ppp coords<-
 MoransISinglePPP <- function(X, Y, Ey, wo, etas, numNNs, cutoff, width, verbose,
     variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...) {
     n <- npoints(X)
@@ -48,7 +48,7 @@ MoransISinglePPP <- function(X, Y, Ey, wo, etas, numNNs, cutoff, width, verbose,
         "Gauss" = etas,
         "nn" = numNNs
     ))
-    X <- split.ppp(X, Marks$feature)
+    X <- split.ppp(X, "feature")
     mm2 <- m * (m - 1) / 2
     distY <- as.vector(stats::dist(Ey))
     if (findVariances) {

@@ -117,7 +117,8 @@ importFrom(spatstat.geom,
   is.ppp,
   marks,
   npoints,
-  split.ppp
+  split.ppp,
+  unmark
 )
 importFrom(spatstat.model,
   Poisson,

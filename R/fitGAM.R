@@ -54,7 +54,7 @@ fitGAM <- function(df, outcome, family = gaussian(), Gamm, correlation) {
 #' @returns A list of GAM models
 #' @importFrom smoppix loadBalanceBplapply
 #' @importFrom BiocParallel bplapply
-#' @importFrom spatstat.geom split.ppp is.ppp
+#' @importFrom spatstat.geom split.ppp is.ppp unmark
 #' @importFrom spatstat.model Poisson ppm
 #' @importFrom splines bs
 #' @importFrom stats poisson
@@ -81,9 +81,9 @@ fitManyGAMs <- function(
             fitGAM(df, outcome = cn, family = family, Gamm = Gamm, correlation = correlation, ...)
         })
     } else if (isp <- is.ppp(mat)) {
-        X <- split.ppp(mat, marks(mat, drop = FALSE)$feature)
+        X <- split.ppp(mat, factor(marks(mat, drop = FALSE)$feature))
         fits <- loadBalanceBplapply(selfName(features), function(feat) {
-            xFit <- ppm(X[[feat]] ~ bs(x) * bs(y), interaction = Poisson())
+            xFit <- ppm(unmark(X[[feat]]) ~ bs(x) * bs(y), interaction = Poisson())
             xFit$family <- poisson()
             return(xFit)
         })

@@ -27,7 +27,6 @@
 #' @importFrom spatstat.geom npoints coords split.ppp coords<-
 MoransISinglePPP <- function(X, Y, Ey, wo, etas, cutoff, width, verbose,
     variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...) {
-    n <- npoints(X)
     m <- nrow(Y)
     p <- length(featuresX)
     k <- length(featuresY)
@@ -38,18 +37,15 @@ MoransISinglePPP <- function(X, Y, Ey, wo, etas, cutoff, width, verbose,
     Y <- scale(Y)
     # Move coordinates
     movedCoords <- moveTwoCoords(as.matrix(coords(X)), Ey)
-    Marks <- marks(X, drop = FALSE)
-    coords(X) <- movedCoords$Cx
-    Ey <- movedCoords$Ey
+    featsVec <- marks(X, drop = FALSE)$feature
     if (verbose) {
         message("Calculating bivariate Moran's I statistics ...")
     }
     wParams <- selfName(switch(wo,
         "Gauss" = etas
     ))
-    X <- split.ppp(X, factor(Marks$feature))
     mm2 <- m * (m - 1) / 2
-    distY <- as.vector(stats::dist(Ey))
+    distY <- as.vector(stats::dist(movedCoords$Ey))
     if (findVariances) {
         # Estimate spatial autocorrelation
         if (verbose) {
@@ -61,11 +57,11 @@ MoransISinglePPP <- function(X, Y, Ey, wo, etas, cutoff, width, verbose,
         )
     }
     res <- lapply(featuresX, function(featx) {
-        Cx <- coords(X[[featx]])
+        Cx <- movedCoords$Cx[featsVec == featx,]
         n <- nrow(Cx)
         prodFac <- (n - 1) * (m - 1)
         Ws <- vapply(wParams, FUN.VALUE = matrix(0, n, m), function(iter) {
-            buildWeightMat(Cx = Cx, Ey = Ey, wo = wo, eta = iter, numNN = iter)
+            buildWeightMat(Cx = Cx, Ey = movedCoords$Ey, wo = wo, eta = iter, numNN = iter)
         })
         Ws <- Ws[, , idW <- (colSums(Ws, dims = 2, na.rm = TRUE) > 0), drop = FALSE]
         numWs <- dim(Ws)[3]

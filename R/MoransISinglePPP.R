@@ -5,7 +5,7 @@
 #' @inheritParams sbivarSinglePPP
 #' @param variogramModels A character vector, indicating the variogram model passed onto \link[gstat]{vgm}.
 #' Currently, only "Exp" and "Lin" are implemented for computational reasons.
-#' @param numNNs,etas Vectors of weight matrix parameters, whose elements are passed onto \link{buildWeightMat}
+#' @param etas Vectors of weight matrix parameters, whose elements are passed onto \link{buildWeightMat}
 #' @param wo type of weight parameter, passed onto \link{buildWeightMat}
 #' @param cutoff,width Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}
 #' @param returnSEsMoransI A boolean, are standard errors of Moran's I to be returned?
@@ -25,10 +25,8 @@
 #' @note No multithreading is implemented for the variance calculation, as the matrix calculations involved
 #' may use inherent multithreading with OpenBLAS.
 #' @importFrom spatstat.geom npoints coords split.ppp coords<-
-MoransISinglePPP <- function(
-      X, Y, Ey, wo, etas, numNNs, cutoff, width, verbose,
-      variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...
-) {
+MoransISinglePPP <- function(X, Y, Ey, wo, etas, cutoff, width, verbose,
+    variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...) {
     n <- npoints(X)
     m <- nrow(Y)
     p <- length(featuresX)
@@ -47,8 +45,7 @@ MoransISinglePPP <- function(
         message("Calculating bivariate Moran's I statistics ...")
     }
     wParams <- selfName(switch(wo,
-        "Gauss" = etas,
-        "nn" = numNNs
+        "Gauss" = etas
     ))
     X <- split.ppp(X, factor(Marks$feature))
     mm2 <- m * (m - 1) / 2

@@ -19,11 +19,10 @@ sbivarSinglePPP(
   featuresY = colnames(Y),
   n_points_grid = 600,
   verbose = TRUE,
+  wo = "Gauss",
   variogramModels = c("Exp", "Lin"),
   width = cutoff/15,
   cutoff = sqrt(2)/3,
-  wo = c("Gauss", "nn"),
-  numNNs = c(4, 8, 24),
   correlation = corGaus(form = ~x + y, nugget = TRUE, value = c(0.9 * max(apply(Ey, 2,
     function(x) diff(range(x)))), 0.25))
 )
@@ -46,7 +45,7 @@ while using the whole matrix to calculate library sizes as offset or for normali
 
 \item{verbose}{Should info on type of analysis be printed?}
 
-\item{wo, variogramModels, numNNs, etas, cutoff, width, returnSEsMoransI}{Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}}
+\item{wo, variogramModels, etas, cutoff, width, returnSEsMoransI}{Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}}
 
 \item{correlation}{Correlation structure, passed onto \link{fitGAM}}
 }
@@ -66,6 +65,9 @@ For two quantitative omics types, see \link{sbivarSingle}. For testing between p
 Ey must have rownames matching those in Y, and have two columns.
 For GAMs, usually no normalization is needed, as the non-gaussianity is taken care of by
 the outcome distribution, offset and link functions. Currently, identity, inverse and log-link are implemented.
+For constructing weight matrices, only the Gaussian weights are currently implemented, as nearest-neighbour weights are not suitable for point patterns.
+For this purpose, eta values larger than 2e-3 are not meaningful as they lead to weight matrices covering the whole measurement area, to whicht the single molecules are restricted by design.
+As this may lead to false findings, a warning is thrown.
 }
 \note{
 All methods use multithreading on the cluster provided using the BiocParallel package

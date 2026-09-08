@@ -5,7 +5,7 @@
 sbivar.Rproj
 /doc/
 /Meta/
-.positai
+.posit/assistant
 *.html
 *.o
 *.so

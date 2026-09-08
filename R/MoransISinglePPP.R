@@ -25,10 +25,8 @@
 #' @note No multithreading is implemented for the variance calculation, as the matrix calculations involved
 #' may use inherent multithreading with OpenBLAS.
 #' @importFrom spatstat.geom npoints coords split.ppp coords<-
-MoransISinglePPP <- function(
-      X, Y, Ey, wo, etas, cutoff, width, verbose,
-      variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...
-) {
+MoransISinglePPP <- function(X, Y, Ey, wo, etas, cutoff, width, verbose,
+    variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...) {
     m <- nrow(Y)
     p <- length(featuresX)
     k <- length(featuresY)
@@ -40,9 +38,6 @@ MoransISinglePPP <- function(
     # Move coordinates
     movedCoords <- moveTwoCoords(as.matrix(coords(X)), Ey)
     featsVec <- marks(X, drop = FALSE)$feature
-    if (verbose) {
-        message("Calculating bivariate Moran's I statistics ...")
-    }
     wParams <- selfName(switch(wo,
         "Gauss" = etas
     ))
@@ -64,6 +59,9 @@ MoransISinglePPP <- function(
     }
     # Prepare a vgParY argument safe to pass regardless of findVariances
     vgParY_arg <- if (findVariances) vgParY else matrix(0.0, 0L, 3L)
+    if (verbose) {
+        message("Calculating bivariate Moran's I statistics and variances ...")
+    }
     res <- lapply(featuresX, function(featx) {
         Cx_i <- movedCoords$Cx[featsVec == featx, , drop = FALSE]
         n <- nrow(Cx_i)
@@ -71,9 +69,9 @@ MoransISinglePPP <- function(
         # Loop over weight parameters; W is built inside C++ and never
         # materialised in the R session.
         nW <- length(wParams)
-        IxysList_w   <- vector("list", nW)
+        IxysList_w <- vector("list", nW)
         varIxyList_w <- if (findVariances) vector("list", nW)
-        idW          <- logical(nW)
+        idW <- logical(nW)
         for (wi in seq_len(nW)) {
             res_w <- computeIxyAndTracePPP_cpp(
                 Cx_i, movedCoords$Ey, wParams[[wi]],
@@ -90,15 +88,15 @@ MoransISinglePPP <- function(
             }
         }
         if (!all(idW) && (wo == "Gauss")) {
-            etas <- etas[idW]  # local shadow, preserving original behaviour
+            etas <- etas[idW] # local shadow, preserving original behaviour
         }
-        IxysList_w   <- IxysList_w[idW]
+        IxysList_w <- IxysList_w[idW]
         if (findVariances) varIxyList_w <- varIxyList_w[idW]
         numWs <- sum(idW)
         # Assemble k x numWs matrices from per-W k-vectors
         Ixys <- do.call(cbind, IxysList_w)
         out <- if (findVariances) {
-            varIxy <- do.call(cbind, varIxyList_w)  # k x numWs
+            varIxy <- do.call(cbind, varIxyList_w) # k x numWs
             list("Ixys" = Ixys, "seIxy" = sqrt(varIxy / prodFac))
         } else {
             list("Ixys" = Ixys)

@@ -33,15 +33,13 @@
 #' @importFrom nlme corRatio corGaus corSpher corExp corLin lmeControl
 #' @importFrom BiocParallel bpparam bpworkers
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
-sbivarSinglePPP <- function(
-      X, Y, Ey, method = c("Moran's I", "GAMs"),
-      normY = c("none", "rel", "log"), pseudoCount = 1e-8,
-      etas = c(5e-6, 4e-5, 2e-4), returnSEsMoransI = TRUE,
-      families = list("Y" = gaussian()), Gamm = FALSE, featuresX = getFeaturesX(X), featuresY = colnames(Y),
-      n_points_grid = 6e2, verbose = TRUE, wo = "Gauss",
-      variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
-      correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(0.9 * max(apply(Ey, 2, function(x) diff(range(x)))), 0.25))
-) {
+sbivarSinglePPP <- function(X, Y, Ey, method = c("Moran's I", "GAMs"),
+    normY = c("none", "rel", "log"), pseudoCount = 1e-8,
+    etas = c(5e-6, 4e-5, 2e-4), returnSEsMoransI = TRUE,
+    families = list("Y" = gaussian()), Gamm = FALSE, featuresX = getFeaturesX(X), featuresY = colnames(Y),
+    n_points_grid = 6e2, verbose = TRUE, wo = "Gauss",
+    variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
+    correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(0.9 * max(apply(Ey, 2, function(x) diff(range(x)))), 0.25))) {
     stopifnot(
         is.numeric(n_points_grid),
         names(families) == "Y",
@@ -60,6 +58,7 @@ sbivarSinglePPP <- function(
     foo <- checkInputSingle(X, Y, Cx = NULL, Ey)
     Y <- normMat(Y, normY, pseudoCount)
     featuresX <- make.names(featuresX)
+    marks(X, drop = FALSE)$feature <- make.names(marks(X, drop = FALSE)$feature)
     featuresY <- make.names(featuresY)
     wo <- match.arg(wo)
     if (((normY %in% c("rel", "log"))) && method == "GAMs") {

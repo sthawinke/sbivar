@@ -47,6 +47,58 @@ computeSigXws <- function(vgVals, W, findSigXws) {
     .Call(`_sbivar_computeSigXws`, vgVals, W, findSigXws)
 }
 
+#' Variance traces for \code{MoransISinglePPP}: compute \eqn{tr(W^T \Sigma_{\!X} W)} for each Y feature
+#'
+#' In the PPP setting there is no fitted covariance model for the X modality, so
+#' \eqn{\Sigma_{\!X}} is approximated by the \eqn{n \times n} covariance matrix
+#' among the \emph{first n} Y spots (matching the existing \code{computeSigXws}
+#' behaviour when called with \eqn{m(m-1)/2} Y-covariance values and an
+#' \eqn{n \times m} weight matrix).  Distances are computed here from \code{Ey}
+#' without materialising a distance vector in R, and the identity
+#' \eqn{tr(W^T \Sigma_{\!X} W) = tr(\Sigma_{\!X} \cdot W W^T)} is exploited so
+#' that, per feature, only \eqn{n \times n} arithmetic is needed instead of the
+#' \eqn{n \times m} and \eqn{m \times m} intermediates in the original code.
+#'
+#' @param W      \eqn{n \times m} weight matrix (single slice, already normalised)
+#' @param Ey     \eqn{m \times 2} coordinate matrix for the second modality
+#' @param vgParY \eqn{k \times 3} variogram parameters for Y features:
+#'   columns \code{[psill, range, isExp]}
+#' @return Length-\eqn{k} vector of raw variance values (before division by
+#'   \code{prodFac}); one entry per Y feature.
+#' @keywords internal
+computeTracePPP_cpp <- function(W, Ey, vgParY) {
+    .Call(`_sbivar_computeTracePPP_cpp`, W, Ey, vgParY)
+}
+
+#' Build the Gaussian weight matrix and compute Ixy + variance traces for MoransISinglePPP
+#'
+#' Combines weight-matrix construction, Ixy calculation, and variance-trace
+#' computation in a single C++ call so that the \eqn{n \times m} weight matrix
+#' \eqn{W} is never materialised as an R object.  The weight matrix is
+#' \eqn{W_{ij} \propto \exp(-\|C_x^{(i)} - E_y^{(j)}\|^2 / \eta)}, normalised
+#' to sum to one.
+#'
+#' @param Cx          \eqn{n \times 2} X-point coordinates for the current cell type
+#' @param Ey          \eqn{m \times 2} Y-spot coordinates
+#' @param eta         Gaussian bandwidth \eqn{\eta}
+#' @param Y           \eqn{m \times k} scaled Y feature matrix (columns = \code{featuresY})
+#' @param vgParY      \eqn{k \times 3} variogram parameters \code{[psill, range, isExp]}
+#'   (ignored when \code{findVariances = FALSE})
+#' @param sqrtProdFac \eqn{\sqrt{(n-1)(m-1)}} normalisation factor
+#' @param findVariances logical; whether to compute variance traces
+#' @return A list with
+#'   \describe{
+#'     \item{isZero}{logical; \code{TRUE} if \eqn{W} sums to zero (all weights underflow)}
+#'     \item{Ixys}{length-\eqn{k} vector of Ixy statistics (zero when \code{isZero})}
+#'     \item{traces}{length-\eqn{k} vector of \eqn{tr(W^T \Sigma_X W)} (zero when
+#'       \code{!findVariances} or \code{isZero})}
+#'     \item{trWtW}{\eqn{tr(W^T W) = \sum W_{ij}^2}, used as the independence fallback}
+#'   }
+#' @keywords internal
+computeIxyAndTracePPP_cpp <- function(Cx, Ey, eta, Y, vgParY, sqrtProdFac, findVariances) {
+    .Call(`_sbivar_computeIxyAndTracePPP_cpp`, Cx, Ey, eta, Y, vgParY, sqrtProdFac, findVariances)
+}
+
 #' Compute Itautau, Itautheta and score statistics for the GP score test
 #'
 #' For each length-scale slice \eqn{l}, exploits the block structure of

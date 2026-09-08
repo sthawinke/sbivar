@@ -65,7 +65,7 @@ MoransISinglePPP <- function(
     if (verbose) {
         message("Calculating bivariate Moran's I statistics and variances ...")
     }
-    res <- lapply(loadBalanceBplapply, function(featx) {
+    res <- loadBalanceBplapply(featuresX, function(featx) {
         Cx_i <- movedCoords$Cx[featsVec == featx, , drop = FALSE]
         n <- nrow(Cx_i)
         prodFac <- (n - 1) * (m - 1)

@@ -135,9 +135,17 @@ MoransISingle <- function(X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose
 #' @inheritParams MoransISingle
 #' @param X Outcome matrix
 #' @param Cx Coordinate matrix
+#' @param maxObs Maximum number of observations for variogram
 #' @return A list of evaluated variograms
 #' @details The best fitting variogram model, measured by the squared error, will be used.
-matheronVariograms <- function(X, Cx, width, cutoff, variogramModels) {
+#' @note A random subset of 100,000 observations is used to fit the variogram, which is a nuisance quantity anyway.
+#' This may introduce slight randomness in the variances calculated
+matheronVariograms <- function(X, Cx, width, cutoff, variogramModels, maxObs = 1e5) {
+    if (nrow(X) > maxObs) {
+        id <- sample(nrow(X), maxObs)
+        X <- X[id, , drop = FALSE]
+        Cx <- Cx[id, ]
+    }
     Cx <- st_as_sf(data.frame(Cx), coords = c("x", "y"))
     # Compute empirical semivariogram using Matheron’s estimator
     variograms <- loadBalanceBplapply(selfName(colnames(X)), function(nm) {

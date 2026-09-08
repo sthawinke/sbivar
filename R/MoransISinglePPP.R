@@ -25,8 +25,11 @@
 #' @note No multithreading is implemented for the variance calculation, as the matrix calculations involved
 #' may use inherent multithreading with OpenBLAS.
 #' @importFrom spatstat.geom npoints coords split.ppp coords<-
-MoransISinglePPP <- function(X, Y, Ey, wo, etas, cutoff, width, verbose,
-    variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...) {
+#' @importFrom smoppix loadBalanceBplapply
+MoransISinglePPP <- function(
+      X, Y, Ey, wo, etas, cutoff, width, verbose,
+      variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...
+) {
     m <- nrow(Y)
     p <- length(featuresX)
     k <- length(featuresY)
@@ -45,7 +48,7 @@ MoransISinglePPP <- function(X, Y, Ey, wo, etas, cutoff, width, verbose,
         if (verbose) {
             message("Fitting variograms for second modality (", k, " features) ...")
         }
-        variogramsY <- matheronVariograms(Y[, featuresY, drop = FALSE], Ey,
+        variogramsY <- matheronVariograms(Y[, featuresY, drop = FALSE], movedCoords$Ey,
             width = width, cutoff = cutoff,
             variogramModels = variogramModels, ...
         )
@@ -62,7 +65,7 @@ MoransISinglePPP <- function(X, Y, Ey, wo, etas, cutoff, width, verbose,
     if (verbose) {
         message("Calculating bivariate Moran's I statistics and variances ...")
     }
-    res <- lapply(featuresX, function(featx) {
+    res <- lapply(loadBalanceBplapply, function(featx) {
         Cx_i <- movedCoords$Cx[featsVec == featx, , drop = FALSE]
         n <- nrow(Cx_i)
         prodFac <- (n - 1) * (m - 1)

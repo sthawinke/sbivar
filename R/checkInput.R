@@ -23,7 +23,7 @@ checkInputSingle <- function(X, Y, Cx, Ey) {
         if (is.null(rownames(X))) {
             stop("Feature matrix X lacks row names!")
         }
-        if (!identical(sort(rownames(X)), sort(rownames(Cx)))) {
+        if (!setequal(rownames(X), rownames(Cx))) {
             stop("Rownames of X and Cx do not match")
         }
     } else if (ispppx) {
@@ -51,7 +51,7 @@ checkInputSingle <- function(X, Y, Cx, Ey) {
         if (ncol(Ey) != 2) {
             stop("Coordinate matrices must be of dimension 2!")
         }
-        if (!identical(sort(rownames(Y)), sort(rownames(Ey)))) {
+        if (!setequal(rownames(Y), rownames(Ey))) {
             stop("Rownames of Y and Ey do not match")
         }
         if (any(c(apply(Cx, 2, min) > apply(Ey, 2, max), apply(Cx, 2, max) < apply(Ey, 2, min)))) {
@@ -104,7 +104,7 @@ checkInputMulti <- function(Xl, Yl, Cxl, Eyl, checkCoords = TRUE) {
             stop("All names of Xl, Yl and Cxl must be identical")
         }
         if (!all(mapply(Xl, Cxl, FUN = function(x, y) {
-            identical(sort(rownames(x)), sort(rownames(y)))
+            setequal(rownames(x), rownames(y))
         }))) {
             stop("Not all sample names are identical in Xl and Cxl!")
         }
@@ -122,7 +122,7 @@ checkInputMulti <- function(Xl, Yl, Cxl, Eyl, checkCoords = TRUE) {
                 stop("Eyl must be named identically to Xl, Yl and Cxl")
             }
             if (!all(mapply(Yl, Eyl, FUN = function(x, y) {
-                identical(sort(rownames(x)), sort(rownames(y)))
+                setequal(rownames(x), rownames(y))
             }))) {
                 stop("Not all sample names are identical in Yl and Eyl!")
             }

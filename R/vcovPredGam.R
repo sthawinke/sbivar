@@ -17,6 +17,7 @@
 #'   smooth coefficients}
 #' @seealso \link[mgcv]{vcov.gam}, \link[mgcv]{predict.gam}
 #' @importFrom mgcv vcov.gam predict.gam
+#' @importFrom splines bs
 #' @inheritParams MoransISingle
 #' @inheritParams GAMsSingle
 vcovPredGam <- function(model, newdata, findVariances = TRUE) {

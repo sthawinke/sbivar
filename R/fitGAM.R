@@ -54,10 +54,7 @@ fitGAM <- function(df, outcome, family = gaussian(), Gamm, correlation) {
 #' @returns A list of GAM models
 #' @importFrom smoppix loadBalanceBplapply
 #' @importFrom BiocParallel bplapply
-#' @importFrom spatstat.geom split.ppp is.ppp unmark
-#' @importFrom spatstat.model Poisson ppm
-#' @importFrom splines bs
-#' @importFrom stats poisson
+#' @importFrom spatstat.geom split.ppp is.ppp
 fitManyGAMs <- function(
       mat, coord, family = gaussian(), modality, features,
       Gamm, correlation, pseudoCount = 1e-8, ...
@@ -83,9 +80,7 @@ fitManyGAMs <- function(
     } else if (isp <- is.ppp(mat)) {
         X <- split.ppp(mat, factor(marks(mat, drop = FALSE)$feature))
         fits <- loadBalanceBplapply(selfName(features), function(feat) {
-            xFit <- try(ppm(unmark(X[[feat]]) ~ bs(x) * bs(y), interaction = Poisson()), silent = TRUE)
-            xFit$family <- poisson()
-            return(xFit)
+            fitPPP(X[[feat]])
         })
     }
     if (!all(id <- vapply(fits, FUN.VALUE = TRUE, is, if (ism) "gam" else if (isp) "ppm"))) {
@@ -96,4 +91,19 @@ fitManyGAMs <- function(
         )
     }
     return(fits[id])
+}
+#' Fit a poisson point process with splines
+#'
+#' @param PPP a ppp object
+#'
+#' @returns a ppm object
+#'
+#' @importFrom spatstat.model Poisson ppm
+#' @importFrom splines bs
+#' @importFrom stats poisson
+#' @importFrom spatstat.geom unmark
+fitPPP <- function(PPP){
+    xFit <- try(ppm(unmark(PPP) ~ bs(x) * bs(y), interaction = Poisson()), silent = TRUE)
+    xFit$family <- poisson()
+    return(xFit)
 }

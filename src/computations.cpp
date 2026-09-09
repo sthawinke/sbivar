@@ -214,7 +214,7 @@ arma::vec computeTracePPP_cpp(
     return traces;
 }
 
-//' Build the Gaussian weight matrix and compute Ixy + variance traces for MoransISinglePPP
+ //' Build the Gaussian weight matrix and compute Ixy + variance traces for MoransISinglePPP
  //'
  //' Combines weight-matrix construction, Ixy calculation, and variance-trace
  //' computation in a single C++ call so that the \eqn{n \times m} weight matrix

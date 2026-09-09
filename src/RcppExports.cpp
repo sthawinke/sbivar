@@ -38,6 +38,36 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// computeTracePPP_cpp
+arma::vec computeTracePPP_cpp(const arma::mat& W, const arma::mat& Ey, const arma::mat& vgParY);
+RcppExport SEXP _sbivar_computeTracePPP_cpp(SEXP WSEXP, SEXP EySEXP, SEXP vgParYSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type W(WSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Ey(EySEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type vgParY(vgParYSEXP);
+    rcpp_result_gen = Rcpp::wrap(computeTracePPP_cpp(W, Ey, vgParY));
+    return rcpp_result_gen;
+END_RCPP
+}
+// computeIxyAndTracePPP_cpp
+Rcpp::List computeIxyAndTracePPP_cpp(const arma::mat& Cx, const arma::mat& Ey, double eta, const arma::mat& Y, const arma::mat& vgParY, double sqrtProdFac, bool findVariances);
+RcppExport SEXP _sbivar_computeIxyAndTracePPP_cpp(SEXP CxSEXP, SEXP EySEXP, SEXP etaSEXP, SEXP YSEXP, SEXP vgParYSEXP, SEXP sqrtProdFacSEXP, SEXP findVariancesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type Cx(CxSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Ey(EySEXP);
+    Rcpp::traits::input_parameter< double >::type eta(etaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type vgParY(vgParYSEXP);
+    Rcpp::traits::input_parameter< double >::type sqrtProdFac(sqrtProdFacSEXP);
+    Rcpp::traits::input_parameter< bool >::type findVariances(findVariancesSEXP);
+    rcpp_result_gen = Rcpp::wrap(computeIxyAndTracePPP_cpp(Cx, Ey, eta, Y, vgParY, sqrtProdFac, findVariances));
+    return rcpp_result_gen;
+END_RCPP
+}
 // scoreTestInternals_cpp
 Rcpp::List scoreTestInternals_cpp(const arma::mat& P, const arma::cube& crossBlocks, const arma::cube& derivX, const arma::cube& derivY, const arma::vec& vecPos);
 RcppExport SEXP _sbivar_scoreTestInternals_cpp(SEXP PSEXP, SEXP crossBlocksSEXP, SEXP derivXSEXP, SEXP derivYSEXP, SEXP vecPosSEXP) {
@@ -57,6 +87,8 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_sbivar_evalVariogramCpp", (DL_FUNC) &_sbivar_evalVariogramCpp, 4},
     {"_sbivar_computeSigXws", (DL_FUNC) &_sbivar_computeSigXws, 3},
+    {"_sbivar_computeTracePPP_cpp", (DL_FUNC) &_sbivar_computeTracePPP_cpp, 3},
+    {"_sbivar_computeIxyAndTracePPP_cpp", (DL_FUNC) &_sbivar_computeIxyAndTracePPP_cpp, 7},
     {"_sbivar_scoreTestInternals_cpp", (DL_FUNC) &_sbivar_scoreTestInternals_cpp, 5},
     {NULL, NULL, 0}
 };

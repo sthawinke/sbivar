@@ -25,10 +25,9 @@
 #' @note No multithreading is implemented for the variance calculation, as the matrix calculations involved
 #' may use inherent multithreading with OpenBLAS.
 #' @importFrom spatstat.geom npoints coords split.ppp coords<-
-MoransISinglePPP <- function(
-      X, Y, Ey, wo, etas, cutoff, width, verbose,
-      variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...
-) {
+#' @importFrom smoppix loadBalanceBplapply
+MoransISinglePPP <- function(X, Y, Ey, wo, etas, cutoff, width, verbose,
+    variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...) {
     m <- nrow(Y)
     p <- length(featuresX)
     k <- length(featuresY)
@@ -40,57 +39,69 @@ MoransISinglePPP <- function(
     # Move coordinates
     movedCoords <- moveTwoCoords(as.matrix(coords(X)), Ey)
     featsVec <- marks(X, drop = FALSE)$feature
-    if (verbose) {
-        message("Calculating bivariate Moran's I statistics ...")
-    }
     wParams <- selfName(switch(wo,
         "Gauss" = etas
     ))
-    mm2 <- m * (m - 1) / 2
-    distY <- as.vector(stats::dist(movedCoords$Ey))
     if (findVariances) {
-        # Estimate spatial autocorrelation
         if (verbose) {
             message("Fitting variograms for second modality (", k, " features) ...")
         }
-        variogramsY <- matheronVariograms(Y[, featuresY, drop = FALSE], Ey,
+        variogramsY <- matheronVariograms(Y[, featuresY, drop = FALSE], movedCoords$Ey,
             width = width, cutoff = cutoff,
             variogramModels = variogramModels, ...
         )
+        # Pack variogram parameters into a k x 3 matrix for C++.
+        # distY is not pre-computed here; it is computed inside C++ per
+        # iteration and freed on return.
+        vgParY <- do.call(rbind, lapply(featuresY, function(fy) {
+            vg <- variogramsY[[fy]]
+            c(vg[2L, "psill"], vg[2L, "range"], as.numeric(vg[2L, "model"] == "Exp"))
+        }))
     }
-    res <- lapply(featuresX, function(featx) {
-        Cx <- movedCoords$Cx[featsVec == featx, ]
-        n <- nrow(Cx)
+    # Prepare a vgParY argument safe to pass regardless of findVariances
+    vgParY_arg <- if (findVariances) vgParY else matrix(0.0, 0L, 3L)
+    if (verbose) {
+        message("Calculating bivariate Moran's I statistics and variances ...")
+    }
+    res <- loadBalanceBplapply(featuresX, function(featx) {
+        Cx_i <- movedCoords$Cx[featsVec == featx, , drop = FALSE]
+        n <- nrow(Cx_i)
         prodFac <- (n - 1) * (m - 1)
-        Ws <- vapply(wParams, FUN.VALUE = matrix(0, n, m), function(iter) {
-            buildWeightMat(Cx = Cx, Ey = movedCoords$Ey, wo = wo, eta = iter, numNN = iter)
-        })
-        Ws <- Ws[, , idW <- (colSums(Ws, dims = 2, na.rm = TRUE) > 0), drop = FALSE]
-        numWs <- dim(Ws)[3]
-        if (!all(idW) && (wo == "Gauss")) {
-            etas <- etas[idW]
-        }
-        Ixys <- t(t(vapply(seq_len(numWs), FUN.VALUE = double(k), function(i) {
-            colSums(Ws[, , i] %*% Y[, featuresY, drop = FALSE])
-        })) / sqrt(prodFac)) # Normalize for matrix size
-        out <- if (findVariances) {
-            varIxy <- t(vapply(selfName(featuresY), FUN.VALUE = double(numWs), function(featy) {
-                # C++: build Sigma_X and batch-compute t(W[,,i]) Sigma_X W[,,i] for all i,
-                # returning their traces
-                sigRes <- computeSigXws(evalVariogram(variogramsY[[featy]], distY), Ws, findSigXws = FALSE)
-                # Precomputing evalVariogram for all Y's is too much memory, so repeat it at a speed cost
-                return(sigRes$traces)
-            }))
-            for (i in seq_len(numWs)) { # If negative variance, fall back on independence
-                if (length(zeroId <- c(which(varIxy[, i] <= 0), which(is.na(varIxy[, i]))))) {
-                    varIxy[zeroId, i] <- sum(Ws[, , i]^2) # tr(W^tW)
-                }
+        # Loop over weight parameters; W is built inside C++ and never
+        # materialised in the R session.
+        nW <- length(wParams)
+        IxysList_w <- vector("list", nW)
+        varIxyList_w <- if (findVariances) vector("list", nW)
+        idW <- logical(nW)
+        for (wi in seq_len(nW)) {
+            res_w <- computeIxyAndTracePPP_cpp(
+                Cx_i, movedCoords$Ey, wParams[[wi]],
+                Y[, featuresY, drop = FALSE],
+                vgParY_arg, sqrt(prodFac), findVariances
+            )
+            if (res_w$isZero) next
+            idW[wi] <- TRUE
+            IxysList_w[[wi]] <- res_w$Ixys
+            if (findVariances) {
+                traces <- res_w$traces
+                traces[traces <= 0 | is.na(traces)] <- res_w$trWtW
+                varIxyList_w[[wi]] <- traces
             }
+        }
+        if (!all(idW) && (wo == "Gauss")) {
+            etas <- etas[idW] # local shadow, preserving original behaviour
+        }
+        IxysList_w <- IxysList_w[idW]
+        if (findVariances) varIxyList_w <- varIxyList_w[idW]
+        numWs <- sum(idW)
+        # Assemble k x numWs matrices from per-W k-vectors
+        Ixys <- do.call(cbind, IxysList_w)
+        out <- if (findVariances) {
+            varIxy <- do.call(cbind, varIxyList_w) # k x numWs
             list("Ixys" = Ixys, "seIxy" = sqrt(varIxy / prodFac))
         } else {
             list("Ixys" = Ixys)
         }
-        printProgress(featx, featuresX, verbose)
         return(out)
     })
     Ixy <- do.call(what = rbind, lapply(res, function(x) x$Ixys))

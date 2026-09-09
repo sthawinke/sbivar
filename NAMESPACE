@@ -112,6 +112,7 @@ importFrom(smoppix,
 )
 importFrom(spatstat.geom,
   "coords<-",
+  "marks<-",
   coords,
   crossdist,
   is.ppp,

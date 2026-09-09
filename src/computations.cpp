@@ -1,4 +1,5 @@
 #include <RcppArmadillo.h>
+#include <vector>
 // [[Rcpp::depends(RcppArmadillo)]]
 
 //' Evaluate Exp or Lin variogram model on a vector of distances
@@ -116,6 +117,280 @@ Rcpp::List computeSigXws(
         Rcpp::Named("traces") = traces
     );
 }
+
+// Helper: column-major pairwise Euclidean distances matching R's dist()
+// i.e. for pairs (i,j) with j < i, iterating j from 0..n-2, i from j+1..n-1
+static arma::vec pairwiseDist2D(const arma::mat& C) {
+    arma::uword n   = C.n_rows;
+    arma::uword nn2 = n * (n - 1) / 2;
+    arma::vec   d(nn2);
+    arma::uword idx = 0;
+    for (arma::uword j = 0; j < n - 1; j++) {
+        for (arma::uword i = j + 1; i < n; i++) {
+            double dx = C(i, 0) - C(j, 0);
+            double dy = C(i, 1) - C(j, 1);
+            d[idx++] = std::sqrt(dx * dx + dy * dy);
+        }
+    }
+    return d;
+}
+
+// Helper: first nn2 pairwise distances from the full m-point lower triangle
+// in column-major order, stopping early once nn2 pairs are collected.
+// Replicates dist(Ey)[1:nn2] in R when Ey has m rows — O(nn2) work, not O(mm2).
+static arma::vec firstNDistsPPP(const arma::mat& Ey, arma::uword nn2) {
+    arma::uword m = Ey.n_rows;
+    arma::vec   d(nn2);
+    arma::uword cnt = 0;
+    for (arma::uword j = 0; j < m && cnt < nn2; j++) {
+        for (arma::uword i = j + 1; i < m && cnt < nn2; i++) {
+            double dx = Ey(i, 0) - Ey(j, 0);
+            double dy = Ey(i, 1) - Ey(j, 1);
+            d[cnt++] = std::sqrt(dx * dx + dy * dy);
+        }
+    }
+    return d;
+}
+
+//' Variance traces for \code{MoransISinglePPP}: compute \eqn{tr(W^T \Sigma_{\!X} W)} for each Y feature
+//'
+//' In the PPP setting there is no fitted covariance model for the X modality, so
+//' \eqn{\Sigma_{\!X}} is approximated by the \eqn{n \times n} covariance matrix
+//' among the \emph{first n} Y spots (matching the existing \code{computeSigXws}
+//' behaviour when called with \eqn{m(m-1)/2} Y-covariance values and an
+//' \eqn{n \times m} weight matrix).  Distances are computed here from \code{Ey}
+//' without materialising a distance vector in R, and the identity
+//' \eqn{tr(W^T \Sigma_{\!X} W) = tr(\Sigma_{\!X} \cdot W W^T)} is exploited so
+//' that, per feature, only \eqn{n \times n} arithmetic is needed instead of the
+//' \eqn{n \times m} and \eqn{m \times m} intermediates in the original code.
+//'
+//' @param W      \eqn{n \times m} weight matrix (single slice, already normalised)
+//' @param Ey     \eqn{m \times 2} coordinate matrix for the second modality
+//' @param vgParY \eqn{k \times 3} variogram parameters for Y features:
+//'   columns \code{[psill, range, isExp]}
+//' @return Length-\eqn{k} vector of raw variance values (before division by
+//'   \code{prodFac}); one entry per Y feature.
+//' @keywords internal
+// [[Rcpp::export]]
+arma::vec computeTracePPP_cpp(
+    const arma::mat& W,
+    const arma::mat& Ey,
+    const arma::mat& vgParY
+) {
+    arma::uword n   = W.n_rows;
+    arma::uword k   = vgParY.n_rows;
+    arma::uword nn2 = n * (n - 1) / 2;
+
+    const arma::vec distFirst = firstNDistsPPP(Ey, nn2);
+
+    arma::vec traces(k);
+    arma::mat SigX(n, n);
+
+    for (arma::uword fj = 0; fj < k; fj++) {
+        arma::vec vgY = evalVariogramCpp(distFirst,
+                                          vgParY(fj, 0),
+                                          vgParY(fj, 1),
+                                          vgParY(fj, 2) > 0.5);
+
+        // Build SigmaX (n x n): diagonal = 1, off-diagonal from the first
+        // nn2 variogram values in column-major lower-triangle order
+        SigX.eye();
+        {
+            arma::uword idx = 0;
+            for (arma::uword j2 = 0; j2 < n - 1; j2++) {
+                for (arma::uword i2 = j2 + 1; i2 < n; i2++) {
+                    SigX(i2, j2) = vgY[idx];
+                    SigX(j2, i2) = vgY[idx];
+                    idx++;
+                }
+            }
+        }
+
+        // tr(W^T SigX W) — same computation as one slice of computeSigXws
+        arma::mat SWi = SigX * W;                  // n x m
+        traces(fj) = arma::trace(W.t() * SWi);    // scalar via m x m
+    }
+
+    return traces;
+}
+
+//' Build the Gaussian weight matrix and compute Ixy + variance traces for MoransISinglePPP
+ //'
+ //' Combines weight-matrix construction, Ixy calculation, and variance-trace
+ //' computation in a single C++ call so that the \eqn{n \times m} weight matrix
+ //' \eqn{W} is never materialised as an R object.  The weight matrix is
+ //' \eqn{W_{ij} \propto \exp(-\|C_x^{(i)} - E_y^{(j)}\|^2 / \eta)}, normalised
+ //' to sum to one.
+ //'
+ //' @param Cx          \eqn{n \times 2} X-point coordinates for the current cell type
+ //' @param Ey          \eqn{m \times 2} Y-spot coordinates
+ //' @param eta         Gaussian bandwidth \eqn{\eta}
+ //' @param Y           \eqn{m \times k} scaled Y feature matrix (columns = \code{featuresY})
+ //' @param vgParY      \eqn{k \times 3} variogram parameters \code{[psill, range, isExp]}
+ //'   (ignored when \code{findVariances = FALSE})
+ //' @param sqrtProdFac \eqn{\sqrt{(n-1)(m-1)}} normalisation factor
+ //' @param findVariances logical; whether to compute variances
+ //' @return A list with
+ //'   \describe{
+ //'     \item{isZero}{logical; \code{TRUE} if \eqn{W} sums to zero (all weights underflow)}
+ //'     \item{Ixys}{length-\eqn{k} vector of Ixy statistics (zero when \code{isZero})}
+ //'     \item{traces}{length-\eqn{k} vector of \eqn{tr(W^T \Sigma_X W)} (zero when
+ //'       \code{!findVariances} or \code{isZero})}
+ //'     \item{trWtW}{\eqn{tr(W^T W) = \sum W_{ij}^2}, used as the independence fallback}
+ //'   }
+ //' @keywords internal
+ //' @note This function is highly optmised to keep memory usage low, at an elevated computation cost.
+ //'   The variance-trace computation additionally uses a sparse approximation for
+ //'   \eqn{\Sigma_X}: because \eqn{\Sigma_X} always has a unit diagonal, \eqn{tr(\Sigma_X W W^T)}
+ //'   decomposes into \eqn{tr(WW^T)} plus a sum of off-diagonal terms, and only
+ //'   pairs of (the first \eqn{n}) Y-spots closer together than 3 times the
+ //'   largest variogram range across features are evaluated and included in
+ //'   that sum -- more distant pairs are treated as having zero covariance.
+ //'   \eqn{\Sigma_X} itself is never built as a dense matrix. The 3x
+ //'   multiplier is the standard geostatistical "practical range" (the
+ //'   distance at which correlation has decayed to ~5% of the sill): exact
+ //'   for variogram models with a finite range (\code{"Lin"}, which reaches
+ //'   zero at 1x range already), and a close approximation for models that
+ //'   only decay asymptotically (\code{"Exp"}).
+ // [[Rcpp::export]]
+ Rcpp::List computeIxyAndTracePPP_cpp(
+         const arma::mat& Cx,
+         const arma::mat& Ey,
+         double           eta,
+         const arma::mat& Y,
+         const arma::mat& vgParY,
+         double           sqrtProdFac,
+         bool             findVariances
+ ) {
+     arma::uword n = Cx.n_rows;
+     arma::uword m = Ey.n_rows;
+     arma::uword k = Y.n_cols;
+
+     // Instead of building the full (n x m) W, compute one column of W at a
+     // time, accumulate what's needed, and discard the column immediately.
+     arma::vec wColSums(m, arma::fill::zeros);   // raw (unnormalised) column sums of W
+     arma::mat WWT(n, n, arma::fill::zeros);     // raw (unnormalised) W * W^T, built incrementally
+     double Wsum = 0.0;
+
+     arma::vec wcol(n);
+     for (arma::uword j = 0; j < m; j++) {
+         for (arma::uword i = 0; i < n; i++) {
+             double dx = Cx(i, 0) - Ey(j, 0);
+             double dy = Cx(i, 1) - Ey(j, 1);
+             wcol(i) = std::exp(-(dx * dx + dy * dy) / eta);
+         }
+         double colSum = arma::sum(wcol);
+         wColSums(j) = colSum;
+         Wsum += colSum;
+         if (findVariances) {
+             WWT += wcol * wcol.t();   // outer product contributes to W * W^T
+         }
+         // wcol is reused/overwritten next iteration -- never stored as a full matrix
+     }
+
+     if (Wsum == 0.0) {
+         return Rcpp::List::create(
+             Rcpp::Named("isZero") = true,
+             Rcpp::Named("Ixys")   = arma::zeros<arma::vec>(k),
+             Rcpp::Named("traces") = arma::zeros<arma::vec>(k),
+             Rcpp::Named("trWtW")  = 0.0
+         );
+     }
+
+     // Normalise at the end.
+     wColSums /= Wsum;
+     const arma::vec Ixys = (Y.t() * wColSums) / sqrtProdFac;  // k-vector
+
+     if (!findVariances) {
+         return Rcpp::List::create(
+             Rcpp::Named("isZero") = false,
+             Rcpp::Named("Ixys")   = Ixys,
+             Rcpp::Named("traces") = arma::zeros<arma::vec>(k),
+             Rcpp::Named("trWtW")  = 0.0
+         );
+     }
+
+     // WWT was accumulated from the raw (unnormalised) W; normalise now.
+     WWT /= (Wsum * Wsum);
+     const double trWtW = arma::trace(WWT);
+
+     const arma::uword nn2 = n * (n - 1) / 2;
+     const arma::vec distFirst = firstNDistsPPP(Ey, nn2);
+
+     // For each linear position idx (0-based) in distFirst, record which
+     // (i2, j2) entry of the n x n SigX lower triangle it feeds -- i.e. the
+     // same column-major traversal the old SigX-filling loop used. Computed
+     // once, reused for every feature below, so switching to the sparse
+     // approximation doesn't change which distance maps to which SigX entry.
+     std::vector<arma::uword> pairI(nn2), pairJ(nn2);
+     {
+         arma::uword idx = 0;
+         for (arma::uword j2 = 0; j2 < n - 1; j2++) {
+             for (arma::uword i2 = j2 + 1; i2 < n; i2++) {
+                 pairI[idx] = i2;
+                 pairJ[idx] = j2;
+                 idx++;
+             }
+         }
+     }
+
+     // Sparse approximation of the variogram: pairs farther apart than the
+     // largest range across features contribute ~0 covariance, so restrict
+     // variogram evaluation to only those nearby pairs instead of evaluating
+     // and storing all nn2 = n(n-1)/2 of them. This is exact for models with
+     // a finite range (e.g. Lin), and an approximation -- treating distant
+     // pairs as uncorrelated -- for models that only decay asymptotically
+     // (e.g. Exp); widen the range column of vgParY for the affected
+     // feature(s) if that approximation is too coarse.
+     // Cutoff multiplier applied to the fitted range before truncating the
+     // variogram. For a finite-range model ("Lin") anything past 1x the
+     // range already has zero covariance, so the multiplier is harmless.
+     // For an asymptotically-decaying model ("Exp"), correlation at exactly
+     // d = range is still exp(-1) ~= 37% of the sill -- nowhere near
+     // negligible -- so a bare 1x cutoff introduces large error. 3x range is
+     // the standard geostatistical "practical range" (correlation ~5% of the
+     // sill, exp(-3) ~= 0.05) and keeps the approximation error small.
+     constexpr double kRangeCutoffMultiplier = 3.0;
+
+     arma::vec traces(k);
+     if (k > 0) {
+         const double maxRange = kRangeCutoffMultiplier * arma::max(vgParY.col(1));
+         std::vector<arma::uword> nearIdx;
+         nearIdx.reserve(nn2);
+         for (arma::uword idx = 0; idx < nn2; idx++) {
+             if (distFirst[idx] <= maxRange) nearIdx.push_back(idx);
+         }
+         arma::vec distNear(nearIdx.size());
+         for (arma::uword p = 0; p < nearIdx.size(); p++) {
+             distNear(p) = distFirst[nearIdx[p]];
+         }
+
+         // Because SigX always has a unit diagonal (SigX.eye() as the base
+         // before off-diagonal entries are filled in), trace(SigX * WWT)
+         // decomposes as
+         //   trace(WWT) + 2 * sum_{i2>j2} SigX(i2,j2) * WWT(i2,j2)
+         // so only the (sparse) off-diagonal terms need the variogram at all
+         // -- a dense n x n SigX is never built, and no O(n^3) matrix product
+         // is formed to get its trace.
+         for (arma::uword fj = 0; fj < k; fj++) {
+             arma::vec covVals = evalVariogramCpp(distNear,
+                                                  vgParY(fj, 0), vgParY(fj, 1),
+                                                  vgParY(fj, 2) > 0.5);
+             double crossSum = 0.0;
+             for (arma::uword p = 0; p < nearIdx.size(); p++) {
+                 arma::uword idx = nearIdx[p];
+                 crossSum += covVals(p) * WWT(pairI[idx], pairJ[idx]);
+             }
+             traces(fj) = trWtW + 2.0 * crossSum;
+         }
+     }
+     return Rcpp::List::create(
+         Rcpp::Named("isZero") = false,
+         Rcpp::Named("Ixys")   = Ixys,
+         Rcpp::Named("traces") = traces,
+         Rcpp::Named("trWtW")  = trWtW
+     );
+ }
 
 //' Compute Itautau, Itautheta and score statistics for the GP score test
 //'

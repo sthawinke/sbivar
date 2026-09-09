@@ -103,7 +103,7 @@ fitManyGAMs <- function(
 #' @importFrom stats poisson
 #' @importFrom spatstat.geom unmark
 fitPPP <- function(PPP){
-    xFit <- try(ppm(unmark(PPP) ~ bs(x) * bs(y), interaction = Poisson()), silent = TRUE)
+    xFit <- try(ppm(unmark(PPP) ~ splines::bs(x) * splines::bs(y), interaction = Poisson()), silent = TRUE)
     xFit$family <- poisson()
     return(xFit)
 }

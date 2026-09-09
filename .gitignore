@@ -9,3 +9,4 @@ sbivar.Rproj
 *.html
 *.o
 *.so
+.posit/assistant

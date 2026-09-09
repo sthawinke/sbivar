@@ -62,6 +62,9 @@ vcovPredGam <- function(model, newdata, findVariances = TRUE) {
 #'
 #' @returns Scalar approximate variance
 getApproxVar <- function(predInfo, cen, x, link) {
+    if (is.null(predInfo$coef_cov)) {
+        return(NA) # If Fisher information is singular, there is no variance for ppm
+    }
     vec <- switch(link,
         "identity" = cen,
         "log"      = cen * x,

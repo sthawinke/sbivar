@@ -26,10 +26,8 @@
 #' may use inherent multithreading with OpenBLAS.
 #' @importFrom spatstat.geom npoints coords split.ppp coords<-
 #' @importFrom smoppix loadBalanceBplapply
-MoransISinglePPP <- function(
-      X, Y, Ey, wo, etas, cutoff, width, verbose,
-      variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...
-) {
+MoransISinglePPP <- function(X, Y, Ey, wo, etas, cutoff, width, verbose,
+    variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...) {
     m <- nrow(Y)
     p <- length(featuresX)
     k <- length(featuresY)

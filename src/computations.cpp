@@ -228,7 +228,7 @@ arma::vec computeTracePPP_cpp(
 //' @param vgParY      \eqn{k \times 3} variogram parameters \code{[psill, range, isExp]}
 //'   (ignored when \code{findVariances = FALSE})
 //' @param sqrtProdFac \eqn{\sqrt{(n-1)(m-1)}} normalisation factor
-//' @param findVariances logical; whether to compute variance traces
+//' @param findVariances logical; whether to compute variances
 //' @return A list with
 //'   \describe{
 //'     \item{isZero}{logical; \code{TRUE} if \eqn{W} sums to zero (all weights underflow)}
@@ -238,6 +238,7 @@ arma::vec computeTracePPP_cpp(
 //'     \item{trWtW}{\eqn{tr(W^T W) = \sum W_{ij}^2}, used as the independence fallback}
 //'   }
 //' @keywords internal
+//' @note This function is highly optmised to keep memory usage low, at an elevated computation cost
 // [[Rcpp::export]]
 Rcpp::List computeIxyAndTracePPP_cpp(
         const arma::mat& Cx,

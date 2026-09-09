@@ -58,8 +58,10 @@ fitGAM <- function(df, outcome, family = gaussian(), Gamm, correlation) {
 #' @importFrom spatstat.model Poisson ppm
 #' @importFrom splines bs
 #' @importFrom stats poisson
-fitManyGAMs <- function(mat, coord, family = gaussian(), modality, features,
-    Gamm, correlation, pseudoCount = 1e-8, ...) {
+fitManyGAMs <- function(
+      mat, coord, family = gaussian(), modality, features,
+      Gamm, correlation, pseudoCount = 1e-8, ...
+) {
     if (ism <- is.matrix(mat)) {
         if (family$family == "Gamma") {
             mat <- mat + pseudoCount
@@ -81,7 +83,7 @@ fitManyGAMs <- function(mat, coord, family = gaussian(), modality, features,
     } else if (isp <- is.ppp(mat)) {
         X <- split.ppp(mat, factor(marks(mat, drop = FALSE)$feature))
         fits <- loadBalanceBplapply(selfName(features), function(feat) {
-            xFit <- ppm(unmark(X[[feat]]) ~ bs(x) * bs(y), interaction = Poisson())
+            xFit <- try(ppm(unmark(X[[feat]]) ~ bs(x) * bs(y), interaction = Poisson()), silent = TRUE)
             xFit$family <- poisson()
             return(xFit)
         })

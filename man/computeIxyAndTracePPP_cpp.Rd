@@ -20,7 +20,7 @@ computeIxyAndTracePPP_cpp(Cx, Ey, eta, Y, vgParY, sqrtProdFac, findVariances)
 
 \item{sqrtProdFac}{\eqn{\sqrt{(n-1)(m-1)}} normalisation factor}
 
-\item{findVariances}{logical; whether to compute variance traces}
+\item{findVariances}{logical; whether to compute variances}
 }
 \value{
 A list with
@@ -38,5 +38,8 @@ computation in a single C++ call so that the \eqn{n \times m} weight matrix
 \eqn{W} is never materialised as an R object.  The weight matrix is
 \eqn{W_{ij} \propto \exp(-\|C_x^{(i)} - E_y^{(j)}\|^2 / \eta)}, normalised
 to sum to one.
+}
+\note{
+This function is highly optmised to keep memory usage low, at an elevated computation cost
 }
 \keyword{internal}

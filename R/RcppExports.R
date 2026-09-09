@@ -85,7 +85,7 @@ computeTracePPP_cpp <- function(W, Ey, vgParY) {
 #' @param vgParY      \eqn{k \times 3} variogram parameters \code{[psill, range, isExp]}
 #'   (ignored when \code{findVariances = FALSE})
 #' @param sqrtProdFac \eqn{\sqrt{(n-1)(m-1)}} normalisation factor
-#' @param findVariances logical; whether to compute variance traces
+#' @param findVariances logical; whether to compute variances
 #' @return A list with
 #'   \describe{
 #'     \item{isZero}{logical; \code{TRUE} if \eqn{W} sums to zero (all weights underflow)}
@@ -95,6 +95,7 @@ computeTracePPP_cpp <- function(W, Ey, vgParY) {
 #'     \item{trWtW}{\eqn{tr(W^T W) = \sum W_{ij}^2}, used as the independence fallback}
 #'   }
 #' @keywords internal
+#' @note This function is highly optmised to keep memory usage low, at an elevated computation cost
 computeIxyAndTracePPP_cpp <- function(Cx, Ey, eta, Y, vgParY, sqrtProdFac, findVariances) {
     .Call(`_sbivar_computeIxyAndTracePPP_cpp`, Cx, Ey, eta, Y, vgParY, sqrtProdFac, findVariances)
 }

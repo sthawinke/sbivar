@@ -104,7 +104,6 @@ MoransISinglePPP <- function(
         } else {
             list("Ixys" = Ixys)
         }
-        printProgress(featx, featuresX, verbose)
         return(out)
     })
     Ixy <- do.call(what = rbind, lapply(res, function(x) x$Ixys))

@@ -240,28 +240,40 @@ arma::vec computeTracePPP_cpp(
 //' @keywords internal
 // [[Rcpp::export]]
 Rcpp::List computeIxyAndTracePPP_cpp(
-    const arma::mat& Cx,
-    const arma::mat& Ey,
-    double           eta,
-    const arma::mat& Y,
-    const arma::mat& vgParY,
-    double           sqrtProdFac,
-    bool             findVariances
+        const arma::mat& Cx,
+        const arma::mat& Ey,
+        double           eta,
+        const arma::mat& Y,
+        const arma::mat& vgParY,
+        double           sqrtProdFac,
+        bool             findVariances
 ) {
     arma::uword n = Cx.n_rows;
     arma::uword m = Ey.n_rows;
     arma::uword k = Y.n_cols;
 
-    // Build Gaussian weight matrix W (n x m) from cross-distances, then normalise.
-    arma::mat W(n, m);
-    for (arma::uword i = 0; i < n; i++) {
-        for (arma::uword j = 0; j < m; j++) {
+    // Instead of building the full (n x m) W, compute one column of W at a
+    // time, accumulate what's needed, and discard the column immediately.
+    arma::vec wColSums(m, arma::fill::zeros);   // raw (unnormalised) column sums of W
+    arma::mat WWT(n, n, arma::fill::zeros);     // raw (unnormalised) W * W^T, built incrementally
+    double Wsum = 0.0;
+
+    arma::vec wcol(n);
+    for (arma::uword j = 0; j < m; j++) {
+        for (arma::uword i = 0; i < n; i++) {
             double dx = Cx(i, 0) - Ey(j, 0);
             double dy = Cx(i, 1) - Ey(j, 1);
-            W(i, j) = std::exp(-(dx * dx + dy * dy) / eta);
+            wcol(i) = std::exp(-(dx * dx + dy * dy) / eta);
         }
+        double colSum = arma::sum(wcol);
+        wColSums(j) = colSum;
+        Wsum += colSum;
+        if (findVariances) {
+            WWT += wcol * wcol.t();   // outer product contributes to W * W^T
+        }
+        // wcol is reused/overwritten next iteration -- never stored as a full matrix
     }
-    const double Wsum = arma::accu(W);
+
     if (Wsum == 0.0) {
         return Rcpp::List::create(
             Rcpp::Named("isZero") = true,
@@ -270,12 +282,10 @@ Rcpp::List computeIxyAndTracePPP_cpp(
             Rcpp::Named("trWtW")  = 0.0
         );
     }
-    W /= Wsum;
 
-    // Ixy_j = colSums(W %*% Y)_j / sqrtProdFac
-    //       = dot(colSums(W), Y[, j]) / sqrtProdFac
-    const arma::vec wColSums = arma::sum(W, 0).t();          // m-vector
-    const arma::vec Ixys     = (Y.t() * wColSums) / sqrtProdFac;  // k-vector
+    // Normalise at the end.
+    wColSums /= Wsum;
+    const arma::vec Ixys = (Y.t() * wColSums) / sqrtProdFac;  // k-vector
 
     if (!findVariances) {
         return Rcpp::List::create(
@@ -286,22 +296,18 @@ Rcpp::List computeIxyAndTracePPP_cpp(
         );
     }
 
-    // WWT (n x n) is computed once per W; tr(WWT) = sum(W^2) for the fallback.
-    // Per featy: tr(SigX * WWT) = tr(W^T SigX W) by cyclic trace — avoids
-    // allocating an n x m intermediate per feature.
-    const arma::mat WWT  = W * W.t();
-    const double trWtW   = arma::trace(WWT);
+    // WWT was accumulated from the raw (unnormalised) W; normalise now.
+    WWT /= (Wsum * Wsum);
+    const double trWtW = arma::trace(WWT);
 
     const arma::uword nn2 = n * (n - 1) / 2;
     const arma::vec distFirst = firstNDistsPPP(Ey, nn2);
-
     arma::mat SigX(n, n);
     arma::vec traces(k);
-
     for (arma::uword fj = 0; fj < k; fj++) {
         arma::vec vgY = evalVariogramCpp(distFirst,
-                                          vgParY(fj, 0), vgParY(fj, 1),
-                                          vgParY(fj, 2) > 0.5);
+                                         vgParY(fj, 0), vgParY(fj, 1),
+                                         vgParY(fj, 2) > 0.5);
         SigX.eye();
         {
             arma::uword idx = 0;
@@ -315,7 +321,6 @@ Rcpp::List computeIxyAndTracePPP_cpp(
         }
         traces(fj) = arma::trace(SigX * WWT);
     }
-
     return Rcpp::List::create(
         Rcpp::Named("isZero") = false,
         Rcpp::Named("Ixys")   = Ixys,

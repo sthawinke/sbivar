@@ -32,6 +32,7 @@
 #' @importFrom methods is
 #' @importFrom nlme corRatio corGaus corSpher corExp corLin lmeControl
 #' @importFrom BiocParallel bpparam bpworkers
+#' @importFrom spatstat.geom marks<-
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
 sbivarSinglePPP <- function(X, Y, Ey, method = c("Moran's I", "GAMs"),
     normY = c("none", "rel", "log"), pseudoCount = 1e-8,

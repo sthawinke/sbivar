@@ -25,6 +25,7 @@ sbivarSingle(
   variogramModels = c("Exp", "Lin"),
   width = cutoff/15,
   cutoff = sqrt(2)/3,
+  findVariances = TRUE,
   wo = c("Gauss", "nn"),
   numNNs = c(4, 8, 24),
   GPmethod = c("REML", "ML"),
@@ -53,7 +54,7 @@ while using the whole matrix to calculate library sizes as offset or for normali
 
 \item{verbose}{Should info on type of analysis be printed?}
 
-\item{wo, variogramModels, numNNs, etas, cutoff, width, returnSEsMoransI, findMaxW}{Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}}
+\item{wo, variogramModels, numNNs, etas, cutoff, width, returnSEsMoransI, findMaxW, findVariances}{Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}}
 
 \item{GPmethod, Quants, numLscAlts, optControl, gpParams}{Passed onto \link{fitGP}}
 

@@ -13,10 +13,8 @@
 #' This argument allows to pass parameters of the Gaussian processes estimated with other software
 #' (e.g. with GPU acceleration) to perform the score test.
 #' @importFrom abind abind
-GPsSingle <- function(
-      X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
-      correlation, optControl, verbose, featuresX, featuresY
-) {
+GPsSingle <- function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
+    correlation, optControl, verbose, featuresX, featuresY) {
     p <- length(featuresX)
     k <- length(featuresY)
     if (missing(gpParams)) {

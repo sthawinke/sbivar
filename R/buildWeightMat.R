@@ -14,8 +14,10 @@
 #' @details
 #' For wo = "Gauss", the weight decays as exp(-d^2/eta) with d the distance between observations.
 #' For wo = "nn" the numNN nearest neighbours are given equal weight, all others are zero.
-buildWeightMat <- function(Cx, Ey, wo, eta, numNN,
-    distMat = spatstat.geom::crossdist(Cx[, 1], Cx[, 2], Ey[, 1], Ey[, 2])) {
+buildWeightMat <- function(
+      Cx, Ey, wo, eta, numNN,
+      distMat = spatstat.geom::crossdist(Cx[, 1], Cx[, 2], Ey[, 1], Ey[, 2])
+) {
     if (wo == "nn") {
         if (requireNamespace("RANN")) {
             nnMatXY <- RANN::nn2(Cx, Ey, k = numNN)$nn.idx

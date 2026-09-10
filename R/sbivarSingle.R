@@ -12,7 +12,7 @@
 #' @param GPmethod,Quants,numLscAlts,optControl,gpParams Passed onto \link{fitGP}
 #' @param correlation Correlation structure, passed onto \link{fitGP} or \link{fitGAM}
 #' @param n_points_grid,families,Gamm Passed onto \link{GAMsSingle}
-#' @param wo,variogramModels,numNNs,etas,cutoff,width,returnSEsMoransI,findMaxW Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}
+#' @param wo,variogramModels,numNNs,etas,cutoff,width,returnSEsMoransI,findMaxW,findVariances Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}
 #' @param verbose Should info on type of analysis be printed?
 #' @param normX,normY,pseudoCount Normalization parameters, passed onto \link{normMat}
 #' @param featuresX,featuresY Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
@@ -35,19 +35,21 @@
 #' @importFrom BiocParallel bpparam bpworkers
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
 #' @seealso \link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle}, \link{GPsSingle}
-sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
-    normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
-    etas = c(5e-6, 2e-4, 2e-2), findMaxW = FALSE, returnSEsMoransI = TRUE,
-    families = list("X" = gaussian(), "Y" = gaussian()), Gamm = FALSE, featuresX = colnames(X), featuresY = colnames(Y),
-    n_points_grid = 6e2, verbose = TRUE,
-    variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
-    wo = c("Gauss", "nn"), numNNs = c(4, 8, 24),
-    GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 5,
-    optControl = lmeControl(
-        opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
-        niterEM = 1e3, msMaxEval = 1e3
-    ),
-    correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(0.9 * max(apply(Cx, 2, function(x) diff(range(x)))), 0.25))) {
+sbivarSingle <- function(
+      X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
+      normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
+      etas = c(5e-6, 2e-4, 2e-2), findMaxW = FALSE, returnSEsMoransI = TRUE,
+      families = list("X" = gaussian(), "Y" = gaussian()), Gamm = FALSE, featuresX = colnames(X), featuresY = colnames(Y),
+      n_points_grid = 6e2, verbose = TRUE,
+      variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3, findVariances = TRUE,
+      wo = c("Gauss", "nn"), numNNs = c(4, 8, 24),
+      GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 5,
+      optControl = lmeControl(
+          opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
+          niterEM = 1e3, msMaxEval = 1e3
+      ),
+      correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(0.9 * max(apply(Cx, 2, function(x) diff(range(x)))), 0.25))
+) {
     stopifnot(
         is.numeric(n_points_grid), ncol(Cx) == 2, is.numeric(numNNs), all(numNNs > 0),
         all(vapply(families, FUN.VALUE = character(1), function(x) x$link) %in% c("identity", "log", "inverse")),
@@ -117,7 +119,7 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
             X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo, numNNs = selfName(numNNs),
             variogramModels = variogramModels, etas = selfName(etas), width = width,
             returnSEsMoransI = returnSEsMoransI, verbose = verbose, cutoff = cutoff, findMaxW = findMaxW,
-            featuresX = featuresX, featuresY = featuresY
+            featuresX = featuresX, featuresY = featuresY, findVariances = findVariances
         ))$res
     } else if (method == "GAMs") {
         GAMsSingle(

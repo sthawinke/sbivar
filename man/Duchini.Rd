@@ -20,9 +20,9 @@ data(Duchini)
 }
 \description{
 Single-molecule spatial transcriptomics and lattice protein immunofluorescence data measured on the same tissue section
- of a human hepatocellular carcinoma sample by \insertCite{Duchini2026;nobrackets}{sbivar}. Only a subset of the data, consisting of
+ of a human hepatocellular carcinoma sample by \insertCite{Duchini2026;nobrackets}{sbivar}. Only a subset of the data, consisting of a subset of the measurement spots and
  two transcripts and two proteins is included in the package for computational and memory reasons.
- The images were pre-aligned by the authors
+ The images were pre-aligned by the authors.
 }
 \references{
 \insertAllCited{}

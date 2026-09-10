@@ -19,9 +19,9 @@
 #' Spatial transcriptomics and proteomics data of data of human hepatocellular carcinoma (HCC)
 #'
 #' Single-molecule spatial transcriptomics and lattice protein immunofluorescence data measured on the same tissue section
-#'  of a human hepatocellular carcinoma sample by \insertCite{Duchini2026;nobrackets}{sbivar}. Only a subset of the data, consisting of
-#'  two transcripts and two proteins is included in the package for computational and memory reasons.
-#'  The images were pre-aligned by the authors
+#' of a human hepatocellular carcinoma sample by \insertCite{Duchini2026;nobrackets}{sbivar}. Only a subset of the data, consisting of a subset of 3,000 measurement spots and
+#' two transcripts and two proteins is included in the package for computational and memory reasons.
+#' The images were pre-aligned by the authors.
 #'
 #' @format A point pattern, and two matrices
 #' \describe{

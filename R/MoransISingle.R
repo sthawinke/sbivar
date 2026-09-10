@@ -114,8 +114,8 @@ MoransISingle <- function(X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose
                 dimnames = list(NULL, paste0("SE(Ixy)_", wParams))
             ))
         }
-        out <- cbind(out, "pVal" = c(cctPvals))
     }
+    out <- cbind(out, "pVal" = if(findVariances) c(cctPvals) else NA)
     rownames(out) <- makeNames(featuresX, featuresY)
     # Maximum values, if needed
     maxIxy <- if (findMaxW) {

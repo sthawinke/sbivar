@@ -436,6 +436,17 @@ if (reqann) {
 }
 ```
 
+## Point patterns
+
+More than another output format, point patterns as stored in the _spatstat::ppp_ format represent another data type that can be analysed by _sbivar_. More precisely, we can test for association between a point pattern, e.g. from a single-molecule assay such as seqFISH or Xenium, and a quantitative outcome, registered on the same coordinate framework (for tests between two point patterns, see the _smoppix_ package @Hawinkel2026a.). Available tests are bivariate Moran's I and GAMs. We illustrate the syntax on the built-in Duchini2026 dataset @Duchini2026
+
+```{r duchini}
+data(Duchini)
+#Provide the point pattern first:
+duchRes = sbivar(X = Duchini$Transcripts, Y = Duchini$ProteinOutcomes, Ey = Duchini$ProteinCoords, method = "Moran")
+head(duchRes$result)
+```
+
 # Troubleshooting
 
 ## Sbivar takes forever

@@ -5,6 +5,7 @@ test_that("SbivarSingle works for correct input", {
     expect_is(sbivar(X, Y, Cx, Ey, method = "GPs"), "list")
     expect_message(sbivar(X, Y, Cx, Ey, method = "GAMs", correlation = corExp(~ x + y, nugget = TRUE)))
     expect_message(sbiResMoran <- sbivar(X, Y, Cx, Ey, method = "Moran's I"))
+    expect_message(sbivar(X, Y, Cx, Ey, method = "Moran's I", findVariances = FALSE))
     expect_message(sbiResMod <- sbivar(X, X, Cx, method = "Modified"))
     expect_true(all(c("pVal", "pAdj") %in% colnames(sbiResMoran$result)))
     expect_false(is.unsorted(sbiRes$result[, "pVal"]))
@@ -12,6 +13,8 @@ test_that("SbivarSingle works for correct input", {
     expect_is(sbivar(X, Y, Cx, Ey, method = "Moran", featuresX = "X1", featuresY = "Y1"), "list")
     sbiResPPP <- sbivar(PPP, Y, Ey = Ey, method = "GAMs")
     expect_is(sbiResPPP, "list")
+    sbiResPPPmoran <- sbivar(PPP, Y, Ey = Ey, method = "Moran")
+    expect_is(sbiResPPPmoran, "list")
 })
 test_that("SbivarSingle throws errors for incorrect input", {
     expect_error(sbivar(X, Y, cbind(Cx, Cx), Ey, method = "GAMs"))

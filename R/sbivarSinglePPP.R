@@ -9,7 +9,7 @@
 #' @param method A character string, indicating which method to apply
 #' @param correlation Correlation structure, passed onto \link{fitGAM}
 #' @param n_points_grid,families,Gamm Passed onto \link{GAMsSingle} for the second modality fitting
-#' @param wo,variogramModels,etas,cutoff,width,returnSEsMoransI Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}
+#' @param wo,variogramModels,etas,cutoff,width,returnSEsMoransI,findVariances Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}
 #' @param verbose Should info on type of analysis be printed?
 #' @param normY,pseudoCount Normalization parameters, passed onto \link{normMat}
 #' @param featuresX,featuresY Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
@@ -37,7 +37,7 @@
 sbivarSinglePPP <- function(
       X, Y, Ey, method = c("Moran's I", "GAMs"),
       normY = c("none", "rel", "log"), pseudoCount = 1e-8,
-      etas = c(5e-6, 4e-5, 2e-4), returnSEsMoransI = TRUE,
+      etas = c(5e-6, 4e-5, 2e-4), returnSEsMoransI = TRUE, findVariances = TRUE,
       families = list("Y" = gaussian()), Gamm = FALSE, featuresX = getFeaturesX(X), featuresY = colnames(Y),
       n_points_grid = 6e2, verbose = TRUE, wo = "Gauss",
       variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
@@ -80,7 +80,7 @@ sbivarSinglePPP <- function(
             X = X, Y = Y, Ey = Ey, wo = wo,
             variogramModels = variogramModels, etas = selfName(etas), width = width,
             returnSEsMoransI = returnSEsMoransI, verbose = verbose, cutoff = cutoff,
-            featuresX = featuresX, featuresY = featuresY
+            featuresX = featuresX, featuresY = featuresY, findVariances = findVariances
         ))$res
     } else if (method == "GAMs") {
         GAMsSingle(

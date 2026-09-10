@@ -13,6 +13,7 @@ sbivarSinglePPP(
   pseudoCount = 1e-08,
   etas = c(5e-06, 4e-05, 2e-04),
   returnSEsMoransI = TRUE,
+  findVariances = TRUE,
   families = list(Y = gaussian()),
   Gamm = FALSE,
   featuresX = getFeaturesX(X),
@@ -45,7 +46,7 @@ while using the whole matrix to calculate library sizes as offset or for normali
 
 \item{verbose}{Should info on type of analysis be printed?}
 
-\item{wo, variogramModels, etas, cutoff, width, returnSEsMoransI}{Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}}
+\item{wo, variogramModels, etas, cutoff, width, returnSEsMoransI, findVariances}{Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}}
 
 \item{correlation}{Correlation structure, passed onto \link{fitGAM}}
 }

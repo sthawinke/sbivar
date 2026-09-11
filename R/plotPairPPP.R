@@ -9,7 +9,7 @@
 #' @param sizeX,sizeY Desired point sizes for corresponding modalities
 #' @seealso \link{plotTopPair}, \link{sbivarSinglePPP}
 #' @return A ggplot object
-#' @order 3
+#' @order 1
 #' @export
 #' @rdname plotTopPairPPP
 #' @note The point pattern is coloured blue, the value corresponding to 1
@@ -33,13 +33,40 @@
 #' plotTopPairPPP(resMoransIppp, X = PPP, Y = Y, Ey = Ey)
 #' # For overlay, do:
 #' plotPairPPP(X = PPP, Y = Y, Ey = Ey, features = c("X1", "Y1"), sideBySide = FALSE)
+plotTopPairPPP <- function(result, X, Y, Ey, topRank = 1, ...) {
+    stopifnot(is.numeric(topRank), topRank >= 1, is.ppp(X))
+    plotPairPPP(X,
+                Y = Y, Ey = Ey, normY = result$normY,
+                features = unlist(result$result[topRank, c("Modality_X", "Modality_Y")]), ...
+    )
+}
+#' @rdname plotTopPairPPP
+#' @param X A point pattern of class ppp
+#' @order 2
+#' @export
+#' @importFrom spatstat.geom coords
+plotPairPPP <- function(X, Y, Ey, features, normY = "none", ...) {
+    stopifnot(is.ppp(X))
+    Y <- normMat(Y, normY)
+    plotPairSinglePPvec(Cx = coords(subset.ppp(X, marks(X, drop = FALSE)$feature == features[1])),
+        y = Y[, features[2]],
+        Ey = Ey, modalityNames = features, ...
+    )
+}
+#' @rdname plotTopPairPPP
+#' @inheritParams plotTopPair
+#' @inheritParams plotPairSingle
+#' @inheritParams plotPairSingleVectors
+#' @importFrom spatstat.geom is.ppp
+#' @export
+#' @order 3
 plotPairSinglePPvec <- function(Cx, y, Ey, sizeX = 0.005, sizeY = .01, sideBySide = TRUE,
-    modalityNames = c("Modality X", "Modality Y"), theme = theme_bw(), ...) {
+modalityNames = c("Modality X", "Modality Y"), theme = theme_bw(), ...) {
     theme_set(theme)
     stopifnot(length(y) == nrow(Ey), ncol(Ey) == 2, ncol(Cx) == 2)
     plotDfX <- data.frame(row.names = seq_len(nrow(Cx)),
-        Cx, "outcome" = 1, "size" = sizeX,
-        "feature" = modalityNames[1]
+                          Cx, "outcome" = 1, "size" = sizeX,
+                          "feature" = modalityNames[1]
     )
     plotDfY <- data.frame(
         Ey, "outcome" = scaleZeroOne(y), "size" = sizeY,
@@ -62,29 +89,4 @@ plotPairSinglePPvec <- function(Cx, y, Ey, sizeX = 0.005, sizeY = .01, sideBySid
         coord_fixed() +
         guides(size="none") +
         theme(axis.text = element_blank(), axis.ticks = element_blank())
-}
-#' @rdname plotTopPairPPP
-#' @param X A point pattern of class ppp
-#' @order 2
-#' @export
-#' @importFrom spatstat.geom coords
-plotPairPPP <- function(X, Y, Ey, features, normY = "none", ...) {
-    stopifnot(is.ppp(X))
-    Y <- normMat(Y, normY)
-    plotPairSinglePPvec(Cx = coords(subset.ppp(X, marks(X, drop = FALSE)$feature == features[1])),
-        y = Y[, features[2]],
-        Ey = Ey, modalityNames = features, ...
-    )
-}
-#' @export
-#' @order 1
-#' @rdname plotTopPairPPP
-#' @inheritParams plotTopPair
-#' @importFrom spatstat.geom is.ppp
-plotTopPairPPP <- function(result, X, Y, Ey, topRank = 1, ...) {
-    stopifnot(is.numeric(topRank), topRank >= 1, is.ppp(X))
-    plotPairPPP(X,
-        Y = Y, Ey = Ey, normY = result$normY,
-        features = unlist(result$result[topRank, c("Modality_X", "Modality_Y")]), ...
-    )
 }

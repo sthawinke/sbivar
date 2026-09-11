@@ -5,4 +5,7 @@ test_that("GAM fitting plotting works", {
     expect_is(plotGAMsTopResults(resGAMsSingle, X, Y, Cx = Cx, Ey = Ey), "ggplot")
     expect_is(plotGAMs(Xl, Yl, Cxl, Eyl, features = c("X1", "Y2")), "ggplot")
     expect_is(plotGAMsTopResults(resGAMsMulti, Xl, Yl, Cx = Cxl, Ey = Eyl), "ggplot")
+    expect_is(plotTopPairPPP(resMoranTestPPP, X = PPP, Y = Y, Ey = Ey), "ggplot")
+    expect_is(plotPairPPP(X = PPP, Y = Y, Ey = Ey, features = c("X1", "Y2")), "ggplot")
+    expect_is(plotGAMsTopResults(resGAMsSinglePPP, X = PPP, Y = Y, Ey = Ey), "ggplot")
 })

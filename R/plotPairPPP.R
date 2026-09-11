@@ -36,11 +36,13 @@
 plotTopPairPPP <- function(results, X, Y, Ey, topRank = 1, ...) {
     stopifnot(is.numeric(topRank), topRank >= 1, is.ppp(X))
     plotPairPPP(X,
-                Y = Y, Ey = Ey, normY = results$normY,
-                features = unlist(results$result[topRank, c("Modality_X", "Modality_Y")]), ...
+        Y = Y, Ey = Ey, normY = results$normY,
+        features = unlist(results$result[topRank, c("Modality_X", "Modality_Y")]), ...
     )
 }
 #' @rdname plotTopPairPPP
+#' @param normY Character string, indicating what normalization is required
+#' the Y matrix before plotting, see \link{plotPairSingle}.
 #' @param X A point pattern of class ppp
 #' @order 2
 #' @export
@@ -48,30 +50,37 @@ plotTopPairPPP <- function(results, X, Y, Ey, topRank = 1, ...) {
 plotPairPPP <- function(X, Y, Ey, features, normY = "none", ...) {
     stopifnot(is.ppp(X))
     Y <- normMat(Y, normY)
-    plotPairSinglePPvec(Cx = coords(subset.ppp(X, marks(X, drop = FALSE)$feature == features[1])),
+    plotPairSinglePPvec(
+        Cx = coords(subset.ppp(X, marks(X, drop = FALSE)$feature == features[1])),
         y = Y[, features[2]],
         Ey = Ey, modalityNames = features, ...
     )
 }
 #' @rdname plotTopPairPPP
+#' @inheritParams plotPairSingleVectors
 #' @importFrom spatstat.geom is.ppp
+#' @param y Outcome vector of second modality
 #' @export
 #' @order 3
-plotPairSinglePPvec <- function(Cx, y, Ey, sizeX = 0.005, sizeY = .01, sideBySide = TRUE,
-modalityNames = c("Modality X", "Modality Y"), theme = theme_bw(), ...) {
+plotPairSinglePPvec <- function(
+      Cx, y, Ey, sizeX = 0.005, sizeY = .01, sideBySide = TRUE,
+      modalityNames = c("Modality X", "Modality Y"), theme = theme_bw(), ...
+) {
     theme_set(theme)
     stopifnot(length(y) == nrow(Ey), ncol(Ey) == 2, ncol(Cx) == 2)
-    plotDfX <- data.frame(row.names = seq_len(nrow(Cx)),
-                          Cx, "outcome" = 1, "size" = sizeX,
-                          "feature" = modalityNames[1]
+    plotDfX <- data.frame(
+        row.names = seq_len(nrow(Cx)),
+        Cx, "outcome" = 1, "size" = sizeX,
+        "feature" = modalityNames[1]
     )
     plotDfY <- data.frame(
-        Ey, "outcome" = scaleZeroOne(y), "size" = sizeY,
+        Ey,
+        "outcome" = scaleZeroOne(y), "size" = sizeY,
         "feature" = modalityNames[2]
     )
     p <- if (sideBySide) {
-        plotDf = rbind(plotDfX, plotDfY)
-        plotDf$feature = factor(plotDf$feature, levels = modalityNames, ordered = TRUE)
+        plotDf <- rbind(plotDfX, plotDfY)
+        plotDf$feature <- factor(plotDf$feature, levels = modalityNames, ordered = TRUE)
         ggplot(data = plotDf, aes(x = x, y = y, col = outcome, size = size)) +
             geom_point() +
             facet_grid(~feature)
@@ -84,6 +93,6 @@ modalityNames = c("Modality X", "Modality Y"), theme = theme_bw(), ...) {
         xlab("x coordinate") +
         ylab("y coordinate") +
         coord_fixed() +
-        guides(size="none") +
+        guides(size = "none") +
         theme(axis.text = element_blank(), axis.ticks = element_blank())
 }

@@ -35,7 +35,12 @@ plotPairSinglePPvec(
 
 \item{features}{Feature vector of length 2 to be plotted}
 
+\item{normY}{Character string, indicating what normalization is required
+the Y matrix before plotting, see \link{plotPairSingle}.}
+
 \item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y respectively}
+
+\item{y}{Outcome vector of second modality}
 
 \item{sizeX, sizeY}{Desired point sizes for corresponding modalities}
 

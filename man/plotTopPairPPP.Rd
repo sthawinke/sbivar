@@ -6,7 +6,7 @@
 \alias{plotPairSinglePPvec}
 \title{Plot a single molecule point pattern and a quantitative outcome}
 \usage{
-plotTopPairPPP(result, X, Y, Ey, topRank = 1, ...)
+plotTopPairPPP(results, X, Y, Ey, topRank = 1, ...)
 
 plotPairPPP(X, Y, Ey, features, normY = "none", ...)
 
@@ -23,6 +23,8 @@ plotPairSinglePPvec(
 )
 }
 \arguments{
+\item{results}{Results returned by \link{sbivarSingle} or \link{extractResultsMulti}}
+
 \item{X}{A point pattern of class ppp}
 
 \item{Y}{Matrix or SpatialExperiment object of second modality}

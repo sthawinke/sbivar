@@ -33,11 +33,11 @@
 #' plotTopPairPPP(resMoransIppp, X = PPP, Y = Y, Ey = Ey)
 #' # For overlay, do:
 #' plotPairPPP(X = PPP, Y = Y, Ey = Ey, features = c("X1", "Y1"), sideBySide = FALSE)
-plotTopPairPPP <- function(result, X, Y, Ey, topRank = 1, ...) {
+plotTopPairPPP <- function(results, X, Y, Ey, topRank = 1, ...) {
     stopifnot(is.numeric(topRank), topRank >= 1, is.ppp(X))
     plotPairPPP(X,
-                Y = Y, Ey = Ey, normY = result$normY,
-                features = unlist(result$result[topRank, c("Modality_X", "Modality_Y")]), ...
+                Y = Y, Ey = Ey, normY = results$normY,
+                features = unlist(results$result[topRank, c("Modality_X", "Modality_Y")]), ...
     )
 }
 #' @rdname plotTopPairPPP
@@ -54,9 +54,6 @@ plotPairPPP <- function(X, Y, Ey, features, normY = "none", ...) {
     )
 }
 #' @rdname plotTopPairPPP
-#' @inheritParams plotTopPair
-#' @inheritParams plotPairSingle
-#' @inheritParams plotPairSingleVectors
 #' @importFrom spatstat.geom is.ppp
 #' @export
 #' @order 3

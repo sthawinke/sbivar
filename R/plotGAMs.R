@@ -38,9 +38,11 @@
 #' @importFrom smoppix loadBalanceBplapply
 #' @importFrom spatstat.geom is.ppp subset.ppp
 #' @order 1
-plotGAMs <- function(X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
-    families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE, normX = c("none", "rel", "log"),
-    normY = c("none", "rel", "log"), n_points_grid = 6e2, Gamm = FALSE, correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25)), ...) {
+plotGAMs <- function(
+      X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
+      families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE, normX = c("none", "rel", "log"),
+      normY = c("none", "rel", "log"), n_points_grid = 6e2, Gamm = FALSE, correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25)), ...
+) {
     stopifnot(
         is.numeric(n_points_grid), all(vapply(families, FUN.VALUE = TRUE, is, "family")),
         all(vapply(features, FUN.VALUE = TRUE, is.character))

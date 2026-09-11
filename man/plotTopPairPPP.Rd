@@ -2,22 +2,21 @@
 % Please edit documentation in R/plotPairPPP.R
 \name{plotTopPairPPP}
 \alias{plotTopPairPPP}
-\alias{plotPairSinglePPP}
+\alias{plotPairPPP}
 \alias{plotPairSinglePPvec}
 \title{Plot a feature pair consisting of a single molecule point pattern and a quantitative outcome}
 \usage{
 plotTopPairPPP(result, X, Y, Ey, topRank = 1, ...)
 
-plotPairSinglePPP(X, Y, Ey, features, normY, ...)
+plotPairPPP(X, Y, Ey, features, normY = "none", ...)
 
 plotPairSinglePPvec(
   Cx,
   y,
   Ey,
-  sizeX = 0.1,
-  sizeY = 1,
-  shapeX = 15,
-  shapeY = 16,
+  sizeX = 0.005,
+  sizeY = 0.02,
+  sideBySide = TRUE,
   modalityNames = c("Modality X", "Modality Y"),
   theme = theme_bw(),
   ...
@@ -36,6 +35,10 @@ plotPairSinglePPvec(
 
 \item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y respectively}
 
+\item{sizeX, sizeY}{Desired point sizes for corresponding modalities}
+
+\item{sideBySide}{Boolean indicating the patterns are to be plotted side by side, or on top of each other if FALSE}
+
 \item{modalityNames}{Names to be given to the modalities,
 appearing in the strip text of the columns. For plotTopPairPPP() and
 plotPairSinglePPP(), the feature names are used.}
@@ -48,6 +51,9 @@ A ggplot object
 \description{
 Plot a chosen feature pair, or the highest ranking feature pair,
 for a single image
+}
+\note{
+The point pattern is coloured blue, the value corresponding to 1
 }
 \examples{
 n <- 8e1
@@ -63,11 +69,12 @@ Ey <- matrix(runif(m * 2), m, 2, dimnames = list(rownames(Y), c("x", "y")))
 library(spatstat.random)
 lambda <- 8e1
 p <- 3
-PPP <- rmpoispp(lambda, types = paste0("gene", seq_len(p)), win = owin(c(0, 1), c(0, 1)))
+PPP <- rmpoispp(lambda, types = paste0("X", seq_len(p)), win = owin(c(0, 1), c(0, 1)))
 marks(PPP, drop = FALSE) <- data.frame(feature = marks(PPP)) # Make sure marks is a dataframe
-plotPairPPP()
 resMoransIppp <- sbivar(X = PPP, Y, Ey, method = "Moran's I")
-plotTopPairPPP(resMoransIppp, PPP = X, Y = Y, Ey = Ey)
+plotTopPairPPP(resMoransIppp, X = PPP, Y = Y, Ey = Ey)
+# For overlay, do:
+plotPairPPP(X = PPP, Y = Y, Ey = Ey, features = c("X1", "Y1"), sideBySide = FALSE)
 }
 \seealso{
 \link{plotTopPair}, \link{sbivarSinglePPP}

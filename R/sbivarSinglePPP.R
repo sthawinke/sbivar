@@ -36,7 +36,7 @@
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
 sbivarSinglePPP <- function(X, Y, Ey, method = c("Moran's I", "GAMs"),
     normY = c("none", "rel", "log"), pseudoCount = 1e-8,
-    etas = c(5e-6, 4e-5, 2e-4), returnSEsMoransI = TRUE, findVariances = TRUE,
+    etas = c(5e-6, 2e-5, 1e-4), returnSEsMoransI = TRUE, findVariances = TRUE,
     families = list("Y" = gaussian()), Gamm = FALSE, featuresX = getFeaturesX(X), featuresY = colnames(Y),
     n_points_grid = 6e2, verbose = TRUE, wo = "Gauss",
     variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
@@ -50,9 +50,6 @@ sbivarSinglePPP <- function(X, Y, Ey, method = c("Moran's I", "GAMs"),
         all(featuresY %in% colnames(Y)), !anyDuplicated(featuresX), !anyDuplicated(featuresY),
         is.logical(verbose)
     )
-    if (any(etas > 2e-3)) {
-        warning("Eta values larger than 2e-3 are not meaningful for point patterns and may lead to false positive findings!")
-    }
     method <- match.arg(method)
     variogramModels <- match.arg(variogramModels, several.ok = TRUE)
     normY <- match.arg(normY)

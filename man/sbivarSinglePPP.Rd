@@ -11,7 +11,7 @@ sbivarSinglePPP(
   method = c("Moran's I", "GAMs"),
   normY = c("none", "rel", "log"),
   pseudoCount = 1e-08,
-  etas = c(5e-06, 4e-05, 2e-04),
+  etas = c(5e-06, 2e-05, 1e-04),
   returnSEsMoransI = TRUE,
   findVariances = TRUE,
   families = list(Y = gaussian()),

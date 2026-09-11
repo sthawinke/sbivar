@@ -42,6 +42,9 @@ MoransISinglePPP <- function(X, Y, Ey, wo, etas, cutoff, width, verbose,
     wParams <- selfName(switch(wo,
         "Gauss" = etas
     ))
+    if (any(wParams > 2e-4)) {
+        warning("Eta values larger than 2e-3 are not meaningful for point patterns and may lead to false positive findings!")
+    }
     if (findVariances) {
         if (verbose) {
             message("Fitting variograms for second modality (", k, " features) ...")

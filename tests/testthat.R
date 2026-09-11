@@ -11,7 +11,7 @@ Y <- matrix(rnorm(m * k), m, k, dimnames = list(paste0("sampleY", seq_len(m)), p
 Cx <- matrix(runif(n * 2), n, 2, dimnames = list(rownames(X), c("x", "y")))
 Ey <- matrix(runif(m * 2), m, 2, dimnames = list(rownames(Y), c("x", "y")))
 lambda <- 8e1
-PPP <- rmpoispp(lambda, types = paste0("gene", seq_len(p)), win = owin(c(0, 1), c(0, 1)))
+PPP <- rmpoispp(lambda, types = paste0("X", seq_len(p)), win = owin(c(0, 1), c(0, 1)))
 marks(PPP, drop = FALSE) <- data.frame("feature" = marks(PPP)) # Make sure marks is a dataframe
 # Multiple images
 ims <- 6

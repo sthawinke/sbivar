@@ -69,7 +69,7 @@ plotPairSinglePPvec <- function(
     theme_set(theme)
     stopifnot(length(y) == nrow(Ey), ncol(Ey) == 2, ncol(Cx) == 2)
     plotDfX <- data.frame(
-        row.names = seq_len(nrow(Cx)),
+        row.names = seq_len(NROW(Cx)),
         Cx, "outcome" = 1, "size" = sizeX,
         "feature" = modalityNames[1]
     )

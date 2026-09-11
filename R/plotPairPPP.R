@@ -1,5 +1,5 @@
-#' @title Plot a feature pair consisting of a single molecule point pattern and a quantitative outcome
-#' @description Plot a chosen feature pair, or the highest ranking feature pair,
+#' @title Plot a single molecule point pattern and a quantitative outcome
+#' @description Plot a chosen feature pair consisting of a point pattern and a fixed-grid quantitative outcome, or the highest ranking feature pair,
 #' for a single image
 #' @inheritParams plotTopPair
 #' @param modalityNames Names to be given to the modalities,
@@ -64,10 +64,12 @@ plotPairSinglePPvec <- function(Cx, y, Ey, sizeX = 0.005, sizeY = .01, sideBySid
         theme(axis.text = element_blank(), axis.ticks = element_blank())
 }
 #' @rdname plotTopPairPPP
+#' @param X A point pattern of class ppp
 #' @order 2
 #' @export
 #' @importFrom spatstat.geom coords
 plotPairPPP <- function(X, Y, Ey, features, normY = "none", ...) {
+    stopifnot(is.ppp(X))
     Y <- normMat(Y, normY)
     plotPairSinglePPvec(Cx = coords(subset.ppp(X, marks(X, drop = FALSE)$feature == features[1])),
         y = Y[, features[2]],

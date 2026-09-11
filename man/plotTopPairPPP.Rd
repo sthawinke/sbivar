@@ -4,7 +4,7 @@
 \alias{plotTopPairPPP}
 \alias{plotPairPPP}
 \alias{plotPairSinglePPvec}
-\title{Plot a feature pair consisting of a single molecule point pattern and a quantitative outcome}
+\title{Plot a single molecule point pattern and a quantitative outcome}
 \usage{
 plotTopPairPPP(result, X, Y, Ey, topRank = 1, ...)
 
@@ -23,7 +23,7 @@ plotPairSinglePPvec(
 )
 }
 \arguments{
-\item{X}{the input object, containing measurements of the first modality, see methods('sbivar')}
+\item{X}{A point pattern of class ppp}
 
 \item{Y}{Matrix or SpatialExperiment object of second modality}
 
@@ -49,7 +49,7 @@ plotPairSinglePPP(), the feature names are used.}
 A ggplot object
 }
 \description{
-Plot a chosen feature pair, or the highest ranking feature pair,
+Plot a chosen feature pair consisting of a point pattern and a fixed-grid quantitative outcome, or the highest ranking feature pair,
 for a single image
 }
 \note{

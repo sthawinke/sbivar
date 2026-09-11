@@ -77,6 +77,7 @@ plotPairPPP <- function(X, Y, Ey, features, normY = "none", ...) {
 #' @export
 #' @order 1
 #' @rdname plotTopPairPPP
+#' @inheritParams plotTopPair
 #' @importFrom spatstat.geom is.ppp
 plotTopPairPPP <- function(result, X, Y, Ey, topRank = 1, ...) {
     stopifnot(is.numeric(topRank), topRank >= 1, is.ppp(X))

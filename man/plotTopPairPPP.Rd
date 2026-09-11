@@ -15,7 +15,7 @@ plotPairSinglePPvec(
   y,
   Ey,
   sizeX = 0.005,
-  sizeY = 0.02,
+  sizeY = 0.01,
   sideBySide = TRUE,
   modalityNames = c("Modality X", "Modality Y"),
   theme = theme_bw(),

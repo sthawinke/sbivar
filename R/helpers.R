@@ -195,7 +195,7 @@ printIteration <- function(current, all) {
 getX <- function(X, assay) {
     if (inherits(X, "SpatialExperiment")) {
         assayT(X, assay)
-    } else if (is.list(X)) {
+    } else if (!is.ppp(X) && is.list(X)) {
         lapply(X, getX, assay = assay)
     } else {
         X
@@ -207,9 +207,12 @@ getX <- function(X, assay) {
 #' @param Cx The coordinate matrix
 #'
 #' @returns A coordinate matrix
+#' @importFrom spatstat.geom is.ppp coords
 getSpatialCoords <- function(X, Cx) {
     out <- if (inherits(X, "SpatialExperiment")) {
         SpatialExperiment::spatialCoords(X)
+    } else if (is.ppp(X)) {
+        as.matrix(coords(X))
     } else if (is.list(X)) {
         lapply(selfName(names(X)), function(i) {
             getSpatialCoords(X[[i]], Cx[[i]])

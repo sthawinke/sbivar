@@ -442,9 +442,14 @@ More than another output format, point patterns as stored in the _spatstat::ppp_
 
 ```{r duchini}
 data(Duchini)
-#Provide the point pattern first:
-duchRes = sbivar(X = Duchini$Transcripts, Y = Duchini$ProteinOutcomes, Ey = Duchini$ProteinCoords, method = "Moran")
-head(duchRes$result)
+# Provide the point pattern first:
+duchRes <- sbivar(X = Duchini$Transcripts, Y = Duchini$ProteinOutcomes, Ey = Duchini$ProteinCoords, method = "Moran")
+plotTopPairPPP(duchRes, X = Duchini$Transcripts, Y = Duchini$ProteinOutcomes, Ey = Duchini$ProteinCoords)
+```
+
+```{r duchini}
+duchResGAM <- sbivar(X = Duchini$Transcripts, Y = Duchini$ProteinOutcomes, Ey = Duchini$ProteinCoords, method = "GAM")
+plotGAMsTopResults(duchResGAM, X = Duchini$Transcripts, Y = Duchini$ProteinOutcomes, Ey = Duchini$ProteinCoords)
 ```
 
 # Troubleshooting

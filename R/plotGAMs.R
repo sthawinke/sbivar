@@ -36,6 +36,7 @@
 #' )
 #' @import ggplot2
 #' @importFrom smoppix loadBalanceBplapply
+#' @importFrom spatstat.geom is.ppp subset.ppp
 #' @order 1
 plotGAMs <- function(X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
     families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE, normX = c("none", "rel", "log"),
@@ -48,7 +49,7 @@ plotGAMs <- function(X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
     normX <- match.arg(normX)
     normY <- match.arg(normY)
     scaleFun <- get(as.character(scaleFun), mode = "function", getNamespace("sbivar"))
-    gamDf <- if (multi <- is.list(X)) {
+    gamDf <- if (multi <- (is.list(X) && !is.ppp(X))) {
         foo <- checkInputMulti(X, Y, Cx, Ey)
         gamDfs <- lapply(names(X), function(nam) {
             df <- buildGamDf(
@@ -126,12 +127,22 @@ makeOffset <- function(X, family) {
     return(out)
 }
 buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun, normX, normY, pseudoCount = 1e-8, ...) {
-    if (families[["X"]]$family != "gaussian") {
-        X <- X[idX <- (rowSums(X) > 0), ]
-        Cx <- Cx[idX, ]
-        if (families[["X"]]$family == "Gamma") {
-            X <- X + pseudoCount
+    if (is.matrix(X)) {
+        if (families[["X"]]$family != "gaussian") {
+            X <- X[idX <- (rowSums(X) > 0), ]
+            Cx <- Cx[idX, ]
+            if (families[["X"]]$family == "Gamma") {
+                X <- X + pseudoCount
+            }
         }
+        X <- normMat(X, normX)
+        dfx <- data.frame("value" = X[, features[1]], Cx)
+        dfx$Offset <- makeOffset(X, families[["X"]])
+        modelx <- fitGAM(
+            df = dfx, outcome = "value", family = families[["X"]], ...
+        )
+    } else if (is.ppp(X)) {
+        modelx <- fitPPP(subset(X, feature = features[1]))
     }
     if (families[["Y"]]$family != "gaussian") {
         Y <- Y[idY <- (rowSums(Y) > 0), ]
@@ -140,20 +151,14 @@ buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun
             Y <- Y + pseudoCount
         }
     }
-    X <- normMat(X, normX)
     Y <- normMat(Y, normY)
-    colnames(Cx) <- colnames(Ey) <- c("x", "y")
-    newGrid <- buildNewGrid(Cx = Cx, Ey = Ey, n_points_grid = n_points_grid)
-    dfx <- data.frame("value" = X[, features[1]], Cx)
-    dfx$Offset <- makeOffset(X, families[["X"]])
-    modelx <- fitGAM(
-        df = dfx, outcome = "value", family = families[["X"]], ...
-    )
     dfy <- data.frame("value" = Y[, features[2]], Ey)
     dfy$Offset <- makeOffset(Y, families[["Y"]])
     modely <- fitGAM(
         df = dfy, outcome = "value", family = families[["Y"]], ...
     )
+    colnames(Cx) <- colnames(Ey) <- c("x", "y")
+    newGrid <- buildNewGrid(Cx = Cx, Ey = Ey, n_points_grid = n_points_grid)
     predx <- vcovPredGam(modelx, newdata = newGrid)
     predy <- vcovPredGam(modely, newdata = newGrid)
     corContr <- (predx$pred - mean(predx$pred)) * (predy$pred - mean(predy$pred))

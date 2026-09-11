@@ -11,8 +11,10 @@ export(plotGAMs)
 export(plotGAMsTopResults)
 export(plotPairMulti)
 export(plotPairSingle)
+export(plotPairSinglePPvec)
 export(plotSpotSums)
 export(plotTopPair)
+export(plotTopPairPPP)
 export(sbivar)
 export(selfName)
 export(writeSbivarToXlsx)
@@ -119,6 +121,7 @@ importFrom(spatstat.geom,
   marks,
   npoints,
   split.ppp,
+  subset.ppp,
   unmark
 )
 importFrom(spatstat.model,

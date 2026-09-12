@@ -47,10 +47,10 @@ if (.Platform$OS.type == "unix") {
     register(SnowParam(workers = nCores, type = "SOCK", stop.on.error = FALSE))
 }
 # register(SerialParam()) # Switch on when mapping test coverage
-resMoranTest <- sbivar(X, Y, Cx, Ey, method = "Moran")
-resGAMsSingle <- sbivar(X, Y, Cx, Ey, method = "GAM")
+resMoranTest <- sbivar(X, Y, Cx, Ey, method = "Moran's I")
+resGAMsSingle <- sbivar(X, Y, Cx, Ey, method = "GAMs")
 estGAMs <- sbivar(Xl, Yl, Cxl, Eyl, method = "GAMs", findVariances = TRUE)
-estMoran <- sbivar(Xl, Yl, Cxl, Eyl, method = "Moran", wo = "nn", findVariances = TRUE)
+estMoran <- sbivar(Xl, Yl, Cxl, Eyl, method = "Moran's I", wo = "nn", findVariances = TRUE)
 estMultiCor <- sbivar(Xl, Xl, Cxl, method = "Correlation")
 multiFitGams <- fitLinModels(estGAMs,
     design = toyDesign,

@@ -24,7 +24,7 @@
 #' VicariMultiTest <- lapply(Vicari, function(x) lapply(x[1:5], function(y) y[1:500, ]))
 #' VicariRes <- sbivar(VicariMultiTest$TranscriptOutcomes, VicariMultiTest$MetaboliteOutcomes,
 #'     VicariMultiTest$TranscriptCoords, VicariMultiTest$MetaboliteCoords,
-#'     normX = "rel", normY = "rel", method = "GAM"
+#'     normX = "rel", normY = "rel", method = "GAMs"
 #' )
 #' mouse <- substr(names(Vicari$TranscriptOutcomes)[1:5], 1, 10)
 #' designDf <- data.frame("mouse" = mouse) # The design matrix

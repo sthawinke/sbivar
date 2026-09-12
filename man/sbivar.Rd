@@ -65,7 +65,7 @@ Y2 <- matrix(rnorm(n * k), n, k,
     dimnames =
         list(paste0("sampleX", seq_len(n)), paste0("Y", seq_len(k)))
 )
-resModtTestJoint <- sbivar(X, Y2, Cx, method = "Modified")
+resModtTestJoint <- sbivar(X, Y2, Cx, method = "Modified t-test")
 # Single image analysis on synthetic data, converted to SpatialExperiment
 if (require(SpatialExperiment)) {
     seX <- SpatialExperiment(

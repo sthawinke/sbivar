@@ -223,7 +223,7 @@ VicariMultiTest <- lapply(Vicari, function(x) lapply(x, function(y) y[1:500, ]))
 multiMoranRes <- sbivar(VicariMultiTest$TranscriptOutcomes, VicariMultiTest$MetaboliteOutcomes,
     normX = "rel", normY = "rel",
     VicariMultiTest$TranscriptCoords, VicariMultiTest$MetaboliteCoords,
-    method = "Moran", wo = if (require(RANN)) "nn" else "Gauss"
+    method = "Moran's I", wo = if (require(RANN)) "nn" else "Gauss"
 )
 ```
 
@@ -341,7 +341,7 @@ MetSElist <- lapply(selfName(names(Vicari$MetaboliteOutcomes)), function(nam) {
 })
 multiMoranResSE <- sbivar(
     X = StxSElist, Y = MetSElist, assayX = "transcripts",
-    assayY = "metabolites", method = "GAM", verbose = FALSE
+    assayY = "metabolites", method = "GAMs", verbose = FALSE
 )
 multiMoranLmmsSE <- fitLinModels(multiMoranResSE, designDf, Formula = ~ (1 | mouse))
 multiMoranLmmsResSE <- extractResultsMulti(multiMoranLmmsSE, designDf)

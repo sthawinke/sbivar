@@ -168,3 +168,9 @@
 # 0.99.31
 
  - In BiocParallel, set stop.on.error as default to skip over failed GAM fits
+
+# 0.99.35
+
+ - No more partial matching of method names in example code
+ - SpatialExperiment is now in 'Imports' as key Bioconductor dependency
+ - Add tests for lists of SpatialExperiment objects and with sample identifiers sample_id_x

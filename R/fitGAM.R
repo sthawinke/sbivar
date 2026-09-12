@@ -54,8 +54,10 @@ fitGAM <- function(df, outcome, family = gaussian(), Gamm, correlation) {
 #' @returns A list of GAM models
 #' @importFrom smoppix loadBalanceBplapply
 #' @importFrom BiocParallel bplapply
-fitManyGAMs <- function(mat, coord, family = gaussian(), modality, features,
-    Gamm, correlation, pseudoCount = 1e-8, ...) {
+fitManyGAMs <- function(
+      mat, coord, family = gaussian(), modality, features,
+      Gamm, correlation, pseudoCount = 1e-8, ...
+) {
     if (family$family == "Gamma") {
         mat <- mat + pseudoCount
     }

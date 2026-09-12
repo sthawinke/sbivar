@@ -86,21 +86,20 @@ spe_prot <- SpatialExperiment(
 )
 test_that("Sbivar works on BioConductor objects of SpatialExperiment class", {
     # Provide separate SpatialExperiment objects
-    expect_is(sbivar(mae[["RNA"]], mae[["Protein"]],
+    expect_is(sbivar(spe_rna, spe_prot,
         assayX = "counts",
         assayY = "counts", families = list("X" = mgcv::nb(), "Y" = mgcv::nb())
     ), "list")
 })
-seListX = mapply(Xl, Cxl, FUN = tmpFun <- function(X, Cx){
+seListX <- mapply(Xl, Cxl, FUN = tmpFun <- function(X, Cx) {
     SpatialExperiment(
         assays = list("X" = t(X)),
         spatialCoords = Cx
     )
 })
-seListY = mapply(Yl, Eyl, FUN = tmpFun)
+seListY <- mapply(Yl, Eyl, FUN = tmpFun)
 test_that("Sbivar works on lists of SpatialExperiment objects", {
-    expect_is(sbivar(seListX, seListY, assayX = "X", assayY = "X", families = list("X" = mgcv::nb(), "Y" = mgcv::nb())
-    ), "list")
+    expect_is(sbivar(seListX, seListY, assayX = "X", assayY = "X", families = list("X" = mgcv::nb(), "Y" = mgcv::nb())), "list")
 })
 spe_rna2 <- SpatialExperiment(
     spatialCoords = rna_coords,
@@ -111,15 +110,14 @@ spe_prot2 <- SpatialExperiment(
     spatialCoords = prot_coords
 )
 test_that("Sbivar works on two SpatialExperiment objects to be split", {
-    expect_is(sbivar(spe_rna2, spe_prot2, assayX = "counts", assayY = "counts", sample_id_x = "idX", sample_id_y = "idY", families = list("X" = mgcv::nb(), "Y" = mgcv::nb())
-    ), "list")
+    expect_is(sbivar(spe_rna2, spe_prot2, assayX = "counts", assayY = "counts", sample_id_x = "idX", sample_id_y = "idY", families = list("X" = mgcv::nb(), "Y" = mgcv::nb())), "list")
 })
 # --- Combine into MultiAssayExperiment ---
 mae <- MultiAssayExperiment(experiments = list(RNA = spe_rna, Protein = spe_prot))
 test_that("Sbivar works on BioConductor objects of MultiAssayExperiment class", {
     expect_is(sbivar(mae,
-                     experimentX = "RNA", experimentY = "Protein", assayX = "counts",
-                     assayY = "counts", families = list("X" = mgcv::nb(), "Y" = mgcv::nb())
+        experimentX = "RNA", experimentY = "Protein", assayX = "counts",
+        assayY = "counts", families = list("X" = mgcv::nb(), "Y" = mgcv::nb())
     ), "list")
 })
 test_that("Sbivar fails on BioConductor objects SpatialExperiment and MultiAssayExperiment where appropriate", {

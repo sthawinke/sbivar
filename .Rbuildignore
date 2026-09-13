@@ -6,3 +6,4 @@
 ^Meta$
 ^\.positai$
 ^\.claude$
+^\.posit/assistant$

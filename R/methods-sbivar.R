@@ -2,11 +2,11 @@
 #' @export
 #' @inheritParams sbivarSingle
 #' @param Y Matrix or SpatialExperiment object of second modality
-setMethod("sbivar", "matrix", function(X, Y, Cx, Ey, ...) {
-    if (!is.matrix(Y) || !is.matrix(Cx) || (!missing(Ey) && !is.matrix(Ey))) {
+setMethod("sbivar", c("matrix", "matrix"), function(X, Y, Cx, Ey, ...) {
+    if (!is.matrix(Cx) || (!missing(Ey) && !is.matrix(Ey))) {
         stop(
-            "Since X is a matrix or dataframe, Y, Cx and Ey must be so too!",
-            if (is.data.frame(Y) || is.data.frame(Cx) || (!missing(Ey) && is.data.frame(Ey))) {
+            "Since X and Y are matrices, Cx and Ey must be so too!",
+            if (is.data.frame(Cx) || (!missing(Ey) && is.data.frame(Ey))) {
                 "\nTry converting data frames with as.matrix()"
             }
         )
@@ -16,10 +16,7 @@ setMethod("sbivar", "matrix", function(X, Y, Cx, Ey, ...) {
 #' @rdname sbivar
 #' @export
 #' @inheritParams sbivarMulti
-setMethod("sbivar", "list", function(X, Y, Cx, Ey, assayX = NULL, assayY = NULL, ...) {
-    if (!is.list(Y)) {
-        stop("Since X is a list, Y must be so too!")
-    }
+setMethod("sbivar", c("list", "list"), function(X, Y, Cx, Ey, assayX = NULL, assayY = NULL, ...) {
     if (all(vapply(X, FUN.VALUE = TRUE, inherits, "SpatialExperiment"))) {
         if (is.null(assayX)) {
             stop("Provide the name of the assay through the 'assayX' argument!")
@@ -42,13 +39,10 @@ setMethod("sbivar", "list", function(X, Y, Cx, Ey, assayX = NULL, assayY = NULL,
 #' included in the same SpatialExperiment objects X and Y. By default, they are assumed to be the same for both X and Y.
 #' @rdname sbivar
 #' @export
-setMethod("sbivar", "SpatialExperiment", function(
+setMethod("sbivar", c("SpatialExperiment", "SpatialExperiment"), function(
       X, Y, assayX, assayY, sample_id_x,
       sample_id_y = sample_id_x, ...
 ) {
-    if (!inherits(Y, "SpatialExperiment")) {
-        stop("Since X is a SpatialExperiment object, Y must be so too!")
-    }
     out <- if (missing(sample_id_x)) {
         c(sbivar(
             assayT(X, assayX), assayT(Y, assayY), SpatialExperiment::spatialCoords(X),

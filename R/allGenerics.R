@@ -49,3 +49,4 @@
 #'     )
 #' }
 setGeneric("sbivar", function(X, ...) standardGeneric("sbivar"))
+setGeneric("sbivar", function(X, Y, ...) standardGeneric("sbivar"))

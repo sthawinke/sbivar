@@ -2,28 +2,28 @@
 % Please edit documentation in R/allGenerics.R, R/methods-sbivar.R
 \name{sbivar}
 \alias{sbivar}
-\alias{sbivar,matrix-method}
-\alias{sbivar,list-method}
-\alias{sbivar,SpatialExperiment-method}
-\alias{sbivar,MultiAssayExperiment-method}
+\alias{sbivar,matrix,matrix-method}
+\alias{sbivar,list,list-method}
+\alias{sbivar,SpatialExperiment,SpatialExperiment-method}
+\alias{sbivar,MultiAssayExperiment,ANY-method}
 \title{Spatial bivariate association analysis}
 \usage{
-sbivar(X, ...)
+sbivar(X, Y, ...)
 
-\S4method{sbivar}{matrix}(X, Y, Cx, Ey, ...)
+\S4method{sbivar}{matrix,matrix}(X, Y, Cx, Ey, ...)
 
-\S4method{sbivar}{list}(X, Y, Cx, Ey, assayX = NULL, assayY = NULL, ...)
+\S4method{sbivar}{list,list}(X, Y, Cx, Ey, assayX = NULL, assayY = NULL, ...)
 
-\S4method{sbivar}{SpatialExperiment}(X, Y, assayX, assayY, sample_id_x, sample_id_y = sample_id_x, ...)
+\S4method{sbivar}{SpatialExperiment,SpatialExperiment}(X, Y, assayX, assayY, sample_id_x, sample_id_y = sample_id_x, ...)
 
-\S4method{sbivar}{MultiAssayExperiment}(X, experimentX, experimentY, assayX, assayY, ...)
+\S4method{sbivar}{MultiAssayExperiment,ANY}(X, experimentX, experimentY, assayX, assayY, ...)
 }
 \arguments{
 \item{X}{the input object, containing measurements of the first modality, see methods('sbivar')}
 
-\item{...}{additional constructor and analysis arguments}
-
 \item{Y}{Matrix or SpatialExperiment object of second modality}
+
+\item{...}{additional constructor and analysis arguments}
 
 \item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y respectively}
 

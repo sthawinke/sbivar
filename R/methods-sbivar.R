@@ -21,9 +21,6 @@ setMethod("sbivar", "list", function(X, Y, Cx, Ey, assayX = NULL, assayY = NULL,
         stop("Since X is a list, Y must be so too!")
     }
     if (all(vapply(X, FUN.VALUE = TRUE, inherits, "SpatialExperiment"))) {
-        if (!requireNamespace("SpatialExperiment", quietly = TRUE)) {
-            stop("SpatialExperiment package needs to be installed first!")
-        }
         if (is.null(assayX)) {
             stop("Provide the name of the assay through the 'assayX' argument!")
         }
@@ -31,9 +28,6 @@ setMethod("sbivar", "list", function(X, Y, Cx, Ey, assayX = NULL, assayY = NULL,
         X <- lapply(X, assayT, assayX)
     }
     if (all(vapply(Y, FUN.VALUE = TRUE, inherits, "SpatialExperiment"))) {
-        if (!requireNamespace("SpatialExperiment", quietly = TRUE)) {
-            stop("SpatialExperiment package needs to be installed first!")
-        }
         if (is.null(assayY)) {
             stop("Provide the name of the assay through the 'assayY' argument!")
         }
@@ -52,9 +46,6 @@ setMethod("sbivar", "SpatialExperiment", function(
       X, Y, assayX, assayY, sample_id_x,
       sample_id_y = sample_id_x, ...
 ) {
-    if (!requireNamespace("SpatialExperiment", quietly = TRUE)) {
-        stop("SpatialExperiment package needs to be installed first!")
-    }
     if (!inherits(Y, "SpatialExperiment")) {
         stop("Since X is a SpatialExperiment object, Y must be so too!")
     }

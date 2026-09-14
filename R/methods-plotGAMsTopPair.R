@@ -1,7 +1,7 @@
 setMethod(
     "plotGAMsTopPair",
     "sbivarResultsGAMs",
-    function(x, topRank, parameter, X, Y, Cx, Ey,  ...) {
+    function(x, topRank, parameter, X, Y, Cx, Ey, ...) {
         stopifnot(is.numeric(topRank))
         topFeats <- (
             if (x@multi) {

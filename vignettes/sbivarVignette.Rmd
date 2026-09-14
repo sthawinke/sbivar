@@ -244,7 +244,8 @@ topPairs(multiMoranLmmsRes, parameter = "Intercept")
 No features are significantly associated after multiplicity correction. This is in part caused by different experimental procedures used for the different sections, i.e. these are not real replicates yet, as technology is still being developed. For illustration, we plot the feature pair with the smallest p-values nevertheless:
 
 ```{r plottopMulti, fig.height = 9}
-plotTopPair(multiMoranLmmsRes, parameter = "Intercept",
+plotTopPair(multiMoranLmmsRes,
+    parameter = "Intercept",
     Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes,
     Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.4
 )

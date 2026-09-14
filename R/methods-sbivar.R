@@ -39,14 +39,17 @@ setMethod("sbivar", c("list", "list"), function(X, Y, Cx, Ey, assayX = NULL, ass
 #' included in the same SpatialExperiment objects X and Y. By default, they are assumed to be the same for both X and Y.
 #' @rdname sbivar
 #' @export
-setMethod("sbivar", c("SpatialExperiment", "SpatialExperiment"), function(X, Y, assayX, assayY, sample_id_x,
-    sample_id_y = sample_id_x, ...) {
+setMethod("sbivar", c("SpatialExperiment", "SpatialExperiment"), function(
+      X, Y, assayX, assayY, sample_id_x,
+      sample_id_y = sample_id_x, ...
+) {
     out <- if (missing(sample_id_x)) {
         foo <- sbivar(
             assayT(X, assayX), assayT(Y, assayY), SpatialExperiment::spatialCoords(X),
             SpatialExperiment::spatialCoords(Y), ...
         )
-        foo@assayX = assayX; foo@assayY = assayY
+        foo@assayX <- assayX
+        foo@assayY <- assayY
         foo
     } else {
         sbivar(splitSpatialExperiment(X, sample_id_x),

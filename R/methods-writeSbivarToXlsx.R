@@ -36,8 +36,8 @@ setMethod(
                 sheetName <- if (nam == "Intercept") "Baseline" else nam
                 addWorksheet(wb, sheetName) # Create sheet and write data to it
                 writeData(wb,
-                          sheet = sheetName, x = data.frame(mat), colNames = TRUE,
-                          rowNames = FALSE
+                    sheet = sheetName, x = data.frame(mat), colNames = TRUE,
+                    rowNames = FALSE
                 )
             }
         }
@@ -50,4 +50,5 @@ setMethod(
                 " after multiplicity correction!\nNo file was created."
             )
         }
-    })
+    }
+)

@@ -102,13 +102,13 @@ extractResultsMulti <- function(result, designDf, method = "BH") {
         tmpMat <- tmpMat[order(tmpMat[, "pVal"]), ]
         addFeatureColumn(cbind(tmpMat, "pAdj" = p.adjust(tmpMat[, "pVal"], method = method)))
     })
-    sbivarResultObj = if (method == "Moran's I") {
+    sbivarResultObj <- if (method == "Moran's I") {
         new("sbivarResultsMoransI",
             "result" = fixResOut, "method" = result$method, "multi" = TRUE, "normX" = result$normX,
             "normY" = result$normY, "maxIxy" = moranRes$maxIxy, "wo" = wo, "estimateSEsMoransI" = result$returnSEsMoransI,
             "wParams" = switch(wo,
-                               "Gauss" = result$etas,
-                               "nn" = result$numNNs
+                "Gauss" = result$etas,
+                "nn" = result$numNNs
             )
         )
     } else if (method == "GAMs") {

@@ -114,3 +114,36 @@ setGeneric(
     function(x, topRank = 1, parameter = "Intercept",
               ...) standardGeneric("plotGAMsTopPair")
 )
+#' Write \emph{sbivar} results to an excel worksheet
+#'
+#' The results of single- or multi-image analysis are written to an excel spreadsheet
+#' with separate tabs per parameter tested, sorted by increasing p-value.
+#'
+#' @param x The analysis results, from a call to \link{sbivar} (single-image)
+#' or \link{extractResultsMulti} (multi-image)
+#' @param file The file to write the results to
+#' @param overwrite A boolean, should the file be overwritten if it exists already?
+#' @param digits An integer, the number of significant digits to retain for the effect size,
+#' raw and adjusted p-values
+#' @param sigLevel The significance level threshold to use for the adjusted p-values,
+#' only features exceeding the threshold are written to the file. Set this parameter to 1 to write all features
+#' @seealso \link[openxlsx]{createWorkbook}
+#' @details If no feature exceeds the significance threshold for a certain parameter,
+#' an empty tab is created. For each fixed effect, a single tab is written.
+#' The "baseline" tabs indicate the overall patterns, the other tabs are named after the fixed effects
+#' and indicate departure from this baseline for this fixed effect.
+#' @return Returns invisible with a message when writing operation successful,
+#' otherwise throws a warning.
+#' @export
+#' @importFrom openxlsx createWorkbook writeData addWorksheet saveWorkbook getSheetNames
+#' @examples
+#' example(sbivar, "sbivar")
+#' # The significance level is set to 1 here for illustration,
+#' # meaning that all feature pairs will be written to the spreadsheet.
+#' # Single result
+#' writeSbivarToXlsx(resGAMs, file = tmpFile <- tempfile(fileext = ".xlsx"), sigLevel = 1)
+#' file.exists(tmpFile)
+setGeneric(
+    "writeSbivarToXlsx",
+    function(x, file, overwrite = FALSE, digits = 3, sigLevel = 0.05) standardGeneric("writeSbivarToXlsx")
+)

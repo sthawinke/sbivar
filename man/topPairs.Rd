@@ -7,7 +7,7 @@
 topPairs(x, ...)
 }
 \arguments{
-\item{sbivarResults}{The sbivarResults object}
+\item{x}{The sbivarResults object}
 }
 \value{
 A dataframe of top results

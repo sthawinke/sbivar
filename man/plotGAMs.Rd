@@ -2,7 +2,6 @@
 % Please edit documentation in R/plotGAMs.R
 \name{plotGAMs}
 \alias{plotGAMs}
-\alias{plotGAMsTopResults}
 \title{Plot the fitted splines, and the correlation between them}
 \usage{
 plotGAMs(
@@ -21,18 +20,6 @@ plotGAMs(
   correlation = corGaus(form = ~x + y, nugget = TRUE, value = c(1, 0.25)),
   ...
 )
-
-plotGAMsTopResults(
-  results,
-  X,
-  Y,
-  Cx,
-  Ey,
-  topRank = 1,
-  parameter = "Intercept",
-  families = results$families,
-  ...
-)
 }
 \arguments{
 \item{X, Y}{Matrices of omics measurements, or lists thereof}
@@ -48,9 +35,6 @@ for the outcome values. See details of \link{sbivarSingle}.}
 
 \item{addTitle}{A boolean, should a title be plotted}
 
-\item{normX, normY}{Character strings, indicating what normalization is required
-for X and Y matrices, respectively, before plotting, see details.}
-
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.}
 
@@ -62,11 +46,6 @@ evaluated on.}
 
 \item{results}{Result of a call to \link{sbivar} (single-image) or to
 \link{fitLinModels} (multi-image)}
-
-\item{topRank}{An integer, the feature pair with the rank-th smallest p-value is plotted}
-
-\item{parameter}{The linear model parameter used to find the feature with the strongest effect.
-The default is the intercept, i.e. the overall effect.}
 }
 \value{
 A ggplot object
@@ -87,7 +66,7 @@ the correlation has naturally, for legibility.
 # Single image
 example(sbivar, "sbivar")
 plotGAMs(X, Y, Cx, Ey, features = c("X1", "Y2"))
-plotGAMsTopResults(resGAMs, X, Y, Cx = Cx, Ey = Ey)
+plotGAMsTopPair(resGAMs, X, Y, Cx = Cx, Ey = Ey)
 # Multi image, arbitrary pair
 data(Vicari)
 plotGAMs(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,

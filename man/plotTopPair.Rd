@@ -48,7 +48,15 @@ plotPairSingleVectors(
   ...
 )
 
-plotTopPair(x, topRank, parameter, scaleBySampleSums, ...)
+plotTopPair(
+  x,
+  topRank = 1,
+  parameter = "Intercept",
+  scaleBySampleSums = FALSE,
+  normX = x@normX,
+  normY = x@normY,
+  ...
+)
 }
 \arguments{
 \item{X}{the input object, containing measurements of the first modality, see methods('sbivar')}

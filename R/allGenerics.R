@@ -35,18 +35,18 @@
 #' resModtTestJoint <- sbivar(X, Y2, Cx, method = "Modified t-test")
 #' # Single image analysis on synthetic data, converted to SpatialExperiment
 #' library(SpatialExperiment)
-#'     seX <- SpatialExperiment(
-#'         assays = list("transcripts" = t(X)),
-#'         spatialCoords = Cx
-#'     )
-#'     seY <- SpatialExperiment(
-#'         assays = list("metabolites" = t(Y)),
-#'         spatialCoords = Ey
-#'     )
-#'     resModtGPs <- sbivar(seX, seY,
-#'         assayX = "transcripts", assayY = "metabolites",
-#'         method = "GPs"
-#'     )
+#' seX <- SpatialExperiment(
+#'     assays = list("transcripts" = t(X)),
+#'     spatialCoords = Cx
+#' )
+#' seY <- SpatialExperiment(
+#'     assays = list("metabolites" = t(Y)),
+#'     spatialCoords = Ey
+#' )
+#' resModtGPs <- sbivar(seX, seY,
+#'     assayX = "transcripts", assayY = "metabolites",
+#'     method = "GPs"
+#' )
 setGeneric("sbivar", function(X, ...) standardGeneric("sbivar"))
 setGeneric("sbivar", function(X, Y, ...) standardGeneric("sbivar"))
 #' Return the top results found by sbivar
@@ -104,5 +104,11 @@ setGeneric(
 #' )
 setGeneric(
     "plotTopPair",
-    function(x, topRank, parameter, scaleBySampleSums,  ...) standardGeneric("plotTopPair")
+    function(x, topRank = 1, parameter = "Intercept", scaleBySampleSums = FALSE,
+             normX = x@normX, normY = x@normY, ...) standardGeneric("plotTopPair")
+)
+setGeneric(
+    "plotGAMsTopPair",
+    function(x, topRank = 1, parameter = "Intercept",
+              ...) standardGeneric("plotGAMsTopPair")
 )

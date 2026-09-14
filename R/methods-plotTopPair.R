@@ -1,21 +1,21 @@
 setMethod(
     "plotTopPair",
     "sbivarResults",
-    function(x, topRank = 1, parameter = "Intercept", scaleBySampleSums = FALSE, ...) {
+    function(x, topRank, parameter, scaleBySampleSums, normX, normY, ...) {
         stopifnot(is.numeric(topRank), topRank >= 1, is.logical(scaleBySampleSums), is.character(parameter))
         if (x@multi) {
-            stopifnot(parameter %in% names(result))
-            topFeats <- x@results[[parameter]][topRank, c("Modality_X", "Modality_Y")]
+            stopifnot(parameter %in% names(x@result))
+            topFeats <- x@result[[parameter]][topRank, c("Modality_X", "Modality_Y")]
             plotPairMulti(
-                features = topFeats, assayX = results@assayX,
-                assayY = results@assayY, normX = results@normX, scaleBySampleSums = scaleBySampleSums,
-                normY = results@normY, ...
+                features = topFeats, assayX = x@assayX,
+                assayY = x@assayY, normX = normX, scaleBySampleSums = scaleBySampleSums,
+                normY = normY, ...
             )
         } else {
-            topFeats <- x@results[topRank, c("Modality_X", "Modality_Y")]
+            topFeats <- x@result[topRank, c("Modality_X", "Modality_Y")]
             plotPairSingle(
-                features = topFeats, assayX = results@assayX, scaleBySampleSums = scaleBySampleSums,
-                assayY = results@assayY, normX = results@normX, normY = results@normY, ...
+                features = topFeats, assayX = x@assayX, scaleBySampleSums = scaleBySampleSums,
+                assayY = x@assayY, normX = normX, normY = normY, ...
             )
         }
     }

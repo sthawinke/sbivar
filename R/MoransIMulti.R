@@ -26,6 +26,5 @@ MoransIMulti <- function(Xl, Yl, Cxl, Eyl, findVariances, verbose, featuresX, fe
             "multi" = FALSE, "normX" = normX, "normY" = normY, "families" = families,
             "correlation" = NULL, "Gamm" = FALSE
         )
-
     })
 }

@@ -27,7 +27,7 @@
 #' # Single image
 #' example(sbivar, "sbivar")
 #' plotGAMs(X, Y, Cx, Ey, features = c("X1", "Y2"))
-#' plotGAMsTopResults(resGAMs, X, Y, Cx = Cx, Ey = Ey)
+#' plotGAMsTopPair(resGAMs, X, Y, Cx = Cx, Ey = Ey)
 #' # Multi image, arbitrary pair
 #' data(Vicari)
 #' plotGAMs(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
@@ -87,28 +87,6 @@ plotGAMs <- function(X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
                 if (!multi) round(corEst, 3)
             ))
         }
-}
-#' @export
-#' @rdname plotGAMs
-#' @order 2
-#' @inheritParams plotTopPair
-plotGAMsTopResults <- function(results, X, Y, Cx, Ey, topRank = 1,
-    parameter = "Intercept", families = results$families, ...) {
-    stopifnot(is.numeric(topRank))
-    topFeats <- (
-        if (results$multi) {
-            results$result[[parameter]]
-        } else {
-            results$result
-        })[topRank, c("Modality_X", "Modality_Y")]
-    Cx <- getSpatialCoords(X, Cx)
-    X <- getX(X, results$assayX)
-    Ey <- getSpatialCoords(Y, Ey)
-    Y <- getX(Y, results$assayY)
-    plotGAMs(
-        X = X, Y = Y, features = topFeats, Cx = Cx, Ey = Ey, families = families,
-        multi = results$multi, normX = results$normX, normY = results$normY, Gamm = !results$multi && results$Gamm, correlation = results$correlation, ...
-    )
 }
 #' Make a list of offsets
 #'

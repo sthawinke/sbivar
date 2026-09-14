@@ -11,13 +11,12 @@
 #' the correlation has naturally, for legibility.
 #'
 #' @inheritParams GAMsSingle
+#' @inheritParams sbivarSingle
 #' @param X,Y Matrices of omics measurements, or lists thereof
 #' @param Cx,Ey Corresponding coordinate matrices of dimension two, or lists thereof
 #' @param scaleFun The scaling function to be applied before plotting
 #' @param addTitle A boolean, should a title be plotted
 #' @param features The features to plot
-#' @param results Result of a call to \link{sbivar} (single-image) or to
-#' \link{fitLinModels} (multi-image)
 #' @param ... passed onto \link{fitGAM}
 #'
 #' @returns A ggplot object

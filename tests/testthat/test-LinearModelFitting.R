@@ -24,12 +24,12 @@ test_that("fitLinModels works for GAM input", {
     )
     # Extract the results
     expect_named(
-        resGams <- extractResultsMulti(multiFitGams, designDf = toyDesign)$result,
+        resGams <- extractResultsMulti(multiFitGams, designDf = toyDesign),
         c("Intercept", "covariate", "cofactor")
     )
     expect_identical(colnames(resGams$Intercept), c("Modality_X", "Modality_Y", "Estimate", "SE", "pVal", "pAdj"))
     expect_warning(
-        resGams3 <- extractResultsMulti(multiFitGams3)$result
+        resGams3 <- extractResultsMulti(multiFitGams3)
     )
     expect_named(resGams3, "Intercept")
     expect_false(is.unsorted(resGams$Intercept[, "pVal"]))

@@ -61,6 +61,7 @@ setGeneric(
 #' @title Plot a the top feature pair according to a sbivar analysis
 #' @description Plot a chosen feature pair, or the highest ranking feature pair,
 #' for a single image or multiple images.
+#' @inheritParams sbivarMulti
 #' @param parameter The linear model parameter used to find the feature with the strongest effect.
 #' The default is the intercept, i.e. the overall effect.
 #' @param topRank An integer, the feature pair with the rank-th smallest p-value is plotted
@@ -112,6 +113,7 @@ setGeneric(
 #' Plot GAMs of top features
 #' @description Fit GAMS for the top feature pair chosen, and plot the resulting spline surfaces
 #' @export
+#' @inheritParams plotTopPair
 setGeneric(
     "plotGAMsTopPair",
     function(x, topRank = 1, parameter = "Intercept",

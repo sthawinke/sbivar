@@ -11,6 +11,8 @@ topPairs(x, ...)
 }
 \arguments{
 \item{x}{The sbivarResults object}
+
+\item{...}{passed onto \link[utils]{head}}
 }
 \value{
 A dataframe of top results

@@ -43,9 +43,6 @@ evaluated on.}
 \item{correlation}{Correlation structure, passed onto \link{fitGP} or \link{fitGAM}}
 
 \item{...}{passed onto \link{fitGAM}}
-
-\item{results}{Result of a call to \link{sbivar} (single-image) or to
-\link{fitLinModels} (multi-image)}
 }
 \value{
 A ggplot object

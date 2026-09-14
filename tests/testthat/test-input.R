@@ -1,7 +1,8 @@
 context("Unit tests for input errors")
 test_that("SbivarSingle works for correct input", {
     sbiRes <- sbivar(X, Y, Cx, Ey, method = "GAMs")
-    expect_is(sbiRes, "list")
+    expect_is(sbiRes, "sbivarResultsGAMs")
+    expect_is(sbiRes, "sbivarResults")
     expect_is(sbivar(X, Y, Cx, Ey, method = "GPs"), "list")
     expect_message(sbivar(X, Y, Cx, Ey, method = "GAMs", correlation = corExp(~ x + y, nugget = TRUE)))
     expect_message(sbiResMoran <- sbivar(X, Y, Cx, Ey, method = "Moran's I"))
@@ -9,7 +10,7 @@ test_that("SbivarSingle works for correct input", {
     expect_true(all(c("pVal", "pAdj") %in% colnames(sbiResMoran$result)))
     expect_false(is.unsorted(sbiRes$result[, "pVal"]))
     expect_silent(sbivar(X, Y, Cx, Ey, method = "GAMs", verbose = FALSE))
-    expect_is(sbivar(X, Y, Cx, Ey, method = "Moran's I", featuresX = "X1", featuresY = "Y1"), "list")
+    expect_is(sbivar(X, Y, Cx, Ey, method = "Moran's I", featuresX = "X1", featuresY = "Y1"), "sbivarResultsMoransI")
 })
 test_that("SbivarSingle throws errors for incorrect input", {
     expect_error(sbivar(X, Y, cbind(Cx, Cx), Ey, method = "GAMs"))
@@ -41,10 +42,10 @@ test_that("SbivarSingle throws errors for incorrect input", {
 })
 test_that("sbivarMulti works for correct input", {
     gamList <- sbivar(Xl, Yl, Cxl, Eyl, method = "GAMs")
-    expect_is(gamList, "list")
-    expect_named(gamList, c("estimates", "method", "multi", "normX", "normY", "families"))
+    expect_is(gamList, "sbivarResultsGAMs")
+    expect_named(gamList, c("result", "method", "multi", "normX", "normY", "families"))
     expect_is(gamList$estimates[[1]]$res, "matrix")
-    expect_is(sbivar(Xl, Yl, Cxl, Eyl, method = "Moran's I"), "list")
+    expect_is(sbivar(Xl, Yl, Cxl, Eyl, method = "Moran's I"), "sbivarResultsMoransI")
 })
 test_that("sbivarMulti throws errors for incorrect input", {
     expect_error(sbivar(Xl, Yl, Cxl, Eyl, method = "GPs"))
@@ -89,7 +90,7 @@ test_that("Sbivar works on BioConductor objects of SpatialExperiment class", {
     expect_is(sbivar(spe_rna, spe_prot,
         assayX = "counts",
         assayY = "counts", families = list("X" = mgcv::nb(), "Y" = mgcv::nb())
-    ), "list")
+    ), "sbivarResultsGAMs")
 })
 seListX <- mapply(Xl, Cxl, FUN = tmpFun <- function(X, Cx) {
     SpatialExperiment(

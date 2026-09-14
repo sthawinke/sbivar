@@ -91,6 +91,10 @@ see \link[SummarizedExperiment]{assay}}
 
 \item{...}{passed onto lower level functions}
 
+\item{Xl, Yl}{Lists of matrices of omics measurements}
+
+\item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
+
 \item{theme}{the ggplot2 theme}
 
 \item{x, y}{Outcome vectors}

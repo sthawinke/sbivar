@@ -1,3 +1,5 @@
+#' @importFrom utils head
+#' @rdname topPairs
 setMethod(
     "topPairs",
     "sbivarResults",

@@ -30,7 +30,7 @@
 #' \item{method,normX,normY}{As provided}
 #' \item{families,wo,wParams}{Optional, as provided. wParams are either etas or numNNs}
 #' @importFrom stats p.adjust
-#' @importFrom methods is
+#' @importFrom methods is new
 #' @importFrom nlme corRatio corGaus corSpher corExp corLin lmeControl
 #' @importFrom BiocParallel bpparam bpworkers
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package

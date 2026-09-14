@@ -109,8 +109,9 @@ setGeneric(
         standardGeneric("plotTopPair")
     }
 )
+#' Plot GAMs of top features
+#' @description Fit GAMS for the top feature pair chosen, and plot the resulting spline surfaces
 #' @export
-#' @rdname plotGAMs
 setGeneric(
     "plotGAMsTopPair",
     function(x, topRank = 1, parameter = "Intercept",

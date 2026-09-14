@@ -1,3 +1,4 @@
+#' @rdname plotGAMsTopPair
 setMethod(
     "plotGAMsTopPair",
     "sbivarResultsGAMs",

@@ -1,3 +1,4 @@
+#' @rdname writeSbivarToXlsx
 setMethod(
     "writeSbivarToXlsx",
     "sbivarResults",

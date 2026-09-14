@@ -64,6 +64,7 @@ importFrom(lme4,
 importFrom(lmerTest,lmer)
 importFrom(methods,
   is,
+  new,
   setGeneric,
   setMethod
 )
@@ -128,4 +129,5 @@ importFrom(stats,
   sigma,
   terms
 )
+importFrom(utils,head)
 useDynLib(sbivar, .registration = TRUE)

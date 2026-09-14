@@ -105,8 +105,8 @@ extractResultsMulti <- function(result, designDf, method = "BH") {
     sbivarResultObj <- if (method == "Moran's I") {
         new("sbivarResultsMoransI",
             "result" = fixResOut, "method" = result$method, "multi" = TRUE, "normX" = result$normX,
-            "normY" = result$normY, "maxIxy" = moranRes$maxIxy, "wo" = wo, "estimateSEsMoransI" = result$returnSEsMoransI,
-            "wParams" = switch(wo,
+            "normY" = result$normY, "maxIxy" = result$maxIxy, "wo" = wo, "estimateSEsMoransI" = result$returnSEsMoransI,
+            "wParams" = switch(result$wo,
                 "Gauss" = result$etas,
                 "nn" = result$numNNs
             )

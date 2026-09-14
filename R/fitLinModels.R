@@ -31,7 +31,7 @@
 #' multiGAMLmms <- fitLinModels(VicariRes, designDf, Formula = ~ (1 | mouse))
 #' # Extract the results
 #' resGAMsMulti <- extractResultsMulti(multiGAMLmms, designDf = designDf)
-#' head(resGAMsMulti$results$Intercept)
+#' topPairs(resGAMsMulti)
 #' @importFrom lmerTest lmer
 #' @importFrom stats formula terms model.matrix
 #' @importFrom lme4 lmerControl .makeCC isSingular lFormula mkReTrms

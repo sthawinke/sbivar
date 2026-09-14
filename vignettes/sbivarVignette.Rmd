@@ -318,7 +318,7 @@ We run a the same analysis, now providing the experiment names on top of the ass
 resMAE <- sbivar(MAE,
     assayX = "transcripts", assayY = "metabolites",
     experimentX = "Stx", experimentY = "Msi",
-    families = FamiliesVicari, method = "GAMs", normX = "rel", normY = "rel"
+    families = FamiliesVicari, method = "GAMs"
 )
 ```
 
@@ -345,7 +345,7 @@ multiMoranResSE <- sbivar(
 )
 multiMoranLmmsSE <- fitLinModels(multiMoranResSE, designDf, Formula = ~ (1 | mouse))
 multiMoranLmmsResSE <- extractResultsMulti(multiMoranLmmsSE, designDf)
-head(multiMoranLmmsResSE$result$Intercept)
+topPairs(multiMoranLmmsResSE, "Intercept")
 ```
 
 Another option is to provide only two _SpatialExperiment_ objects, but provide a _sample_id_ argument that identifies the different images. For illustration, we construct such objects from the Vicari data.
@@ -432,7 +432,7 @@ if (reqann) {
         assayX = "Stx", assayY = "msi",
         normX = "rel", normY = "rel", verbose = FALSE
     )
-    plotTopPair(GodfreyRes, speStx, speMet)
+    plotTopPair(GodfreyRes, X = speStx, Y = speMet)
 }
 ```
 

@@ -1,11 +1,15 @@
+setClassUnion("characterOrNULL", c("character", "NULL"))
+setClassUnion("dataframeOrList", c("data.frame", "list"))
 setClass(
     "sbivarResults",
     slots = c(
-        result = "list",
+        result = "dataframeOrList",
         method = "character",
         multi = "logical",
         normX = "character",
-        normY = "character"
+        normY = "character",
+        assayX = "characterOrNULL",
+        assayY = "characterOrNULL"
     )
 )
 setClassUnion("numericOrNULL", c("numeric", "NULL"))

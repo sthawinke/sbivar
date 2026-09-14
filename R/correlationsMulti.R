@@ -18,6 +18,6 @@ correlationsMulti <- function(Xl, Yl, featuresX, featuresY, verbose) {
             Yl[[nam]][commonNames, featuresY <- intersect(featuresY, colnames(Yl[[nam]]))]
         ))
         names(out) <- makeNames(featuresX, featuresY)
-        out
+        list("res" = out)
     })
 }

@@ -69,7 +69,7 @@ designDf <- data.frame("mouse" = mouse) # The design matrix
 multiGAMLmms <- fitLinModels(VicariRes, designDf, Formula = ~ (1 | mouse))
 # Extract the results
 resGAMsMulti <- extractResultsMulti(multiGAMLmms, designDf = designDf)
-head(resGAMsMulti$results$Intercept)
+topPairs(resGAMsMulti)
 }
 \seealso{
 \link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}, \link[stats]{p.adjust}

@@ -70,7 +70,7 @@ sbivarMulti <- function(
             bpworkers(bpparam()), " computing cores"
         )
     }
-    out <- if (method == "Moran's I") {
+    res <- if (method == "Moran's I") {
         MoransIMulti(Xl, Yl, Cxl, Eyl,
             featuresX = featuresX, featuresY = featuresY, normX = normX, normY = normY,
             wo = wo, numNNs = numNNs, verbose = verbose, findVariances = findVariances, findMaxW = findMaxW,
@@ -88,5 +88,6 @@ sbivarMulti <- function(
             featuresX = featuresX, featuresY = featuresY, verbose = verbose
         )
     }
+    out = c(res, "normX" = normX, "normY" = normY)
     return(out)
 }

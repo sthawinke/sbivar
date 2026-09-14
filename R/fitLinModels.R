@@ -53,51 +53,51 @@ fitLinModels <- function(
         designDf <- data.frame("foo" = seq_along(result@result))
     } # Allow for intercept only models
     stopifnot(
-        is.logical(inverseWeigh), is.logical(scaleByMax), length(result@result) == nrow(designDf),
+        is.logical(inverseWeigh), is.logical(scaleByMax), length(result$result) == nrow(designDf),
         is.data.frame(designDf),
         is.character(Formula) || is(Formula, "formula")
     )
-    if (!result@multi) {
+    if (!result$multi) {
         stop("Fitting linear models only makes sense for multi-image analyses!")
     }
-    if (inverseWeigh && (result@method == "Moran's I") && !result@returnSEsMoransI) {
+    if (inverseWeigh && (result$method == "Moran's I") && !result$returnSEsMoransI) {
         stop("Inverse weighing only possible if the variances of Moran's I are included!
              Rerun sbivar() with estimateSEsMoransI=TRUE.")
     }
-    if (inverseWeigh && (result@method == "Correlation")) {
+    if (inverseWeigh && (result$method == "Correlation")) {
         warning("Inverse weighing not available for method = 'Correlation'.
                 Performing an unweighted analysis", immediate. = TRUE)
         inverseWeigh <- FALSE
     }
-    namesFun <- switch(result@method,
+    namesFun <- switch(result$method,
         "Correlation" = names,
         rownames
     )
-    Features <- selfName(unique(unlist(lapply(result@result, function(x) namesFun(x$res))))) # All feature pairs present
-    iter <- selfName(if (moran <- result@method == "Moran's I") {
-        result@wParams
+    Features <- selfName(unique(unlist(lapply(result$result, function(x) namesFun(x$res))))) # All feature pairs present
+    iter <- selfName(if (moran <- result$method == "Moran's I") {
+        result$wParams
     } else {
         1
     })
     # Prepare arrays of outcomes and weights
     outArr <- array(NA,
         dim = c(nrow(designDf), length(Features), length(iter)),
-        dimnames = list(names(result@result), Features, names(iter))
+        dimnames = list(names(result$result), Features, names(iter))
     )
     if (inverseWeigh) {
         weightsArr <- outArr
     }
-    for (i in names(result@result)) {
-        outArr[i, namesFun(result@result[[i]]$res), ] <- if (result@method == "Correlation") result@result[[i]]$res else result@result[[i]]$res[, seq_along(iter)]
-        if (scaleByMax && (result@method == "Moran's I")) {
+    for (i in names(result$result)) {
+        outArr[i, namesFun(result$result[[i]]$res), ] <- if (result$method == "Correlation") result$result[[i]]$res else result$result[[i]]$res[, seq_along(iter)]
+        if (scaleByMax && (result$method == "Moran's I")) {
             # Scale estimates
-            outArr[i, namesFun(result@result[[i]]$res), ] <- t(t(outArr[i, namesFun(result@result[[i]]$res), ]) / result@result[[i]]$maxIxy)
+            outArr[i, namesFun(result$result[[i]]$res), ] <- t(t(outArr[i, namesFun(result$result[[i]]$res), ]) / result$result[[i]]$maxIxy)
         }
-        if (inverseWeigh && (result@method %in% c("Moran's I", "GAMs"))) {
-            weightsArr[i, namesFun(result@result[[i]]$res), ] <- 1 / result@result[[i]]$res[, seq_along(iter) + length(iter)]^2
-            if (scaleByMax && (result@method == "Moran's I")) {
+        if (inverseWeigh && (result$method %in% c("Moran's I", "GAMs"))) {
+            weightsArr[i, namesFun(result$result[[i]]$res), ] <- 1 / result$result[[i]]$res[, seq_along(iter) + length(iter)]^2
+            if (scaleByMax && (result$method == "Moran's I")) {
                 # Scale variances too
-                weightsArr[i, namesFun(result@result[[i]]$res), ] <- t(t(weightsArr[i, namesFun(result@result[[i]]$res), ]) * result@result[[i]]$maxIxy^2)
+                weightsArr[i, namesFun(result$result[[i]]$res), ] <- t(t(weightsArr[i, namesFun(result$result[[i]]$res), ]) * result$result[[i]]$maxIxy^2)
             }
         }
     }

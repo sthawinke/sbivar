@@ -18,9 +18,6 @@ correlationsMulti <- function(Xl, Yl, featuresX, featuresY, normX, normY, verbos
             Yl[[nam]][commonNames, featuresY <- intersect(featuresY, colnames(Yl[[nam]]))]
         ))
         names(out) <- makeNames(featuresX, featuresY)
-        new("sbivarResults",
-            "result" = out, "method" = method,
-            "multi" = TRUE, "normX" = normX, "normY" = normY
-        )
+        out
     })
 }

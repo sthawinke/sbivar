@@ -13,15 +13,10 @@ GAMsMulti <- function(Xl, Yl, Cxl, Eyl, families, n_points_grid, verbose, normX,
         if (verbose) {
             printIteration(nam, names(Xl))
         }
-        out <- GAMsSingle(Xl[[nam]], Yl[[nam]], Cxl[[nam]], Eyl[[nam]],
+        GAMsSingle(Xl[[nam]], Yl[[nam]], Cxl[[nam]], Eyl[[nam]],
             families = families, n_points_grid = n_points_grid, Gamm = FALSE,
             verbose = FALSE, findVariances = findVariances, featuresX = intersect(featuresX, colnames(Xl[[nam]])),
             featuresY = intersect(featuresY, colnames(Yl[[nam]]))
-        )
-        new("sbivarResultsGAMs",
-            "result" = out[, c("corxy", if (findVariances) "se.corxy"), drop = FALSE], "method" = method,
-            "multi" = FALSE, "normX" = normX, "normY" = normY, "families" = families,
-            "correlation" = NULL, "Gamm" = FALSE
         )
     })
 }

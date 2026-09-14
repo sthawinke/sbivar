@@ -8,7 +8,7 @@ setClass(
         normY = "character"
     )
 )
-setClassUnion("numericOrNULL", c("character", "NULL"))
+setClassUnion("numericOrNULL", c("numeric", "NULL"))
 setClass(
     "sbivarResultsMoransI",
     contains = "sbivarResults",

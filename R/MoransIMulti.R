@@ -15,16 +15,11 @@ MoransIMulti <- function(Xl, Yl, Cxl, Eyl, findVariances, verbose, featuresX, fe
         if (verbose) {
             printIteration(nam, names(Xl))
         }
-        out <- MoransISingle(
+        MoransISingle(
             X = Xl[[nam]], Y = Yl[[nam]], Cx = Cxl[[nam]], Ey = Eyl[[nam]],
             verbose = FALSE, findMaxW = findMaxW, findVariances = findVariances,
             returnSEsMoransI = findVariances, featuresX = intersect(featuresX, colnames(Xl[[nam]])),
             featuresY = intersect(featuresY, colnames(Yl[[nam]])), ...
         )[c("res", "maxIxy")]
-        new("sbivarResultsGAMs",
-            "result" = out$res, "method" = method,
-            "multi" = FALSE, "normX" = normX, "normY" = normY, "families" = families,
-            "correlation" = NULL, "Gamm" = FALSE
-        )
     })
 }

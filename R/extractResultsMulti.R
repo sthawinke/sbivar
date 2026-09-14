@@ -102,6 +102,7 @@ extractResultsMulti <- function(result, designDf, method = "BH") {
         tmpMat <- tmpMat[order(tmpMat[, "pVal"]), ]
         addFeatureColumn(cbind(tmpMat, "pAdj" = p.adjust(tmpMat[, "pVal"], method = method)))
     })
+    sbivarResultObj =
     return(c(list("result" = fixResOut), result[intersect(
         names(result),
         c("method", "families", "wo", "wParams", "multi", "assayX", "assayY")

@@ -48,9 +48,6 @@ for the outcome values. See details of \link{sbivarSingle}.}
 
 \item{addTitle}{A boolean, should a title be plotted}
 
-\item{normX, normY}{Character strings, indicating what normalization is required
-for X and Y matrices, respectively, before plotting, see details.}
-
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.}
 
@@ -62,11 +59,6 @@ evaluated on.}
 
 \item{results}{Result of a call to \link{sbivar} (single-image) or to
 \link{fitLinModels} (multi-image)}
-
-\item{topRank}{An integer, the feature pair with the rank-th smallest p-value is plotted}
-
-\item{parameter}{The linear model parameter used to find the feature with the strongest effect.
-The default is the intercept, i.e. the overall effect.}
 }
 \value{
 A ggplot object

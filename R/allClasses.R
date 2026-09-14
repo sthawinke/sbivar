@@ -1,5 +1,5 @@
 setClass(
-    "SbivarResults",
+    "sbivarResults",
     slots = c(
         result = "data.frame",
         method = "character",
@@ -10,8 +10,8 @@ setClass(
 )
 setClassUnion("numericOrNULL", c("character", "NULL"))
 setClass(
-    "SbivarResultsMoransI",
-    contains = "SbivarResults",
+    "sbivarResultsMoransI",
+    contains = "sbivarResults",
     slots = c(
         maxIxy = "numericOrNULL",
         estimateSEsMoransI = "logical",
@@ -22,8 +22,8 @@ setClass(
 setOldClass("corSpatial")
 setClassUnion("corSpatialOrNULL", c("character", "NULL"))
 setClass(
-    "SbivarResultsGAMs",
-    contains = "SbivarResults",
+    "sbivarResultsGAMs",
+    contains = "sbivarResults",
     slots = c(
         families = "list",
         correlation = "corSpatialOrNULL",

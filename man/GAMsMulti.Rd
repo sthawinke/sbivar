@@ -12,6 +12,8 @@ GAMsMulti(
   families,
   n_points_grid,
   verbose,
+  normX,
+  normY,
   featuresX,
   featuresY,
   findVariances = FALSE

@@ -4,7 +4,7 @@
 \alias{correlationsMulti}
 \title{Find all cross-correlations for a list of matrices}
 \usage{
-correlationsMulti(Xl, Yl, featuresX, featuresY, verbose)
+correlationsMulti(Xl, Yl, featuresX, featuresY, normX, normY, verbose)
 }
 \arguments{
 \item{Xl, Yl}{Lists of matrices of omics measurements}

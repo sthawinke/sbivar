@@ -13,8 +13,6 @@ getSize(X, Y, normX, normY, size, scaleBySampleSums)
 for X and Y matrices, respectively, before plotting, see details.}
 
 \item{size}{The maximum output size}
-
-\item{scaleBySampleSums}{A boolean, should the size of the spots be scaled by their sample sum, e.g. library size or total ion count? Recommended to reflect differences in certainty depending on sample sums.}
 }
 \value{
 The final point size

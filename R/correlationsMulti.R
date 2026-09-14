@@ -6,7 +6,7 @@
 #'
 #' @returns A list of named correlation vectors
 #' @importFrom stats cor
-correlationsMulti <- function(Xl, Yl, featuresX, featuresY, verbose) {
+correlationsMulti <- function(Xl, Yl, featuresX, featuresY, normX, normY, verbose) {
     lapply(selfName(names(Xl)), function(nam) {
         if (verbose) {
             printIteration(nam, names(Xl))
@@ -18,6 +18,9 @@ correlationsMulti <- function(Xl, Yl, featuresX, featuresY, verbose) {
             Yl[[nam]][commonNames, featuresY <- intersect(featuresY, colnames(Yl[[nam]]))]
         ))
         names(out) <- makeNames(featuresX, featuresY)
-        return(list("res" = out))
+        new("sbivarResults",
+            "result" = out, "method" = method,
+            "multi" = TRUE, "normX" = normX, "normY" = normY
+        )
     })
 }

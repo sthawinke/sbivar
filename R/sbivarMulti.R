@@ -70,39 +70,19 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" 
     }
     out <- if (method == "Moran's I") {
         MoransIMulti(Xl, Yl, Cxl, Eyl,
-            featuresX = featuresX, featuresY = featuresY,
+            featuresX = featuresX, featuresY = featuresY, normX = normX, normY = normY,
             wo = wo, numNNs = numNNs, verbose = verbose, findVariances = findVariances, findMaxW = findMaxW,
             etas = etas, variogramModels = variogramModels, width = width, cutoff = cutoff
         )
     } else if (method == "GAMs") {
         GAMsMulti(Xl, Yl, Cxl, Eyl,
-            featuresX = featuresX, featuresY = featuresY,
+            featuresX = featuresX, featuresY = featuresY, normX = normX, normY = normY,
             families = families, findVariances = findVariances,
             n_points_grid = n_points_grid, verbose = verbose
         )
     } else if (method == "Correlation") {
-        correlationsMulti(Xl, Yl, featuresX = featuresX, featuresY = featuresY, verbose = verbose)
+        correlationsMulti(Xl, Yl, normX = normX, normY = normY,
+                          featuresX = featuresX, featuresY = featuresY, verbose = verbose)
     }
-    res <- if (method == "Moran's I") {
-        new("SbivarResultsMoransI",
-            "result" = out, "method" = method, "multi" = TRUE, "normX" = normX,
-            "normY" = normY, "maxIxy" = maxIxy, "wo" = wo, "estimateSEsMoransI" = findVariances,
-            "wParams" = switch(wo,
-                "Gauss" = etas,
-                "nn" = numNNs
-            )
-        )
-    } else if (method == "GAMs") {
-        new("SbivarResultsGAMs",
-            "result" = out, "method" = method,
-            "multi" = FALSE, "normX" = normX, "normY" = normY, "families" = families,
-            "correlation" = NULL, "Gamm" = FALSE
-        )
-    } else {
-        new("SbivarResults",
-            "result" = out, "method" = method,
-            "multi" = TRUE, "normX" = normX, "normY" = normY
-        )
-    }
-    return(res)
+    return(out)
 }

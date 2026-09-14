@@ -14,6 +14,8 @@ MoransIMulti(
   featuresX,
   featuresY,
   findMaxW,
+  normX,
+  normY,
   ...
 )
 }

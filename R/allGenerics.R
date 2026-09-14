@@ -49,3 +49,16 @@
 #'     )
 setGeneric("sbivar", function(X, ...) standardGeneric("sbivar"))
 setGeneric("sbivar", function(X, Y, ...) standardGeneric("sbivar"))
+#' Return the top results found by sbivar
+#' @param sbivarResults The sbivarResults object
+#'
+#' @return A dataframe of top results
+#'@export
+setGeneric(
+    "topPairs",
+    function(x, ...) standardGeneric("topPairs")
+)
+setGeneric(
+    "plotTopPair",
+    function(x, topRank, parameter, scaleBySampleSums,  ...) standardGeneric("plotTopPair")
+)

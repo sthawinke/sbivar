@@ -148,7 +148,7 @@ moransIRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
 Have a look at the results, which are sorted by increasing p-value:
 
 ```{r headres}
-head(moransIRes$result)
+topPairs(moransIRes)
 ```
 
 Plot the most significantly spatially associated gene-metabolite pair `r gpMoran <- rownames(moransIRes$result)[1]`:
@@ -199,7 +199,7 @@ Another available analysis for single images are bivariate Gaussian processes (G
 
 ```{r gp, eval = FALSE}
 gpRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, method = "GPs", normX = "rel", normY = "rel")
-head(gpRes$result)
+topPairs(gpRes)
 ```
 
 ## Multi-image analysis
@@ -238,7 +238,7 @@ Extract the results and show the results for the intercept, i.e. the overall eff
 
 ```{r extractMulti}
 multiMoranLmmsRes <- extractResultsMulti(multiMoranLmms, designDf)
-head(multiMoranLmmsRes$result$Intercept)
+topPairs(multiMoranLmmsRes, "Intercept")
 ```
 
 No features are significantly associated after multiplicity correction. This is in part caused by different experimental procedures used for the different sections, i.e. these are not real replicates yet, as technology is still being developed. For illustration, we plot the feature pair with the smallest p-values nevertheless:

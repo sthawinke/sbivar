@@ -143,7 +143,7 @@ sbivarSingle <- function(
     out <- cbind(out, "pAdj" = p.adjust(out[, "pVal"], method = "BH"))
     out <- addFeatureColumn(out[order(out[, "pVal"]), , drop = FALSE])
     res <- if (method == "Moran's I") {
-        new("SbivarResultsMoransI",
+        new("sbivarResultsMoransI",
             "result" = out, "method" = method, "multi" = FALSE, "normX" = normX,
             "normY" = normY, "maxIxy" = moranRes$maxIxy, "wo" = wo, "estimateSEsMoransI" = returnSEsMoransI,
             "wParams" = switch(wo,
@@ -152,13 +152,13 @@ sbivarSingle <- function(
             )
         )
     } else if (method == "GAMs") {
-        new("SbivarResultsGAMs",
+        new("sbivarResultsGAMs",
             "result" = out, "method" = method,
             "multi" = FALSE, "normX" = normX, "normY" = normY, "families" = families,
             "correlation" = if (Gamm) correlation, "Gamm" = Gamm
         )
     } else {
-        new("SbivarResults",
+        new("sbivarResults",
             "result" = out, "method" = method,
             "multi" = FALSE, "normX" = normX, "normY" = normY
         )

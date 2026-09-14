@@ -85,19 +85,21 @@ sbivarMulti <- function(
     } else if (method == "Correlation") {
         correlationsMulti(Xl, Yl, featuresX = featuresX, featuresY = featuresY, verbose = verbose)
     }
-    out <- list(
-        "estimates" = out, "method" = method, "multi" = TRUE,
-        "normX" = normX, "normY" = normY
-    )
-    if (method == "GAMs") {
-        out$families <- families
-    } else if (method == "Moran's I") {
-        out$wo <- wo
-        out$wParams <- selfName(switch(wo,
-            "Gauss" = etas,
-            "nn" = numNNs
-        ))
-        out$returnSEsMoransI <- findVariances
+    if (method == "Moran's I") {
+        new("SbivarResultsMoransI",
+            "result" = out, "method" = method, "multi" = TRUE, "normX" = normX,
+            "normY" = normY, "maxIxy" = maxIxy, "wo" = wo, "estimateSEsMoransI" = findVariances,
+            "wParams" = switch(wo, "Gauss" = etas, "nn" = numNNs))
+    } else if (method == "GAMs") {
+        new("SbivarResultsGAMs",
+            "result" = out, "method" = method,
+            "multi" = FALSE, "normX" = normX, "normY" = normY, "families" = families,
+            "correlation" = if (Gamm) correlation, "Gamm" = Gamm)
+    } else {
+        new("SbivarResults",
+            "result" = out, "method" = method,
+            "multi" = TRUE, "normX" = normX, "normY" = normY
+        )
     }
     return(out)
 }

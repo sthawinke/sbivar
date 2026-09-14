@@ -4,23 +4,25 @@ setClass(
         result = "matrix",
         method = "character",
         multi = "logical",
-        normX = "characeter",
-        normY = "character",
-    ),
-    prototype = list(
-        maxIxy = NA,
-        wo = "",
-        wParams = NA,
-
-
+        normX = "character",
+        normY = "character"
+    )
+)
+setClass(
+    "SbivarResultsMoransI",
+    contains = "SbivarResults",
+    slots = c(
+        maxIxy = "numeric",
+        estimateSEsMoransI = "logical",
+        wo = "character",
+        wParams = "numeric"
     )
 )
 setClass(
     "SbivarResultsGAM",
     contains = "SbivarResults",
     slots = c(
-        families = character(2),
-        correlation = FALSE,
-
+        families = "character",
+        correlation = "logical"
     )
 )

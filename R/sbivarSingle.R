@@ -140,22 +140,21 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
     }
     out <- cbind(out, "pAdj" = p.adjust(out[, "pVal"], method = "BH"))
     out <- addFeatureColumn(out[order(out[, "pVal"]), , drop = FALSE])
-    lis <- new("SbivarResults",
-        "result" = out, "method" = method,
-        "multi" = FALSE, "normX" = normX, "normY" = normY
-    )
     if (method == "Moran's I") {
-        lis$maxIxy <- moranRes$maxIxy
-        lis$wo <- wo
-        lis$wParams <- switch(wo,
-            "Gauss" = etas,
-            "nn" = numNNs
+        new("SbivarResultsMoransI",
+            "result" = out, "method" = method, "multi" = FALSE, "normX" = normX,
+            "normY" = normY, "maxIxy" = maxIxy, "wo" = wo, "estimateSEsMoransI" = findVariances,
+            "wParams" = switch(wo, "Gauss" = etas, "nn" = numNNs))
+    } else if (method == "GAMs") {
+        new("SbivarResultsGAMs",
+            "result" = out, "method" = method,
+            "multi" = FALSE, "normX" = normX, "normY" = normY, "families" = families,
+            "correlation" = if (Gamm) correlation, "Gamm" = Gamm)
+    } else {
+        new("SbivarResults",
+            "result" = out, "method" = method,
+            "multi" = FALSE, "normX" = normX, "normY" = normY
         )
-    }
-    if (method == "GAMs") {
-        lis$families <- families
-        lis$correlation <- if (Gamm) correlation
-        lis$Gamm <- Gamm
     }
     return(lis)
 }

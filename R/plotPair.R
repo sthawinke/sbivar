@@ -1,23 +1,3 @@
-#' @inheritParams sbivarMulti
-#' @inheritParams plotPairSingle
-plotTopPair <- function(results, multi, normX, normY, ...,
-    topRank, parameter, scaleBySampleSums) {
-    if (multi) {
-        stopifnot(parameter %in% names(result))
-        topFeats <- result[[parameter]][topRank, c("Modality_X", "Modality_Y")]
-        plotPairMulti(
-            features = topFeats, assayX = assayX,
-            assayY = assayY, normX = normX, scaleBySampleSums = scaleBySampleSums,
-            normY = normY, ...
-        )
-    } else {
-        topFeats <- result[topRank, c("Modality_X", "Modality_Y")]
-        plotPairSingle(
-            features = topFeats, assayX = assayX, scaleBySampleSums = scaleBySampleSums,
-            assayY = assayY, normX = normX, normY = normY, ...
-        )
-    }
-}
 #' @rdname plotTopPair
 #' @export
 #' @inheritParams plotPairSingle

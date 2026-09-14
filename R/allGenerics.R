@@ -53,7 +53,7 @@ setGeneric("sbivar", function(X, Y, ...) standardGeneric("sbivar"))
 #' @param sbivarResults The sbivarResults object
 #'
 #' @return A dataframe of top results
-#'@export
+#' @export
 setGeneric(
     "topPairs",
     function(x, ...) standardGeneric("topPairs")

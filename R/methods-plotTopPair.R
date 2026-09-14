@@ -1,4 +1,4 @@
-#' @title Plot a feature pair
+#' @title Plot a the top feature pair according to a sbivar analysis
 #' @description Plot a chosen feature pair, or the highest ranking feature pair,
 #' for a single image or multiple images.
 #' @param parameter The linear model parameter used to find the feature with the strongest effect.
@@ -6,11 +6,10 @@
 #' @param topRank An integer, the feature pair with the rank-th smallest p-value is plotted
 #' @param ... passed onto lower level functions
 #' @param scaleBySampleSums A boolean, should the size of the spots be scaled by their sample sum, e.g. library size or total ion count? Recommended to reflect differences in certainty depending on sample sums.
-#' @export
-#' #' @seealso \link{extractResultsMulti}, \link{fitLinModels}
+#' @seealso \link{extractResultsMulti}, \link{fitLinModels}
 #' @return A ggplot object
-#' @order 1
 #' @export
+#' @rdname plotTopPair
 #' @details For sequence count data, such as transcriptomics, normalization
 #' may be indicated to achieve clear plots (normX = "rel" or "log", see  \link{normMat}).
 #' The normalization used for plotting is not necessarily the same as the one used for the analysis.
@@ -48,7 +47,20 @@ setMethod(
     "sbivarResults",
     function(x, topRank = 1, parameter = "Intercept", scaleBySampleSums = FALSE, ...) {
         stopifnot(is.numeric(topRank), topRank >= 1, is.logical(scaleBySampleSums), is.character(parameter))
-        plotTopPair(x@results, multi = x@multi, normX = results@normX, normY = results@normY,
-                    assayX = results@assayX, assayY = results@assayY,...)
+        if (x@multi) {
+            stopifnot(parameter %in% names(result))
+            topFeats <- x@results[[parameter]][topRank, c("Modality_X", "Modality_Y")]
+            plotPairMulti(
+                features = topFeats, assayX = results@assayX,
+                assayY = results@assayY, normX = results@normX, scaleBySampleSums = scaleBySampleSums,
+                normY = results@normY, ...
+            )
+        } else {
+            topFeats <- x@results[topRank, c("Modality_X", "Modality_Y")]
+            plotPairSingle(
+                features = topFeats, assayX = results@assayX, scaleBySampleSums = scaleBySampleSums,
+                assayY = results@assayY, normX = results@normX, normY = results@normY, ...
+            )
+        }
     }
 )

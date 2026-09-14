@@ -102,9 +102,26 @@ extractResultsMulti <- function(result, designDf, method = "BH") {
         tmpMat <- tmpMat[order(tmpMat[, "pVal"]), ]
         addFeatureColumn(cbind(tmpMat, "pAdj" = p.adjust(tmpMat[, "pVal"], method = method)))
     })
-    sbivarResultObj =
-    return(c(list("result" = fixResOut), result[intersect(
-        names(result),
-        c("method", "families", "wo", "wParams", "multi", "assayX", "assayY")
-    )]))
+    sbivarResultObj = if (method == "Moran's I") {
+        new("sbivarResultsMoransI",
+            "result" = fixResOut, "method" = result$method, "multi" = TRUE, "normX" = result$normX,
+            "normY" = result$normY, "maxIxy" = moranRes$maxIxy, "wo" = wo, "estimateSEsMoransI" = result$returnSEsMoransI,
+            "wParams" = switch(wo,
+                               "Gauss" = result$etas,
+                               "nn" = result$numNNs
+            )
+        )
+    } else if (method == "GAMs") {
+        new("sbivarResultsGAMs",
+            "result" = fixResOut, "method" = result$method,
+            "multi" = TRUE, "normX" = result$normX, "normY" = result$normY, "families" = result$families,
+            "correlation" = if (result$Gamm) result$correlation, "Gamm" = result$Gamm
+        )
+    } else {
+        new("sbivarResults",
+            "result" = fixResOut, "method" = result$method,
+            "multi" = TRUE, "normX" = result$normX, "normY" = result$normY
+        )
+    }
+    return(sbivarResultObj)
 }

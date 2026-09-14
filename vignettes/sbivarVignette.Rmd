@@ -238,7 +238,7 @@ Extract the results and show the results for the intercept, i.e. the overall eff
 
 ```{r extractMulti}
 multiMoranLmmsRes <- extractResultsMulti(multiMoranLmms, designDf)
-topPairs(multiMoranLmmsRes, "Intercept")
+topPairs(multiMoranLmmsRes, parameter = "Intercept")
 ```
 
 No features are significantly associated after multiplicity correction. This is in part caused by different experimental procedures used for the different sections, i.e. these are not real replicates yet, as technology is still being developed. For illustration, we plot the feature pair with the smallest p-values nevertheless:

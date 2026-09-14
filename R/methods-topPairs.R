@@ -1,5 +1,10 @@
 setMethod(
     "topPairs",
     "sbivarResults",
-    function(x, ...) head(x@result, ...)
-)
+    function(x, parameter, ...) {
+        if(x@multi){
+            head(x@result[[parameter]], ...)
+        } else {
+            head(x@result, ...)
+        }
+})

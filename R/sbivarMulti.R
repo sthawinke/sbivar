@@ -72,22 +72,31 @@ sbivarMulti <- function(
     }
     res <- if (method == "Moran's I") {
         MoransIMulti(Xl, Yl, Cxl, Eyl,
-            featuresX = featuresX, featuresY = featuresY, normX = normX, normY = normY,
+            featuresX = featuresX, featuresY = featuresY,
             wo = wo, numNNs = numNNs, verbose = verbose, findVariances = findVariances, findMaxW = findMaxW,
             etas = etas, variogramModels = variogramModels, width = width, cutoff = cutoff
         )
     } else if (method == "GAMs") {
         GAMsMulti(Xl, Yl, Cxl, Eyl,
-            featuresX = featuresX, featuresY = featuresY, normX = normX, normY = normY,
+            featuresX = featuresX, featuresY = featuresY,
             families = families, findVariances = findVariances,
             n_points_grid = n_points_grid, verbose = verbose
         )
     } else if (method == "Correlation") {
         correlationsMulti(Xl, Yl,
-            normX = normX, normY = normY,
             featuresX = featuresX, featuresY = featuresY, verbose = verbose
         )
     }
-    out = c(res, "normX" = normX, "normY" = normY)
+    out = list("result" = res, "normX" = normX, "normY" = normY, "method" = method, "multi" = TRUE)
+    if (method == "GAMs") {
+        out$families <- families
+    } else if (method == "Moran's I") {
+        out$wo <- wo
+        out$wParams <- selfName(switch(wo,
+                                       "Gauss" = etas,
+                                       "nn" = numNNs
+        ))
+        out$returnSEsMoransI <- findVariances
+    }
     return(out)
 }

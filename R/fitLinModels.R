@@ -50,12 +50,11 @@ fitLinModels <- function(
       )
 ) {
     if (missing(designDf) && length(ncol(attr(terms(Formula), "factors"))) == 0) {
-        designDf <- data.frame("foo" = seq_along(result@result))
+        designDf <- data.frame("foo" = seq_along(result$result))
     } # Allow for intercept only models
     stopifnot(
         is.logical(inverseWeigh), is.logical(scaleByMax), length(result$result) == nrow(designDf),
-        is.data.frame(designDf),
-        is.character(Formula) || is(Formula, "formula")
+        is.data.frame(designDf), is.character(Formula) || is(Formula, "formula")
     )
     if (!result$multi) {
         stop("Fitting linear models only makes sense for multi-image analyses!")
@@ -152,7 +151,7 @@ fitLinModels <- function(
     })
     return(c(
         list("result" = models),
-        result[intersect(names(result), c("method", "families", "wo", "multi", "assayX", "assayY", "wParams"))]
+        result[intersect(names(result), c("method", "families", "wo", "multi", "assayX", "assayY", "wParams", "normX", "normY", "estimateSEsMoransI"))]
     ))
 }
 #' Fit a linear model for an individual feature pair

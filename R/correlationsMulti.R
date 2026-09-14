@@ -6,7 +6,7 @@
 #'
 #' @returns A list of named correlation vectors
 #' @importFrom stats cor
-correlationsMulti <- function(Xl, Yl, featuresX, featuresY, normX, normY, verbose) {
+correlationsMulti <- function(Xl, Yl, featuresX, featuresY, verbose) {
     lapply(selfName(names(Xl)), function(nam) {
         if (verbose) {
             printIteration(nam, names(Xl))

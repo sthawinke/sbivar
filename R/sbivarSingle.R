@@ -140,7 +140,7 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
     }
     out <- cbind(out, "pAdj" = p.adjust(out[, "pVal"], method = "BH"))
     out <- addFeatureColumn(out[order(out[, "pVal"]), , drop = FALSE])
-    lis <- list(
+    lis <- new("SbivarResults",
         "result" = out, "method" = method,
         "multi" = FALSE, "normX" = normX, "normY" = normY
     )

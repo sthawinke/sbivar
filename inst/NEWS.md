@@ -174,4 +174,5 @@
  - No more partial matching of method names in example code
  - SpatialExperiment is now in 'Imports' as key Bioconductor dependency
  - Add tests for lists of SpatialExperiment objects and with sample identifiers sample_id_x
- - Dispatching versus X and Y now
+ - Dispatching versus X and Y
+ - Define an S4 results class

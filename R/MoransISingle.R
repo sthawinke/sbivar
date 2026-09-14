@@ -122,8 +122,6 @@ MoransISingle <- function(X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose
         vapply(selfName(names(wParams)), FUN.VALUE = double(1), function(i) {
             svd(Ws[, , i], nu = 0, nv = 0)$d[1]
         })
-    } else {
-        rep(NA, length(wParams))
     }
     return(list(
         "res" = out, "maxIxy" = maxIxy

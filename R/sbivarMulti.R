@@ -83,7 +83,7 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" 
     } else if (method == "Correlation") {
         correlationsMulti(Xl, Yl, featuresX = featuresX, featuresY = featuresY, verbose = verbose)
     }
-    if (method == "Moran's I") {
+    res <- if (method == "Moran's I") {
         new("SbivarResultsMoransI",
             "result" = out, "method" = method, "multi" = TRUE, "normX" = normX,
             "normY" = normY, "maxIxy" = maxIxy, "wo" = wo, "estimateSEsMoransI" = findVariances,
@@ -96,7 +96,7 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" 
         new("SbivarResultsGAMs",
             "result" = out, "method" = method,
             "multi" = FALSE, "normX" = normX, "normY" = normY, "families" = families,
-            "correlation" = if (Gamm) correlation, "Gamm" = Gamm
+            "correlation" = NULL, "Gamm" = FALSE
         )
     } else {
         new("SbivarResults",
@@ -104,5 +104,5 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" 
             "multi" = TRUE, "normX" = normX, "normY" = normY
         )
     }
-    return(out)
+    return(res)
 }

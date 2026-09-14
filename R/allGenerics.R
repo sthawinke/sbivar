@@ -34,7 +34,7 @@
 #' )
 #' resModtTestJoint <- sbivar(X, Y2, Cx, method = "Modified t-test")
 #' # Single image analysis on synthetic data, converted to SpatialExperiment
-#' if (require(SpatialExperiment)) {
+#' library(SpatialExperiment)
 #'     seX <- SpatialExperiment(
 #'         assays = list("transcripts" = t(X)),
 #'         spatialCoords = Cx
@@ -47,6 +47,5 @@
 #'         assayX = "transcripts", assayY = "metabolites",
 #'         method = "GPs"
 #'     )
-#' }
 setGeneric("sbivar", function(X, ...) standardGeneric("sbivar"))
 setGeneric("sbivar", function(X, Y, ...) standardGeneric("sbivar"))

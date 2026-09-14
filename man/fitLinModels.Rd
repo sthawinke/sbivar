@@ -3,7 +3,7 @@
 \name{fitLinModels}
 \alias{fitLinModels}
 \alias{extractResultsMulti}
-\title{Fit linear models on measures calculated for replicated images, and extract the results}
+\title{Fit linear models on result@result calculated for replicated images, and extract the results}
 \usage{
 fitLinModels(
   result,
@@ -20,7 +20,7 @@ fitLinModels(
 extractResultsMulti(result, designDf, method = "BH")
 }
 \arguments{
-\item{result}{A result with the measures of bivariate spatial association,
+\item{result}{A result with the result@result of bivariate spatial association,
 from a call to the \link{sbivar} function with multiple images}
 
 \item{designDf}{A design dataframe}
@@ -44,7 +44,7 @@ For extractResultsMulti() a list of matrices, all containing estimate, standard 
 p-value and adjusted p-value
 }
 \description{
-Given measures estimated from replicated images using \link{sbivarMulti},
+Given result@result estimated from replicated images using \link{sbivarMulti},
 fit linear models to determine significance.
 To maintain interpretability of the intercept, continuous fixed effect variables are centered,
 and sum coding is used for the categorical ones.
@@ -69,7 +69,7 @@ designDf <- data.frame("mouse" = mouse) # The design matrix
 multiGAMLmms <- fitLinModels(VicariRes, designDf, Formula = ~ (1 | mouse))
 # Extract the results
 resGAMsMulti <- extractResultsMulti(multiGAMLmms, designDf = designDf)
-head(resGAMsMulti$result$Intercept)
+head(resGAMsMulti$result@Intercept)
 }
 \seealso{
 \link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}, \link[stats]{p.adjust}

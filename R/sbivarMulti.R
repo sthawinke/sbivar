@@ -20,15 +20,13 @@
 #' @inheritParams GAMsSingle
 #' @importFrom BiocParallel bpparam bpworkers
 #' @seealso \link{fitLinModels}, \link{MoransIMulti}, \link{correlationsMulti}, \link{GAMsMulti}
-sbivarMulti <- function(
-      Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
-      method = c("Moran's I", "GAMs", "Correlation"), wo = c("Gauss", "nn"),
-      numNNs = c(4, 8, 24), etas = c(5e-6, 2e-4, 2e-2), featuresX = getFeaturesList(Xl), featuresY = getFeaturesList(Yl),
-      normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
-      variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
-      pseudoCount = 1e-8, n_points_grid = 6e2, verbose = TRUE, findVariances = FALSE,
-      findMaxW = TRUE
-) {
+sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
+    method = c("Moran's I", "GAMs", "Correlation"), wo = c("Gauss", "nn"),
+    numNNs = c(4, 8, 24), etas = c(5e-6, 2e-4, 2e-2), featuresX = getFeaturesList(Xl), featuresY = getFeaturesList(Yl),
+    normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
+    variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
+    pseudoCount = 1e-8, n_points_grid = 6e2, verbose = TRUE, findVariances = FALSE,
+    findMaxW = TRUE) {
     method <- match.arg(method)
     wo <- match.arg(wo)
     normX <- match.arg(normX)
@@ -89,12 +87,17 @@ sbivarMulti <- function(
         new("SbivarResultsMoransI",
             "result" = out, "method" = method, "multi" = TRUE, "normX" = normX,
             "normY" = normY, "maxIxy" = maxIxy, "wo" = wo, "estimateSEsMoransI" = findVariances,
-            "wParams" = switch(wo, "Gauss" = etas, "nn" = numNNs))
+            "wParams" = switch(wo,
+                "Gauss" = etas,
+                "nn" = numNNs
+            )
+        )
     } else if (method == "GAMs") {
         new("SbivarResultsGAMs",
             "result" = out, "method" = method,
             "multi" = FALSE, "normX" = normX, "normY" = normY, "families" = families,
-            "correlation" = if (Gamm) correlation, "Gamm" = Gamm)
+            "correlation" = if (Gamm) correlation, "Gamm" = Gamm
+        )
     } else {
         new("SbivarResults",
             "result" = out, "method" = method,

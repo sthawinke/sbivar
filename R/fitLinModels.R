@@ -1,10 +1,10 @@
-#' Fit linear models on measures calculated for replicated images, and extract the results
-#' @description Given measures estimated from replicated images using \link{sbivarMulti},
+#' Fit linear models on result@result calculated for replicated images, and extract the results
+#' @description Given result@result estimated from replicated images using \link{sbivarMulti},
 #' fit linear models to determine significance.
 #' To maintain interpretability of the intercept, continuous fixed effect variables are centered,
 #' and sum coding is used for the categorical ones.
 #'
-#' @param result A result with the measures of bivariate spatial association,
+#' @param result A result with the result@result of bivariate spatial association,
 #' from a call to the \link{sbivar} function with multiple images
 #' @param designDf A design dataframe
 #' @param Formula A formula for the linear model to be fitted, can contain random effects.
@@ -31,7 +31,7 @@
 #' multiGAMLmms <- fitLinModels(VicariRes, designDf, Formula = ~ (1 | mouse))
 #' # Extract the results
 #' resGAMsMulti <- extractResultsMulti(multiGAMLmms, designDf = designDf)
-#' head(resGAMsMulti$result$Intercept)
+#' head(resGAMsMulti$result@Intercept)
 #' @importFrom lmerTest lmer
 #' @importFrom stats formula terms model.matrix
 #' @importFrom lme4 lmerControl .makeCC isSingular lFormula mkReTrms
@@ -41,63 +41,63 @@
 #' @importFrom BiocParallel bplapply bpparam bpworkers
 #' @seealso \link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}, \link[stats]{p.adjust}
 #' @order 1
-fitLinModels <- function(result, designDf, Formula, verbose = TRUE, inverseWeigh = FALSE, scaleByMax = TRUE,
-    Control = lmerControl(
-        check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
-        check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
-        check.conv.hess = .makeCC(action = "ignore", tol = 1e-06)
-    )) {
+fitLinModels <- function(
+      result, designDf, Formula, verbose = TRUE, inverseWeigh = FALSE, scaleByMax = TRUE,
+      Control = lmerControl(
+          check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
+          check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
+          check.conv.hess = .makeCC(action = "ignore", tol = 1e-06)
+      )
+) {
     if (missing(designDf) && length(ncol(attr(terms(Formula), "factors"))) == 0) {
-        designDf <- data.frame("foo" = seq_along(result$estimates))
+        designDf <- data.frame("foo" = seq_along(result@result))
     } # Allow for intercept only models
     stopifnot(
-        all(c("estimates", "method", "multi") %in% names(result)),
-        is.logical(inverseWeigh), is.logical(scaleByMax), length(result$estimates) == nrow(designDf),
+        is.logical(inverseWeigh), is.logical(scaleByMax), length(result@result) == nrow(designDf),
         is.data.frame(designDf),
         is.character(Formula) || is(Formula, "formula")
     )
-    measures <- result$estimates
-    if (!result$multi) {
+    if (!result@multi) {
         stop("Fitting linear models only makes sense for multi-image analyses!")
     }
-    if (inverseWeigh && (result$method == "Moran's I") && !result$returnSEsMoransI) {
+    if (inverseWeigh && (result@method == "Moran's I") && !result@returnSEsMoransI) {
         stop("Inverse weighing only possible if the variances of Moran's I are included!
              Rerun sbivar() with estimateSEsMoransI=TRUE.")
     }
-    if (inverseWeigh && (result$method == "Correlation")) {
+    if (inverseWeigh && (result@method == "Correlation")) {
         warning("Inverse weighing not available for method = 'Correlation'.
                 Performing an unweighted analysis", immediate. = TRUE)
         inverseWeigh <- FALSE
     }
-    namesFun <- switch(result$method,
+    namesFun <- switch(result@method,
         "Correlation" = names,
         rownames
     )
-    Features <- selfName(unique(unlist(lapply(measures, function(x) namesFun(x$res))))) # All feature pairs present
-    iter <- selfName(if (moran <- result$method == "Moran's I") {
-        result$wParams
+    Features <- selfName(unique(unlist(lapply(result@result, function(x) namesFun(x$res))))) # All feature pairs present
+    iter <- selfName(if (moran <- result@method == "Moran's I") {
+        result@wParams
     } else {
         1
     })
     # Prepare arrays of outcomes and weights
     outArr <- array(NA,
         dim = c(nrow(designDf), length(Features), length(iter)),
-        dimnames = list(names(measures), Features, names(iter))
+        dimnames = list(names(result@result), Features, names(iter))
     )
     if (inverseWeigh) {
         weightsArr <- outArr
     }
-    for (i in names(measures)) {
-        outArr[i, namesFun(measures[[i]]$res), ] <- if (result$method == "Correlation") measures[[i]]$res else measures[[i]]$res[, seq_along(iter)]
-        if (scaleByMax && (result$method == "Moran's I")) {
+    for (i in names(result@result)) {
+        outArr[i, namesFun(result@result[[i]]$res), ] <- if (result@method == "Correlation") result@result[[i]]$res else result@result[[i]]$res[, seq_along(iter)]
+        if (scaleByMax && (result@method == "Moran's I")) {
             # Scale estimates
-            outArr[i, namesFun(measures[[i]]$res), ] <- t(t(outArr[i, namesFun(measures[[i]]$res), ]) / measures[[i]]$maxIxy)
+            outArr[i, namesFun(result@result[[i]]$res), ] <- t(t(outArr[i, namesFun(result@result[[i]]$res), ]) / result@result[[i]]$maxIxy)
         }
-        if (inverseWeigh && (result$method %in% c("Moran's I", "GAMs"))) {
-            weightsArr[i, namesFun(measures[[i]]$res), ] <- 1 / measures[[i]]$res[, seq_along(iter) + length(iter)]^2
-            if (scaleByMax && (result$method == "Moran's I")) {
+        if (inverseWeigh && (result@method %in% c("Moran's I", "GAMs"))) {
+            weightsArr[i, namesFun(result@result[[i]]$res), ] <- 1 / result@result[[i]]$res[, seq_along(iter) + length(iter)]^2
+            if (scaleByMax && (result@method == "Moran's I")) {
                 # Scale variances too
-                weightsArr[i, namesFun(measures[[i]]$res), ] <- t(t(weightsArr[i, namesFun(measures[[i]]$res), ]) * measures[[i]]$maxIxy^2)
+                weightsArr[i, namesFun(result@result[[i]]$res), ] <- t(t(weightsArr[i, namesFun(result@result[[i]]$res), ]) * result@result[[i]]$maxIxy^2)
             }
         }
     }

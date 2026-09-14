@@ -1,7 +1,7 @@
 setClass(
     "SbivarResults",
     slots = c(
-        result = "matrix",
+        result = "data.frame",
         method = "character",
         multi = "logical",
         normX = "character",

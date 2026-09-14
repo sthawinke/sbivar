@@ -151,7 +151,7 @@ Have a look at the results, which are sorted by increasing p-value:
 topPairs(moransIRes)
 ```
 
-Plot the most significantly spatially associated gene-metabolite pair `r gpMoran <- rownames(moransIRes$result)[1]`:
+Plot the most significantly spatially associated gene-metabolite pair `r gpMoran <- rownames(topPairs(moransIRes))[1]`:
 
 ```{r plottoppairmoran}
 plotTopPair(moransIRes,
@@ -180,7 +180,7 @@ plotTopPair(gamRes,
 )
 ```
 
-An other feature is found most significant by GAMs, now with a positive relationship. For GAMs, we can also plot the corresponding spline fit, with the contributions to the correlation `r round(gamRes$result[1, "corxy"], 3)`:
+An other feature is found most significant by GAMs, now with a positive relationship. For GAMs, we can also plot the corresponding spline fit, with the contributions to the correlation `r round(topPairs(gamRes)[1, "corxy"], 3)`:
 
 ```{r plotGAM}
 plotGAMsTopPair(gamRes,

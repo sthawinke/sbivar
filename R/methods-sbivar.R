@@ -46,7 +46,7 @@ setMethod("sbivar", c("SpatialExperiment", "SpatialExperiment"), function(X, Y, 
             assayT(X, assayX), assayT(Y, assayY), SpatialExperiment::spatialCoords(X),
             SpatialExperiment::spatialCoords(Y), ...
         )
-        foo@assayX = assayX; foo@assayX = assayY
+        foo@assayX = assayX; foo@assayY = assayY
         foo
     } else {
         sbivar(splitSpatialExperiment(X, sample_id_x),

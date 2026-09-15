@@ -5,6 +5,7 @@
 #' @inheritParams sbivarMulti
 #' @order 2
 #' @param theme the ggplot2 theme
+#' @return a ggplot2 object
 plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "log"), scaleBySampleSums = FALSE,
     normY = c("none", "rel", "log"), size = 1.25, assayX, assayY, theme = theme_bw()) {
     stopifnot(is.logical(scaleBySampleSums), is.numeric(size))

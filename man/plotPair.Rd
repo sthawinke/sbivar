@@ -80,6 +80,9 @@ see \link[SummarizedExperiment]{assay}}
 appearing in the strip text of the columns. For plotTopPair() and
 plotPairSingle(), the feature names are used.}
 }
+\value{
+a ggplot2 object
+}
 \description{
 Plot a specified feature pair for the data provided
 }

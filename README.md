@@ -99,7 +99,7 @@ moranRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
 Have a look at the results:
 
 ``` r
-head(moranRes$result)
+topPairs(moranRes)
 ```
 
     ##   Modality_X Modality_Y     Ixy_5e.06     Ixy_2e.04      Ixy_0.02 SE.Ixy._5e.06
@@ -183,7 +183,7 @@ Extract the results for the desired parameter (the intercept)
 
 ``` r
 multiGAMLmmsRes <- extractResultsMulti(multiGAMLmms, design)
-head(multiGAMLmmsRes$result$Intercept)
+topPairs(multiGAMLmmsRes, parameter = "Intercept")
 ```
 
     ##   Modality_X Modality_Y   Estimate         SE       pVal      pAdj

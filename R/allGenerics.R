@@ -62,6 +62,8 @@ setGeneric(
 #' @description Plot a chosen feature pair, or the highest ranking feature pair,
 #' for a single image or multiple images.
 #' @inheritParams sbivarMulti
+#' @inheritParams plotPairSingle
+#' @inheritParams topPairs
 #' @param parameter The linear model parameter used to find the feature with the strongest effect.
 #' The default is the intercept, i.e. the overall effect.
 #' @param topRank An integer, the feature pair with the rank-th smallest p-value is plotted

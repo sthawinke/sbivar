@@ -13,6 +13,8 @@ getSize(X, Y, normX, normY, size, scaleBySampleSums)
 for X and Y matrices, respectively, before plotting, see details.}
 
 \item{size}{The maximum output size}
+
+\item{scaleBySampleSums}{boolean, should the point size be scaled by sample sums?}
 }
 \value{
 The final point size

@@ -2,6 +2,7 @@
 #' @rdname plotPair
 #' @export
 #' @inheritParams plotPairSingle
+#' @inheritParams sbivarMulti
 #' @order 2
 #' @param theme the ggplot2 theme
 plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "log"), scaleBySampleSums = FALSE,
@@ -42,12 +43,12 @@ plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "
         theme(axis.text = element_blank(), axis.ticks = element_blank())
 }
 #' @inheritParams sbivar
-#' @param results Results returned by \link{sbivarSingle} or \link{extractResultsMulti}
 #' @param x,y Outcome vectors
 #' @param normX,normY Character strings, indicating what normalization is required
 #' for X and Y matrices, respectively, before plotting, see details.
 #' @param size Point size
 #' @param features Feature vector of length 2 to be plotted
+#' @param scaleBySampleSums boolean, should the point size be scaled by sample sums?
 #' @rdname plotPair
 #' @export
 #' @order 1

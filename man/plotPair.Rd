@@ -62,9 +62,15 @@ for X and Y matrices, respectively, before plotting, see details.}
 \item{assayX, assayY}{Assay names to be used in the analysis,
 see \link[SummarizedExperiment]{assay}}
 
+\item{scaleBySampleSums}{boolean, should the point size be scaled by sample sums?}
+
 \item{size}{Point size}
 
 \item{...}{additional constructor and analysis arguments}
+
+\item{Xl, Yl}{Lists of matrices of omics measurements}
+
+\item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
 \item{theme}{the ggplot2 theme}
 
@@ -73,8 +79,6 @@ see \link[SummarizedExperiment]{assay}}
 \item{modalityNames}{Names to be given to the modalities,
 appearing in the strip text of the columns. For plotTopPair() and
 plotPairSingle(), the feature names are used.}
-
-\item{results}{Results returned by \link{sbivarSingle} or \link{extractResultsMulti}}
 }
 \description{
 Plot a specified feature pair for the data provided

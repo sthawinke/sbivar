@@ -26,6 +26,8 @@ plotTopPair(
 )
 }
 \arguments{
+\item{x}{The sbivarResults object}
+
 \item{...}{passed onto lower level functions}
 
 \item{topRank}{An integer, the feature pair with the rank-th smallest p-value is plotted}
@@ -34,6 +36,9 @@ plotTopPair(
 The default is the intercept, i.e. the overall effect.}
 
 \item{scaleBySampleSums}{A boolean, should the size of the spots be scaled by their sample sum, e.g. library size or total ion count? Recommended to reflect differences in certainty depending on sample sums.}
+
+\item{normX, normY}{Character strings, indicating what normalization is required
+for X and Y matrices, respectively, before plotting, see details.}
 }
 \value{
 A ggplot object

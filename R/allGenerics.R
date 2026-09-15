@@ -118,6 +118,7 @@ setGeneric(
 #' @description Fit GAMS for the top feature pair chosen, and plot the resulting spline surfaces
 #' @export
 #' @inheritParams plotTopPair
+#' @inheritParams sbivarSingle
 setGeneric(
     "plotGAMsTopPair",
     function(x,X, Y, Cx, Ey, topRank = 1, parameter = "Intercept", ...) {

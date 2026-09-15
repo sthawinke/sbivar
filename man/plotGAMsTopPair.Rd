@@ -12,6 +12,10 @@ plotGAMsTopPair(x, X, Y, Cx, Ey, topRank = 1, parameter = "Intercept", ...)
 \arguments{
 \item{x}{a sbivarResultsGAMs object}
 
+\item{X, Y}{Matrices of omics measurements}
+
+\item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y respectively}
+
 \item{topRank}{An integer, the feature pair with the rank-th smallest p-value is plotted}
 
 \item{parameter}{The linear model parameter used to find the feature with the strongest effect.

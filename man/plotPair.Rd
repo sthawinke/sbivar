@@ -86,3 +86,7 @@ a ggplot2 object
 \description{
 Plot a specified feature pair for the data provided
 }
+\examples{
+example(sbivar, "sbivar")
+plotPairSingle(X, Y, Cx, Ey, features = c("X1", "Y1"))
+}

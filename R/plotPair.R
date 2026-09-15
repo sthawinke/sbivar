@@ -53,6 +53,9 @@ plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "
 #' @rdname plotPair
 #' @export
 #' @order 1
+#' @examples
+#' example(sbivar, "sbivar")
+#' plotPairSingle(X, Y, Cx, Ey, features = c("X1", "Y1"))
 plotPairSingle <- function(
       X, Y, Cx, Ey, features, normX = c("none", "rel", "log"),
       normY = c("none", "rel", "log"), assayX, assayY, scaleBySampleSums = FALSE, size = 1.5, ...

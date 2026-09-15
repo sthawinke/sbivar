@@ -1,4 +1,8 @@
 #' @rdname plotGAMsTopPair
+#' @examples
+#' example(sbivar, "sbivar")
+#' plotGAMsTopPair(resGAMs)
+#' @return a ggplot2 object
 setMethod(
     "plotGAMsTopPair",
     "sbivarResultsGAMs",

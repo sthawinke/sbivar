@@ -105,8 +105,10 @@ setGeneric(
 #' )
 setGeneric(
     "plotTopPair",
-    function(x, topRank = 1, parameter = "Intercept", scaleBySampleSums = FALSE,
-    normX = x@normX, normY = x@normY, ...) {
+    function(
+      x, ..., topRank = 1, parameter = "Intercept", scaleBySampleSums = FALSE,
+      normX = x@normX, normY = x@normY
+    ) {
         standardGeneric("plotTopPair")
     }
 )

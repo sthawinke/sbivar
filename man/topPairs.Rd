@@ -20,3 +20,7 @@ A dataframe of top results
 \description{
 Return the top results found by sbivar
 }
+\examples{
+example(sbivar, "sbivar")
+topPairs(resGAMs)
+}

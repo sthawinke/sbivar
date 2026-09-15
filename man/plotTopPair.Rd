@@ -52,22 +52,22 @@ plotPairSingleVectors(
 
 plotTopPair(
   x,
+  ...,
   topRank = 1,
   parameter = "Intercept",
   scaleBySampleSums = FALSE,
   normX = x@normX,
-  normY = x@normY,
-  ...
+  normY = x@normY
 )
 
 \S4method{plotTopPair}{sbivarResults}(
   x,
+  ...,
   topRank = 1,
   parameter = "Intercept",
   scaleBySampleSums = FALSE,
   normX = x@normX,
-  normY = x@normY,
-  ...
+  normY = x@normY
 )
 }
 \arguments{

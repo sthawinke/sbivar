@@ -1,6 +1,9 @@
 #' @importFrom utils head
 #' @rdname topPairs
 #' @param ... passed onto \link[utils]{head}
+#' @examples
+#' example(sbivar, "sbivar")
+#' topPairs(resGAMs)
 setMethod(
     "topPairs",
     "sbivarResults",
@@ -9,6 +12,5 @@ setMethod(
             head(x@result[[parameter]], ...)
         } else {
             head(x@result, ...)
-        }
     }
-)
+})

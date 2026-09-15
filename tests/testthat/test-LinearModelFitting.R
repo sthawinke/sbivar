@@ -23,16 +23,17 @@ test_that("fitLinModels works for GAM input", {
         )
     )
     # Extract the results
+    expect_is(resGams <- extractResultsMulti(multiFitGams, designDf = toyDesign), "sbivarResults")
     expect_named(
-        resGams <- extractResultsMulti(multiFitGams, designDf = toyDesign),
+        resGams@result,
         c("Intercept", "covariate", "cofactor")
     )
-    expect_identical(colnames(resGams$Intercept), c("Modality_X", "Modality_Y", "Estimate", "SE", "pVal", "pAdj"))
+    expect_identical(colnames(resGams@result$Intercept), c("Modality_X", "Modality_Y", "Estimate", "SE", "pVal", "pAdj"))
     expect_warning(
         resGams3 <- extractResultsMulti(multiFitGams3)
     )
-    expect_named(resGams3, "Intercept")
-    expect_false(is.unsorted(resGams$Intercept[, "pVal"]))
+    expect_named(resGams3@result, "Intercept")
+    expect_false(is.unsorted(resGams@result$Intercept[, "pVal"]))
 })
 test_that("fitLinModels works for Moran's I input", {
     expect_is(

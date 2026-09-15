@@ -2,7 +2,7 @@
 setMethod(
     "plotTopPair",
     "sbivarResults",
-    function(x, topRank, parameter, scaleBySampleSums, normX, normY, ...) {
+    function(x, ..., topRank, parameter, scaleBySampleSums, normX, normY) {
         stopifnot(is.numeric(topRank), topRank >= 1, is.logical(scaleBySampleSums), is.character(parameter))
         if (x@multi) {
             stopifnot(parameter %in% names(x@result))

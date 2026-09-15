@@ -118,8 +118,7 @@ setGeneric(
 #' @inheritParams plotTopPair
 setGeneric(
     "plotGAMsTopPair",
-    function(x, topRank = 1, parameter = "Intercept",
-    ...) {
+    function(x,X, Y, Cx, Ey, topRank = 1, parameter = "Intercept", ...) {
         standardGeneric("plotGAMsTopPair")
     }
 )

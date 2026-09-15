@@ -15,6 +15,7 @@ plotGAMs(
   addTitle = TRUE,
   normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
+  pseudoCount = 1e-08,
   n_points_grid = 600,
   Gamm = FALSE,
   correlation = corGaus(form = ~x + y, nugget = TRUE, value = c(1, 0.25)),
@@ -34,6 +35,8 @@ plotGAMs(
 for the outcome values. See details of \link{sbivarSingle}.}
 
 \item{addTitle}{A boolean, should a title be plotted}
+
+\item{normX, normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}
 
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.}

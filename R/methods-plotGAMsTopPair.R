@@ -1,12 +1,13 @@
 #' @rdname plotGAMsTopPair
 #' @examples
 #' example(sbivar, "sbivar")
-#' plotGAMsTopPair(resGAMs)
+#' plotGAMsTopPair(resGAMs, X, Y, Cx, Ey)
 #' @return a ggplot2 object
+#' @param x a sbivarResultsGAMs object
 setMethod(
     "plotGAMsTopPair",
     "sbivarResultsGAMs",
-    function(x, topRank, parameter, X, Y, Cx, Ey, ...) {
+    function(x, X, Y, Cx, Ey, topRank, parameter, ...) {
         stopifnot(is.numeric(topRank))
         topFeats <- (
             if (x@multi) {

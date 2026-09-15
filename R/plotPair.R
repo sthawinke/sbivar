@@ -1,7 +1,8 @@
-#' @rdname plotTopPair
+#' Plot a specified feature pair for the data provided
+#' @rdname plotPair
 #' @export
 #' @inheritParams plotPairSingle
-#' @order 3
+#' @order 2
 #' @param theme the ggplot2 theme
 plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "log"), scaleBySampleSums = FALSE,
     normY = c("none", "rel", "log"), size = 1.25, assayX, assayY, theme = theme_bw()) {
@@ -47,9 +48,9 @@ plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "
 #' for X and Y matrices, respectively, before plotting, see details.
 #' @param size Point size
 #' @param features Feature vector of length 2 to be plotted
-#' @rdname plotTopPair
+#' @rdname plotPair
 #' @export
-#' @order 2
+#' @order 1
 plotPairSingle <- function(
       X, Y, Cx, Ey, features, normX = c("none", "rel", "log"),
       normY = c("none", "rel", "log"), assayX, assayY, scaleBySampleSums = FALSE, size = 1.5, ...
@@ -76,11 +77,11 @@ plotPairSingle <- function(
         Cx = Cx[rownames(X), ], Ey = Ey[rownames(Y), ], modalityNames = features, ...
     )
 }
-#' @rdname plotTopPair
+#' @rdname plotPair
 #' @param modalityNames Names to be given to the modalities,
 #' appearing in the strip text of the columns. For plotTopPair() and
 #' plotPairSingle(), the feature names are used.
-#' @order 4
+#' @order 3
 plotPairSingleVectors <- function(x, y, Cx, Ey, size,
     modalityNames = c("Modality X", "Modality Y"), theme = theme_bw(), ...) {
     theme_set(theme)

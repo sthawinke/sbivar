@@ -21,7 +21,6 @@
 #'
 #' @returns A ggplot object
 #' @export
-#'
 #' @examples
 #' # Single image
 #' example(sbivar, "sbivar")
@@ -38,7 +37,7 @@
 #' @order 1
 plotGAMs <- function(X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
     families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE, normX = c("none", "rel", "log"),
-    normY = c("none", "rel", "log"), n_points_grid = 6e2, Gamm = FALSE, correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25)), ...) {
+    normY = c("none", "rel", "log"), pseudoCount = 1e-8, n_points_grid = 6e2, Gamm = FALSE, correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25)), ...) {
     stopifnot(
         is.numeric(n_points_grid), all(vapply(families, FUN.VALUE = TRUE, is, "family")),
         all(vapply(features, FUN.VALUE = TRUE, is.character))
@@ -53,7 +52,7 @@ plotGAMs <- function(X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
             df <- buildGamDf(
                 X[[nam]], Y[[nam]], Cx[[nam]], Ey[[nam]], n_points_grid,
                 families, features, scaleFun,
-                correlation = correlation,
+                correlation = correlation, pseudoCount = pseudoCount,
                 normX = normX, normY = normY, Gamm = Gamm
             )$df
             df$image <- nam
@@ -63,7 +62,7 @@ plotGAMs <- function(X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
     } else {
         foo <- checkInputSingle(X, Y, Cx, Ey)
         df <- buildGamDf(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun,
-            normX = normX, normY = normY, correlation = correlation, Gamm = Gamm
+            normX = normX, normY = normY, correlation = correlation, Gamm = Gamm, pseudoCount = pseudoCount
         )
         corEst <- df$corEst
         df$df
@@ -102,7 +101,7 @@ makeOffset <- function(X, family) {
     }
     return(out)
 }
-buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun, normX, normY, pseudoCount = 1e-8, ...) {
+buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun, normX, normY, pseudoCount, ...) {
     if (families[["X"]]$family != "gaussian") {
         X <- X[idX <- (rowSums(X) > 0), ]
         Cx <- Cx[idX, ]
@@ -117,8 +116,8 @@ buildGamDf <- function(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun
             Y <- Y + pseudoCount
         }
     }
-    X <- normMat(X, normX)
-    Y <- normMat(Y, normY)
+    X <- normMat(X, normX, pseudoCount)
+    Y <- normMat(Y, normY, pseudoCount )
     colnames(Cx) <- colnames(Ey) <- c("x", "y")
     newGrid <- buildNewGrid(Cx = Cx, Ey = Ey, n_points_grid = n_points_grid)
     dfx <- data.frame("value" = X[, features[1]], Cx)

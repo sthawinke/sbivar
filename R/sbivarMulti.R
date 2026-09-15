@@ -88,6 +88,7 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" 
     out <- list("result" = res, "normX" = normX, "normY" = normY, "method" = method, "multi" = TRUE)
     if (method == "GAMs") {
         out$families <- families
+        out$Gamm <- FALSE
     } else if (method == "Moran's I") {
         out$wo <- wo
         out$wParams <- selfName(switch(wo,

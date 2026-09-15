@@ -149,7 +149,8 @@ fitLinModels <- function(result, designDf, Formula, verbose = TRUE, inverseWeigh
     })
     return(c(
         list("result" = models),
-        result[intersect(names(result), c("method", "families", "wo", "multi", "assayX", "assayY", "wParams", "normX", "normY", "estimateSEsMoransI"))]
+        result[intersect(names(result), c("method", "families", "wo", "multi", "assayX", "assayY",
+                                          "wParams", "normX", "normY", "estimateSEsMoransI", "Gamm", "correlation"))]
     ))
 }
 #' Fit a linear model for an individual feature pair

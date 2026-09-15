@@ -5,24 +5,27 @@
 \alias{plotGAMsTopPair,sbivarResultsGAMs-method}
 \title{Plot GAMs of top features}
 \usage{
-plotGAMsTopPair(x, topRank = 1, parameter = "Intercept", ...)
+plotGAMsTopPair(x, X, Y, Cx, Ey, topRank = 1, parameter = "Intercept", ...)
 
-\S4method{plotGAMsTopPair}{sbivarResultsGAMs}(x, topRank, parameter, X, Y, Cx, Ey, ...)
+\S4method{plotGAMsTopPair}{sbivarResultsGAMs}(x, X, Y, Cx, Ey, topRank = 1, parameter = "Intercept", ...)
 }
 \arguments{
+\item{x}{a sbivarResultsGAMs object}
+
 \item{topRank}{An integer, the feature pair with the rank-th smallest p-value is plotted}
 
 \item{parameter}{The linear model parameter used to find the feature with the strongest effect.
 The default is the intercept, i.e. the overall effect.}
 
 \item{...}{passed onto lower level functions}
-
-\item{X}{the input object, containing measurements of the first modality, see methods('sbivar')}
-
-\item{Y}{Matrix or SpatialExperiment object of second modality}
-
-\item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y respectively}
+}
+\value{
+a ggplot2 object
 }
 \description{
 Fit GAMS for the top feature pair chosen, and plot the resulting spline surfaces
+}
+\examples{
+example(sbivar, "sbivar")
+plotGAMsTopPair(resGAMs, X, Y, Cx, Ey)
 }

@@ -106,10 +106,7 @@ extractResultsMulti <- function(result, designDf, method = "BH") {
         new("sbivarResultsMoransI",
             "result" = fixResOut, "method" = result$method, "multi" = TRUE, "normX" = result$normX,
             "normY" = result$normY, "maxIxy" = result$maxIxy, "wo" = result$wo,
-            "wParams" = switch(result$wo,
-                "Gauss" = result$etas,
-                "nn" = result$numNNs
-            )
+            "wParams" = result$wParams
         )
     } else if (result$method == "GAMs") {
         new("sbivarResultsGAMs",

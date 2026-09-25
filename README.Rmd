@@ -67,7 +67,7 @@ if (.Platform$OS.type == "unix") {
 
 Now analyse this single sample using bivariate Moran's I.
 
-```{r gamSingle}
+```{r moranSingle}
 moranRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
     method = "Moran's I"
 )

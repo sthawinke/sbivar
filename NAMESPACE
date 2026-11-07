@@ -27,7 +27,6 @@ importFrom(BiocParallel,
 )
 importFrom(Matrix,
   bdiag,
-  diag,
   sparseMatrix
 )
 importFrom(MultiAssayExperiment,MultiAssayExperiment)

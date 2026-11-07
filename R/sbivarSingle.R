@@ -48,6 +48,11 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
         niterEM = 1e3, msMaxEval = 1e3
     ),
     correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(0.9 * max(apply(Cx, 2, function(x) diff(range(x)))), 0.25))) {
+    method <- match.arg(method)
+    variogramModels <- match.arg(variogramModels, several.ok = TRUE)
+    normX <- match.arg(normX)
+    normY <- match.arg(normY)
+    GPmethod <- match.arg(GPmethod)
     stopifnot(
         is.numeric(n_points_grid), ncol(Cx) == 2, is.numeric(numNNs), all(numNNs > 0),
         all(vapply(families, FUN.VALUE = character(1), function(x) x$link) %in% c("identity", "log", "inverse")),
@@ -57,11 +62,6 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
         all(featuresY %in% colnames(Y)), !anyDuplicated(featuresX), !anyDuplicated(featuresY),
         length(Quants) == 2, is.numeric(Quants), is.logical(verbose), is.logical(findMaxW)
     )
-    method <- match.arg(method)
-    variogramModels <- match.arg(variogramModels, several.ok = TRUE)
-    normX <- match.arg(normX)
-    normY <- match.arg(normY)
-    GPmethod <- match.arg(GPmethod)
     foo <- checkInputSingle(X, Y, Cx, Ey)
     colnames(Cx) <- c("x", "y")
     X <- normMat(X, normX, pseudoCount)
@@ -92,9 +92,9 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
         stop("Name families 'X' and 'Y' for unambiguous matching")
     }
     if (!missing(gpParams)) {
-        if (!is.list(gpParams) || names(gpParams) != c("X", "Y") ||
+        if (!is.list(gpParams) || !identical(names(gpParams), c("X", "Y")) ||
             !all(vapply(gpParams, FUN.VALUE = TRUE, function(x) {
-                identical(sort(rownames(x), c("mean", "nugget", "range", "sigma")))
+                setequal(rownames(x), c("mean", "nugget", "range", "sigma"))
             })) || !all(colnames(X) %in% colnames(gpParams$X) ||
             !all(colnames(Y) %in% colnames(gpParams$Y)))) {
             stop("gpParams must be a list with names 'X' and 'Y' consisting of

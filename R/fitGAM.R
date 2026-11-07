@@ -62,8 +62,8 @@ fitManyGAMs <- function(
         mat <- mat + pseudoCount
     }
     df <- data.frame(as.matrix(mat), coord)
+    libSizes <- rowSums(mat)
     if (family$family != "gaussian") {
-        libSizes <- rowSums(mat)
         df <- df[id <- (libSizes > 0), ]
         libSizes <- libSizes[id]
     }

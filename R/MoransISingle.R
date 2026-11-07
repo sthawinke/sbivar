@@ -56,6 +56,7 @@ MoransISingle <- function(
         buildWeightMat(Cx = Cx, Ey = Ey, wo = wo, eta = iter, numNN = iter)
     })
     Ws <- Ws[, , idW <- (colSums(Ws, dims = 2, na.rm = TRUE) > 0), drop = FALSE]
+    wParams <- wParams[idW]
     numWs <- dim(Ws)[3]
     if (!all(idW) && (wo == "Gauss")) {
         warning("Eta values ", etas[!idW], " yielded zero weight matrices and have been dropped!", immediate. = TRUE)

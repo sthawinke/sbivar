@@ -5,6 +5,7 @@ test_that("SbivarSingle works for correct input", {
     expect_is(sbiRes, "sbivarResults")
     expect_is(sbivar(X, Y, Cx, Ey, method = "GPs"), "sbivarResults")
     expect_message(sbivar(X, Y, Cx, Ey, method = "GAMs", correlation = corExp(~ x + y, nugget = TRUE)))
+    expect_message(sbivar(X, Y, Cx, Ey, method = "GAMs", Gamm = TRUE, correlation = corExp(~ x + y, nugget = TRUE)))
     expect_message(sbiResMoran <- sbivar(X, Y, Cx, Ey, method = "Moran's I"))
     expect_message(sbiResMod <- sbivar(X, X, Cx, method = "Modified t-test"))
     expect_true(all(c("pVal", "pAdj") %in% colnames(topPairs(sbiResMoran))))

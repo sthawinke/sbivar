@@ -34,8 +34,8 @@ plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "
             "feature" = rep(features, times = c(nrow(X), nrow(Y)))
         )
     }))
-    ggplot(data = dfList, aes(x = x, y = y, col = outcome)) +
-        geom_point(size = size) +
+    ggplot(data = dfList, aes(x = x, y = y, col = outcome, size = size)) +
+        geom_point() +
         facet_grid(image ~ feature) +
         scale_colour_gradient(low = "yellow", high = "blue", name = "Outcome") +
         xlab("x coordinate") +

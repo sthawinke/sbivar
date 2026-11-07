@@ -92,8 +92,8 @@ plotGAMs <- function(X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
 #' @param family The distribution family
 #' @returns A list of length two with offsets
 makeOffset <- function(X, family) {
+    libSizes <- rowSums(X)
     out <- if (family$family != "gaussian") {
-        libSizes <- rowSums(X)
         switch(family$link,
             "inverse" = 1 / libSizes,
             "log" = log(libSizes)

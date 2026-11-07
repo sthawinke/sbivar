@@ -24,7 +24,7 @@ setClass(
     )
 )
 setOldClass("corSpatial")
-setClassUnion("corSpatialOrNULL", c("character", "NULL"))
+setClassUnion("corSpatialOrNULL", c("corSpatial", "NULL"))
 setClass(
     "sbivarResultsGAMs",
     contains = "sbivarResults",

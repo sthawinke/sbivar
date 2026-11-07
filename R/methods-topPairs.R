@@ -13,5 +13,6 @@ setMethod(
             head(x@result[[parameter]], ...)
         } else {
             head(x@result, ...)
+        }
     }
-})
+)

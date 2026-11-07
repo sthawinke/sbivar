@@ -3,7 +3,7 @@ setMethod(
     "writeSbivarToXlsx",
     "sbivarResults",
     function(x, file, overwrite, digits, sigLevel) {
-        if(!requireNamespace("openxlsx")){
+        if (!requireNamespace("openxlsx")) {
             stop("Install the 'openxlsx' package first!")
         }
         stopifnot(

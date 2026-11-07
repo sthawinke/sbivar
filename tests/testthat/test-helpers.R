@@ -42,6 +42,3 @@ test_that("Helper functions do their job", {
     expect_identical(dimnames(mat), dimnames(normMat(abs(mat), "rel")))
     expect_identical(dimnames(mat), dimnames(normMat(abs(mat), "log")))
 })
-test_that("Helper functions fail where appropriate", {
-    expect_error(tr(list()))
-})

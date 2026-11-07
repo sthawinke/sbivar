@@ -106,10 +106,8 @@ setGeneric(
 #' )
 setGeneric(
     "plotTopPair",
-    function(
-      x, ..., topRank = 1, parameter = "Intercept", scaleBySampleSums = FALSE,
-      normX = x@normX, normY = x@normY
-    ) {
+    function(x, ..., topRank = 1, parameter = "Intercept", scaleBySampleSums = FALSE,
+    normX = x@normX, normY = x@normY) {
         standardGeneric("plotTopPair")
     }
 )
@@ -120,7 +118,7 @@ setGeneric(
 #' @inheritParams sbivarSingle
 setGeneric(
     "plotGAMsTopPair",
-    function(x,X, Y, Cx, Ey, topRank = 1, parameter = "Intercept", ...) {
+    function(x, X, Y, Cx, Ey, topRank = 1, parameter = "Intercept", ...) {
         standardGeneric("plotGAMsTopPair")
     }
 )

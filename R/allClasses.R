@@ -23,7 +23,11 @@ setClass(
         wParams = "numeric"
     )
 )
-setOldClass("corSpatial")
+methods::setOldClass(c("corExp", "corSpatial", "corStruct"))
+methods::setOldClass(c("corGaus", "corSpatial", "corStruct"))
+methods::setOldClass(c("corLin", "corSpatial", "corStruct"))
+methods::setOldClass(c("corRatio", "corSpatial", "corStruct"))
+methods::setOldClass(c("corSpher", "corSpatial", "corStruct"))
 setClassUnion("corSpatialOrNULL", c("corSpatial", "NULL"))
 setClass(
     "sbivarResultsGAMs",

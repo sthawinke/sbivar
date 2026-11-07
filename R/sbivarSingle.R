@@ -35,19 +35,21 @@
 #' @importFrom BiocParallel bpparam bpworkers
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
 #' @seealso \link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle}, \link{GPsSingle}
-sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
-    normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
-    etas = c(5e-6, 2e-4, 2e-2), findMaxW = FALSE, returnSEsMoransI = TRUE,
-    families = list("X" = gaussian(), "Y" = gaussian()), Gamm = FALSE, featuresX = colnames(X), featuresY = colnames(Y),
-    n_points_grid = 6e2, verbose = TRUE,
-    variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
-    wo = c("Gauss", "nn"), numNNs = c(4, 8, 24),
-    GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 5,
-    optControl = lmeControl(
-        opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
-        niterEM = 1e3, msMaxEval = 1e3
-    ),
-    correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(0.9 * max(apply(Cx, 2, function(x) diff(range(x)))), 0.25))) {
+sbivarSingle <- function(
+      X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
+      normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
+      etas = c(5e-6, 2e-4, 2e-2), findMaxW = FALSE, returnSEsMoransI = TRUE,
+      families = list("X" = gaussian(), "Y" = gaussian()), Gamm = FALSE, featuresX = colnames(X), featuresY = colnames(Y),
+      n_points_grid = 6e2, verbose = TRUE,
+      variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
+      wo = c("Gauss", "nn"), numNNs = c(4, 8, 24),
+      GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 5,
+      optControl = lmeControl(
+          opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
+          niterEM = 1e3, msMaxEval = 1e3
+      ),
+      correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(0.9 * max(apply(Cx, 2, function(x) diff(range(x)))), 0.25))
+) {
     method <- match.arg(method)
     variogramModels <- match.arg(variogramModels, several.ok = TRUE)
     normX <- match.arg(normX)
@@ -113,9 +115,9 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
         )
     }
     out <- if (method == "Moran's I") {
-        if (wo == "nn" & !requireNamespace("RANN", quietly = TRUE)){
-                stop("Install 'RANN' package for nearest neighbour weighting matrices")
-            }
+        if (wo == "nn" & !requireNamespace("RANN", quietly = TRUE)) {
+            stop("Install 'RANN' package for nearest neighbour weighting matrices")
+        }
         (moranRes <- MoransISingle(
             X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo, numNNs = selfName(numNNs),
             variogramModels = variogramModels, etas = selfName(etas), width = width,

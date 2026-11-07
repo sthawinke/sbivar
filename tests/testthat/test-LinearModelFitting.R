@@ -1,12 +1,12 @@
 test_that("fitLinModels works for GAM input", {
-    expect_is(
+    expect_s3_class(
         class = "list",
         multiFitGams <- fitLinModels(estGAMs,
             designDf = toyDesign, inverseWeigh = TRUE,
             Formula = out ~ covariate + cofactor + (1 | group)
         )
     )
-    expect_is(
+    expect_s3_class(
         class = "list",
         multiFitGams2 <- fitLinModels(estGAMs,
             inverseWeigh = FALSE,
@@ -14,7 +14,7 @@ test_that("fitLinModels works for GAM input", {
             Formula = out ~ covariate + cofactor + (1 | group)
         )
     )
-    expect_is( # Intercept only model
+    expect_s3_class( # Intercept only model
         class = "list",
         multiFitGams3 <- fitLinModels(estGAMs,
             inverseWeigh = FALSE,
@@ -22,7 +22,7 @@ test_that("fitLinModels works for GAM input", {
         )
     )
     # Extract the results
-    expect_is(resGams <- extractResultsMulti(multiFitGams, designDf = toyDesign), "sbivarResults")
+    expect_s4_class(resGams <- extractResultsMulti(multiFitGams, designDf = toyDesign), "sbivarResults")
     expect_named(
         resGams@result,
         c("Intercept", "covariate", "cofactor")
@@ -35,14 +35,14 @@ test_that("fitLinModels works for GAM input", {
     expect_false(is.unsorted(resGams@result$Intercept[, "pVal"]))
 })
 test_that("fitLinModels works for Moran's I input", {
-    expect_is(
+    expect_s3_class(
         class = "list",
         multiFitMoran <- fitLinModels(estMoran,
             designDf = toyDesign,
             Formula = out ~ covariate + cofactor + (1 | group)
         )
     )
-    expect_is(
+    expect_s3_class(
         class = "list",
         multiFitMoran2 <- fitLinModels(estMoran,
             inverseWeigh = FALSE,
@@ -50,7 +50,7 @@ test_that("fitLinModels works for Moran's I input", {
             Formula = out ~ covariate + cofactor + (1 | group)
         )
     )
-    expect_is(
+    expect_s3_class(
         class = "list",
         multiFitMoran3 <- fitLinModels(estMoran,
             inverseWeigh = FALSE, scaleByMax = FALSE,
@@ -58,7 +58,7 @@ test_that("fitLinModels works for Moran's I input", {
             Formula = out ~ covariate + cofactor + (1 | group)
         )
     )
-    expect_is(
+    expect_s3_class(
         class = "list",
         multiFitMoran4 <- fitLinModels(estMoran,
             inverseWeigh = TRUE, scaleByMax = FALSE,
@@ -68,7 +68,7 @@ test_that("fitLinModels works for Moran's I input", {
     )
 })
 test_that("fitLinModels works for correlation input", {
-    expect_is(
+    expect_s3_class(
         class = "list",
         multiFitCors <- fitLinModels(estMultiCor,
             designDf = toyDesign,

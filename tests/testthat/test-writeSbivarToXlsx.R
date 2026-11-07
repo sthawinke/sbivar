@@ -1,4 +1,4 @@
-if(requireNamespace("openxlsx")){
+if (requireNamespace("openxlsx")) {
     test_that("Writing to spreadsheets works as expected", {
         expect_message(writeSbivarToXlsx(resGAMsSingle, file = "tmpFile", sigLevel = 1))
         expect_true(file.exists("tmpFile.xlsx"))
@@ -16,7 +16,7 @@ if(requireNamespace("openxlsx")){
             file = "tmpFile", sigLevel = 1,
             overwrite = TRUE
         ))
-        expect_length(getSheetNames("tmpFile.xlsx"), 3L)
+        expect_length(openxlsx::getSheetNames("tmpFile.xlsx"), 3L)
         file.remove("tmpFile.xlsx")
     })
 }

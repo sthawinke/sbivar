@@ -35,7 +35,7 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" 
         is.numeric(numNNs), all(numNNs > 0), is.numeric(etas), is.numeric(n_points_grid), is.logical(verbose),
         is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family")), is.character(featuresX), is.character(featuresY)
     )
-    foo <- checkInputMulti(Xl, Yl, Cxl, Eyl, checkCoords = ccs <- (method != "Correlation"))
+    invisible(checkInputMulti(Xl, Yl, Cxl, Eyl, checkCoords = ccs <- (method != "Correlation")))
     if (ccs) {
         if (missing(Eyl)) {
             message("Only one coordinate matrix list Cxl supplied, and dimensions of X and Y do match.
@@ -69,6 +69,9 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" 
         )
     }
     res <- if (method == "Moran's I") {
+        if (wo == "nn" & !requireNamespace("RANN", quietly = TRUE)){
+            stop("Install 'RANN' package for nearest neighbour weighting matrices")
+        }
         MoransIMulti(Xl, Yl, Cxl, Eyl,
             featuresX = featuresX, featuresY = featuresY,
             wo = wo, numNNs = numNNs, verbose = verbose, findVariances = findVariances, findMaxW = findMaxW,

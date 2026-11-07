@@ -18,7 +18,7 @@ setClass(
     contains = "sbivarResults",
     slots = c(
         maxIxy = "numericOrNULL",
-        estimateSEsMoransI = "logical",
+        returnSEsMoransI = "logical",
         wo = "character",
         wParams = "numeric"
     )

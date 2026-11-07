@@ -59,7 +59,7 @@ fitLinModels <- function(result, designDf, Formula, verbose = TRUE, inverseWeigh
     }
     if (inverseWeigh && (result$method == "Moran's I") && !result$returnSEsMoransI) {
         stop("Inverse weighing only possible if the variances of Moran's I are included!
-             Rerun sbivar() with estimateSEsMoransI=TRUE.")
+             Rerun sbivar() with returnSEsMoransI=TRUE.")
     }
     if (inverseWeigh && (result$method == "Correlation")) {
         warning("Inverse weighing not available for method = 'Correlation'.
@@ -168,6 +168,7 @@ fitLinModels <- function(result, designDf, Formula, verbose = TRUE, inverseWeigh
 #'
 #' @returns A fitted lmer or lm model
 #' @importFrom lme4 mkLmerDevfun optimizeLmer mkMerMod
+#' @importFrom lmerTest as_lmerModLmerTest
 #' @importFrom stats lm.wfit lm.fit
 #' @importFrom smoppix lm_from_wfit
 fitLinModel <- function(ff, y, Control, Terms, modMat, MM, Assign, weights = NULL) {
@@ -184,7 +185,7 @@ fitLinModel <- function(ff, y, Control, Terms, modMat, MM, Assign, weights = NUL
                     rho = environment(devfun), opt = opt,
                     reTrms = ff$reTrms, fr = fr
                 )
-                out <- lmerTest:::as_lmerModLT(out, devfun = devfun)
+                out <- as_lmerModLmerTest(out)
             },
             silent = TRUE
         )

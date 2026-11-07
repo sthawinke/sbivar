@@ -47,7 +47,6 @@
 #'     assayX = "transcripts", assayY = "metabolites",
 #'     method = "GPs"
 #' )
-setGeneric("sbivar", function(X, ...) standardGeneric("sbivar"))
 setGeneric("sbivar", function(X, Y, ...) standardGeneric("sbivar"))
 #' Return the top results found by sbivar
 #' @param x The sbivarResults object

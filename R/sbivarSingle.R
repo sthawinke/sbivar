@@ -62,7 +62,7 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
         all(featuresY %in% colnames(Y)), !anyDuplicated(featuresX), !anyDuplicated(featuresY),
         length(Quants) == 2, is.numeric(Quants), is.logical(verbose), is.logical(findMaxW)
     )
-    foo <- checkInputSingle(X, Y, Cx, Ey)
+    invisible(checkInputSingle(X, Y, Cx, Ey))
     colnames(Cx) <- c("x", "y")
     X <- normMat(X, normX, pseudoCount)
     Y <- normMat(Y, normY, pseudoCount)
@@ -72,13 +72,13 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
     wo <- match.arg(wo)
     if (missing(Ey)) {
         if (nrow(X) != nrow(Y)) {
-            stop("Only one coordinate matrix supplied, but sample size of X and Y do not match!
-                 Please supply the 'Ey' argument and consider 'Moran's I' as method.")
+            stop(strwrap("Only one coordinate matrix supplied, but sample size of X and Y do not match!
+                 Please supply the 'Ey' argument and consider 'Moran's I' as method."))
         }
         # Run a joint analysis
         if (verbose) {
-            message("Only one coordinate matrix Cx supplied, and dimensions of X and Y do match.
-                 Performing an analysis with joint coordinate sets.")
+            message(strwrap("Only one coordinate matrix Cx supplied, and dimensions of X and Y do match.
+                 Performing an analysis with joint coordinate sets."))
         }
         Ey <- Cx
     } else if (method == "Modified t-test") {
@@ -113,6 +113,9 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
         )
     }
     out <- if (method == "Moran's I") {
+        if (wo == "nn" & !requireNamespace("RANN", quietly = TRUE)){
+                stop("Install 'RANN' package for nearest neighbour weighting matrices")
+            }
         (moranRes <- MoransISingle(
             X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo, numNNs = selfName(numNNs),
             variogramModels = variogramModels, etas = selfName(etas), width = width,
@@ -143,7 +146,7 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
     res <- if (method == "Moran's I") {
         new("sbivarResultsMoransI",
             "result" = out, "method" = method, "multi" = FALSE, "normX" = normX,
-            "normY" = normY, "maxIxy" = moranRes$maxIxy, "wo" = wo, "estimateSEsMoransI" = returnSEsMoransI,
+            "normY" = normY, "maxIxy" = moranRes$maxIxy, "wo" = wo, "returnSEsMoransI" = returnSEsMoransI,
             "wParams" = switch(wo,
                 "Gauss" = etas,
                 "nn" = numNNs

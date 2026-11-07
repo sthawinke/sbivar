@@ -13,7 +13,7 @@
 #' @param Cx The shared coordinate matrix
 #' @importFrom SpatialPack modified.ttest
 ModTtestSingle <- function(X, Y, Cx, verbose) {
-    featGrid <- expand.grid("featX" = colnames(X), "featY" = colnames(Y))
+    featGrid <- expand.grid("featX" = colnames(X), "featY" = colnames(Y), stringsAsFactors = FALSE)
     if (verbose) {
         message("Performing ", nrow(featGrid), " modified t-tests")
     }

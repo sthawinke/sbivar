@@ -51,25 +51,6 @@ bdiagn <- function(A, B) {
     dimnames(M) <- list(c(rownames(A), rownames(B)), c(colnames(A), colnames(B)))
     M
 }
-#' Find trace of a matrix, of traces of an array
-#'
-#' A (mxm) matric has one trace (the sum of the diagonal elements), a (mxmxp) array has p traces
-#'
-#' @param x Matrix or array
-#' @param dim Dimensions defining matrices to find traces over
-#'
-#' @returns A trace or vector of traces
-#' @importFrom methods is
-#' @importFrom Matrix diag
-tr <- function(x, dim = c(1, 2)) {
-    if (is.matrix(x) || is(x, "Matrix")) {
-        sum(diag(x))
-    } else if (is.array(x)) {
-        apply(x, dim, tr)
-    } else {
-        stop("Trace function not implemented for ", class(x))
-    }
-}
 #' Get all categrocial variables from a dataframe
 #'
 #' @param df The data frane

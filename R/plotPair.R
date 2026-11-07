@@ -13,7 +13,7 @@ plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "
     Yl <- getX(Yl, assayY)
     Cxl <- getSpatialCoords(Xl, Cxl)
     Eyl <- getSpatialCoords(Yl, Eyl)
-    foo <- checkInputMulti(Xl, Yl, Cxl, Eyl)
+    invisible(checkInputMulti(Xl, Yl, Cxl, Eyl))
     features <- make.names(features)
     stopifnot(length(features) == 2)
     normX <- match.arg(normX)
@@ -70,7 +70,7 @@ plotPairSingle <- function(
         Y <- assayT(Y, assayY)
     }
     features <- make.names(features)
-    foo <- checkInputSingle(X, Y, Cx, Ey)
+    inivisible(checkInputSingle(X, Y, Cx, Ey))
     normX <- match.arg(normX)
     normY <- match.arg(normY)
     size <- getSize(X, Y, normX, normY, scaleBySampleSums, size = size)

@@ -17,7 +17,7 @@
 #' @importFrom graphics legend lines
 exploreWeights <- function(etas, dists = seq(0, 0.2, length.out = 1e3), palette = "paired", legend.position = "topright") {
     stopifnot(all(dists <= sqrt(2)), all(etas > 0))
-    Pal <- palette.colors(palette)
+    Pal <- palette.colors(palette = palette)
     if (length(etas) > length(Pal)) {
         stop("Insufficient colours in palette ", palette, "for supplied etas!")
     }

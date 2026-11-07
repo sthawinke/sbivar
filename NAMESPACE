@@ -40,7 +40,7 @@ importFrom(SummarizedExperiment,
 )
 importFrom(abind,abind)
 importFrom(concaveman,concaveman)
-importFrom(grDevices,palette)
+importFrom(grDevices,palette.colors)
 importFrom(graphics,
   legend,
   lines,
@@ -61,7 +61,10 @@ importFrom(lme4,
   mkReTrms,
   optimizeLmer
 )
-importFrom(lmerTest,lmer)
+importFrom(lmerTest,
+  as_lmerModLmerTest,
+  lmer
+)
 importFrom(methods,
   is,
   new,

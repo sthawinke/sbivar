@@ -19,8 +19,7 @@ buildWeightMat <- function(
       distMat = spatstat.geom::crossdist(Cx[, 1], Cx[, 2], Ey[, 1], Ey[, 2])
 ) {
     if (wo == "nn") {
-        if (requireNamespace("RANN")) {
-            nnMatXY <- RANN::nn2(Cx, Ey, k = numNN)$nn.idx
+                    nnMatXY <- RANN::nn2(Cx, Ey, k = numNN)$nn.idx
             nnMatYX <- RANN::nn2(Ey, Cx, k = numNN)$nn.idx
             n <- nrow(Cx)
             m <- nrow(Ey)
@@ -29,9 +28,6 @@ buildWeightMat <- function(
                 i = c(rep(seq_len(n), times = numNN), c(t(nnMatXY))),
                 j = c(nnMatYX, rep(seq_len(m), each = numNN))
             ))
-        } else {
-            stop("Install 'RANN' package for nearest neighbour weighting matrices")
-        }
     } else if (wo == "Gauss") {
         wm <- exp(-distMat^2 / eta)
     }

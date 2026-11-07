@@ -47,7 +47,7 @@ plotGAMs <- function(X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
     normY <- match.arg(normY)
     scaleFun <- get(as.character(scaleFun), mode = "function", getNamespace("sbivar"))
     gamDf <- if (multi <- is.list(X)) {
-        foo <- checkInputMulti(X, Y, Cx, Ey)
+        invisible(checkInputMulti(X, Y, Cx, Ey))
         gamDfs <- lapply(names(X), function(nam) {
             df <- buildGamDf(
                 X[[nam]], Y[[nam]], Cx[[nam]], Ey[[nam]], n_points_grid,
@@ -60,7 +60,7 @@ plotGAMs <- function(X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
         })
         do.call(rbind, gamDfs)
     } else {
-        foo <- checkInputSingle(X, Y, Cx, Ey)
+        invisible(checkInputSingle(X, Y, Cx, Ey))
         df <- buildGamDf(X, Y, Cx, Ey, n_points_grid, families, features, scaleFun,
             normX = normX, normY = normY, correlation = correlation, Gamm = Gamm, pseudoCount = pseudoCount
         )

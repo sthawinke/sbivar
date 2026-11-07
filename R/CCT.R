@@ -11,7 +11,7 @@
 #' @importFrom stats pcauchy
 CCT <- function(pvals) {
     if (anyNA(pvals)) {
-        return(1)
+        return(NA)
     }
     #### check if there are p-values that are either exactly 0 or 1.
     is.zero <- any(pvals == 0)
@@ -21,7 +21,6 @@ CCT <- function(pvals) {
     } else if (is.zero) {
         return(0)
     } else if (is.one) {
-        warning("There are p-values that are exactly 1!")
         return(1)
     }
     #### check if there are very small non-zero p-values

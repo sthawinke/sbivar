@@ -21,7 +21,7 @@ plotSpotSums <- function(
       Xl, Yl, Cxl, Eyl, viewNames = c("Transcriptomics", "Metabolomics"),
       pointSize = 0.01, stripTextSize = 8.5
 ) {
-    baa <- checkInputMulti(Xl, Yl, Cxl, Eyl)
+    inivisble(checkInputMulti(Xl, Yl, Cxl, Eyl))
     foo <- base::do.call(rbind, lapply(names(Xl), function(x) {
         dfStx <- data.frame(Cxl[[x]], "log10_Library_size" = log10(rowSums(Xl[[x]])), what = viewNames[1])
         dfMsi <- data.frame(Eyl[[x]], "log10_Library_size" = log10(rowSums(Yl[[x]])), what = viewNames[2])

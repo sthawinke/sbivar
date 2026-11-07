@@ -35,7 +35,7 @@
 #' @import ggplot2
 #' @importFrom smoppix loadBalanceBplapply
 #' @order 1
-plotGAMs <- function(X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
+plotGAMs <- function(X, Y, Cx, Ey, features, scaleFun = scaleMinusOne,
     families = list("X" = gaussian(), "Y" = gaussian()), addTitle = TRUE, normX = c("none", "rel", "log"),
     normY = c("none", "rel", "log"), pseudoCount = 1e-8, n_points_grid = 6e2, Gamm = FALSE, correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(1, 0.25)), ...) {
     stopifnot(
@@ -45,7 +45,7 @@ plotGAMs <- function(X, Y, Cx, Ey, features, scaleFun = "scaleMinusOne",
     features <- make.names(features)
     normX <- match.arg(normX)
     normY <- match.arg(normY)
-    scaleFun <- get(as.character(scaleFun), mode = "function", getNamespace("sbivar"))
+    scaleFun <- match.fun(scaleFun)
     gamDf <- if (multi <- is.list(X)) {
         invisible(checkInputMulti(X, Y, Cx, Ey))
         gamDfs <- lapply(names(X), function(nam) {

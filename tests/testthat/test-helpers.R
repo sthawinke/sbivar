@@ -1,4 +1,3 @@
-context("Unit tests for small auxiliary function")
 test_that("Helper functions do their job", {
     expect_identical(makePval(0), 1)
     expect_named(selfName("gene1"), "gene1")

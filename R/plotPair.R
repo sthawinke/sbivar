@@ -18,7 +18,6 @@ plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "
     stopifnot(length(features) == 2)
     normX <- match.arg(normX)
     normY <- match.arg(normY)
-    theme_set(theme)
     dfList <- do.call(rbind, lapply(names(Xl), function(nam) {
         size <- getSize(Xl[[nam]], Yl[[nam]], normX, normY, scaleBySampleSums, size = size)
         X <- normMat(Xl[[nam]], normX)
@@ -89,7 +88,6 @@ plotPairSingle <- function(
 #' @order 3
 plotPairSingleVectors <- function(x, y, Cx, Ey, size,
     modalityNames = c("Modality X", "Modality Y"), theme = theme_bw(), ...) {
-    theme_set(theme)
     stopifnot(length(x) == nrow(Cx), length(y) == nrow(Ey), ncol(Ey) == 2, ncol(Cx) == 2)
     coordMat <- rbind(Cx, Ey)
     colnames(coordMat) <- c("x", "y")

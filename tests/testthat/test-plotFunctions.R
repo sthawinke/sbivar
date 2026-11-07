@@ -1,4 +1,3 @@
-context("Plotting functions for single and multiple images")
 test_that("Single image plotting function works", {
     expect_is(plotTopPair(resMoranTest, X = X, Y = Y, Cx = Cx, Ey = Ey), "ggplot")
     expect_is(plotPairSingle(X = X, Y = Y, Cx = Cx, Ey = Ey, features = c("X1", "Y1")), "ggplot")

@@ -145,7 +145,6 @@ setGeneric(
 #' @return Returns invisible with a message when writing operation successful,
 #' otherwise throws a warning.
 #' @export
-#' @importFrom openxlsx createWorkbook writeData addWorksheet saveWorkbook getSheetNames
 #' @examples
 #' example(sbivar, "sbivar")
 #' # The significance level is set to 1 here for illustration,

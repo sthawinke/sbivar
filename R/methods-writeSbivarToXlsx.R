@@ -3,11 +3,14 @@ setMethod(
     "writeSbivarToXlsx",
     "sbivarResults",
     function(x, file, overwrite, digits, sigLevel) {
+        if(!requireNamespace("openxlsx")){
+            stop("Install the 'openxlsx' package first!")
+        }
         stopifnot(
             is.logical(overwrite), is.character(file), is.numeric(digits),
             is.numeric(sigLevel)
         )
-        if (!grepl("\\.xlsx", file)) {
+        if (!grepl("\\.xlsx$", file)) {
             message("Adding .xlsx extension to file")
             file <- paste0(file, ".xlsx")
         }
@@ -18,7 +21,7 @@ setMethod(
                 stop("File ", file, " already exists! Set overwrite = TRUE to overwrite")
             }
         }
-        wb <- createWorkbook()
+        wb <- openxlsx::createWorkbook()
         res <- if (x@multi) {
             x@result
         } else {
@@ -35,16 +38,16 @@ setMethod(
                     mat[, i] <- signif(mat[, i], digits)
                 }
                 sheetName <- if (nam == "Intercept") "Baseline" else nam
-                addWorksheet(wb, sheetName) # Create sheet and write data to it
-                writeData(wb,
+                openxlsx::addWorksheet(wb, sheetName) # Create sheet and write data to it
+                openxlsx::writeData(wb,
                     sheet = sheetName, x = data.frame(mat), colNames = TRUE,
                     rowNames = FALSE
                 )
             }
         }
-        if (length(wb$worksheets)) {
-            saveWorkbook(wb, file = file, overwrite = overwrite)
-            message(length(getSheetNames(file)), " tabs successfully written to ", file)
+        if (length(openxlsx::sheets(wb))) {
+            openxlsx::saveWorkbook(wb, file = file, overwrite = overwrite)
+            message(length(openxlsx::getSheetNames(file)), " tabs successfully written to ", file)
         } else {
             warning(
                 "No significant features at significance level ", sigLevel,

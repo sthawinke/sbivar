@@ -1,4 +1,3 @@
-context("Unit tests for array products and traces")
 test_that("Array functions yield the same results as using loops", {
     m <- 3
     p <- 4

@@ -1,4 +1,3 @@
-context("Fit linear models and extract results")
 test_that("fitLinModels works for GAM input", {
     expect_is(
         class = "list",

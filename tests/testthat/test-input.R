@@ -1,4 +1,3 @@
-context("Unit tests for input errors")
 test_that("SbivarSingle works for correct input", {
     sbiRes <- sbivar(X, Y, Cx, Ey, method = "GAMs")
     expect_is(sbiRes, "sbivarResultsGAMs")

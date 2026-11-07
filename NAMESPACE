@@ -86,13 +86,6 @@ importFrom(nlme,
   gls,
   lmeControl
 )
-importFrom(openxlsx,
-  addWorksheet,
-  createWorkbook,
-  getSheetNames,
-  saveWorkbook,
-  writeData
-)
 importFrom(reformulas,
   findbars,
   nobars

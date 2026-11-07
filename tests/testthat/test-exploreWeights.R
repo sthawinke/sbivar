@@ -1,4 +1,3 @@
-context("Weights exploration")
 test_that("Weight plotting function works", {
     expect_silent(exploreWeights(10^c(-5, -4, -3)))
 })

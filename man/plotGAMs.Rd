@@ -10,7 +10,7 @@ plotGAMs(
   Cx,
   Ey,
   features,
-  scaleFun = "scaleMinusOne",
+  scaleFun = scaleMinusOne,
   families = list(X = gaussian(), Y = gaussian()),
   addTitle = TRUE,
   normX = c("none", "rel", "log"),

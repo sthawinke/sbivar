@@ -1,4 +1,3 @@
-context("Plot GAM fits and correlations")
 test_that("GAM fitting plotting works", {
     expect_is(plotGAMs(X, Y, Cx, Ey, features = c("X1", "Y2")), "ggplot")
     expect_is(plotGAMs(X, Y, Cx, Ey, features = c("X1", "Y2"), Gamm = TRUE), "ggplot")

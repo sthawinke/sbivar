@@ -198,7 +198,8 @@ writeSbivarToXlsx(gamRes, file = tmpFile <- tempfile(fileext = ".xlsx"))
 Another available analysis for single images are bivariate Gaussian processes (GPs). Yet fitting GPs and calculating the score tests statistics can be computation and memory intensive! Hence the code is shown, but not run:
 
 ```{r gp, eval = FALSE}
-gpRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, method = "GPs", normX = "rel", normY = "rel")
+gpRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords, 
+                method = "GPs", normX = "rel", normY = "rel")
 topPairs(gpRes)
 ```
 
@@ -394,7 +395,8 @@ AnnData is python data format often used to store spatial experiment results, wh
 
 ```{r readh5ad, message = FALSE}
 if (reqann <- (require(anndataR) && require(rhdf5))) {
-    annDataObj <- read_h5ad(system.file("h5adData", "LC_170_subset.h5ad", package = "sbivar"), as = "HDF5AnnData")
+    annDataObj <- read_h5ad(system.file("h5adData", "LC_170_subset.h5ad", package = "sbivar"), 
+                            as = "HDF5AnnData")
 }
 ```
 

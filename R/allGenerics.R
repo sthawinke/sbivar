@@ -67,7 +67,8 @@ setGeneric(
 #' The default is the intercept, i.e. the overall effect.
 #' @param topRank An integer, the feature pair with the rank-th smallest p-value is plotted
 #' @param ... passed onto lower level functions
-#' @param scaleBySampleSums A boolean, should the size of the spots be scaled by their sample sum, e.g. library size or total ion count? Recommended to reflect differences in certainty depending on sample sums.
+#' @param scaleBySampleSums A boolean, should the size of the spots be scaled by their sample sum,
+#' e.g. library size or total ion count? Recommended to reflect differences in certainty depending on sample sums.
 #' @seealso \link{extractResultsMulti}, \link{fitLinModels}
 #' @return A ggplot object
 #' @export

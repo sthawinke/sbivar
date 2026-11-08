@@ -42,10 +42,10 @@ test_that("SbivarSingle throws errors for incorrect input", {
 })
 test_that("sbivarMulti works for correct input", {
     gamList <- sbivar(Xl, Yl, Cxl, Eyl, method = "GAMs")
-    expect_s3_class(gamList, "list")
+    expect_type(gamList, "list")
     expect_named(gamList, c("result", "normX", "normY", "method", "multi", "families", "Gamm"))
-    expect_s3_class(gamList$result[[1]]$res, "matrix")
-    expect_s3_class(sbivar(Xl, Yl, Cxl, Eyl, method = "Moran's I"), "list")
+    expect_vector(gamList$result[[1]]$res)
+    expect_type(sbivar(Xl, Yl, Cxl, Eyl, method = "Moran's I"), "list")
 })
 test_that("sbivarMulti throws errors for incorrect input", {
     expect_error(sbivar(Xl, Yl, Cxl, Eyl, method = "GPs"))

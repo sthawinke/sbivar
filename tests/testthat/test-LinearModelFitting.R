@@ -1,21 +1,21 @@
 test_that("fitLinModels works for GAM input", {
-    expect_s3_class(
-        class = "list",
+    expect_type(
+        type = "list",
         multiFitGams <- fitLinModels(estGAMs,
             designDf = toyDesign, inverseWeigh = TRUE,
             Formula = out ~ covariate + cofactor + (1 | group)
         )
     )
-    expect_s3_class(
-        class = "list",
+    expect_type(
+        type = "list",
         multiFitGams2 <- fitLinModels(estGAMs,
             inverseWeigh = FALSE,
             designDf = toyDesign,
             Formula = out ~ covariate + cofactor + (1 | group)
         )
     )
-    expect_s3_class( # Intercept only model
-        class = "list",
+    expect_type(
+        type = "list",
         multiFitGams3 <- fitLinModels(estGAMs,
             inverseWeigh = FALSE,
             Formula = out ~ 1
@@ -35,31 +35,31 @@ test_that("fitLinModels works for GAM input", {
     expect_false(is.unsorted(resGams@result$Intercept[, "pVal"]))
 })
 test_that("fitLinModels works for Moran's I input", {
-    expect_s3_class(
-        class = "list",
+    expect_type(
+        type = "list",
         multiFitMoran <- fitLinModels(estMoran,
             designDf = toyDesign,
             Formula = out ~ covariate + cofactor + (1 | group)
         )
     )
-    expect_s3_class(
-        class = "list",
+    expect_type(
+        type = "list",
         multiFitMoran2 <- fitLinModels(estMoran,
             inverseWeigh = FALSE,
             designDf = toyDesign,
             Formula = out ~ covariate + cofactor + (1 | group)
         )
     )
-    expect_s3_class(
-        class = "list",
+    expect_type(
+        type = "list",
         multiFitMoran3 <- fitLinModels(estMoran,
             inverseWeigh = FALSE, scaleByMax = FALSE,
             designDf = toyDesign,
             Formula = out ~ covariate + cofactor + (1 | group)
         )
     )
-    expect_s3_class(
-        class = "list",
+    expect_type(
+        type = "list",
         multiFitMoran4 <- fitLinModels(estMoran,
             inverseWeigh = TRUE, scaleByMax = FALSE,
             designDf = toyDesign,

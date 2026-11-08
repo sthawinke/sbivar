@@ -9,7 +9,7 @@ output:
     citation_package: biblatex
 vignette: >
   %\VignetteIndexEntry{Vignette of the sbivar package}
-  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEngine{knitr::knitr}
   %\VignetteEncoding{UTF-8}
 bibliography: ../inst/REFERENCES.bib 
 ---
@@ -127,7 +127,7 @@ These spot sums are usually considered to be technical artefacts, but since they
 
 ## Single-image analysis
 
-The Vicari data consist of six images which can be analysed jointly, but for didactical purposes we first analyse a single image here, the sample "V11T16-085_A1".
+The Vicari data consist of six images which can be analysed jointly, but for didactic purposes we first analyse a single image here, the sample "V11T16-085_A1".
 
 ```{r getsinglesample}
 singleSample <- "V11T16-085_A1"
@@ -249,7 +249,7 @@ No features are significantly associated after multiplicity correction. This is 
 plotTopPair(multiMoranLmmsRes,
     parameter = "Intercept",
     Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes,
-    Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.4
+    Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.2
 )
 ```
 
@@ -327,47 +327,21 @@ resMAE <- sbivar(MAE,
 
 ### Multi-image
 
-For the multi-image case, there are several options. One is to provide two lists of _SpatialExperiment_ objects to the _sbivar_ function. We construct such list here for illustrative purposes, and fit GAMs:
-
-```{r multiListSE}
-StxSElist <- lapply(selfName(names(Vicari$TranscriptOutcomes)), function(nam) {
-    SpatialExperiment(
-        assays = list("transcripts" = t(Vicari$TranscriptOutcomes[[nam]])),
-        spatialCoords = Vicari$TranscriptCoords[[nam]]
-    )
-})
-MetSElist <- lapply(selfName(names(Vicari$MetaboliteOutcomes)), function(nam) {
-    SpatialExperiment(
-        assays = list("metabolites" = t(Vicari$MetaboliteOutcomes[[nam]])),
-        spatialCoords = Vicari$MetaboliteCoords[[nam]]
-    )
-})
-multiMoranResSE <- sbivar(
-    X = StxSElist, Y = MetSElist, assayX = "transcripts",
-    assayY = "metabolites", method = "GAMs", verbose = FALSE
-)
-multiMoranLmmsSE <- fitLinModels(multiMoranResSE, designDf, Formula = ~ (1 | mouse))
-multiMoranLmmsResSE <- extractResultsMulti(multiMoranLmmsSE, designDf)
-topPairs(multiMoranLmmsResSE, "Intercept")
-```
-
-Another option is to provide only two _SpatialExperiment_ objects, but provide a _sample_id_ argument that identifies the different images. For illustration, we construct such objects from the Vicari data.
+For the multi-image case, there are several options. One is to provide two _SpatialExperiment_ objects, with provide a _sample_id_ argument that identifies the different images. For illustration, we construct such objects from the Vicari data, and fit GAMs:
 
 ```{r SEidentifier}
-SEsingleStx <- SpatialExperiment(
-    assays = list("transcripts" = t(Reduce(Vicari$TranscriptOutcomes, f = rbind))),
-    spatialCoords = Reduce(Vicari$TranscriptCoords, f = rbind),
-    colData = data.frame("sample_id" = rep(names(Vicari$TranscriptOutcomes),
-        times = vapply(Vicari$TranscriptOutcomes, FUN.VALUE = 0L, nrow)
-    ))
-)
-SEsingleMet <- SpatialExperiment(
-    assays = list("metabolites" = t(Reduce(Vicari$MetaboliteOutcomes, f = rbind))),
-    spatialCoords = Reduce(Vicari$MetaboliteCoords, f = rbind),
-    colData = data.frame("sample_id" = rep(names(Vicari$MetaboliteOutcomes),
-        times = vapply(Vicari$MetaboliteOutcomes, FUN.VALUE = 0L, nrow)
-    ))
-)
+SEsingleStx <- Reduce(f = cbind, lapply(names(Vicari$TranscriptOutcomes), function(nam){
+    SpatialExperiment(
+    assays = list("transcripts" = t(Vicari$TranscriptOutcomes[[nam]])),
+    spatialCoords = Vicari$TranscriptCoords[[nam]],
+    sample_id = nam
+)}))
+SEsingleMet <- Reduce(f = cbind, lapply(names(Vicari$MetaboliteOutcomes), function(nam){
+    SpatialExperiment(
+    assays = list("metabolites" = t(Vicari$MetaboliteOutcomes[[nam]])),
+    spatialCoords = Vicari$MetaboliteCoords[[nam]],
+    sample_id = nam
+)}))
 ```
 
 A quick look:
@@ -376,11 +350,10 @@ A quick look:
 SEsingleStx
 ```
 
-And run the same analysis:
+Run the analysis:
 
-```{r singleSEanalysis, eval = FALSE}
+```{r singleSEanalysis}
 sbivarMultiSingleSE <- sbivar(SEsingleStx, SEsingleMet,
-    sample_id_x = "sample_id",
     assayX = "transcripts", assayY = "metabolites",
     method = "GAMs", normX = "rel", normY = "rel"
 )

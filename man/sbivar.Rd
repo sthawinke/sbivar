@@ -14,7 +14,15 @@ sbivar(X, Y, ...)
 
 \S4method{sbivar}{list,list}(X, Y, Cx, Ey, assayX = NULL, assayY = NULL, ...)
 
-\S4method{sbivar}{SpatialExperiment,SpatialExperiment}(X, Y, assayX, assayY, sample_id_x, sample_id_y = sample_id_x, ...)
+\S4method{sbivar}{SpatialExperiment,SpatialExperiment}(
+  X,
+  Y,
+  assayX,
+  assayY,
+  sample_id_x = "sample_id",
+  sample_id_y = sample_id_x,
+  ...
+)
 
 \S4method{sbivar}{MultiAssayExperiment,ANY}(X, experimentX, experimentY, assayX, assayY, ...)
 }

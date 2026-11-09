@@ -44,8 +44,8 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
     method <- match.arg(method)
     normX <- match.arg(normX)
     normY <- match.arg(normY)
-    controlvals <- switch(method, "Moran's I" = moranControl(), "GP" = GPcontrol(),
-                          "GAM" = GAMcontrol())
+    controlvals <- switch(method, "Moran's I" = moranControl(), "GPs" = GPcontrol(),
+                          "GAMs" = GAMcontrol())
     if (!missing(control))
         controlvals[names(control)] <- control
     variogramModels <- match.arg(controlvals$variogramModels,
@@ -68,10 +68,24 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
                   all(vapply(controlvals$families, FUN.VALUE = character(1), function(x) x$link) %in% c("identity", "log", "inverse")),
                   all(vapply(controlvals$families, FUN.VALUE = TRUE, is, "family")),
                   is.logical(controlvals$Gamm), inherits(correlation, "corSpatial"))
+        if (!identical(names(controlvals$families), c("X", "Y"))) {
+            stop("Name families 'X' and 'Y' for unambiguous matching")
+        }
     } else if (method=="GPs"){
         stopifnot(inherits(correlation, "corGaus"), is.list(controlvals$optControl),
                   length(controlvals$Quants) == 2, is.numeric(controlvals$Quants))
         GPmethod <- match.arg(controlvals$GPmethod, choices = formals(GPcontrol)$GPmethod)
+        if (!missing(gpParams)) {
+            if (!is.list(gpParams) || !identical(names(gpParams), c("X", "Y")) ||
+                !all(vapply(gpParams, FUN.VALUE = TRUE, function(x) {
+                    setequal(rownames(x), c("mean", "nugget", "range", "sigma"))
+                })) || !all(colnames(X) %in% colnames(gpParams$X) ||
+                            !all(colnames(Y) %in% colnames(gpParams$Y)))) {
+                stop(strwrapPaste("gpParams must be a list with names 'X' and 'Y' consisting of
+            matrices with rownames 'mean', 'nugget', 'range', 'sigma',
+                 and colnames the same as matrices X and Y!"))
+            }
+        }
     }
     invisible(checkInputSingle(X, Y, Cx, Ey))
     colnames(Cx) <- c("x", "y")
@@ -97,20 +111,6 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
     } else {
         Ey <- Ey[rownames(Y), ]
         colnames(Ey) <- c("x", "y")
-    }
-    if (!identical(names(controlvals$families), c("X", "Y"))) {
-        stop("Name families 'X' and 'Y' for unambiguous matching")
-    }
-    if (!missing(gpParams)) {
-        if (!is.list(gpParams) || !identical(names(gpParams), c("X", "Y")) ||
-            !all(vapply(gpParams, FUN.VALUE = TRUE, function(x) {
-                setequal(rownames(x), c("mean", "nugget", "range", "sigma"))
-            })) || !all(colnames(X) %in% colnames(gpParams$X) ||
-            !all(colnames(Y) %in% colnames(gpParams$Y)))) {
-            stop(strwrapPaste("gpParams must be a list with names 'X' and 'Y' consisting of
-            matrices with rownames 'mean', 'nugget', 'range', 'sigma',
-                 and colnames the same as matrices X and Y!"))
-        }
     }
     if (((normX %in% c("rel", "log")) || (normY %in% c("rel", "log"))) && method == "GAMs") {
         warning(strwrapPaste("Normalizing data is not recommended for GAMs!
@@ -167,7 +167,7 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
         new("sbivarResultsGAMs",
             "result" = out, "method" = method, "multi" = FALSE,
             "normX" = normX, "normY" = normY, "families" = controlvals$families,
-            "correlation" = if (Gamm) correlation, "Gamm" = controlvals$Gamm
+            "correlation" = if (Gamm) controlvals$correlation, "Gamm" = controlvals$Gamm
         )
     } else {
         new("sbivarResults",

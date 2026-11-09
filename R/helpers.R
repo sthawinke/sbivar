@@ -97,7 +97,7 @@ normMat <- function(x, norm, pseudoCount = 1e-8) {
         id <- ((rs <- rowSums(x)) > 0)
         x <- x[id, , drop = FALSE]
         if (!all(id)) {
-            warning(sum(!id), "empty spots dropped!")
+            warning(sum(!id), " empty spots dropped!")
         }
         dn <- dimnames(x)
         out <- if (norm == "rel") {
@@ -277,4 +277,12 @@ getSize <- function(X, Y, normX, normY, size, scaleBySampleSums) {
 #' @returns A vector of feature names
 getFeaturesList <- function(Xl) {
     make.names(unique(unlist(lapply(Xl, colnames))))
+}
+#' Collapse a set of character vectors, and wrap the string
+#'
+#' @param ... A number of character vectors
+#'
+#' @returns Formats the character vector
+strwrapPaste <- function(...) {
+    strwrap(paste(..., collapse = " "))
 }

@@ -72,17 +72,17 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
     wo <- match.arg(wo)
     if (missing(Ey)) {
         if (nrow(X) != nrow(Y)) {
-            stop(strwrap("Only one coordinate matrix supplied, but sample size of X and Y do not match!
+            stop(strwrapPaste("Only one coordinate matrix supplied, but sample size of X and Y do not match!
                  Please supply the 'Ey' argument and consider 'Moran's I' as method."))
         }
         # Run a joint analysis
         if (verbose) {
-            message(strwrap("Only one coordinate matrix Cx supplied, and dimensions of X and Y do match.
+            message(strwrapPaste("Only one coordinate matrix Cx supplied, and dimensions of X and Y do match.
                  Performing an analysis with joint coordinate sets."))
         }
         Ey <- Cx
     } else if (method == "Modified t-test") {
-        stop(strwrap("Two coordinate matrices supplied, whereas the modified t-test requires only one.
+        stop(strwrapPaste("Two coordinate matrices supplied, whereas the modified t-test requires only one.
             If coordinates are shared, omit Ey. If coordinates are disjoint, consider using method = 'MoransI'."))
     } else {
         Ey <- Ey[rownames(Y), ]
@@ -97,18 +97,18 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
                 setequal(rownames(x), c("mean", "nugget", "range", "sigma"))
             })) || !all(colnames(X) %in% colnames(gpParams$X) ||
             !all(colnames(Y) %in% colnames(gpParams$Y)))) {
-            stop(strwrap("gpParams must be a list with names 'X' and 'Y' consisting of
+            stop(strwrapPaste("gpParams must be a list with names 'X' and 'Y' consisting of
             matrices with rownames 'mean', 'nugget', 'range', 'sigma',
                  and colnames the same as matrices X and Y!"))
         }
     }
     if (((normX %in% c("rel", "log")) || (normY %in% c("rel", "log"))) && method == "GAMs") {
-        warning(strwrap("Normalizing data is not recommended for GAMs!
+        warning(strwrapPaste("Normalizing data is not recommended for GAMs!
                 try accounting for non-normality through the 'families' argument."), immediate. = TRUE)
     }
     if (verbose) {
         message(
-            strwrap(
+            strwrapPaste(
                 "Starting sbivar analysis of a single image on ",
                 bpworkers(bpparam()), " computing cores"
             )

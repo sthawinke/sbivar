@@ -25,7 +25,7 @@
 #' The maximum value of the bivariate Moran's I statistics are returned conditionally,
 #' as it is computation intensive and not always needed.
 #' @note No multithreading is implemented for the variance calculation, as the matrix calculations involved
-#' may use inherent multithreading with OpenBLAS.
+#' may use inherent multithreading with OpenBLAS. Computations may require much RAM for building weight matrices.
 MoransISingle <- function(
       X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose,
       findMaxW, variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...

@@ -36,7 +36,7 @@ passed onto \link[nlme]{gls} as "method".}
 
 \item{correlation}{Correlation structure, passed onto \link{fitGP} or \link{fitGAM}}
 
-\item{optControl}{List of control values, see \link[nlme]{glsControl}.}
+\item{optControl}{List of control values for \link[nlme]{gls}, see \link[nlme]{glsControl}.}
 
 \item{verbose}{Should info on type of analysis be printed?}
 

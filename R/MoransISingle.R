@@ -30,6 +30,9 @@ MoransISingle <- function(
       X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose,
       findMaxW, variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...
 ) {
+    if (wo == "nn" & !requireNamespace("RANN", quietly = TRUE)) {
+        stop("Install 'RANN' package for nearest neighbour weighting matrices")
+    }
     n <- nrow(X)
     m <- nrow(Y)
     p <- length(featuresX)

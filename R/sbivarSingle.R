@@ -9,10 +9,7 @@
 #' @param X,Y Matrices of omics measurements
 #' @param Cx,Ey Coordinate matrices of dimension two, belonging to X and Y respectively
 #' @param method A character string, indicating which method to apply
-#' @param GPmethod,Quants,numLscAlts,optControl,gpParams Passed onto \link{fitGP}
 #' @param correlation Correlation structure, passed onto \link{fitGP} or \link{fitGAM}
-#' @param n_points_grid,families,Gamm Passed onto \link{GAMsSingle}
-#' @param wo,variogramModels,numNNs,etas,cutoff,width,returnSEsMoransI,findMaxW Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}
 #' @param verbose Should info on type of analysis be printed?
 #' @param normX,normY,pseudoCount Normalization parameters, passed onto \link{normMat}
 #' @param featuresX,featuresY Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
@@ -35,16 +32,17 @@
 #' @importFrom BiocParallel bpparam bpworkers
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package.
 #' @seealso \link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle}, \link{GPsSingle}
-sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
-    normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
-   moranList = moranControl(), GPlist = GPcontrol(), GAMlist = GAMcontrol(),
-   featuresX = colnames(X), featuresY = colnames(Y),
-    verbose = TRUE) {
+sbivarSingle <- function(
+      X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
+      normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
+      moranList = moranControl(), GPlist = GPcontrol(Cx = Cx), GAMlist = GAMcontrol(Cx = Cx), gpParams,
+      featuresX = colnames(X), featuresY = colnames(Y),
+      verbose = TRUE
+) {
     method <- match.arg(method)
-    variogramModels <- match.arg(variogramModels, several.ok = TRUE)
+    variogramModels <- match.arg(moranList$variogramModels, choices = c("Exp", "Lin"), several.ok = TRUE)
     normX <- match.arg(normX)
     normY <- match.arg(normY)
-    GPmethod <- match.arg(GPmethod)
     stopifnot(
         ncol(Cx) == 2, !is.null(colnames(Y)), all(featuresX %in% colnames(X)),
         all(featuresY %in% colnames(Y)), !anyDuplicated(featuresX), !anyDuplicated(featuresY),
@@ -60,6 +58,7 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
     )
     invisible(checkInputSingle(X, Y, Cx, Ey))
     colnames(Cx) <- c("x", "y")
+    GPmethod <- match.arg(GPlist$GPmethod, choices = c("ML", "REML"))
     X <- normMat(X, normX, pseudoCount)
     Y <- normMat(Y, normY, pseudoCount)
     Cx <- Cx[rownames(X), ] # Match coordinates to observations through rownames
@@ -111,11 +110,8 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
         )
     }
     out <- if (method == "Moran's I") {
-        if (wo == "nn" & !requireNamespace("RANN", quietly = TRUE)) {
-            stop("Install 'RANN' package for nearest neighbour weighting matrices")
-        }
         (moranRes <- MoransISingle(
-            X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo, numNNs = selfName(moranList$numNNs),
+            X = X, Y = Y, Cx = Cx, Ey = Ey, wo = moranList$wo, numNNs = selfName(moranList$numNNs),
             variogramModels = moranList$variogramModels, etas = selfName(moranList$etas), width = moranList$width,
             returnSEsMoransI = moranList$returnSEsMoransI, verbose = verbose, cutoff = moranList$cutoff, findMaxW = moranList$findMaxW,
             featuresX = featuresX, featuresY = featuresY
@@ -127,7 +123,7 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
         )
     } else if (method == "GPs") {
         GPsSingle(
-            X = X, Y = Y, Cx = Cx, Ey = Ey, gpParams = GPlist$gpParams, Quants = GPlist$Quants,
+            X = X, Y = Y, Cx = Cx, Ey = Ey, gpParams = gpParams, Quants = GPlist$Quants,
             GPmethod = GPlist$GPmethod, correlation = GPlist$correlation, optControl = GPlist$optControl,
             numLscAlts = GPlist$numLscAlts, verbose = verbose, featuresX = featuresX, featuresY = featuresY
         )
@@ -158,7 +154,7 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
         )
     } else {
         new("sbivarResults",
-            "result" = out, "method" = method,  "multi" = FALSE,
+            "result" = out, "method" = method, "multi" = FALSE,
             "normX" = normX, "normY" = normY
         )
     }

@@ -4,10 +4,16 @@ test_that("SbivarSingle works for correct input", {
     expect_message(show(sbiRes))
     expect_s4_class(sbiRes, "sbivarResults")
     expect_s4_class(sbivar(X, Y, Cx, Ey, method = "GPs"), "sbivarResults")
-    expect_s4_class(sbivar(X, Y, Cx, Ey, method = "GPs",
-                           gpParams = list("X" = matrix(runif(4*p), 4, p,  dimnames = list(c("mean", "nugget", "range", "sigma"), paste0("X", seq_len(p)))),
-                                           "Y" = matrix(runif(4*k), 4, k,  dimnames = list(c("mean", "nugget", "range", "sigma"), paste0("Y", seq_len(k)))))),
-                    "sbivarResults")
+    expect_s4_class(
+        sbivar(X, Y, Cx, Ey,
+            method = "GPs",
+            gpParams = list(
+                "X" = matrix(runif(4 * p), 4, p, dimnames = list(c("mean", "nugget", "range", "sigma"), paste0("X", seq_len(p)))),
+                "Y" = matrix(runif(4 * k), 4, k, dimnames = list(c("mean", "nugget", "range", "sigma"), paste0("Y", seq_len(k))))
+            )
+        ),
+        "sbivarResults"
+    )
     expect_message(sbivar(X, Y, Cx, Ey, method = "GAMs", correlation = corExp(~ x + y, nugget = TRUE)))
     expect_message(sbivar(X, Y, Cx, Ey, method = "GAMs", Gamm = TRUE, correlation = corExp(~ x + y, nugget = TRUE)))
     expect_message(sbiResMoran <- sbivar(X, Y, Cx, Ey, method = "Moran's I"))
@@ -15,8 +21,10 @@ test_that("SbivarSingle works for correct input", {
     expect_true(all(c("pVal", "pAdj") %in% colnames(topPairs(sbiResMoran))))
     expect_false(is.unsorted(topPairs(sbiRes, Inf)[, "pVal"]))
     expect_silent(sbivar(X, Y, Cx, Ey, method = "GAMs", verbose = FALSE))
-    expect_s4_class(sbivar(X, Y, Cx, Ey, method = "GAMs",
-                           families = list("X" = gaussian(link = "log"), "Y" = gaussian(link = "inverse"))), "sbivarResults")
+    expect_s4_class(sbivar(X, Y, Cx, Ey,
+        method = "GAMs",
+        families = list("X" = gaussian(link = "log"), "Y" = gaussian(link = "inverse"))
+    ), "sbivarResults")
     expect_s4_class(sbivar(X, Y, Cx, Ey, method = "Moran's I", featuresX = "X1", featuresY = "Y1"), "sbivarResultsMoransI")
 })
 test_that("SbivarSingle throws errors for incorrect input", {
@@ -46,9 +54,13 @@ test_that("SbivarSingle throws errors for incorrect input", {
     Xunnamed <- X
     rownames(Xunnamed) <- NULL
     expect_error(sbivar(Xunnamed, Y, Cx, Ey, method = "GAMs"))
-    expect_error(sbivar(X, Y, Cx, Ey, method = "GPs",
-                           gpParams = list("X" = matrix(runif(4*p), 4, p,  dimnames = list(c("boo", "nugget", "range", "sigma"), paste0("X", seq_len(p)))),
-                                           "Y" = matrix(runif(4*k), 4, k,  dimnames = list(c("mean", "nugget", "range", "sigma"), paste0("Y", seq_len(k)))))))
+    expect_error(sbivar(X, Y, Cx, Ey,
+        method = "GPs",
+        gpParams = list(
+            "X" = matrix(runif(4 * p), 4, p, dimnames = list(c("boo", "nugget", "range", "sigma"), paste0("X", seq_len(p)))),
+            "Y" = matrix(runif(4 * k), 4, k, dimnames = list(c("mean", "nugget", "range", "sigma"), paste0("Y", seq_len(k))))
+        )
+    ))
 })
 test_that("sbivarMulti works for correct input", {
     gamList <- sbivar(Xl, Yl, Cxl, Eyl, method = "GAMs")

@@ -3,12 +3,14 @@
 setMethod(
     "fitLinModels",
     "sbivarResults",
-    function(result, designDf, Formula, verbose = TRUE, inverseWeigh = FALSE, scaleByMax = TRUE,
-    Control = lmerControl(
-        check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
-        check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
-        check.conv.hess = .makeCC(action = "ignore", tol = 1e-06)
-    )) {
+    function(
+      result, designDf, Formula, verbose = TRUE, inverseWeigh = FALSE, scaleByMax = TRUE,
+      Control = lmerControl(
+          check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
+          check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
+          check.conv.hess = .makeCC(action = "ignore", tol = 1e-06)
+      )
+    ) {
         if (!result@multi) {
             stop("Fitting linear models only makes sense for multi-image analyses!")
         }

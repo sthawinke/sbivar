@@ -14,8 +14,9 @@ sbivarSingle(
   normY = c("none", "rel", "log"),
   pseudoCount = 1e-08,
   moranList = moranControl(),
-  GPlist = GPcontrol(),
-  GAMlist = GAMcontrol(),
+  GPlist = GPcontrol(Cx = Cx),
+  GAMlist = GAMcontrol(Cx = Cx),
+  gpParams,
   featuresX = colnames(X),
   featuresY = colnames(Y),
   verbose = TRUE
@@ -35,13 +36,7 @@ while using the whole matrix to calculate library sizes as offset or for normali
 
 \item{verbose}{Should info on type of analysis be printed?}
 
-\item{GPmethod, Quants, numLscAlts, optControl, gpParams}{Passed onto \link{fitGP}}
-
 \item{correlation}{Correlation structure, passed onto \link{fitGP} or \link{fitGAM}}
-
-\item{n_points_grid, families, Gamm}{Passed onto \link{GAMsSingle}}
-
-\item{wo, variogramModels, numNNs, etas, cutoff, width, returnSEsMoransI, findMaxW}{Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}}
 }
 \value{
 A list with at least the following components

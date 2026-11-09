@@ -44,7 +44,7 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
     method <- match.arg(method)
     normX <- match.arg(normX)
     normY <- match.arg(normY)
-    controlvals <- switch(method, "Moran" = moranControl(), "GP" = GPcontrol(),
+    controlvals <- switch(method, "Moran's I" = moranControl(), "GP" = GPcontrol(),
                           "GAM" = GAMcontrol())
     if (!missing(control))
         controlvals[names(control)] <- control
@@ -55,25 +55,31 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
     stopifnot(
         ncol(Cx) == 2, !is.null(colnames(Y)), all(featuresX %in% colnames(X)),
         all(featuresY %in% colnames(Y)), !anyDuplicated(featuresX), !anyDuplicated(featuresY),
-        !is.null(colnames(X)), is.logical(verbose),
-        is.numeric(controlvals$numNNs), all(controlvals$numNNs > 0), is.numeric(controlvals$etas),
-        is.logical(controlvals$findMaxW),
-        is.numeric(controlvals$n_points_grid),
-        all(vapply(controlvals$families, FUN.VALUE = character(1), function(x) x$link) %in% c("identity", "log", "inverse")),
-        all(vapply(controlvals$families, FUN.VALUE = TRUE, is, "family")),
-        is.logical(controlvals$Gamm), inherits(correlation, "corSpatial"),
-        inherits(correlation, "corGaus") || method !="GPs", is.list(controlvals$optControl),
-        length(controlvals$Quants) == 2, is.numeric(controlvals$Quants)
+        !is.null(colnames(X)), is.logical(verbose)
     )
+    if(method=="Moran's I"){
+        wo <- match.arg(controlvals$wo, choices = formals(moranControl)$wo)
+        stopifnot(
+            is.numeric(controlvals$numNNs), all(controlvals$numNNs > 0), is.numeric(controlvals$etas),
+            is.logical(controlvals$findMaxW)
+        )
+    } else if(method=="GAMs"){
+        stopifnot(is.numeric(controlvals$n_points_grid),
+                  all(vapply(controlvals$families, FUN.VALUE = character(1), function(x) x$link) %in% c("identity", "log", "inverse")),
+                  all(vapply(controlvals$families, FUN.VALUE = TRUE, is, "family")),
+                  is.logical(controlvals$Gamm), inherits(correlation, "corSpatial"))
+    } else if (method=="GPs"){
+        stopifnot(inherits(correlation, "corGaus"), is.list(controlvals$optControl),
+                  length(controlvals$Quants) == 2, is.numeric(controlvals$Quants))
+        GPmethod <- match.arg(controlvals$GPmethod, choices = formals(GPcontrol)$GPmethod)
+    }
     invisible(checkInputSingle(X, Y, Cx, Ey))
     colnames(Cx) <- c("x", "y")
-    GPmethod <- match.arg(controlvals$GPmethod, choices = formals(GPcontrol)$GPmethod)
     X <- normMat(X, normX, pseudoCount)
     Y <- normMat(Y, normY, pseudoCount)
     Cx <- Cx[rownames(X), ] # Match coordinates to observations through rownames
     featuresX <- make.names(featuresX)
     featuresY <- make.names(featuresY)
-    wo <- match.arg(controlvals$wo, choices = formals(moranControl)$wo)
     if (missing(Ey)) {
         if (nrow(X) != nrow(Y)) {
             stop(strwrapPaste("Only one coordinate matrix supplied, but sample size of X and Y do not match!

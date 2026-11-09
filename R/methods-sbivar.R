@@ -31,7 +31,10 @@ setMethod("sbivar", c("list", "list"), function(X, Y, Cx, Ey, assayX = NULL, ass
         Ey <- lapply(Y, SpatialExperiment::spatialCoords)
         Y <- lapply(Y, assayT, assayY)
     }
-    c(sbivarMulti(X, Y, Cx, Ey, ...), "assayX" = assayX, "assayY" = assayY)
+    foo <- sbivarMulti(X, Y, Cx, Ey, ...)
+    foo@assayX <- assayX
+    foo@assayY <- assayY
+    foo
 })
 #' @param assayX,assayY Assay names to be used in the analysis,
 #' see \link[SummarizedExperiment]{assay}

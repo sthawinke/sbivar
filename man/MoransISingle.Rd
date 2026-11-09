@@ -66,7 +66,7 @@ as it is computation intensive and not always needed.
 }
 \note{
 No multithreading is implemented for the variance calculation, as the matrix calculations involved
-may use inherent multithreading with OpenBLAS.
+may use inherent multithreading with OpenBLAS. Computations may require much RAM for building weight matrices.
 }
 \references{
 \insertAllCited{}

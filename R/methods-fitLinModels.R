@@ -2,13 +2,16 @@
 #' @rdname fitLinModels
 setMethod(
     "fitLinModels",
-    "sbivarResultsMulti",
+    "sbivarResults",
     function(result, designDf, Formula, verbose = TRUE, inverseWeigh = FALSE, scaleByMax = TRUE,
     Control = lmerControl(
         check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
         check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
         check.conv.hess = .makeCC(action = "ignore", tol = 1e-06)
     )) {
+        if (!result@multi) {
+            stop("Fitting linear models only makes sense for multi-image analyses!")
+        }
         if (missing(designDf) && length(ncol(attr(terms(Formula), "factors"))) == 0) {
             designDf <- data.frame("foo" = seq_along(result@result))
         } # Allow for intercept only models
@@ -16,9 +19,6 @@ setMethod(
             is.logical(inverseWeigh), is.logical(scaleByMax), length(result@result) == nrow(designDf),
             is.data.frame(designDf), is.character(Formula) || is(Formula, "formula")
         )
-        if (!result@multi) {
-            stop("Fitting linear models only makes sense for multi-image analyses!")
-        }
         if (inverseWeigh && (result@method == "Moran's I") && !result@returnSEsMoransI) {
             stop(strwrap("Inverse weighing only possible if the variances of Moran's I are included!
              Rerun sbivar() with returnSEsMoransI=TRUE."))

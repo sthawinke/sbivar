@@ -90,8 +90,8 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" 
         )
     }
     out <- if (method == "Moran's I") {
-        new("sbivarResultsMultiMoransI",
-            "result" = lapply(res, function(x) x$res), "method" = method, "normX" = normX,
+        new("sbivarResultsMoransI",
+            "result" = lapply(res, function(x) x$res), "method" = method, "normX" = normX, "multi" = TRUE,
             "normY" = normY, "maxIxy" = if (findmaxW) vapply(res, FUN.VALUE = double(1), function(x) x$maxIxy),
             "wo" = wo, "returnSEsMoransI" = findVariances,
             "wParams" = switch(wo,
@@ -100,13 +100,13 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" 
             )
         )
     } else if (method == "GAMs") {
-        new("sbivarResultsMultiGAMs",
-            "result" = res, "method" = method,
+        new("sbivarResultsGAMs",
+            "result" = res, "method" = method, "multi" = TRUE,
             "normX" = normX, "normY" = normY, "families" = families
         )
     } else if (method == "Correlation") {
-        new("sbivarResultsMulti",
-            "result" = out, "method" = method,
+        new("sbivarResults",
+            "result" = out, "method" = method, "multi" = TRUE,
             "normX" = normX, "normY" = normY
         )
     }

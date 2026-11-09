@@ -4,7 +4,7 @@
 \name{extractResultsMulti}
 \alias{extractResultsMulti}
 \alias{fitLinModels}
-\alias{fitLinModels,sbivarResultsMulti-method}
+\alias{fitLinModels,sbivarResults-method}
 \title{Fit linear models on result calculated for replicated images, and extract the results}
 \usage{
 extractResultsMulti(result, designDf, method = "BH")
@@ -21,7 +21,7 @@ fitLinModels(
     .makeCC(action = "ignore", tol = 1e-06))
 )
 
-\S4method{fitLinModels}{sbivarResultsMulti}(
+\S4method{fitLinModels}{sbivarResults}(
   result,
   designDf,
   Formula,

@@ -7,6 +7,7 @@ setClass(
         method = "character",
         normX = "character",
         normY = "character",
+        multi = "logical",
         assayX = "characterOrNULL",
         assayY = "characterOrNULL"
     )
@@ -37,35 +38,14 @@ setClass(
         Gamm = "logical"
     )
 )
-setClass(
-    "sbivarResultsMulti",
-    contains = "sbivarResults"
-)
-setClass(
-    "sbivarResultsMultiMoransI",
-    contains = "sbivarResultsMulti",
-    slots = c(
-        maxIxy = "numericOrNULL",
-        returnSEsMoransI = "logical",
-        wo = "character",
-        wParams = "numeric"
-    )
-)
-setClass(
-    "sbivarResultsMultiGAMs",
-    contains = "sbivarResultsMulti",
-    slots = c(
-        families = "list"
-    )
-)
 #' @export
 setMethod(
     "show",
     signature(object = "sbivarResults"),
     function(object) {
         cat(
-            "Sbivar fit with method:", object@method, "on",
-            if (inherits(object, "sbivarResultsMulti")) {
+            "Sbivar fit with ", object@method, " method on",
+            if (object@multi) {
                 cat(length(object$res), "images")
             } else {
                 "single image"
@@ -83,11 +63,14 @@ setValidity("sbivarResults", function(object) {
     if (length(object@method) != 1 || !is.character(object@method)) {
         return("method must have length 1 and be a character")
     }
-    if (length(object@assayX) != 1 || !(is.character(object@assayX) || is.null(object@assayX))) {
-        return("assayX must have length 1 and be a character or null")
+    if (!is.null(object@assayX) && !(length(object@assayX) == 1 && is.character(object@assayX))) {
+        return("assayX must be null or have length 1 and be a character")
     }
-    if (length(object@assayY) != 1 || !(is.character(object@assayY) || is.null(object@assayY))) {
-        return("assayX must have length 1 and be a character or null")
+    if (!is.null(object@assayY) && !(length(object@assayY) == 1 && is.character(object@assayY))) {
+        return("assayY must be null or have length 1 and be a character")
+    }
+    if (!is.logical(object@multi)) {
+        return("multi must be a boolean")
     }
     TRUE
 })

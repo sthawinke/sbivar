@@ -310,8 +310,8 @@ Now we construct a _MultiAssayExperiment_ object
 library(MultiAssayExperiment)
 MAE <- MultiAssayExperiment(experiments = list(
     "Stx" = StxSE,
-    "Msi" = MetSE
-))
+    "Msi" = MetSE)
+)
 MAE
 ```
 
@@ -330,13 +330,13 @@ resMAE <- sbivar(MAE,
 For the multi-image case, there are several options. One is to provide two _SpatialExperiment_ objects, with provide a _sample_id_ argument that identifies the different images. For illustration, we construct such objects from the Vicari data, and fit GAMs:
 
 ```{r SEidentifier}
-SEsingleStx <- Reduce(f = cbind, lapply(names(Vicari$TranscriptOutcomes), function(nam){
+SEmultiStx <- Reduce(f = cbind, lapply(names(Vicari$TranscriptOutcomes), function(nam){
     SpatialExperiment(
     assays = list("transcripts" = t(Vicari$TranscriptOutcomes[[nam]])),
     spatialCoords = Vicari$TranscriptCoords[[nam]],
     sample_id = nam
 )}))
-SEsingleMet <- Reduce(f = cbind, lapply(names(Vicari$MetaboliteOutcomes), function(nam){
+SEmultiMet <- Reduce(f = cbind, lapply(names(Vicari$MetaboliteOutcomes), function(nam){
     SpatialExperiment(
     assays = list("metabolites" = t(Vicari$MetaboliteOutcomes[[nam]])),
     spatialCoords = Vicari$MetaboliteCoords[[nam]],
@@ -346,21 +346,39 @@ SEsingleMet <- Reduce(f = cbind, lapply(names(Vicari$MetaboliteOutcomes), functi
 
 A quick look:
 
-```{r singleStxLook}
-SEsingleStx
+```{r multiStxLook}
+SEmultiStx
 ```
 
 Run the analysis:
 
-```{r singleSEanalysis}
-sbivarMultiSingleSE <- sbivar(SEsingleStx, SEsingleMet,
+```{r multiSEanalysis}
+sbivarMultiSingleSE <- sbivar(SEmultiStx, SEmultiMet,
     assayX = "transcripts", assayY = "metabolites",
-    method = "GAMs", normX = "rel", normY = "rel"
+    method = "GAMs", families = FamiliesVicari
 )
 multiMoranLmmsSingleSE <- fitLinModels(sbivarMultiSingleSE, designDf,
     Formula = ~ (1 | mouse)
 )
 multiMoranLmmsResSingleSE <- extractResultsMulti(multiMoranLmmsSingleSE, designDf)
+```
+
+Alternatively, based on the _MultiAssayExperiment_, we include the design in the _colData_ slot:
+
+```{r multiMAEanalysis, eval = FALSE}
+MAEmulti <- MultiAssayExperiment(experiments = list(
+    "Stx" = SEmultiStx,
+    "Msi" = SEmultiMet),
+    colData = designDf
+)
+sbivarMultiSingleSE <- sbivar(SEmultiStx, SEmultiMet,
+    assayX = "transcripts", assayY = "metabolites",
+    method = "GAMs", normX = "rel", normY = "rel"
+)
+multiMoranLmmsSingleSE <- fitLinModels(sbivarMultiSingleSE, colData(MAEmulti),
+    Formula = ~ (1 | mouse)
+)
+multiMoranLmmsResSingleSE <- extractResultsMulti(multiMoranLmmsSingleSE, colData(MAEmulti))
 ```
 
 ## AnnData

@@ -33,23 +33,21 @@
 #' @importFrom methods is new
 #' @importFrom nlme corRatio corGaus corSpher corExp corLin lmeControl
 #' @importFrom BiocParallel bpparam bpworkers
-#' @note All methods use multithreading on the cluster provided using the BiocParallel package
+#' @note All methods use multithreading on the cluster provided using the BiocParallel package.
 #' @seealso \link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle}, \link{GPsSingle}
-sbivarSingle <- function(
-      X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
-      normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
-      etas = c(5e-6, 2e-4, 2e-2), findMaxW = FALSE, returnSEsMoransI = TRUE,
-      families = list("X" = gaussian(), "Y" = gaussian()), Gamm = FALSE, featuresX = colnames(X), featuresY = colnames(Y),
-      n_points_grid = 6e2, verbose = TRUE,
-      variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
-      wo = c("Gauss", "nn"), numNNs = c(4, 8, 24),
-      GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 5,
-      optControl = lmeControl(
-          opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
-          niterEM = 1e3, msMaxEval = 1e3
-      ),
-      correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(0.9 * max(apply(Cx, 2, function(x) diff(range(x)))), 0.25))
-) {
+sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
+    normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
+    etas = c(5e-6, 2e-4, 2e-2), findMaxW = FALSE, returnSEsMoransI = TRUE,
+    families = list("X" = gaussian(), "Y" = gaussian()), Gamm = FALSE, featuresX = colnames(X), featuresY = colnames(Y),
+    n_points_grid = 6e2, verbose = TRUE,
+    variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
+    wo = c("Gauss", "nn"), numNNs = c(4, 8, 24),
+    GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 5,
+    optControl = lmeControl(
+        opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
+        niterEM = 1e3, msMaxEval = 1e3
+    ),
+    correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(0.9 * max(apply(Cx, 2, function(x) diff(range(x)))), 0.25))) {
     method <- match.arg(method)
     variogramModels <- match.arg(variogramModels, several.ok = TRUE)
     normX <- match.arg(normX)
@@ -84,8 +82,8 @@ sbivarSingle <- function(
         }
         Ey <- Cx
     } else if (method == "Modified t-test") {
-        stop("Two coordinate matrices supplied, whereas the modified t-test requires only one.
-            If coordinates are shared, omit Ey. If coordinates are disjoint, consider using method = 'MoransI'.")
+        stop(strwrap("Two coordinate matrices supplied, whereas the modified t-test requires only one.
+            If coordinates are shared, omit Ey. If coordinates are disjoint, consider using method = 'MoransI'."))
     } else {
         Ey <- Ey[rownames(Y), ]
         colnames(Ey) <- c("x", "y")
@@ -99,19 +97,21 @@ sbivarSingle <- function(
                 setequal(rownames(x), c("mean", "nugget", "range", "sigma"))
             })) || !all(colnames(X) %in% colnames(gpParams$X) ||
             !all(colnames(Y) %in% colnames(gpParams$Y)))) {
-            stop("gpParams must be a list with names 'X' and 'Y' consisting of
+            stop(strwrap("gpParams must be a list with names 'X' and 'Y' consisting of
             matrices with rownames 'mean', 'nugget', 'range', 'sigma',
-                 and colnames the same as matrices X and Y!")
+                 and colnames the same as matrices X and Y!"))
         }
     }
     if (((normX %in% c("rel", "log")) || (normY %in% c("rel", "log"))) && method == "GAMs") {
-        warning("Normalizing data is not recommended for GAMs!
-                try accounting for non-normality through the 'families' argument.", immediate. = TRUE)
+        warning(strwrap("Normalizing data is not recommended for GAMs!
+                try accounting for non-normality through the 'families' argument."), immediate. = TRUE)
     }
     if (verbose) {
         message(
-            "Starting sbivar analysis of a single image on ",
-            bpworkers(bpparam()), " computing cores"
+            strwrap(
+                "Starting sbivar analysis of a single image on ",
+                bpworkers(bpparam()), " computing cores"
+            )
         )
     }
     out <- if (method == "Moran's I") {

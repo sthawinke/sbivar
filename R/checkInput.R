@@ -32,8 +32,8 @@ checkInputSingle <- function(X, Y, Cx, Ey) {
     }
     if (missing(Ey)) {
         if (n != m) {
-            stop("Only one coordinate matrix Cx supplied, and dimensions of X and Y do not match.
-                 Please provide the coordinates of Y too through the Ey argument.")
+            stop(strwrap("Only one coordinate matrix Cx supplied, and dimensions of X and Y do not match.
+                 Please provide the coordinates of Y too through the Ey argument."))
         }
     } else {
         if (m != nrow(Ey)) {
@@ -50,8 +50,8 @@ checkInputSingle <- function(X, Y, Cx, Ey) {
         }
     }
     if (findDoubleUnderScore(c(colnames(X), colnames(Y)))) {
-        stop("Double underscores found in feature names. Please change the names,
-             as the double underscore is used in this package to separate feature pairs!")
+        stop(strwrap("Double underscores found in feature names. Please change the names,
+             as the double underscore is used in this package to separate feature pairs!"))
     }
 }
 checkInputMulti <- function(Xl, Yl, Cxl, Eyl, checkCoords = TRUE) {
@@ -71,8 +71,8 @@ checkInputMulti <- function(Xl, Yl, Cxl, Eyl, checkCoords = TRUE) {
         stop("Some sample names are missing in Yl!")
     }
     if (findDoubleUnderScore(unlist(lapply(c(Xl, Yl), colnames)))) {
-        stop("Double underscores found in feature names. Please change the names,
-             as the double underscore is used in this package to separate feature pairs!")
+        stop(strwrap("Double underscores found in feature names. Please change the names,
+             as the double underscore is used in this package to separate feature pairs!"))
     }
     if (!all(vapply(Xl, FUN.VALUE = 0L, nrow) == vapply(Yl, FUN.VALUE = 0L, nrow))) {
         if (missing(Eyl)) {

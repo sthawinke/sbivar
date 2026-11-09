@@ -94,7 +94,11 @@ normMat <- function(x, norm, pseudoCount = 1e-8) {
         if (min(x) < 0) {
             warning("Normalization '", norm, "'is not recommended for real valued data!")
         }
-        x <- x[id <- ((rs <- rowSums(x)) > 0), , drop = FALSE]
+        id <- ((rs <- rowSums(x)) > 0)
+        x <- x[id, , drop = FALSE]
+        if (!all(id)) {
+            warning(sum(!id), "empty spots dropped!")
+        }
         dn <- dimnames(x)
         out <- if (norm == "rel") {
             x / rs[id]

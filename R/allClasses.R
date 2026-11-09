@@ -63,7 +63,31 @@ setMethod(
     "show",
     signature(object = "sbivarResults"),
     function(object) {
-        cat("Sbivar fit with method:", object@method, "on",
-            if(inherits(object, "sbivarResultsMulti")){cat(length(object$res), "images")} else {"single image"})
+        cat(
+            "Sbivar fit with method:", object@method, "on",
+            if (inherits(object, "sbivarResultsMulti")) {
+                cat(length(object$res), "images")
+            } else {
+                "single image"
+            }
+        )
     }
 )
+setValidity("sbivarResults", function(object) {
+    if (length(object@normX) != 1 || !is.character(object@normX)) {
+        return("normX must have length 1 and be a character")
+    }
+    if (length(object@normY) != 1 || !is.character(object@normY)) {
+        return("normY must have length 1 and be a character")
+    }
+    if (length(object@method) != 1 || !is.character(object@method)) {
+        return("method must have length 1 and be a character")
+    }
+    if (length(object@assayX) != 1 || !(is.character(object@assayX) || is.null(object@assayX))) {
+        return("assayX must have length 1 and be a character or null")
+    }
+    if (length(object@assayY) != 1 || !(is.character(object@assayY) || is.null(object@assayY))) {
+        return("assayX must have length 1 and be a character or null")
+    }
+    TRUE
+})

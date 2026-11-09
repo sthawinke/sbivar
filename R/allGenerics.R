@@ -10,6 +10,7 @@
 #' @param ... additional constructor and analysis arguments
 #' @return A list containing the analysis result, along with parameters used in the analysis
 #' @seealso \link{sbivarSingle}, \link{sbivarMulti}
+#' @note Feature names are converted using the make.names() function
 #' @examples
 #' # Single image analysis on synthetic data
 #' n <- 8e1
@@ -199,14 +200,12 @@ setGeneric(
 #' @seealso \link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}, \link[stats]{p.adjust}
 setGeneric(
     "fitLinModels",
-    function(
-        result, designDf, Formula, verbose = TRUE, inverseWeigh = FALSE, scaleByMax = TRUE,
-        Control = lmerControl(
-            check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
-            check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
-            check.conv.hess = .makeCC(action = "ignore", tol = 1e-06)
-        )
-    ) {
+    function(result, designDf, Formula, verbose = TRUE, inverseWeigh = FALSE, scaleByMax = TRUE,
+    Control = lmerControl(
+        check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
+        check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
+        check.conv.hess = .makeCC(action = "ignore", tol = 1e-06)
+    )) {
         standardGeneric("fitLinModels")
     }
 )

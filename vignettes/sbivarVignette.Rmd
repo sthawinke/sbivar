@@ -310,8 +310,8 @@ Now we construct a _MultiAssayExperiment_ object
 library(MultiAssayExperiment)
 MAE <- MultiAssayExperiment(experiments = list(
     "Stx" = StxSE,
-    "Msi" = MetSE)
-)
+    "Msi" = MetSE
+))
 MAE
 ```
 
@@ -330,18 +330,20 @@ resMAE <- sbivar(MAE,
 For the multi-image case, there are several options. One is to provide two _SpatialExperiment_ objects, with provide a _sample_id_ argument that identifies the different images. For illustration, we construct such objects from the Vicari data, and fit GAMs:
 
 ```{r SEidentifier}
-SEmultiStx <- Reduce(f = cbind, lapply(names(Vicari$TranscriptOutcomes), function(nam){
+SEmultiStx <- Reduce(f = cbind, lapply(names(Vicari$TranscriptOutcomes), function(nam) {
     SpatialExperiment(
-    assays = list("transcripts" = t(Vicari$TranscriptOutcomes[[nam]])),
-    spatialCoords = Vicari$TranscriptCoords[[nam]],
-    sample_id = nam
-)}))
-SEmultiMet <- Reduce(f = cbind, lapply(names(Vicari$MetaboliteOutcomes), function(nam){
+        assays = list("transcripts" = t(Vicari$TranscriptOutcomes[[nam]])),
+        spatialCoords = Vicari$TranscriptCoords[[nam]],
+        sample_id = nam
+    )
+}))
+SEmultiMet <- Reduce(f = cbind, lapply(names(Vicari$MetaboliteOutcomes), function(nam) {
     SpatialExperiment(
-    assays = list("metabolites" = t(Vicari$MetaboliteOutcomes[[nam]])),
-    spatialCoords = Vicari$MetaboliteCoords[[nam]],
-    sample_id = nam
-)}))
+        assays = list("metabolites" = t(Vicari$MetaboliteOutcomes[[nam]])),
+        spatialCoords = Vicari$MetaboliteCoords[[nam]],
+        sample_id = nam
+    )
+}))
 ```
 
 A quick look:
@@ -366,9 +368,11 @@ multiMoranLmmsResSingleSE <- extractResultsMulti(multiMoranLmmsSingleSE, designD
 Alternatively, based on the _MultiAssayExperiment_, we include the design in the _colData_ slot:
 
 ```{r multiMAEanalysis, eval = FALSE}
-MAEmulti <- MultiAssayExperiment(experiments = list(
-    "Stx" = SEmultiStx,
-    "Msi" = SEmultiMet),
+MAEmulti <- MultiAssayExperiment(
+    experiments = list(
+        "Stx" = SEmultiStx,
+        "Msi" = SEmultiMet
+    ),
     colData = designDf
 )
 sbivarMultiSingleSE <- sbivar(SEmultiStx, SEmultiMet,

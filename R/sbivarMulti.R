@@ -20,15 +20,13 @@
 #' @inheritParams GAMsSingle
 #' @importFrom BiocParallel bpparam bpworkers
 #' @seealso \link{fitLinModels}, \link{MoransIMulti}, \link{correlationsMulti}, \link{GAMsMulti}
-sbivarMulti <- function(
-      Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
-      method = c("Moran's I", "GAMs", "Correlation"), wo = c("Gauss", "nn"),
-      numNNs = c(4, 8, 24), etas = c(5e-6, 2e-4, 2e-2), featuresX = getFeaturesList(Xl), featuresY = getFeaturesList(Yl),
-      normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
-      variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
-      pseudoCount = 1e-8, n_points_grid = 6e2, verbose = TRUE, findVariances = FALSE,
-      findMaxW = TRUE
-) {
+sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
+    method = c("Moran's I", "GAMs", "Correlation"), wo = c("Gauss", "nn"),
+    numNNs = c(4, 8, 24), etas = c(5e-6, 2e-4, 2e-2), featuresX = getFeaturesList(Xl), featuresY = getFeaturesList(Yl),
+    normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
+    variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
+    pseudoCount = 1e-8, n_points_grid = 6e2, verbose = TRUE, findVariances = FALSE,
+    findMaxW = TRUE) {
     method <- match.arg(method)
     wo <- match.arg(wo)
     normX <- match.arg(normX)
@@ -37,7 +35,8 @@ sbivarMulti <- function(
         is.numeric(numNNs), all(numNNs > 0), is.numeric(etas), is.numeric(n_points_grid), is.logical(verbose),
         is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family")), is.character(featuresX), is.character(featuresY)
     )
-    invisible(checkInputMulti(Xl, Yl, Cxl, Eyl, checkCoords = ccs <- (method != "Correlation")))
+    ccs <- (method != "Correlation")
+    invisible(checkInputMulti(Xl, Yl, Cxl, Eyl, checkCoords = ccs))
     if (ccs) {
         if (missing(Eyl)) {
             message("Only one coordinate matrix list Cxl supplied, and dimensions of X and Y do match.
@@ -93,11 +92,11 @@ sbivarMulti <- function(
     out <- if (method == "Moran's I") {
         new("sbivarResultsMultiMoransI",
             "result" = lapply(res, function(x) x$res), "method" = method, "normX" = normX,
-            "normY" = normY, "maxIxy" = if(findmaxW) vapply(res, FUN.VALUE = double(1), function(x) x$maxIxy),
+            "normY" = normY, "maxIxy" = if (findmaxW) vapply(res, FUN.VALUE = double(1), function(x) x$maxIxy),
             "wo" = wo, "returnSEsMoransI" = findVariances,
             "wParams" = switch(wo,
-                               "Gauss" = etas,
-                               "nn" = numNNs
+                "Gauss" = etas,
+                "nn" = numNNs
             )
         )
     } else if (method == "GAMs") {

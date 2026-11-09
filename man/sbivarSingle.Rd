@@ -81,7 +81,7 @@ For GAMs, usually no normalization is needed, as the non-gaussianity is taken ca
 the outcome distribution, offset and link functions. Currently, identity, inverse and log-link are implemented.
 }
 \note{
-All methods use multithreading on the cluster provided using the BiocParallel package
+All methods use multithreading on the cluster provided using the BiocParallel package.
 }
 \seealso{
 \link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle}, \link{GPsSingle}

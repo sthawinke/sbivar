@@ -3,14 +3,12 @@
 setMethod(
     "fitLinModels",
     "sbivarResultsMulti",
-    function(
-        result, designDf, Formula, verbose = TRUE, inverseWeigh = FALSE, scaleByMax = TRUE,
-        Control = lmerControl(
-            check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
-            check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
-            check.conv.hess = .makeCC(action = "ignore", tol = 1e-06)
-        )
-    ) {
+    function(result, designDf, Formula, verbose = TRUE, inverseWeigh = FALSE, scaleByMax = TRUE,
+    Control = lmerControl(
+        check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
+        check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
+        check.conv.hess = .makeCC(action = "ignore", tol = 1e-06)
+    )) {
         if (missing(designDf) && length(ncol(attr(terms(Formula), "factors"))) == 0) {
             designDf <- data.frame("foo" = seq_along(result@result))
         } # Allow for intercept only models
@@ -22,17 +20,17 @@ setMethod(
             stop("Fitting linear models only makes sense for multi-image analyses!")
         }
         if (inverseWeigh && (result@method == "Moran's I") && !result@returnSEsMoransI) {
-            stop("Inverse weighing only possible if the variances of Moran's I are included!
-             Rerun sbivar() with returnSEsMoransI=TRUE.")
+            stop(strwrap("Inverse weighing only possible if the variances of Moran's I are included!
+             Rerun sbivar() with returnSEsMoransI=TRUE."))
         }
         if (inverseWeigh && (result@method == "Correlation")) {
-            warning("Inverse weighing not available for method = 'Correlation'.
-                Performing an unweighted analysis", immediate. = TRUE)
+            warning(strwrap("Inverse weighing not available for method = 'Correlation'.
+                Performing an unweighted analysis"), immediate. = TRUE)
             inverseWeigh <- FALSE
         }
         namesFun <- switch(result@method,
-                           "Correlation" = names,
-                           rownames
+            "Correlation" = names,
+            rownames
         )
         Features <- selfName(unique(unlist(lapply(result@result, function(x) namesFun(x$res))))) # All feature pairs present
         iter <- selfName(if (moran <- result@method == "Moran's I") {
@@ -42,8 +40,8 @@ setMethod(
         })
         # Prepare arrays of outcomes and weights
         outArr <- array(NA,
-                        dim = c(nrow(designDf), length(Features), length(iter)),
-                        dimnames = list(names(result@result), Features, names(iter))
+            dim = c(nrow(designDf), length(Features), length(iter)),
+            dimnames = list(names(result@result), Features, names(iter))
         )
         if (inverseWeigh) {
             weightsArr <- outArr
@@ -76,8 +74,8 @@ setMethod(
         }
         if (MM) {
             ff <- lFormula(Formula,
-                           data = baseDf, contrasts = contrasts,
-                           na.action = na.omit
+                data = baseDf, contrasts = contrasts,
+                na.action = na.omit
             )
             # Prepare random effects fitting
         }

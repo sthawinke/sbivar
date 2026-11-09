@@ -51,6 +51,9 @@ Perform a bivariate spatial association analysis, either on a single or multiple
 Depending on the input, the workhorse functions \link{sbivarSingle}
 (single-image) or \link{sbivarMulti} (multi-image) are called.
 }
+\note{
+Feature names are converted using the make.names() function
+}
 \examples{
 # Single image analysis on synthetic data
 n <- 8e1

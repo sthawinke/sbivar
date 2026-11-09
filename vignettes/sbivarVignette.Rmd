@@ -167,7 +167,7 @@ In addition, we employ generalized additive models (GAMs), with a negative binom
 ```{r fitgam}
 FamiliesVicari <- list("X" = mgcv::nb(), "Y" = Gamma(lin = "log"))
 gamRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
-    method = "GAMs", families = FamiliesVicari
+    method = "GAMs", control = list(families = FamiliesVicari)
 )
 ```
 
@@ -225,7 +225,7 @@ VicariMultiTest <- lapply(Vicari, function(x) lapply(x, function(y) y[1:500, ]))
 multiMoranRes <- sbivar(VicariMultiTest$TranscriptOutcomes, VicariMultiTest$MetaboliteOutcomes,
     normX = "rel", normY = "rel",
     VicariMultiTest$TranscriptCoords, VicariMultiTest$MetaboliteCoords,
-    method = "Moran's I", wo = if (require(RANN)) "nn" else "Gauss"
+    method = "Moran's I", control = list(wo = if (require(RANN)) "nn" else "Gauss")
 )
 ```
 
@@ -294,7 +294,7 @@ Next we call the _sbivar_ function with these as arguments, providing the names 
 ```{r SEanalysis}
 resSpatExp <- sbivar(StxSE, MetSE,
     assayX = "transcripts", assayY = "metabolites",
-    families = FamiliesVicari, method = "GAMs", verbose = FALSE
+    control = list("families" = FamiliesVicari), method = "GAMs", verbose = FALSE
 )
 ```
 
@@ -321,7 +321,7 @@ We run a the same analysis, now providing the experiment names on top of the ass
 resMAE <- sbivar(MAE,
     assayX = "transcripts", assayY = "metabolites",
     experimentX = "Stx", experimentY = "Msi",
-    families = FamiliesVicari, method = "GAMs"
+    control = list("families" = FamiliesVicari), method = "GAMs"
 )
 ```
 
@@ -357,7 +357,7 @@ Run the analysis:
 ```{r multiSEanalysis}
 sbivarMultiSingleSE <- sbivar(SEmultiStx, SEmultiMet,
     assayX = "transcripts", assayY = "metabolites",
-    method = "GAMs", families = FamiliesVicari
+    method = "GAMs", control = list("families" = FamiliesVicari)
 )
 multiMoranLmmsSingleSE <- fitLinModels(sbivarMultiSingleSE, designDf,
     Formula = ~ (1 | mouse)

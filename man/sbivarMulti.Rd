@@ -39,7 +39,8 @@ sbivarMulti(
 
 \item{wo, numNNs, etas}{Passed onto \link{MoransISingle}}
 
-\item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
+\item{featuresX, featuresY}{Features to be tested. Defaults to all features,
+but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization.}
 
 \item{normX, normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}

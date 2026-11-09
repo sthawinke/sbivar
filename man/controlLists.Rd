@@ -21,8 +21,6 @@ GAMcontrol(
   Gamm = FALSE,
   Cx,
   n_points_grid = 600,
-  correlation = corGaus(form = ~x + y, nugget = TRUE, value = c(0.9 * max(apply(Cx, 2,
-    function(x) diff(range(x)))), 0.25)),
   families = list(X = gaussian(), Y = gaussian())
 )
 
@@ -32,9 +30,7 @@ GPcontrol(
   Quants = c(0.005, 0.5),
   numLscAlts = 5,
   optControl = lmeControl(opt = "optim", maxIter = 500, msMaxIter = 500, niterEM = 1000,
-    msMaxEval = 1000),
-  correlation = corGaus(form = ~x + y, nugget = TRUE, value = c(0.9 * max(apply(Cx, 2,
-    function(x) diff(range(x)))), 0.25))
+    msMaxEval = 1000)
 )
 }
 \arguments{
@@ -52,8 +48,6 @@ Currently, only "Exp" and "Lin" are implemented for computational reasons.}
 \item{numNNs, etas}{Vectors of weight matrix parameters, whose elements are passed onto \link{buildWeightMat}}
 
 \item{Gamm}{A boolean, should a gamm with Gaussian covariance kernel be fitted? See \link[mgcv]{gamm}}
-
-\item{correlation}{Correlation structure, passed onto \link{fitGP} or \link{fitGAM}}
 
 \item{GPmethod}{The method by which to fit the Gaussian processes,
 passed onto \link[nlme]{gls} as "method".}

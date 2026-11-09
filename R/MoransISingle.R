@@ -26,10 +26,8 @@
 #' as it is computation intensive and not always needed.
 #' @note No multithreading is implemented for the variance calculation, as the matrix calculations involved
 #' may use inherent multithreading with OpenBLAS. Computations may require much RAM for building weight matrices.
-MoransISingle <- function(
-      X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose,
-      findMaxW, variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...
-) {
+MoransISingle <- function(X, Y, Cx, Ey, wo, etas, numNNs, cutoff, width, verbose,
+    findMaxW, variogramModels, returnSEsMoransI, featuresX, featuresY, findVariances = TRUE, ...) {
     if (wo == "nn" & !requireNamespace("RANN", quietly = TRUE)) {
         stop("Install 'RANN' package for nearest neighbour weighting matrices")
     }

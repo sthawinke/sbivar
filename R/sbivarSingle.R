@@ -11,14 +11,18 @@
 #' @param method A character string, indicating which method to apply
 #' @param correlation Correlation structure, passed onto \link{fitGP} or \link{fitGAM}
 #' @param verbose Should info on type of analysis be printed?
+#' @param control Control arguments passed onto \link{MoransIsingle}, \link{fitGPs} or \link{fitGAMs}, replacing defaults by \link{MoransIsingle}, \link{fitGPs} or \link{fitGAMs}, respectively
 #' @param normX,normY,pseudoCount Normalization parameters, passed onto \link{normMat}
-#' @param featuresX,featuresY Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
+#' @param featuresX,featuresY Features to be tested. Defaults to all features,
+#' but specifying them allows to test a limited feature set,
 #' while using the whole matrix to calculate library sizes as offset or for normalization.
 #'
-#' @details X and Y need to have rownames for matching to the coordinates, and column names for identifying the features.
+#' @details X and Y need to have rownames for matching to the coordinates,
+#' and column names for identifying the features.
 #' Cx and Ey must have rownames matching those in X and Y, and have two columns.
 #' For GAMs, usually no normalization is needed, as the non-gaussianity is taken care of by
-#' the outcome distribution, offset and link functions. Currently, identity, inverse and log-link are implemented.
+#' the outcome distribution, offset and link functions. Currently, identity,
+#' inverse and log-link are implemented.
 #'
 #' @returns A list with at least the following components
 #' \item{result}{A matrix which contains at least a p-values ("pVal") and a
@@ -32,40 +36,44 @@
 #' @importFrom BiocParallel bpparam bpworkers
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package.
 #' @seealso \link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle}, \link{GPsSingle}
-sbivarSingle <- function(
-      X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
-      normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
-      moranList = moranControl(), GPlist = GPcontrol(Cx = Cx), GAMlist = GAMcontrol(Cx = Cx), gpParams,
-      featuresX = colnames(X), featuresY = colnames(Y),
-      verbose = TRUE
-) {
+sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
+    normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
+    correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(0.9 * max(apply(Cx, 2, function(x) diff(range(x)))), 0.25)), control, gpParams,
+    featuresX = colnames(X), featuresY = colnames(Y),
+    verbose = TRUE) {
     method <- match.arg(method)
-    variogramModels <- match.arg(moranList$variogramModels, choices = formals(moranControl)$variogramModels,
-                                 several.ok = TRUE)
     normX <- match.arg(normX)
     normY <- match.arg(normY)
+    controlvals <- switch(method, "Moran" = moranControl(), "GP" = GPcontrol(),
+                          "GAM" = GAMcontrol())
+    if (!missing(control))
+        controlvals[names(control)] <- control
+    variogramModels <- match.arg(controlvals$variogramModels,
+                                 choices = formals(moranControl)$variogramModels,
+                                 several.ok = TRUE
+    )
     stopifnot(
         ncol(Cx) == 2, !is.null(colnames(Y)), all(featuresX %in% colnames(X)),
         all(featuresY %in% colnames(Y)), !anyDuplicated(featuresX), !anyDuplicated(featuresY),
         !is.null(colnames(X)), is.logical(verbose),
-        is.numeric(moranList$numNNs), all(moranList$numNNs > 0), is.numeric(moranList$etas),
-        is.logical(moranList$findMaxW),
-        is.numeric(GAMlist$n_points_grid),
-        all(vapply(GAMlist$families, FUN.VALUE = character(1), function(x) x$link) %in% c("identity", "log", "inverse")),
-        all(vapply(GAMlist$families, FUN.VALUE = TRUE, is, "family")),
-        is.logical(GAMlist$Gamm), inherits(GAMlist$correlation, "corSpatial"),
-        inherits(GPlist$correlation, "corGaus"), is.list(GPlist$optControl),
-        length(GPlist$Quants) == 2, is.numeric(GPlist$Quants)
+        is.numeric(controlvals$numNNs), all(controlvals$numNNs > 0), is.numeric(controlvals$etas),
+        is.logical(controlvals$findMaxW),
+        is.numeric(controlvals$n_points_grid),
+        all(vapply(controlvals$families, FUN.VALUE = character(1), function(x) x$link) %in% c("identity", "log", "inverse")),
+        all(vapply(controlvals$families, FUN.VALUE = TRUE, is, "family")),
+        is.logical(controlvals$Gamm), inherits(correlation, "corSpatial"),
+        inherits(correlation, "corGaus") || method !="GPs", is.list(controlvals$optControl),
+        length(controlvals$Quants) == 2, is.numeric(controlvals$Quants)
     )
     invisible(checkInputSingle(X, Y, Cx, Ey))
     colnames(Cx) <- c("x", "y")
-    GPmethod <- match.arg(GPlist$GPmethod, choices = formals(GPcontrol)$GPmethod)
+    GPmethod <- match.arg(controlvals$GPmethod, choices = formals(GPcontrol)$GPmethod)
     X <- normMat(X, normX, pseudoCount)
     Y <- normMat(Y, normY, pseudoCount)
     Cx <- Cx[rownames(X), ] # Match coordinates to observations through rownames
     featuresX <- make.names(featuresX)
     featuresY <- make.names(featuresY)
-    wo <- match.arg(moranList$wo, choices = formals(moranControl)$wo)
+    wo <- match.arg(controlvals$wo, choices = formals(moranControl)$wo)
     if (missing(Ey)) {
         if (nrow(X) != nrow(Y)) {
             stop(strwrapPaste("Only one coordinate matrix supplied, but sample size of X and Y do not match!
@@ -84,7 +92,7 @@ sbivarSingle <- function(
         Ey <- Ey[rownames(Y), ]
         colnames(Ey) <- c("x", "y")
     }
-    if (!identical(names(GAMlist$families), c("X", "Y"))) {
+    if (!identical(names(controlvals$families), c("X", "Y"))) {
         stop("Name families 'X' and 'Y' for unambiguous matching")
     }
     if (!missing(gpParams)) {
@@ -112,21 +120,22 @@ sbivarSingle <- function(
     }
     out <- if (method == "Moran's I") {
         (moranRes <- MoransISingle(
-            X = X, Y = Y, Cx = Cx, Ey = Ey, wo = moranList$wo, numNNs = selfName(moranList$numNNs),
-            variogramModels = moranList$variogramModels, etas = selfName(moranList$etas), width = moranList$width,
-            returnSEsMoransI = moranList$returnSEsMoransI, verbose = verbose, cutoff = moranList$cutoff, findMaxW = moranList$findMaxW,
+            X = X, Y = Y, Cx = Cx, Ey = Ey, wo = controlvals$wo, numNNs = selfName(controlvals$numNNs),
+            variogramModels = controlvals$variogramModels, etas = selfName(controlvals$etas), width = controlvals$width,
+            returnSEsMoransI = controlvals$returnSEsMoransI, verbose = verbose,
+            cutoff = controlvals$cutoff, findMaxW = controlvals$findMaxW,
             featuresX = featuresX, featuresY = featuresY
         ))$res
     } else if (method == "GAMs") {
         GAMsSingle(
-            X = X, Y = Y, Cx = Cx, Ey = Ey, families = GAMlist$families, n_points_grid = GAMlist$n_points_grid,
-            verbose = verbose, featuresX = featuresX, featuresY = featuresY, Gamm = GAMlist$Gamm, correlation = GAMlist$correlation
+            X = X, Y = Y, Cx = Cx, Ey = Ey, families = controlvals$families, n_points_grid = controlvals$n_points_grid,
+            verbose = verbose, featuresX = featuresX, featuresY = featuresY, Gamm = controlvals$Gamm, correlation = correlation
         )
     } else if (method == "GPs") {
         GPsSingle(
-            X = X, Y = Y, Cx = Cx, Ey = Ey, gpParams = gpParams, Quants = GPlist$Quants,
-            GPmethod = GPlist$GPmethod, correlation = GPlist$correlation, optControl = GPlist$optControl,
-            numLscAlts = GPlist$numLscAlts, verbose = verbose, featuresX = featuresX, featuresY = featuresY
+            X = X, Y = Y, Cx = Cx, Ey = Ey, gpParams = gpParams, Quants = controlvals$Quants,
+            GPmethod = controlvals$GPmethod, correlation = correlation, optControl = controlvals$optControl,
+            numLscAlts = controlvals$numLscAlts, verbose = verbose, featuresX = featuresX, featuresY = featuresY
         )
     } else if (method == "Modified t-test") {
         sharedNames <- intersect(rownames(X), rownames(Y))
@@ -141,17 +150,18 @@ sbivarSingle <- function(
     res <- if (method == "Moran's I") {
         new("sbivarResultsMoransI",
             "result" = out, "method" = method, "normX" = normX, "multi" = FALSE,
-            "normY" = normY, "maxIxy" = moranRes$maxIxy, "wo" = wo, "returnSEsMoransI" = moranList$returnSEsMoransI,
-            "wParams" = switch(wo,
-                "Gauss" = moranList$etas,
-                "nn" = moranList$numNNs
+            "normY" = normY, "maxIxy" = moranRes$maxIxy, "wo" = controlvals$wo,
+            "returnSEsMoransI" = controlvals$returnSEsMoransI,
+            "wParams" = switch(controlvals$wo,
+                "Gauss" = controlvals$etas,
+                "nn" = controlvals$numNNs
             )
         )
     } else if (method == "GAMs") {
         new("sbivarResultsGAMs",
             "result" = out, "method" = method, "multi" = FALSE,
-            "normX" = normX, "normY" = normY, "families" = GAMlist$families,
-            "correlation" = if (Gamm) GAMlist$correlation, "Gamm" = GAMlist$Gamm
+            "normX" = normX, "normY" = normY, "families" = controlvals$families,
+            "correlation" = if (Gamm) correlation, "Gamm" = controlvals$Gamm
         )
     } else {
         new("sbivarResults",

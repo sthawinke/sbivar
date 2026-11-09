@@ -32,7 +32,8 @@ evaluated on.}
 
 \item{verbose}{Should info on type of analysis be printed?}
 
-\item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
+\item{featuresX, featuresY}{Features to be tested. Defaults to all features,
+but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization.}
 
 \item{Gamm}{A boolean, should a gamm with Gaussian covariance kernel be fitted? See \link[mgcv]{gamm}}

@@ -13,28 +13,12 @@ sbivarSingle(
   normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
   pseudoCount = 1e-08,
-  etas = c(5e-06, 2e-04, 0.02),
-  findMaxW = FALSE,
-  returnSEsMoransI = TRUE,
-  families = list(X = gaussian(), Y = gaussian()),
-  Gamm = FALSE,
+  moranList = moranControl(),
+  GPlist = GPcontrol(),
+  GAMlist = GAMcontrol(),
   featuresX = colnames(X),
   featuresY = colnames(Y),
-  n_points_grid = 600,
-  verbose = TRUE,
-  variogramModels = c("Exp", "Lin"),
-  width = cutoff/15,
-  cutoff = sqrt(2)/3,
-  wo = c("Gauss", "nn"),
-  numNNs = c(4, 8, 24),
-  GPmethod = c("REML", "ML"),
-  gpParams,
-  Quants = c(0.005, 0.5),
-  numLscAlts = 5,
-  optControl = lmeControl(opt = "optim", maxIter = 500, msMaxIter = 500, niterEM = 1000,
-    msMaxEval = 1000),
-  correlation = corGaus(form = ~x + y, nugget = TRUE, value = c(0.9 * max(apply(Cx, 2,
-    function(x) diff(range(x)))), 0.25))
+  verbose = TRUE
 )
 }
 \arguments{
@@ -49,15 +33,15 @@ sbivarSingle(
 \item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization.}
 
-\item{n_points_grid, families, Gamm}{Passed onto \link{GAMsSingle}}
-
 \item{verbose}{Should info on type of analysis be printed?}
-
-\item{wo, variogramModels, numNNs, etas, cutoff, width, returnSEsMoransI, findMaxW}{Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}}
 
 \item{GPmethod, Quants, numLscAlts, optControl, gpParams}{Passed onto \link{fitGP}}
 
 \item{correlation}{Correlation structure, passed onto \link{fitGP} or \link{fitGAM}}
+
+\item{n_points_grid, families, Gamm}{Passed onto \link{GAMsSingle}}
+
+\item{wo, variogramModels, numNNs, etas, cutoff, width, returnSEsMoransI, findMaxW}{Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}}
 }
 \value{
 A list with at least the following components

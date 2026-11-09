@@ -18,6 +18,7 @@ export(selfName)
 export(topPairs)
 export(writeSbivarToXlsx)
 exportMethods(sbivar)
+exportMethods(show)
 import(ggplot2)
 import(stats)
 importFrom(BiocParallel,

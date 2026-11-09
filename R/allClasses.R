@@ -5,7 +5,6 @@ setClass(
     slots = c(
         result = "dataframeOrList",
         method = "character",
-        multi = "logical",
         normX = "character",
         normY = "character",
         assayX = "characterOrNULL",
@@ -37,4 +36,34 @@ setClass(
         correlation = "corSpatialOrNULL",
         Gamm = "logical"
     )
+)
+setClass(
+    "sbivarResultsMulti",
+    contains = "sbivarResults"
+)
+setClass(
+    "sbivarResultsMultiMoransI",
+    contains = "sbivarResultsMulti",
+    slots = c(
+        maxIxy = "numericOrNULL",
+        returnSEsMoransI = "logical",
+        wo = "character",
+        wParams = "numeric"
+    )
+)
+setClass(
+    "sbivarResultsMultiGAMs",
+    contains = "sbivarResultsMulti",
+    slots = c(
+        families = "list"
+    )
+)
+#' @export
+setMethod(
+    "show",
+    signature(object = "sbivarResults"),
+    function(object) {
+        cat("Sbivar fit with method:", object@method, "on",
+            if(inherits(object, "sbivarResultsMulti")){cat(length(object$res), "images")} else {"single image"})
+    }
 )

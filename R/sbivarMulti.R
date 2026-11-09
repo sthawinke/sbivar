@@ -90,17 +90,26 @@ sbivarMulti <- function(
             featuresX = featuresX, featuresY = featuresY, verbose = verbose
         )
     }
-    out <- list("result" = res, "normX" = normX, "normY" = normY, "method" = method, "multi" = TRUE)
-    if (method == "GAMs") {
-        out$families <- families
-        out$Gamm <- FALSE
-    } else if (method == "Moran's I") {
-        out$wo <- wo
-        out$wParams <- selfName(switch(wo,
-            "Gauss" = etas,
-            "nn" = numNNs
-        ))
-        out$returnSEsMoransI <- findVariances
+    out <- if (method == "Moran's I") {
+        new("sbivarResultsMultiMoransI",
+            "result" = lapply(res, function(x) x$res), "method" = method, "normX" = normX,
+            "normY" = normY, "maxIxy" = if(findmaxW) vapply(res, FUN.VALUE = double(1), function(x) x$maxIxy),
+            "wo" = wo, "returnSEsMoransI" = findVariances,
+            "wParams" = switch(wo,
+                               "Gauss" = etas,
+                               "nn" = numNNs
+            )
+        )
+    } else if (method == "GAMs") {
+        new("sbivarResultsMultiGAMs",
+            "result" = res, "method" = method,
+            "normX" = normX, "normY" = normY, "families" = families
+        )
+    } else if (method == "Correlation") {
+        new("sbivarResultsMulti",
+            "result" = out, "method" = method,
+            "normX" = normX, "normY" = normY
+        )
     }
     return(out)
 }

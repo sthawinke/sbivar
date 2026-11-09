@@ -14,7 +14,7 @@ topPairs(x, ...)
 
 \item{...}{passed onto \link[utils]{head}}
 
-\item{parameter}{For mulit-image analysis, the parameter for which top results should be shown}
+\item{parameter}{For multi-image analysis, the parameter for which top results should be shown}
 }
 \value{
 A dataframe of top results

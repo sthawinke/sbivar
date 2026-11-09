@@ -155,3 +155,58 @@ setGeneric(
     "writeSbivarToXlsx",
     function(x, file, overwrite = FALSE, digits = 3, sigLevel = 0.05) standardGeneric("writeSbivarToXlsx")
 )
+#' Fit linear models on result calculated for replicated images, and extract the results
+#' @description Given result estimated from replicated images using \link{sbivarMulti},
+#' fit linear models to determine significance.
+#' To maintain interpretability of the intercept, continuous fixed effect variables are centered,
+#' and sum coding is used for the categorical ones.
+#'
+#' @param result A result with the result of bivariate spatial association,
+#' from a call to the \link{sbivar} function with multiple images
+#' @param designDf A design dataframe
+#' @param Formula A formula for the linear model to be fitted, can contain random effects.
+#' @param Control A control list for lmerTest::lmer
+#' @param inverseWeigh A boolean, should estimates be inverse weighed by variance for GAMs and Moran's I?
+#' @param scaleByMax A boolean, should Moran's I be scaled by maximum values before plugging into the linear model?
+#' @param verbose Should a message with number of linear models and cores be printed?
+#' @returns For fitLinModels(), a list of linear models
+#' @export
+#' @details The left hand side of "Formula" can be provided or not,
+#' but it will be overridden by "out" for downstream analysis
+#'
+#' @examples
+#' # Multi-image analysis on Vicari data, using GAMs
+#' data(Vicari)
+#' # Subset to 5 images and 500 spots limit computing time
+#' VicariMultiTest <- lapply(Vicari, function(x) lapply(x[1:5], function(y) y[1:500, ]))
+#' VicariRes <- sbivar(VicariMultiTest$TranscriptOutcomes, VicariMultiTest$MetaboliteOutcomes,
+#'     VicariMultiTest$TranscriptCoords, VicariMultiTest$MetaboliteCoords,
+#'     normX = "rel", normY = "rel", method = "GAMs"
+#' )
+#' mouse <- substr(names(Vicari$TranscriptOutcomes)[1:5], 1, 10)
+#' designDf <- data.frame("mouse" = mouse) # The design matrix
+#' multiGAMLmms <- fitLinModels(VicariRes, designDf, Formula = ~ (1 | mouse))
+#' # Extract the results
+#' resGAMsMulti <- extractResultsMulti(multiGAMLmms, designDf = designDf)
+#' topPairs(resGAMsMulti)
+#' @importFrom lmerTest lmer
+#' @importFrom stats formula terms model.matrix
+#' @importFrom lme4 lmerControl .makeCC isSingular lFormula mkReTrms
+#' @importFrom reformulas findbars nobars
+#' @importFrom methods is
+#' @importFrom smoppix centerNumeric named.contr.sum loadBalanceBplapply
+#' @importFrom BiocParallel bplapply bpparam bpworkers
+#' @seealso \link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}, \link[stats]{p.adjust}
+setGeneric(
+    "fitLinModels",
+    function(
+        result, designDf, Formula, verbose = TRUE, inverseWeigh = FALSE, scaleByMax = TRUE,
+        Control = lmerControl(
+            check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
+            check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
+            check.conv.hess = .makeCC(action = "ignore", tol = 1e-06)
+        )
+    ) {
+        standardGeneric("fitLinModels")
+    }
+)

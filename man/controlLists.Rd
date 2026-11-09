@@ -22,7 +22,8 @@ GAMcontrol(
   Cx,
   n_points_grid = 600,
   correlation = corGaus(form = ~x + y, nugget = TRUE, value = c(0.9 * max(apply(Cx, 2,
-    function(x) diff(range(x)))), 0.25))
+    function(x) diff(range(x)))), 0.25)),
+  families = list(X = gaussian(), Y = gaussian())
 )
 
 GPcontrol(

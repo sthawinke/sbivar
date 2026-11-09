@@ -40,7 +40,8 @@ sbivarSingle <- function(
       verbose = TRUE
 ) {
     method <- match.arg(method)
-    variogramModels <- match.arg(moranList$variogramModels, choices = c("Exp", "Lin"), several.ok = TRUE)
+    variogramModels <- match.arg(moranList$variogramModels, choices = formals(moranControl)$variogramModels,
+                                 several.ok = TRUE)
     normX <- match.arg(normX)
     normY <- match.arg(normY)
     stopifnot(
@@ -58,13 +59,13 @@ sbivarSingle <- function(
     )
     invisible(checkInputSingle(X, Y, Cx, Ey))
     colnames(Cx) <- c("x", "y")
-    GPmethod <- match.arg(GPlist$GPmethod, choices = c("ML", "REML"))
+    GPmethod <- match.arg(GPlist$GPmethod, choices = formals(GPcontrol)$GPmethod)
     X <- normMat(X, normX, pseudoCount)
     Y <- normMat(Y, normY, pseudoCount)
     Cx <- Cx[rownames(X), ] # Match coordinates to observations through rownames
     featuresX <- make.names(featuresX)
     featuresY <- make.names(featuresY)
-    wo <- match.arg(wo)
+    wo <- match.arg(moranList$wo, choices = formals(moranControl)$wo)
     if (missing(Ey)) {
         if (nrow(X) != nrow(Y)) {
             stop(strwrapPaste("Only one coordinate matrix supplied, but sample size of X and Y do not match!
@@ -83,7 +84,7 @@ sbivarSingle <- function(
         Ey <- Ey[rownames(Y), ]
         colnames(Ey) <- c("x", "y")
     }
-    if (!identical(names(families), c("X", "Y"))) {
+    if (!identical(names(GAMlist$families), c("X", "Y"))) {
         stop("Name families 'X' and 'Y' for unambiguous matching")
     }
     if (!missing(gpParams)) {

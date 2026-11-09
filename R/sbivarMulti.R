@@ -92,7 +92,7 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" 
     out <- if (method == "Moran's I") {
         new("sbivarResultsMoransI",
             "result" = lapply(res, function(x) x$res), "method" = method, "normX" = normX, "multi" = TRUE,
-            "normY" = normY, "maxIxy" = if (findmaxW) vapply(res, FUN.VALUE = double(1), function(x) x$maxIxy),
+            "normY" = normY, "maxIxy" = if (findMaxW) vapply(res, FUN.VALUE = double(1), function(x) x$maxIxy),
             "wo" = wo, "returnSEsMoransI" = findVariances,
             "wParams" = switch(wo,
                 "Gauss" = etas,

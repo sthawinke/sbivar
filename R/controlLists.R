@@ -4,7 +4,7 @@
 #'
 #' @inheritParams MoransISingle
 #' @order 1
-#' @seealso \link{MoransISingle, fitGAM, fitGP}
+#' @seealso \link{MoransISingle}, \lnk{fitGAM}, \link{fitGP}
 #' @rdname controlLists
 #' @return A list of control elements
 moranControl <- function(etas = c(5e-6, 2e-4, 2e-2), findMaxW = FALSE, returnSEsMoransI = TRUE,

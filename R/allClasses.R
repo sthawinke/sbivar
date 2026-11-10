@@ -1,6 +1,20 @@
 setClassUnion("characterOrNULL", c("character", "NULL"))
 setClassUnion("listOrNULL", c("list", "NULL"))
 setClassUnion("dataframeOrList", c("data.frame", "list"))
+#' sbivarResults class
+#'
+#' An S4 class representing the result of a sbivar call, testing for bivariate spatial association in one or more images
+#'
+#' @slot method The statistical test used
+#' @slot normX Normalization applied to the first modality
+#' @slot normY Normalization applied to the second modality
+#' @slot multi A boolean, were multiple images tested?
+#' @slot assayX Name of the assay of the first modality
+#' @slot assayY Name of the assay of the second modality
+#' @slot models Optional, the linear model fits if multi=TRUE
+#' @slot result The result of the statistical test
+#'
+#' @export
 setClass(
   "sbivarResults",
   slots = c(

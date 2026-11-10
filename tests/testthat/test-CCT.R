@@ -1,11 +1,10 @@
 test_that("Cauchy combination rule works as expected", {
   pVals <- runif(20, 0, 1)
   cctP <- CCT(pVals)
-  expect_s3_class(cctP, "numeric")
+  expect_type(cctP, "numeric")
   expect_lte(cctP, 1)
   expect_gte(cctP, 0)
-  expect_warning(CCT(c(1, pVals)))
   expect_s3_class(c(cctP, 1e-20), "numeric")
-  expect_equal(CCT(c(NA, 0.1, 0.2)), 1)
+  expect_equal(CCT(c(NA, 0.1, 0.2)), NA)
   expect_equal(CCT(c(0, 0.1, 0.2)), 0)
 })

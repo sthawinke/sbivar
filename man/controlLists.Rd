@@ -67,5 +67,5 @@ A list of control elements
 Define default argument lists for the MoransISingle(), GAMsSingle() and GPsingle() functions
 }
 \seealso{
-\link{MoransISingle, fitGAM, fitGP}
+\link{MoransISingle}, \lnk{fitGAM}, \link{fitGP}
 }

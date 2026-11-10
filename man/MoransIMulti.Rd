@@ -30,7 +30,7 @@ while using the whole matrix to calculate library sizes as offset or for normali
 
 \item{findVariances}{Should variances be calculated? For internal use only}
 
-\item{control}{Control arguments passed onto \link{MoransIsingle}, \link{fitGPs} or \link{fitGAMs}, replacing defaults by \link{MoransIsingle}, \link{fitGPs} or \link{fitGAMs}, respectively}
+\item{control}{Control arguments passed onto \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, replacing defaults by \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, respectively}
 
 \item{...}{passed onto \link{MoransISingle}}
 }

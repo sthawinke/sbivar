@@ -292,6 +292,7 @@ strwrapPaste <- function(...) {
 #' @inheritParams sbivarSingle
 #' @param controlvals The list of control values
 #'
+#'
 #' @returns Finishes silently if no problems found
 checkControlVals <- function(method, controlvals, correlation, gpParams){
     if (method == "Moran's I") {

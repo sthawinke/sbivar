@@ -49,6 +49,12 @@ Currently, only "Exp" and "Lin" are implemented for computational reasons.}
 
 \item{Gamm}{A boolean, should a gamm with Gaussian covariance kernel be fitted? See \link[mgcv]{gamm}}
 
+\item{n_points_grid}{The number of points in the new grid for the GAMs to be
+evaluated on.}
+
+\item{families}{A vector of length 2 giving the distributional families
+for the outcome values. See details of \link{sbivarSingle}.}
+
 \item{GPmethod}{The method by which to fit the Gaussian processes,
 passed onto \link[nlme]{gls} as "method".}
 

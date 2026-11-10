@@ -69,7 +69,8 @@ importFrom(methods,
   is,
   new,
   setGeneric,
-  setMethod
+  setMethod,
+  show
 )
 importFrom(mgcv,
   gam,

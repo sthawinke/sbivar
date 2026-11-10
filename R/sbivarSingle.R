@@ -10,8 +10,9 @@
 #' @param Cx,Ey Coordinate matrices of dimension two, belonging to X and Y respectively
 #' @param method A character string, indicating which method to apply
 #' @param correlation Correlation structure, passed onto \link{fitGP} or \link{fitGAM}
+#' @param gpParams Pre-estimated GP parameters
 #' @param verbose Should info on type of analysis be printed?
-#' @param control Control arguments passed onto \link{MoransIsingle}, \link{fitGPs} or \link{fitGAMs}, replacing defaults by \link{MoransIsingle}, \link{fitGPs} or \link{fitGAMs}, respectively
+#' @param control Control arguments passed onto \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, replacing defaults by \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, respectively
 #' @param normX,normY,pseudoCount Normalization parameters, passed onto \link{normMat}
 #' @param featuresX,featuresY Features to be tested. Defaults to all features,
 #' but specifying them allows to test a limited feature set,

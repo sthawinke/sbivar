@@ -15,7 +15,7 @@ test_that("SbivarSingle works for correct input", {
     "sbivarResults"
   )
   expect_message(sbivar(X, Y, Cx, Ey, method = "GAMs", correlation = corExp(~ x + y, nugget = TRUE)))
-  expect_message(sbivar(X, Y, Cx, Ey, method = "GAMs", Gamm = TRUE, correlation = corExp(~ x + y, nugget = TRUE)))
+  expect_message(sbivar(X, Y, Cx, Ey, method = "GAMs", control = list(Gamm = TRUE), correlation = corExp(~ x + y, nugget = TRUE)))
   expect_message(sbiResMoran <- sbivar(X, Y, Cx, Ey, method = "Moran's I"))
   expect_message(sbiResMod <- sbivar(X, X, Cx, method = "Modified t-test"))
   expect_true(all(c("pVal", "pAdj") %in% colnames(topPairs(sbiResMoran))))
@@ -23,7 +23,7 @@ test_that("SbivarSingle works for correct input", {
   expect_silent(sbivar(X, Y, Cx, Ey, method = "GAMs", verbose = FALSE))
   expect_s4_class(sbivar(X, Y, Cx, Ey,
     method = "GAMs",
-    families = list("X" = gaussian(link = "log"), "Y" = gaussian(link = "inverse"))
+    control = list("families" = list("X" = gaussian(link = "log"), "Y" = gaussian(link = "inverse")))
   ), "sbivarResults")
   expect_s4_class(sbivar(X, Y, Cx, Ey, method = "Moran's I", featuresX = "X1", featuresY = "Y1"), "sbivarResultsMoransI")
 })
@@ -39,9 +39,10 @@ test_that("SbivarSingle throws errors for incorrect input", {
     method = "GAMs",
     families = list(gaussian(), gaussian())
   ))
+  expect_error(sbivar(X, Y, Cx, Ey, method = "GAMs",
+             families = list("X" = gaussian(link = "log"), "Y" = gaussian(link = "inverse"))))
   expect_error(sbivar(X, Y, Cx, Ey,
-    method = "GAMs",
-    families = list("X" = gaussian(), "Y" = mean)
+    method = "GAMs", families = list("X" = gaussian(), "Y" = mean)
   ))
   expect_error(sbivar(X, Y, Cx[-1, ], Ey, method = "GAMs"))
   expect_error(sbivar(X, Y, Cx, Ey,
@@ -64,10 +65,10 @@ test_that("SbivarSingle throws errors for incorrect input", {
 })
 test_that("sbivarMulti works for correct input", {
   gamList <- sbivar(Xl, Yl, Cxl, Eyl, method = "GAMs")
-  expect_type(gamList, "list")
+  expect_s4_class(gamList, "sbivarResults")
+  expect_true(gamList@multi)
   expect_named(gamList, c("result", "normX", "normY", "method", "multi", "families", "Gamm"))
-  expect_vector(gamList$result[[1]]$res)
-  expect_type(sbivar(Xl, Yl, Cxl, Eyl, method = "Moran's I"), "list")
+  expect_s4_class(sbivar(Xl, Yl, Cxl, Eyl, method = "Moran's I"), "sbivarResults")
 })
 test_that("sbivarMulti throws errors for incorrect input", {
   expect_error(sbivar(Xl, Yl, Cxl, Eyl, method = "GPs"))
@@ -111,7 +112,7 @@ test_that("Sbivar works on BioConductor objects of SpatialExperiment class", {
   # Provide separate SpatialExperiment objects
   expect_s4_class(sbivar(spe_rna, spe_prot,
     assayX = "counts", method = "GAMs",
-    assayY = "counts", families = list("X" = mgcv::nb(), "Y" = mgcv::nb())
+    assayY = "counts", control = list("families" = list("X" = mgcv::nb(), "Y" = mgcv::nb()))
   ), "sbivarResultsGAMs")
 })
 seListX <- mapply(Xl, Cxl, FUN = tmpFun <- function(X, Cx) {
@@ -122,7 +123,7 @@ seListX <- mapply(Xl, Cxl, FUN = tmpFun <- function(X, Cx) {
 })
 seListY <- mapply(Yl, Eyl, FUN = tmpFun)
 test_that("Sbivar works on lists of SpatialExperiment objects", {
-  expect_type(sbivar(seListX, seListY, assayX = "X", assayY = "X"), "list")
+  expect_s4_class(sbivar(seListX, seListY, assayX = "X", assayY = "X"), "sbivarResults")
 })
 spe_rna2 <- SpatialExperiment(
   spatialCoords = rna_coords,
@@ -133,14 +134,13 @@ spe_prot2 <- SpatialExperiment(
   spatialCoords = prot_coords
 )
 test_that("Sbivar works and yields list on two SpatialExperiment objects to be split", {
-  expect_type(sbivar(spe_rna2, spe_prot2, assayX = "counts", assayY = "counts", sample_id_x = "idX", sample_id_y = "idY", families = list("X" = mgcv::nb(), "Y" = mgcv::nb())), "list")
+    expect_s4_class(sbivar(spe_rna2, spe_prot2, assayX = "counts", assayY = "counts", sample_id_x = "idX", sample_id_y = "idY", families = list("X" = mgcv::nb(), "Y" = mgcv::nb())), "sbivarResults")
 })
 # --- Combine into MultiAssayExperiment ---
 mae <- MultiAssayExperiment(experiments = list(RNA = spe_rna, Protein = spe_prot))
 test_that("Sbivar works on BioConductor objects of MultiAssayExperiment class", {
-  expect_s4_class(sbivar(mae,
-    experimentX = "RNA", experimentY = "Protein", assayX = "counts",
-    assayY = "counts"
+  expect_s4_class(sbivar(mae, experimentX = "RNA", experimentY = "Protein",
+                         assayX = "counts", assayY = "counts"
   ), "sbivarResultsMoransI")
 })
 test_that("Sbivar fails on BioConductor objects SpatialExperiment and MultiAssayExperiment where appropriate", {

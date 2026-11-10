@@ -50,7 +50,7 @@ if (.Platform$OS.type == "unix") {
 resMoranTest <- sbivar(X, Y, Cx, Ey, method = "Moran's I")
 resGAMsSingle <- sbivar(X, Y, Cx, Ey, method = "GAMs")
 estGAMs <- sbivar(Xl, Yl, Cxl, Eyl, method = "GAMs", findVariances = TRUE)
-estMoran <- sbivar(Xl, Yl, Cxl, Eyl, method = "Moran's I", wo = "nn", findVariances = TRUE)
+estMoran <- sbivar(Xl, Yl, Cxl, Eyl, method = "Moran's I", control = list(wo = "nn"), findVariances = TRUE)
 estMultiCor <- sbivar(Xl, Xl, Cxl, method = "Correlation")
 multiFitGams <- fitLinModels(estGAMs,
   design = toyDesign,

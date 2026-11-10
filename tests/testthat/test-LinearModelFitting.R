@@ -1,21 +1,21 @@
 test_that("fitLinModels works for GAM input", {
-  expect_type(
-    type = "list",
+  expect_s4_class(
+    type = "sbivarResults",
     multiFitGams <- fitLinModels(estGAMs,
       designDf = toyDesign, inverseWeigh = TRUE,
       Formula = out ~ covariate + cofactor + (1 | group)
     )
   )
-  expect_type(
-    type = "list",
+    expect_s4_class(
+        type = "sbivarResults",
     multiFitGams2 <- fitLinModels(estGAMs,
       inverseWeigh = FALSE,
       designDf = toyDesign,
       Formula = out ~ covariate + cofactor + (1 | group)
     )
   )
-  expect_type(
-    type = "list",
+    expect_s4_class(
+        type = "sbivarResults",
     multiFitGams3 <- fitLinModels(estGAMs,
       inverseWeigh = FALSE,
       Formula = out ~ 1
@@ -35,15 +35,15 @@ test_that("fitLinModels works for GAM input", {
   expect_false(is.unsorted(resGams@result$Intercept[, "pVal"]))
 })
 test_that("fitLinModels works for Moran's I input", {
-  expect_type(
-    type = "list",
+    expect_s4_class(
+        type = "sbivarResults",
     multiFitMoran <- fitLinModels(estMoran,
       designDf = toyDesign,
       Formula = out ~ covariate + cofactor + (1 | group)
     )
   )
-  expect_type(
-    type = "list",
+    expect_s4_class(
+        type = "sbivarResults",
     multiFitMoran2 <- fitLinModels(estMoran,
       inverseWeigh = FALSE,
       designDf = toyDesign,
@@ -58,8 +58,8 @@ test_that("fitLinModels works for Moran's I input", {
       Formula = out ~ covariate + cofactor + (1 | group)
     )
   )
-  expect_type(
-    type = "list",
+  expect_s4_class(
+      type = "sbivarResults",
     multiFitMoran4 <- fitLinModels(estMoran,
       inverseWeigh = TRUE, scaleByMax = FALSE,
       designDf = toyDesign,
@@ -68,8 +68,8 @@ test_that("fitLinModels works for Moran's I input", {
   )
 })
 test_that("fitLinModels works for correlation input", {
-  expect_s3_class(
-    class = "list",
+    expect_s4_class(
+        type = "sbivarResults",
     multiFitCors <- fitLinModels(estMultiCor,
       designDf = toyDesign,
       Formula = out ~ covariate + cofactor + (1 | group)

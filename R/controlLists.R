@@ -16,7 +16,8 @@ moranControl <- function(etas = c(5e-6, 2e-4, 2e-2), findMaxW = FALSE, returnSEs
     wo = match.arg(wo), numNNs = numNNs
   )
 }
-#' @inheritParams fitGAM
+#' @inheritParams GAMsSingle
+#' @inheritParams sbivarSingle
 #' @order 2
 #' @rdname controlLists
 GAMcontrol <- function(Gamm = FALSE, Cx, n_points_grid = 6e2,

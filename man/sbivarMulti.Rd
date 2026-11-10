@@ -15,6 +15,7 @@ sbivarMulti(
   featuresY = getFeaturesList(Yl),
   normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
+  pseudoCount = 1e-08,
   verbose = TRUE,
   findVariances = FALSE,
   findMaxW = TRUE
@@ -27,13 +28,17 @@ sbivarMulti(
 
 \item{method}{A character string, indicating which method to apply}
 
-\item{control}{Control arguments passed onto \link{MoransIsingle}, \link{fitGPs} or \link{fitGAMs}, replacing defaults by \link{MoransIsingle}, \link{fitGPs} or \link{fitGAMs}, respectively}
+\item{control}{Control arguments passed onto \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, replacing defaults by \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, respectively}
 
 \item{featuresX, featuresY}{Features to be tested. Defaults to all features,
 but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization.}
 
+\item{normX, normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}
+
 \item{verbose}{Should info on type of analysis be printed?}
+
+\item{findMaxW}{A boolean, should maximum values be found for bivariate Moran's I}
 }
 \value{
 A \link{sbivarResults} object with multi = TRUE

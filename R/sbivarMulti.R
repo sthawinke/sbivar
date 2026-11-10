@@ -5,6 +5,7 @@
 #'
 #' @param Xl,Yl Lists of matrices of omics measurements
 #' @param Cxl,Eyl Lists of corresponding coordinate matrices of dimension two
+#' @param findMaxW A boolean, should maximum values be found for bivariate Moran's I
 #' @returns A \link{sbivarResults} object with multi = TRUE
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
 #' @inheritParams sbivarSingle
@@ -12,7 +13,7 @@
 #' @seealso \link{fitLinModels}, \link{MoransIMulti}, \link{correlationsMulti}, \link{GAMsMulti}
 sbivarMulti <- function(Xl, Yl, Cxl, Eyl, method = c("Moran's I", "GAMs", "Correlation"),
             control, featuresX = getFeaturesList(Xl), featuresY = getFeaturesList(Yl),
-            normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
+            normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
                        verbose = TRUE, findVariances = FALSE, findMaxW = TRUE) {
   method <- match.arg(method)
   normX <- match.arg(normX)
@@ -99,7 +100,7 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, method = c("Moran's I", "GAMs", "Corre
     )
   } else if (method == "Correlation") {
     new("sbivarResults",
-      "result" = out, "method" = method, "multi" = TRUE,
+      "result" = res, "method" = method, "multi" = TRUE,
       "normX" = normX, "normY" = normY
     )
   }

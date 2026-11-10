@@ -2,7 +2,6 @@
 #'
 #' Wraps \link{GAMsSingle} for lists
 #'
-#' @param families,n_points_grid See \link{GAMsSingle}
 #' @inheritParams sbivarMulti
 #' @inheritParams MoransIMulti
 #'

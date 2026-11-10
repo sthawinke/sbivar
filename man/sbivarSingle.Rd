@@ -33,7 +33,9 @@ sbivarSingle(
 
 \item{correlation}{Correlation structure, passed onto \link{fitGP} or \link{fitGAM}}
 
-\item{control}{Control arguments passed onto \link{MoransIsingle}, \link{fitGPs} or \link{fitGAMs}, replacing defaults by \link{MoransIsingle}, \link{fitGPs} or \link{fitGAMs}, respectively}
+\item{control}{Control arguments passed onto \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, replacing defaults by \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, respectively}
+
+\item{gpParams}{Pre-estimated GP parameters}
 
 \item{featuresX, featuresY}{Features to be tested. Defaults to all features,
 but specifying them allows to test a limited feature set,

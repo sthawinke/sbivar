@@ -40,21 +40,6 @@ setClass(
     Gamm = "logical"
   )
 )
-#' @export
-setMethod(
-  "show",
-  signature(object = "sbivarResults"),
-  function(object) {
-    cat(
-      "Sbivar fit with method", object@method, "on",
-      if (object@multi) {
-        c(length(object@result), "images")
-      } else {
-        c("single image with", nrow(object@result), "feature pairs tested")
-      }
-    )
-  }
-)
 setValidity("sbivarResults", function(object) {
   if (length(object@normX) != 1 || !is.character(object@normX)) {
     return("normX must have length 1 and be a character")
@@ -79,3 +64,19 @@ setValidity("sbivarResults", function(object) {
    }
   TRUE
 })
+#' @importFrom methods show
+#' @export
+setMethod(
+    "show",
+    signature(object = "sbivarResults"),
+    function(object) {
+        cat(
+            "Sbivar fit with method", object@method, "on",
+            if (object@multi) {
+                c(length(object@result), "images")
+            } else {
+                c("single image with", nrow(object@result), "feature pairs tested")
+            }
+        )
+    }
+)

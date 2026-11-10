@@ -13,20 +13,20 @@
 #'
 #' @examples
 #' exploreWeights(10^c(-5, -4, -3))
-#' @importFrom grDevices palette
+#' @importFrom grDevices palette.colors
 #' @importFrom graphics legend lines
 exploreWeights <- function(etas, dists = seq(0, 0.2, length.out = 1e3), palette = "paired", legend.position = "topright") {
-    stopifnot(all(dists <= sqrt(2)), all(etas > 0))
-    Pal <- palette("paired")
-    if (length(etas) > length(Pal)) {
-        stop("Insufficient colours in palette ", palette, "for supplied etas!")
-    }
-    plot(type = "n", x = 0, y = 0, xlim = range(dists), ylim = c(0, 1), xlab = "Distance", ylab = "Weight")
-    foo <- lapply(seq_along(etas), function(i) {
-        lines(dists, exp(-dists^2 / etas[i]), col = Pal[i])
-    })
-    legend(legend.position,
-        legend = signif(etas, 3), lty = 1, col = Pal[seq_along(etas)],
-        title = "Decay parameter"
-    )
+  stopifnot(all(dists <= sqrt(2)), all(etas > 0))
+  Pal <- palette.colors(palette = palette)
+  if (length(etas) > length(Pal)) {
+    stop("Insufficient colours in palette ", palette, "for supplied etas!")
+  }
+  plot(type = "n", x = 0, y = 0, xlim = range(dists), ylim = c(0, 1), xlab = "Distance", ylab = "Weight")
+  foo <- lapply(seq_along(etas), function(i) {
+    lines(dists, exp(-dists^2 / etas[i]), col = Pal[i])
+  })
+  legend(legend.position,
+    legend = signif(etas, 3), lty = 1, col = Pal[seq_along(etas)],
+    title = "Decay parameter"
+  )
 }

@@ -9,20 +9,13 @@ sbivarMulti(
   Yl,
   Cxl,
   Eyl,
-  families = list(X = gaussian(), Y = gaussian()),
   method = c("Moran's I", "GAMs", "Correlation"),
-  wo = c("Gauss", "nn"),
-  numNNs = c(4, 8, 24),
-  etas = c(5e-06, 2e-04, 0.02),
+  control,
   featuresX = getFeaturesList(Xl),
   featuresY = getFeaturesList(Yl),
   normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
-  variogramModels = c("Exp", "Lin"),
-  width = cutoff/15,
-  cutoff = sqrt(2)/3,
   pseudoCount = 1e-08,
-  n_points_grid = 600,
   verbose = TRUE,
   findVariances = FALSE,
   findMaxW = TRUE
@@ -33,34 +26,24 @@ sbivarMulti(
 
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
-\item{families, n_points_grid}{Passed onto \link{GAMsMulti}}
-
 \item{method}{A character string, indicating which method to apply}
 
-\item{wo, numNNs, etas}{Passed onto \link{MoransISingle}}
+\item{control}{Control arguments passed onto \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, replacing defaults by \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, respectively}
 
-\item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
+\item{featuresX, featuresY}{Features to be tested. Defaults to all features,
+but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization.}
 
 \item{normX, normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}
 
-\item{variogramModels}{A character vector, indicating the variogram model passed onto \link[gstat]{vgm}.
-Currently, only "Exp" and "Lin" are implemented for computational reasons.}
-
-\item{cutoff, width}{Cutoff and width of the variogram estimation, passed onto \link[gstat]{vgm}}
-
 \item{verbose}{Should info on type of analysis be printed?}
 
-\item{findVariances}{Should variances be calculated? For internal use only}
+\item{findVariances}{A boolean, should variances be found for bivariate Moran's I and GAMs}
 
-\item{findMaxW}{Is the maximum bivariate Moran's I needed?}
+\item{findMaxW}{A boolean, should maximum values be found for bivariate Moran's I}
 }
 \value{
-A list containing
-\item{estimates}{The estimated measures of association}
-\item{multi}{TRUE, a flag for the type of analysis}
-\item{normX,normY,method}{As provided}
-\item{families,wo,wParams}{Optional, as provided. wParams are either etas or numNNs}
+A \link{sbivarResults-class} object with multi = TRUE
 }
 \description{
 This function calculates measures of spatial association for every image.

@@ -14,65 +14,65 @@
 #' (e.g. with GPU acceleration) to perform the score test.
 #' @importFrom abind abind
 GPsSingle <- function(X, Y, Cx, Ey, gpParams, numLscAlts, Quants, GPmethod,
-    correlation, optControl, verbose, featuresX, featuresY) {
-    p <- length(featuresX)
-    k <- length(featuresY)
-    if (missing(gpParams)) {
-        if (verbose) {
-            message("Fitting GPs for first modality (", p, " features) ...")
-        }
-        gpsx <- fitManyGPs(
-            mat = X, coord = Cx, GPmethod = GPmethod, features = featuresX,
-            correlation = correlation, optControl = optControl
-        )
-        if (verbose) {
-            message("Fitting GPs for second modality (", k, " features) ...")
-        }
-        gpsy <- fitManyGPs(
-            mat = Y, coord = Ey, GPmethod = GPmethod, features = featuresY,
-            correlation = correlation, optControl = optControl
-        )
-    } else {
-        # Extract fits
-        gpsx <- gpParams$X
-        gpsy <- gpParams$Y
+                      correlation, optControl, verbose, featuresX, featuresY) {
+  p <- length(featuresX)
+  k <- length(featuresY)
+  if (missing(gpParams)) {
+    if (verbose) {
+      message("Fitting GPs for first modality (", p, " features) ...")
     }
-    distMat <- as.matrix(stats::dist(rbind(Cx, Ey)))
-    n <- nrow(X)
-    m <- nrow(Y)
-    idN <- seq_len(n)
-    idM <- n + seq_len(m)
-    crossBlocks <- buildAltSigmas(distMat,
-        numLscAlts = numLscAlts, Quants = Quants,
-        idN = idN, idM = idM
+    gpsx <- fitManyGPs(
+      mat = X, coord = Cx, GPmethod = GPmethod, features = featuresX,
+      correlation = correlation, optControl = optControl
     )
     if (verbose) {
-        message(
-            "Performing all ", p * k,
-            " pairwise score tests on fitted GPs ..."
-        )
+      message("Fitting GPs for second modality (", k, " features) ...")
     }
-    out <- vapply(selfName(featuresX), function(featx) {
-        # Precompute sx and derivX once per x-feature (p times total)
-        sx <- base::solve(buildSigmaGp(gpsx[, featx], distMat = distMat[idN, idN]))
-        derivX <- buildDerivArray(gpsx[, featx], distMat[idN, idN], "X")
-        out <- vapply(selfName(featuresY), FUN.VALUE = double(2), function(featy) {
-            testGP(
-                x = X[, featx], y = Y[, featy],
-                crossBlocks = crossBlocks,
-                solXonly = gpsx[, featx], solYonly = gpsy[, featy],
-                sx = sx, sy = base::solve(buildSigmaGp(gpsy[, featy], distMat = distMat[idM, idM])),
-                derivX = derivX, derivY = buildDerivArray(gpsy[, featy], distMat[idM, idM], "Y")
-            )
-        })
-        printProgress(featx, featuresX, verbose)
-        return(out)
-    }, FUN.VALUE = matrix(0, nrow = 2, ncol = k))
-    # Reformat to long format
-    t(matrix(c(out), 2, p * k,
-        dimnames = list(
-            c("pVal", "sign"),
-            paste(rep(featuresX, each = k), rep(featuresY, times = p), sep = "__")
-        )
-    ))
+    gpsy <- fitManyGPs(
+      mat = Y, coord = Ey, GPmethod = GPmethod, features = featuresY,
+      correlation = correlation, optControl = optControl
+    )
+  } else {
+    # Extract fits
+    gpsx <- gpParams$X
+    gpsy <- gpParams$Y
+  }
+  distMat <- as.matrix(stats::dist(rbind(Cx, Ey)))
+  n <- nrow(X)
+  m <- nrow(Y)
+  idN <- seq_len(n)
+  idM <- n + seq_len(m)
+  crossBlocks <- buildAltSigmas(distMat,
+    numLscAlts = numLscAlts, Quants = Quants,
+    idN = idN, idM = idM
+  )
+  if (verbose) {
+    message(
+      "Performing all ", p * k,
+      " pairwise score tests on fitted GPs ..."
+    )
+  }
+  out <- vapply(selfName(featuresX), function(featx) {
+    # Precompute sx and derivX once per x-feature (p times total)
+    sx <- base::solve(buildSigmaGp(gpsx[, featx], distMat = distMat[idN, idN]))
+    derivX <- buildDerivArray(gpsx[, featx], distMat[idN, idN], "X")
+    out <- vapply(selfName(featuresY), FUN.VALUE = double(2), function(featy) {
+      testGP(
+        x = X[, featx], y = Y[, featy],
+        crossBlocks = crossBlocks,
+        solXonly = gpsx[, featx], solYonly = gpsy[, featy],
+        sx = sx, sy = base::solve(buildSigmaGp(gpsy[, featy], distMat = distMat[idM, idM])),
+        derivX = derivX, derivY = buildDerivArray(gpsy[, featy], distMat[idM, idM], "Y")
+      )
+    })
+    printProgress(featx, featuresX, verbose)
+    return(out)
+  }, FUN.VALUE = matrix(0, nrow = 2, ncol = k))
+  # Reformat to long format
+  t(matrix(c(out), 2, p * k,
+    dimnames = list(
+      c("pVal", "sign"),
+      paste(rep(featuresX, each = k), rep(featuresY, times = p), sep = "__")
+    )
+  ))
 }

@@ -44,7 +44,8 @@ Currently, only "Exp" and "Lin" are implemented for computational reasons.}
 
 \item{returnSEsMoransI}{A boolean, are standard errors of Moran's I to be returned?}
 
-\item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
+\item{featuresX, featuresY}{Features to be tested. Defaults to all features,
+but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization.}
 
 \item{findVariances}{Should variances be calculated? For internal use only}
@@ -66,7 +67,7 @@ as it is computation intensive and not always needed.
 }
 \note{
 No multithreading is implemented for the variance calculation, as the matrix calculations involved
-may use inherent multithreading with OpenBLAS.
+may use inherent multithreading with OpenBLAS. Computations may require much RAM for building weight matrices.
 }
 \references{
 \insertAllCited{}

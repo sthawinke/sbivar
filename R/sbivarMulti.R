@@ -5,97 +5,105 @@
 #'
 #' @param Xl,Yl Lists of matrices of omics measurements
 #' @param Cxl,Eyl Lists of corresponding coordinate matrices of dimension two
-#' @param method A character string, indicating which method to apply
-#' @param families,n_points_grid Passed onto \link{GAMsMulti}
-#' @param wo,numNNs,etas Passed onto \link{MoransISingle}
-#' @returns A list containing
-#' \item{estimates}{The estimated measures of association}
-#' \item{multi}{TRUE, a flag for the type of analysis}
-#' \item{normX,normY,method}{As provided}
-#' \item{families,wo,wParams}{Optional, as provided. wParams are either etas or numNNs}
+#' @param findMaxW A boolean, should maximum values be found for bivariate Moran's I
+#' @param findVariances A boolean, should variances be found for bivariate Moran's I and GAMs
+#' @returns A \link{sbivarResults-class} object with multi = TRUE
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
 #' @inheritParams sbivarSingle
-#' @inheritParams buildWeightMat
-#' @inheritParams MoransISingle
-#' @inheritParams GAMsSingle
 #' @importFrom BiocParallel bpparam bpworkers
 #' @seealso \link{fitLinModels}, \link{MoransIMulti}, \link{correlationsMulti}, \link{GAMsMulti}
-sbivarMulti <- function(Xl, Yl, Cxl, Eyl, families = list("X" = gaussian(), "Y" = gaussian()),
-    method = c("Moran's I", "GAMs", "Correlation"), wo = c("Gauss", "nn"),
-    numNNs = c(4, 8, 24), etas = c(5e-6, 2e-4, 2e-2), featuresX = getFeaturesList(Xl), featuresY = getFeaturesList(Yl),
-    normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
-    variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
-    pseudoCount = 1e-8, n_points_grid = 6e2, verbose = TRUE, findVariances = FALSE,
-    findMaxW = TRUE) {
-    method <- match.arg(method)
-    wo <- match.arg(wo)
-    normX <- match.arg(normX)
-    normY <- match.arg(normY)
-    stopifnot(
-        is.numeric(numNNs), all(numNNs > 0), is.numeric(etas), is.numeric(n_points_grid), is.logical(verbose),
-        is.character(method), all(vapply(families, FUN.VALUE = TRUE, is, "family")), is.character(featuresX), is.character(featuresY)
-    )
-    foo <- checkInputMulti(Xl, Yl, Cxl, Eyl, checkCoords = ccs <- (method != "Correlation"))
-    if (ccs) {
-        if (missing(Eyl)) {
-            message("Only one coordinate matrix list Cxl supplied, and dimensions of X and Y do match.
+sbivarMulti <- function(Xl, Yl, Cxl, Eyl, method = c("Moran's I", "GAMs", "Correlation"),
+            control, featuresX = getFeaturesList(Xl), featuresY = getFeaturesList(Yl),
+            normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
+                       verbose = TRUE, findVariances = FALSE, findMaxW = TRUE) {
+  method <- match.arg(method)
+  normX <- match.arg(normX)
+  normY <- match.arg(normY)
+  controlvals <- switch(method, "Moran's I" = moranControl(),
+                        "GAMs" = GAMcontrol()
+  )
+  if (!missing(control)) {
+      controlvals[names(control)] <- control
+  }
+  invisible(checkControlVals(method, controlvals))
+  stopifnot(
+    is.logical(verbose), is.character(method), is.character(featuresX), is.character(featuresY)
+  )
+  ccs <- (method != "Correlation")
+  invisible(checkInputMulti(Xl, Yl, Cxl, Eyl, checkCoords = ccs))
+  if (ccs) {
+    if (missing(Eyl)) {
+      message("Only one coordinate matrix list Cxl supplied, and dimensions of X and Y do match.
                  Performing an analysis with joint coordinate sets.")
-            Eyl <- Cxl
-        }
-        Cxl <- lapply(Cxl, tmpFun <- function(cx) {
-            colnames(cx) <- c("x", "y")
-            cx
-        })
-        Eyl <- lapply(Eyl, tmpFun)
-    } else if (!missing(Cxl)) {
-        warning("Correlation analysis will ignore coordinate matrices provided.
+      Eyl <- Cxl
+    }
+    Cxl <- lapply(Cxl, tmpFun <- function(cx) {
+      colnames(cx) <- c("x", "y")
+      cx
+    })
+    Eyl <- lapply(Eyl, tmpFun)
+  } else if (!missing(Cxl)) {
+    warning("Correlation analysis will ignore coordinate matrices provided.
                 Consider providing another 'method' argument for a full spatial analysis", immediate. = TRUE)
+  }
+  # Normalization
+  Xl <- lapply(Xl, normMat, normX, pseudoCount, warnDrop = FALSE)
+  Yl <- lapply(Yl, normMat, normY, pseudoCount, warnDrop = FALSE)
+  if (ccs) {
+    Cxl <- lapply(selfName(names(Cxl)), function(i) {
+      Cxl[[i]][rownames(Xl[[i]]), ]
+    })
+    Eyl <- lapply(selfName(names(Eyl)), function(i) {
+      Eyl[[i]][rownames(Yl[[i]]), ]
+    })
+  }
+  if (verbose) {
+    message(
+      "Starting sbivar analysis (", method, ") of ", length(Xl), " images on ",
+      bpworkers(bpparam()), " computing cores"
+    )
+  }
+  res <- if (method == "Moran's I") {
+    wo <- match.arg(controlvals$wo, choices = formals(moranControl)$wo)
+    controlvals$findMaxW <- findMaxW
+    if (wo == "nn" & !requireNamespace("RANN", quietly = TRUE)) {
+      stop("Install 'RANN' package for nearest neighbour weighting matrices")
     }
-    # Normalization
-    Xl <- lapply(Xl, normMat, normX, pseudoCount)
-    Yl <- lapply(Yl, normMat, normY, pseudoCount)
-    if (ccs) {
-        Cxl <- lapply(selfName(names(Cxl)), function(i) {
-            Cxl[[i]][rownames(Xl[[i]]), ]
-        })
-        Eyl <- lapply(selfName(names(Eyl)), function(i) {
-            Eyl[[i]][rownames(Yl[[i]]), ]
-        })
-    }
-    if (verbose) {
-        message(
-            "Starting sbivar analysis (", method, ") of ", length(Xl), " images on ",
-            bpworkers(bpparam()), " computing cores"
-        )
-    }
-    res <- if (method == "Moran's I") {
-        MoransIMulti(Xl, Yl, Cxl, Eyl,
-            featuresX = featuresX, featuresY = featuresY,
-            wo = wo, numNNs = numNNs, verbose = verbose, findVariances = findVariances, findMaxW = findMaxW,
-            etas = etas, variogramModels = variogramModels, width = width, cutoff = cutoff
-        )
-    } else if (method == "GAMs") {
-        GAMsMulti(Xl, Yl, Cxl, Eyl,
-            featuresX = featuresX, featuresY = featuresY,
-            families = families, findVariances = findVariances,
-            n_points_grid = n_points_grid, verbose = verbose
-        )
-    } else if (method == "Correlation") {
-        correlationsMulti(Xl, Yl,
-            featuresX = featuresX, featuresY = featuresY, verbose = verbose
-        )
-    }
-    out <- list("result" = res, "normX" = normX, "normY" = normY, "method" = method, "multi" = TRUE)
-    if (method == "GAMs") {
-        out$families <- families
-        out$Gamm <- FALSE
-    } else if (method == "Moran's I") {
-        out$wo <- wo
-        out$wParams <- selfName(switch(wo,
-            "Gauss" = etas,
-            "nn" = numNNs
-        ))
-        out$returnSEsMoransI <- findVariances
-    }
-    return(out)
+    MoransIMulti(Xl, Yl, Cxl, Eyl,
+      featuresX = featuresX, featuresY = featuresY,
+     control = controlvals, verbose = verbose, findVariances = findVariances
+    )
+  } else if (method == "GAMs") {
+    GAMsMulti(Xl, Yl, Cxl, Eyl,
+      featuresX = featuresX, featuresY = featuresY,
+     findVariances = findVariances,
+      control = controlvals, verbose = verbose
+    )
+  } else if (method == "Correlation") {
+    correlationsMulti(Xl, Yl,
+      featuresX = featuresX, featuresY = featuresY, verbose = verbose
+    )
+  }
+  out <- if (method == "Moran's I") {
+    wParams <- switch(controlvals$wo,
+                        "Gauss" = controlvals$etas,
+                        "nn" = controlvals$numNNs)
+    new("sbivarResultsMoransI",
+      "result" = lapply(res, function(x) x$res), "method" = method, "normX" = normX, "multi" = TRUE,
+      "normY" = normY, "maxIxy" = if (controlvals$findMaxW) vapply(res, FUN.VALUE = wParams, function(x) x$maxIxy),
+      "wo" = controlvals$wo, "returnSEsMoransI" = findVariances,
+      "wParams" = wParams
+    )
+  } else if (method == "GAMs") {
+    new("sbivarResultsGAMs",
+      "result" = res, "method" = method, "multi" = TRUE,
+      "normX" = normX, "normY" = normY, "families" = controlvals$families
+    )
+  } else if (method == "Correlation") {
+    new("sbivarResults",
+      "result" = res, "method" = method, "multi" = TRUE,
+      "normX" = normX, "normY" = normY
+    )
+  }
+  return(out)
 }

@@ -9,24 +9,24 @@
 #' At this point, \link[nlme]{corGaus} is hard-coded,
 #' @param GPmethod The method by which to fit the Gaussian processes,
 #' passed onto \link[nlme]{gls} as "method".
-#' @param optControl List of control values, see \link[nlme]{glsControl}.
+#' @param optControl List of control values for \link[nlme]{gls}, see \link[nlme]{glsControl}.
 #'
 #' @returns A vector of length 4 with components range, nugget, sigma and mean
 #' @importFrom stats sigma coef
 #' @importFrom nlme gls
 fitGP <- function(x, coord, GPmethod, correlation, optControl) {
-    xModGls <- do.call(nlme::gls, args = list(
-        "model" = formula("out ~ 1"),
-        "data" = data.frame("out" = x, coord),
-        "method" = GPmethod, "correlation" = correlation,
-        "control" = optControl
-    ))
-    xPars <- c(
-        coef(xModGls$modelStruct$corStruct, unconstrained = FALSE),
-        sigma(xModGls)
-    )
-    names(xPars) <- c("range", "nugget", "sigma")
-    c(xPars, "mean" = unname(coef(xModGls)[1]))
+  xModGls <- do.call(nlme::gls, args = list(
+    "model" = formula("out ~ 1"),
+    "data" = data.frame("out" = x, coord),
+    "method" = GPmethod, "correlation" = correlation,
+    "control" = optControl
+  ))
+  xPars <- c(
+    coef(xModGls$modelStruct$corStruct, unconstrained = FALSE),
+    sigma(xModGls)
+  )
+  names(xPars) <- c("range", "nugget", "sigma")
+  c(xPars, "mean" = unname(coef(xModGls)[1]))
 }
 #' A wrapper to fit GPs on all columns of a matrix
 #'
@@ -36,7 +36,7 @@ fitGP <- function(x, coord, GPmethod, correlation, optControl) {
 #' @inheritParams fitManyGAMs
 #' @returns Matrix of fitted GP components
 fitManyGPs <- function(mat, coord, features, ...) {
-    simplify2array(loadBalanceBplapply(selfName(features), function(cn) {
-        fitGP(mat[, cn], coord = coord, ...)
-    }))
+  simplify2array(loadBalanceBplapply(selfName(features), function(cn) {
+    fitGP(mat[, cn], coord = coord, ...)
+  }))
 }

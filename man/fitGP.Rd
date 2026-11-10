@@ -17,7 +17,7 @@ passed onto \link[nlme]{gls} as "method".}
 \item{correlation}{A corStruct object, see \link[nlme]{corStruct}.
 At this point, \link[nlme]{corGaus} is hard-coded,}
 
-\item{optControl}{List of control values, see \link[nlme]{glsControl}.}
+\item{optControl}{List of control values for \link[nlme]{gls}, see \link[nlme]{glsControl}.}
 }
 \value{
 A vector of length 4 with components range, nugget, sigma and mean

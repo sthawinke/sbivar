@@ -17,7 +17,9 @@ export(sbivar)
 export(selfName)
 export(topPairs)
 export(writeSbivarToXlsx)
+exportClasses(sbivarResults)
 exportMethods(sbivar)
+exportMethods(show)
 import(ggplot2)
 import(stats)
 importFrom(BiocParallel,
@@ -27,7 +29,6 @@ importFrom(BiocParallel,
 )
 importFrom(Matrix,
   bdiag,
-  diag,
   sparseMatrix
 )
 importFrom(MultiAssayExperiment,MultiAssayExperiment)
@@ -40,7 +41,7 @@ importFrom(SummarizedExperiment,
 )
 importFrom(abind,abind)
 importFrom(concaveman,concaveman)
-importFrom(grDevices,palette)
+importFrom(grDevices,palette.colors)
 importFrom(graphics,
   legend,
   lines,
@@ -61,12 +62,16 @@ importFrom(lme4,
   mkReTrms,
   optimizeLmer
 )
-importFrom(lmerTest,lmer)
+importFrom(lmerTest,
+  as_lmerModLmerTest,
+  lmer
+)
 importFrom(methods,
   is,
   new,
   setGeneric,
-  setMethod
+  setMethod,
+  show
 )
 importFrom(mgcv,
   gam,
@@ -83,13 +88,6 @@ importFrom(nlme,
   corSpher,
   gls,
   lmeControl
-)
-importFrom(openxlsx,
-  addWorksheet,
-  createWorkbook,
-  getSheetNames,
-  saveWorkbook,
-  writeData
 )
 importFrom(reformulas,
   findbars,

@@ -35,7 +35,8 @@ plotTopPair(
 \item{parameter}{The linear model parameter used to find the feature with the strongest effect.
 The default is the intercept, i.e. the overall effect.}
 
-\item{scaleBySampleSums}{A boolean, should the size of the spots be scaled by their sample sum, e.g. library size or total ion count? Recommended to reflect differences in certainty depending on sample sums.}
+\item{scaleBySampleSums}{A boolean, should the size of the spots be scaled by their sample sum,
+e.g. library size or total ion count? Recommended to reflect differences in certainty depending on sample sums.}
 
 \item{normX, normY}{Character strings, indicating what normalization is required
 for X and Y matrices, respectively, before plotting, see details.}
@@ -60,12 +61,12 @@ m <- 9e1
 p <- 3
 k <- 2
 X <- matrix(rnorm(n * p), n, p,
-    dimnames =
-        list(paste0("sampleX", seq_len(n)), paste0("X", seq_len(p)))
+  dimnames =
+    list(paste0("sampleX", seq_len(n)), paste0("X", seq_len(p)))
 )
 Y <- matrix(rnorm(m * k), m, k,
-    dimnames =
-        list(paste0("sampleY", seq_len(m)), paste0("Y", seq_len(k)))
+  dimnames =
+    list(paste0("sampleY", seq_len(m)), paste0("Y", seq_len(k)))
 )
 Cx <- matrix(runif(n * 2), n, 2, dimnames = list(rownames(X), c("x", "y")))
 Ey <- matrix(runif(m * 2), m, 2, dimnames = list(rownames(Y), c("x", "y")))
@@ -78,8 +79,8 @@ plotPairSingle(X, Y, Cx, Ey, features = c("X1", "Y1"))
 data(Vicari)
 # Plot an arbitrary feature pair
 plotPairMulti(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
-    Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
-    normX = "rel", normY = "rel", features = c("Gnas", "Tocopherol")
+  Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
+  normX = "rel", normY = "rel", features = c("Gnas", "Tocopherol")
 )
 }
 \seealso{

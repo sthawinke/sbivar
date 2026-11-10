@@ -13,28 +13,13 @@ sbivarSingle(
   normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
   pseudoCount = 1e-08,
-  etas = c(5e-06, 2e-04, 0.02),
-  findMaxW = FALSE,
-  returnSEsMoransI = TRUE,
-  families = list(X = gaussian(), Y = gaussian()),
-  Gamm = FALSE,
+  correlation = corGaus(form = ~x + y, nugget = TRUE, value = c(getLengthScale(Cx),
+    0.25)),
+  control,
+  gpParams,
   featuresX = colnames(X),
   featuresY = colnames(Y),
-  n_points_grid = 600,
-  verbose = TRUE,
-  variogramModels = c("Exp", "Lin"),
-  width = cutoff/15,
-  cutoff = sqrt(2)/3,
-  wo = c("Gauss", "nn"),
-  numNNs = c(4, 8, 24),
-  GPmethod = c("REML", "ML"),
-  gpParams,
-  Quants = c(0.005, 0.5),
-  numLscAlts = 5,
-  optControl = lmeControl(opt = "optim", maxIter = 500, msMaxIter = 500, niterEM = 1000,
-    msMaxEval = 1000),
-  correlation = corGaus(form = ~x + y, nugget = TRUE, value = c(0.9 * max(apply(Cx, 2,
-    function(x) diff(range(x)))), 0.25))
+  verbose = TRUE
 )
 }
 \arguments{
@@ -46,26 +31,20 @@ sbivarSingle(
 
 \item{normX, normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}
 
-\item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
+\item{correlation}{Correlation structure, passed onto \link{fitGP} or \link{fitGAM}}
+
+\item{control}{Control arguments passed onto \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, replacing defaults by \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, respectively}
+
+\item{gpParams}{Pre-estimated GP parameters}
+
+\item{featuresX, featuresY}{Features to be tested. Defaults to all features,
+but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization.}
 
-\item{n_points_grid, families, Gamm}{Passed onto \link{GAMsSingle}}
-
 \item{verbose}{Should info on type of analysis be printed?}
-
-\item{wo, variogramModels, numNNs, etas, cutoff, width, returnSEsMoransI, findMaxW}{Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}}
-
-\item{GPmethod, Quants, numLscAlts, optControl, gpParams}{Passed onto \link{fitGP}}
-
-\item{correlation}{Correlation structure, passed onto \link{fitGP} or \link{fitGAM}}
 }
 \value{
-A list with at least the following components
-\item{result}{A matrix which contains at least a p-values ("pVal") and a
-Benjamini-Hochberg adjusted p-value ("pAdj"), sorted by increasing p-value.}
-\item{multi}{FALSE, a flag for the type of analysis}
-\item{method,normX,normY}{As provided}
-\item{families,wo,wParams}{Optional, as provided. wParams are either etas or numNNs}
+A \link{sbivarResults-class} object with multi = FALSE
 }
 \description{
 The tests can be applied to either joint or disjoint coordinate sets.
@@ -75,13 +54,15 @@ If only Cx is supplied and X and Y have the same number of rows, a joint analysi
 If Cx and Ey are provided, and X and Y have the same number of rows, equality of Cx and Ey is checked.
 If true, a joint analysis is run, with a warning.
 
-X and Y need to have rownames for matching to the coordinates, and column names for identifying the features.
+X and Y need to have rownames for matching to the coordinates,
+and column names for identifying the features.
 Cx and Ey must have rownames matching those in X and Y, and have two columns.
 For GAMs, usually no normalization is needed, as the non-gaussianity is taken care of by
-the outcome distribution, offset and link functions. Currently, identity, inverse and log-link are implemented.
+the outcome distribution, offset and link functions. Currently, identity,
+inverse and log-link are implemented.
 }
 \note{
-All methods use multithreading on the cluster provided using the BiocParallel package
+All methods use multithreading on the cluster provided using the BiocParallel package.
 }
 \seealso{
 \link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle}, \link{GPsSingle}

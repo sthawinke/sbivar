@@ -1,7 +1,7 @@
 Package: sbivar
 Type: Package
 Title: Test for Spatial Bivariate Association Across Omics Types
-Version: 0.99.37
+Version: 0.99.38
 Authors@R: c(person(given = "Stijn", family = "Hawinkel", 
     email = "stijn.hawinkel@psb.ugent.be",
     role=c("cre", "aut"), comment = c(ORCID = "0000-0002-4501-5180")),
@@ -17,10 +17,42 @@ Encoding: UTF-8
 RdMacros: Rdpack
 biocViews: Transcriptomics, Spatial, Proteomics, Metabolomics
 Depends: R (>= 4.6.0)
-Imports: lme4,reformulas,lmerTest,mgcv,ggplot2,concaveman,BiocParallel,Rdpack,SpatialExperiment,SpatialPack,stats,sf,Matrix,smoppix(>= 1.1.8),spatstat.geom,methods,abind,nlme,gstat(>= 2.0.3),SummarizedExperiment,openxlsx,Rcpp,MultiAssayExperiment
-LinkingTo: Rcpp,RcppArmadillo
-Suggests: testthat,knitr,rmarkdown,htmltools,anndataR,RANN,rhdf5
+Imports:
+    abind,
+    BiocParallel,
+    concaveman,
+    ggplot2,
+    gstat(>= 2.0.3),
+    lme4,
+    lmerTest,
+    Matrix,
+    methods,
+    mgcv,
+    MultiAssayExperiment,
+    nlme,
+    Rcpp,
+    Rdpack,
+    reformulas,
+    sf,
+    smoppix(>= 1.1.8),
+    SpatialExperiment,
+    SpatialPack,
+    spatstat.geom,
+    stats,
+    SummarizedExperiment
+Suggests:
+    anndataR,
+    htmltools,
+    knitr,
+    RANN,
+    rhdf5,
+    rmarkdown,
+    openxlsx,
+    testthat
+LinkingTo:
+    Rcpp,
+    RcppArmadillo
 VignetteBuilder: knitr
 BugReports: https://github.com/sthawinke/sbivar/issues
 URL: https://github.com/sthawinke/sbivar
-Config/roxygen2/version: 8.1.0
+Config/roxygen2/version: 8.1.1

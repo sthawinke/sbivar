@@ -10,6 +10,7 @@
 #' @param ... additional constructor and analysis arguments
 #' @return A list containing the analysis result, along with parameters used in the analysis
 #' @seealso \link{sbivarSingle}, \link{sbivarMulti}
+#' @note Feature names are converted using the make.names() function
 #' @examples
 #' # Single image analysis on synthetic data
 #' n <- 8e1
@@ -17,37 +18,36 @@
 #' p <- 3
 #' k <- 2
 #' X <- matrix(rnorm(n * p), n, p,
-#'     dimnames =
-#'         list(paste0("sampleX", seq_len(n)), paste0("X", seq_len(p)))
+#'   dimnames =
+#'     list(paste0("sampleX", seq_len(n)), paste0("X", seq_len(p)))
 #' )
 #' Y <- matrix(rnorm(m * k), m, k,
-#'     dimnames =
-#'         list(paste0("sampleY", seq_len(m)), paste0("Y", seq_len(k)))
+#'   dimnames =
+#'     list(paste0("sampleY", seq_len(m)), paste0("Y", seq_len(k)))
 #' )
 #' Cx <- matrix(runif(n * 2), n, 2, dimnames = list(rownames(X), c("x", "y")))
 #' Ey <- matrix(runif(m * 2), m, 2, dimnames = list(rownames(Y), c("x", "y")))
 #' resMoransI <- sbivar(X, Y, Cx, Ey, method = "Moran's I")
 #' resGAMs <- sbivar(X, Y, Cx, Ey, method = "GAMs")
 #' Y2 <- matrix(rnorm(n * k), n, k,
-#'     dimnames =
-#'         list(paste0("sampleX", seq_len(n)), paste0("Y", seq_len(k)))
+#'   dimnames =
+#'     list(paste0("sampleX", seq_len(n)), paste0("Y", seq_len(k)))
 #' )
 #' resModtTestJoint <- sbivar(X, Y2, Cx, method = "Modified t-test")
 #' # Single image analysis on synthetic data, converted to SpatialExperiment
 #' library(SpatialExperiment)
 #' seX <- SpatialExperiment(
-#'     assays = list("transcripts" = t(X)),
-#'     spatialCoords = Cx
+#'   assays = list("transcripts" = t(X)),
+#'   spatialCoords = Cx
 #' )
 #' seY <- SpatialExperiment(
-#'     assays = list("metabolites" = t(Y)),
-#'     spatialCoords = Ey
+#'   assays = list("metabolites" = t(Y)),
+#'   spatialCoords = Ey
 #' )
 #' resModtGPs <- sbivar(seX, seY,
-#'     assayX = "transcripts", assayY = "metabolites",
-#'     method = "GPs"
+#'   assayX = "transcripts", assayY = "metabolites",
+#'   method = "GPs"
 #' )
-setGeneric("sbivar", function(X, ...) standardGeneric("sbivar"))
 setGeneric("sbivar", function(X, Y, ...) standardGeneric("sbivar"))
 #' Return the top results found by sbivar
 #' @param x The sbivarResults object
@@ -55,8 +55,8 @@ setGeneric("sbivar", function(X, Y, ...) standardGeneric("sbivar"))
 #' @return A dataframe of top results
 #' @export
 setGeneric(
-    "topPairs",
-    function(x, ...) standardGeneric("topPairs")
+  "topPairs",
+  function(x, ...) standardGeneric("topPairs")
 )
 #' @title Plot a the top feature pair according to a sbivar analysis
 #' @description Plot a chosen feature pair, or the highest ranking feature pair,
@@ -68,7 +68,8 @@ setGeneric(
 #' The default is the intercept, i.e. the overall effect.
 #' @param topRank An integer, the feature pair with the rank-th smallest p-value is plotted
 #' @param ... passed onto lower level functions
-#' @param scaleBySampleSums A boolean, should the size of the spots be scaled by their sample sum, e.g. library size or total ion count? Recommended to reflect differences in certainty depending on sample sums.
+#' @param scaleBySampleSums A boolean, should the size of the spots be scaled by their sample sum,
+#' e.g. library size or total ion count? Recommended to reflect differences in certainty depending on sample sums.
 #' @seealso \link{extractResultsMulti}, \link{fitLinModels}
 #' @return A ggplot object
 #' @export
@@ -84,12 +85,12 @@ setGeneric(
 #' p <- 3
 #' k <- 2
 #' X <- matrix(rnorm(n * p), n, p,
-#'     dimnames =
-#'         list(paste0("sampleX", seq_len(n)), paste0("X", seq_len(p)))
+#'   dimnames =
+#'     list(paste0("sampleX", seq_len(n)), paste0("X", seq_len(p)))
 #' )
 #' Y <- matrix(rnorm(m * k), m, k,
-#'     dimnames =
-#'         list(paste0("sampleY", seq_len(m)), paste0("Y", seq_len(k)))
+#'   dimnames =
+#'     list(paste0("sampleY", seq_len(m)), paste0("Y", seq_len(k)))
 #' )
 #' Cx <- matrix(runif(n * 2), n, 2, dimnames = list(rownames(X), c("x", "y")))
 #' Ey <- matrix(runif(m * 2), m, 2, dimnames = list(rownames(Y), c("x", "y")))
@@ -102,17 +103,17 @@ setGeneric(
 #' data(Vicari)
 #' # Plot an arbitrary feature pair
 #' plotPairMulti(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
-#'     Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
-#'     normX = "rel", normY = "rel", features = c("Gnas", "Tocopherol")
+#'   Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
+#'   normX = "rel", normY = "rel", features = c("Gnas", "Tocopherol")
 #' )
 setGeneric(
-    "plotTopPair",
-    function(
-      x, ..., topRank = 1, parameter = "Intercept", scaleBySampleSums = FALSE,
-      normX = x@normX, normY = x@normY
-    ) {
-        standardGeneric("plotTopPair")
-    }
+  "plotTopPair",
+  function(
+    x, ..., topRank = 1, parameter = "Intercept", scaleBySampleSums = FALSE,
+    normX = x@normX, normY = x@normY
+  ) {
+    standardGeneric("plotTopPair")
+  }
 )
 #' Plot GAMs of top features
 #' @description Fit GAMS for the top feature pair chosen, and plot the resulting spline surfaces
@@ -120,10 +121,10 @@ setGeneric(
 #' @inheritParams plotTopPair
 #' @inheritParams sbivarSingle
 setGeneric(
-    "plotGAMsTopPair",
-    function(x,X, Y, Cx, Ey, topRank = 1, parameter = "Intercept", ...) {
-        standardGeneric("plotGAMsTopPair")
-    }
+  "plotGAMsTopPair",
+  function(x, X, Y, Cx, Ey, topRank = 1, parameter = "Intercept", ...) {
+    standardGeneric("plotGAMsTopPair")
+  }
 )
 #' Write \emph{sbivar} results to an excel worksheet
 #'
@@ -146,7 +147,6 @@ setGeneric(
 #' @return Returns invisible with a message when writing operation successful,
 #' otherwise throws a warning.
 #' @export
-#' @importFrom openxlsx createWorkbook writeData addWorksheet saveWorkbook getSheetNames
 #' @examples
 #' example(sbivar, "sbivar")
 #' # The significance level is set to 1 here for illustration,
@@ -155,6 +155,80 @@ setGeneric(
 #' writeSbivarToXlsx(resGAMs, file = tmpFile <- tempfile(fileext = ".xlsx"), sigLevel = 1)
 #' file.exists(tmpFile)
 setGeneric(
-    "writeSbivarToXlsx",
-    function(x, file, overwrite = FALSE, digits = 3, sigLevel = 0.05) standardGeneric("writeSbivarToXlsx")
+  "writeSbivarToXlsx",
+  function(x, file, overwrite = FALSE, digits = 3, sigLevel = 0.05) standardGeneric("writeSbivarToXlsx")
+)
+#' Fit linear models on result calculated for replicated images, and extract the results
+#' @description Given result estimated from replicated images using \link{sbivarMulti},
+#' fit linear models to determine significance.
+#' To maintain interpretability of the intercept, continuous fixed effect variables are centered,
+#' and sum coding is used for the categorical ones.
+#'
+#' @param result A result with the result of bivariate spatial association,
+#' from a call to the \link{sbivar} function with multiple images
+#' @param designDf A design dataframe
+#' @param Formula A formula for the linear model to be fitted, can contain random effects.
+#' @param Control A control list for lmerTest::lmer
+#' @param inverseWeigh A boolean, should estimates be inverse weighed by variance for GAMs and Moran's I?
+#' @param scaleByMax A boolean, should Moran's I be scaled by maximum values before plugging into the linear model?
+#' @param verbose Should a message with number of linear models and cores be printed?
+#' @returns For fitLinModels(), a list of linear models
+#' @export
+#' @details The left hand side of "Formula" can be provided or not,
+#' but it will be overridden by "out" for downstream analysis
+#'
+#' @examples
+#' # Multi-image analysis on Vicari data, using GAMs
+#' data(Vicari)
+#' # Subset to 5 images and 500 spots limit computing time
+#' VicariMultiTest <- lapply(Vicari, function(x) lapply(x[1:5], function(y) y[1:500, ]))
+#' VicariRes <- sbivar(VicariMultiTest$TranscriptOutcomes, VicariMultiTest$MetaboliteOutcomes,
+#'   VicariMultiTest$TranscriptCoords, VicariMultiTest$MetaboliteCoords,
+#'   method = "GAMs", control = list("families" = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log")))
+#' )
+#' mouse <- substr(names(Vicari$TranscriptOutcomes)[1:5], 1, 10)
+#' designDf <- data.frame("mouse" = mouse) # The design matrix
+#' multiGAMLmms <- fitLinModels(VicariRes, designDf, Formula = ~ (1 | mouse))
+#' # Extract the results
+#' resGAMsMulti <- extractResultsMulti(multiGAMLmms, designDf = designDf)
+#' topPairs(resGAMsMulti)
+#' @importFrom lmerTest lmer
+#' @importFrom stats formula terms model.matrix
+#' @importFrom lme4 lmerControl .makeCC isSingular lFormula mkReTrms
+#' @importFrom reformulas findbars nobars
+#' @importFrom methods is
+#' @importFrom smoppix centerNumeric named.contr.sum loadBalanceBplapply
+#' @importFrom BiocParallel bplapply bpparam bpworkers
+#' @seealso \link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}, \link[stats]{p.adjust}
+setGeneric(
+  "fitLinModels",
+  function(
+    result, designDf, Formula, verbose = TRUE, inverseWeigh = FALSE, scaleByMax = TRUE,
+    Control = lmerControl(
+      check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
+      check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
+      check.conv.hess = .makeCC(action = "ignore", tol = 1e-06)
+    )
+  ) {
+    standardGeneric("fitLinModels")
+  }
+)
+#' Extract results from linear models
+#' @description extractResultsMulti() adds the results as matrix to the object, including adjusted p-values, and sorted by p-value.
+#'
+#' @param method Multiplicity correction method passed onto p.adjust
+#'
+#' @importFrom stats p.adjust anova
+#' @importFrom methods is
+#' @importFrom reformulas nobars
+#' @return The modified results object
+#' @export
+#' @rdname fitLinModels
+#' @order 2
+setGeneric(
+    "extractResultsMulti",
+    function(result, designDf, method = "BH"
+    ) {
+        standardGeneric("extractResultsMulti")
+    }
 )

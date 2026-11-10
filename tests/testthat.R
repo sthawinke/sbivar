@@ -17,48 +17,48 @@ Ey <- matrix(runif(m * 2), m, 2, dimnames = list(rownames(Y), c("x", "y")))
 # Multiple images
 ims <- 6
 Xl <- lapply(selfName(seq_len(ims)), function(i) {
-    n <- rpois(1, n)
-    matrix(rnorm(n * p), n, p, dimnames = list(paste0("sampleX", seq_len(n)), paste0("X", seq_len(p))))
+  n <- rpois(1, n)
+  matrix(rnorm(n * p), n, p, dimnames = list(paste0("sampleX", seq_len(n)), paste0("X", seq_len(p))))
 })
 Yl <- lapply(selfName(seq_len(ims)), function(i) {
-    m <- rpois(1, m)
-    matrix(rnorm(m * k), m, k, dimnames = list(paste0("sampleY", seq_len(m)), paste0("Y", seq_len(k))))
+  m <- rpois(1, m)
+  matrix(rnorm(m * k), m, k, dimnames = list(paste0("sampleY", seq_len(m)), paste0("Y", seq_len(k))))
 })
 Cxl <- lapply(Xl, function(x) {
-    n <- nrow(x)
-    matrix(runif(n * 2), n, 2, dimnames = list(paste0("sampleX", seq_len(n)), c("x", "y")))
+  n <- nrow(x)
+  matrix(runif(n * 2), n, 2, dimnames = list(paste0("sampleX", seq_len(n)), c("x", "y")))
 })
 Eyl <- lapply(Yl, function(y) {
-    m <- nrow(y)
-    matrix(runif(m * 2), m, 2, dimnames = list(paste0("sampleY", seq_len(m)), c("x", "y")))
+  m <- nrow(y)
+  matrix(runif(m * 2), m, 2, dimnames = list(paste0("sampleY", seq_len(m)), c("x", "y")))
 })
 toyDesign <- data.frame(
-    "covariate" = rnorm(ims),
-    "cofactor" = factor(rep(c(TRUE, FALSE), length.out = ims)),
-    "group" = rep(c("control", "treatment"), length.out = ims)
+  "covariate" = rnorm(ims),
+  "cofactor" = factor(rep(c(TRUE, FALSE), length.out = ims)),
+  "group" = rep(c("control", "treatment"), length.out = ims)
 )
 # Register the parallel backend
 nCores <- 2
 if (.Platform$OS.type == "unix") {
-    # On unix-based systems (linux and macOS), use MulticoreParam
-    register(MulticoreParam(nCores, stop.on.error = FALSE))
+  # On unix-based systems (linux and macOS), use MulticoreParam
+  register(MulticoreParam(nCores, stop.on.error = FALSE))
 } else {
-    # On windows, use SnowParam
-    register(SnowParam(workers = nCores, type = "SOCK", stop.on.error = FALSE))
+  # On windows, use SnowParam
+  register(SnowParam(workers = nCores, type = "SOCK", stop.on.error = FALSE))
 }
 # register(SerialParam()) # Switch on when mapping test coverage
 resMoranTest <- sbivar(X, Y, Cx, Ey, method = "Moran's I")
 resGAMsSingle <- sbivar(X, Y, Cx, Ey, method = "GAMs")
 estGAMs <- sbivar(Xl, Yl, Cxl, Eyl, method = "GAMs", findVariances = TRUE)
-estMoran <- sbivar(Xl, Yl, Cxl, Eyl, method = "Moran's I", wo = "nn", findVariances = TRUE)
+estMoran <- sbivar(Xl, Yl, Cxl, Eyl, method = "Moran's I", control = list(wo = "nn"), findVariances = TRUE)
 estMultiCor <- sbivar(Xl, Xl, Cxl, method = "Correlation")
 multiFitGams <- fitLinModels(estGAMs,
-    design = toyDesign,
-    Formula = out ~ covariate + cofactor + (1 | group)
+  design = toyDesign,
+  Formula = out ~ covariate + cofactor + (1 | group)
 )
 multiFitMoran <- fitLinModels(estMoran,
-    design = toyDesign,
-    Formula = out ~ covariate + cofactor
+  design = toyDesign,
+  Formula = out ~ covariate + cofactor
 )
 # Extract the results
 resGAMsMulti <- extractResultsMulti(multiFitGams, design = toyDesign)

@@ -14,7 +14,15 @@ sbivar(X, Y, ...)
 
 \S4method{sbivar}{list,list}(X, Y, Cx, Ey, assayX = NULL, assayY = NULL, ...)
 
-\S4method{sbivar}{SpatialExperiment,SpatialExperiment}(X, Y, assayX, assayY, sample_id_x, sample_id_y = sample_id_x, ...)
+\S4method{sbivar}{SpatialExperiment,SpatialExperiment}(
+  X,
+  Y,
+  assayX,
+  assayY,
+  sample_id_x = "sample_id",
+  sample_id_y = sample_id_x,
+  ...
+)
 
 \S4method{sbivar}{MultiAssayExperiment,ANY}(X, experimentX, experimentY, assayX, assayY, ...)
 }
@@ -43,6 +51,9 @@ Perform a bivariate spatial association analysis, either on a single or multiple
 Depending on the input, the workhorse functions \link{sbivarSingle}
 (single-image) or \link{sbivarMulti} (multi-image) are called.
 }
+\note{
+Feature names are converted using the make.names() function
+}
 \examples{
 # Single image analysis on synthetic data
 n <- 8e1
@@ -50,35 +61,35 @@ m <- 9e1
 p <- 3
 k <- 2
 X <- matrix(rnorm(n * p), n, p,
-    dimnames =
-        list(paste0("sampleX", seq_len(n)), paste0("X", seq_len(p)))
+  dimnames =
+    list(paste0("sampleX", seq_len(n)), paste0("X", seq_len(p)))
 )
 Y <- matrix(rnorm(m * k), m, k,
-    dimnames =
-        list(paste0("sampleY", seq_len(m)), paste0("Y", seq_len(k)))
+  dimnames =
+    list(paste0("sampleY", seq_len(m)), paste0("Y", seq_len(k)))
 )
 Cx <- matrix(runif(n * 2), n, 2, dimnames = list(rownames(X), c("x", "y")))
 Ey <- matrix(runif(m * 2), m, 2, dimnames = list(rownames(Y), c("x", "y")))
 resMoransI <- sbivar(X, Y, Cx, Ey, method = "Moran's I")
 resGAMs <- sbivar(X, Y, Cx, Ey, method = "GAMs")
 Y2 <- matrix(rnorm(n * k), n, k,
-    dimnames =
-        list(paste0("sampleX", seq_len(n)), paste0("Y", seq_len(k)))
+  dimnames =
+    list(paste0("sampleX", seq_len(n)), paste0("Y", seq_len(k)))
 )
 resModtTestJoint <- sbivar(X, Y2, Cx, method = "Modified t-test")
 # Single image analysis on synthetic data, converted to SpatialExperiment
 library(SpatialExperiment)
 seX <- SpatialExperiment(
-    assays = list("transcripts" = t(X)),
-    spatialCoords = Cx
+  assays = list("transcripts" = t(X)),
+  spatialCoords = Cx
 )
 seY <- SpatialExperiment(
-    assays = list("metabolites" = t(Y)),
-    spatialCoords = Ey
+  assays = list("metabolites" = t(Y)),
+  spatialCoords = Ey
 )
 resModtGPs <- sbivar(seX, seY,
-    assayX = "transcripts", assayY = "metabolites",
-    method = "GPs"
+  assayX = "transcripts", assayY = "metabolites",
+  method = "GPs"
 )
 }
 \seealso{

@@ -10,7 +10,7 @@ plotGAMs(
   Cx,
   Ey,
   features,
-  scaleFun = "scaleMinusOne",
+  scaleFun = scaleMinusOne,
   families = list(X = gaussian(), Y = gaussian()),
   addTitle = TRUE,
   normX = c("none", "rel", "log"),
@@ -70,7 +70,7 @@ plotGAMsTopPair(resGAMs, X, Y, Cx = Cx, Ey = Ey)
 # Multi image, arbitrary pair
 data(Vicari)
 plotGAMs(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
-    Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
-    features = c("Pcp4", "Dopamine")
+  Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
+  features = c("Pcp4", "Dopamine")
 )
 }

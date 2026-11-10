@@ -9,157 +9,147 @@
 #' @param X,Y Matrices of omics measurements
 #' @param Cx,Ey Coordinate matrices of dimension two, belonging to X and Y respectively
 #' @param method A character string, indicating which method to apply
-#' @param GPmethod,Quants,numLscAlts,optControl,gpParams Passed onto \link{fitGP}
 #' @param correlation Correlation structure, passed onto \link{fitGP} or \link{fitGAM}
-#' @param n_points_grid,families,Gamm Passed onto \link{GAMsSingle}
-#' @param wo,variogramModels,numNNs,etas,cutoff,width,returnSEsMoransI,findMaxW Parameters for the calculation of Moran's I, passed onto \link{buildWeightMat}
+#' @param gpParams Pre-estimated GP parameters
 #' @param verbose Should info on type of analysis be printed?
+#' @param control Control arguments passed onto \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, replacing defaults by \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, respectively
 #' @param normX,normY,pseudoCount Normalization parameters, passed onto \link{normMat}
-#' @param featuresX,featuresY Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
+#' @param featuresX,featuresY Features to be tested. Defaults to all features,
+#' but specifying them allows to test a limited feature set,
 #' while using the whole matrix to calculate library sizes as offset or for normalization.
 #'
-#' @details X and Y need to have rownames for matching to the coordinates, and column names for identifying the features.
+#' @details X and Y need to have rownames for matching to the coordinates,
+#' and column names for identifying the features.
 #' Cx and Ey must have rownames matching those in X and Y, and have two columns.
 #' For GAMs, usually no normalization is needed, as the non-gaussianity is taken care of by
-#' the outcome distribution, offset and link functions. Currently, identity, inverse and log-link are implemented.
+#' the outcome distribution, offset and link functions. Currently, identity,
+#' inverse and log-link are implemented.
 #'
-#' @returns A list with at least the following components
-#' \item{result}{A matrix which contains at least a p-values ("pVal") and a
-#' Benjamini-Hochberg adjusted p-value ("pAdj"), sorted by increasing p-value.}
-#' \item{multi}{FALSE, a flag for the type of analysis}
-#' \item{method,normX,normY}{As provided}
-#' \item{families,wo,wParams}{Optional, as provided. wParams are either etas or numNNs}
+#' @returns A \link{sbivarResults-class} object with multi = FALSE
 #' @importFrom stats p.adjust
 #' @importFrom methods is new
 #' @importFrom nlme corRatio corGaus corSpher corExp corLin lmeControl
 #' @importFrom BiocParallel bpparam bpworkers
-#' @note All methods use multithreading on the cluster provided using the BiocParallel package
+#' @note All methods use multithreading on the cluster provided using the BiocParallel package.
 #' @seealso \link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle}, \link{GPsSingle}
 sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
-    normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
-    etas = c(5e-6, 2e-4, 2e-2), findMaxW = FALSE, returnSEsMoransI = TRUE,
-    families = list("X" = gaussian(), "Y" = gaussian()), Gamm = FALSE, featuresX = colnames(X), featuresY = colnames(Y),
-    n_points_grid = 6e2, verbose = TRUE,
-    variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
-    wo = c("Gauss", "nn"), numNNs = c(4, 8, 24),
-    GPmethod = c("REML", "ML"), gpParams, Quants = c(0.005, 0.5), numLscAlts = 5,
-    optControl = lmeControl(
-        opt = "optim", maxIter = 5e2, msMaxIter = 5e2,
-        niterEM = 1e3, msMaxEval = 1e3
-    ),
-    correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(0.9 * max(apply(Cx, 2, function(x) diff(range(x)))), 0.25))) {
-    stopifnot(
-        is.numeric(n_points_grid), ncol(Cx) == 2, is.numeric(numNNs), all(numNNs > 0),
-        all(vapply(families, FUN.VALUE = character(1), function(x) x$link) %in% c("identity", "log", "inverse")),
-        all(vapply(families, FUN.VALUE = TRUE, is, "family")), is.list(optControl), !is.null(colnames(X)),
-        !is.null(colnames(Y)), is.logical(Gamm), inherits(correlation, "corSpatial"),
-        inherits(correlation, "corGaus") || (method != "GPs"), is.numeric(etas), all(featuresX %in% colnames(X)),
-        all(featuresY %in% colnames(Y)), !anyDuplicated(featuresX), !anyDuplicated(featuresY),
-        length(Quants) == 2, is.numeric(Quants), is.logical(verbose), is.logical(findMaxW)
-    )
-    method <- match.arg(method)
-    variogramModels <- match.arg(variogramModels, several.ok = TRUE)
-    normX <- match.arg(normX)
-    normY <- match.arg(normY)
-    GPmethod <- match.arg(GPmethod)
-    foo <- checkInputSingle(X, Y, Cx, Ey)
-    colnames(Cx) <- c("x", "y")
-    X <- normMat(X, normX, pseudoCount)
-    Y <- normMat(Y, normY, pseudoCount)
-    Cx <- Cx[rownames(X), ] # Match coordinates to observations through rownames
-    featuresX <- make.names(featuresX)
-    featuresY <- make.names(featuresY)
-    wo <- match.arg(wo)
-    if (missing(Ey)) {
-        if (nrow(X) != nrow(Y)) {
-            stop("Only one coordinate matrix supplied, but sample size of X and Y do not match!
-                 Please supply the 'Ey' argument and consider 'Moran's I' as method.")
-        }
-        # Run a joint analysis
-        if (verbose) {
-            message("Only one coordinate matrix Cx supplied, and dimensions of X and Y do match.
-                 Performing an analysis with joint coordinate sets.")
-        }
-        Ey <- Cx
-    } else if (method == "Modified t-test") {
-        stop("Two coordinate matrices supplied, whereas the modified t-test requires only one.
-            If coordinates are shared, omit Ey. If coordinates are disjoint, consider using method = 'MoransI'.")
-    } else {
-        Ey <- Ey[rownames(Y), ]
-        colnames(Ey) <- c("x", "y")
+                         normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
+                         correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(getLengthScale(Cx), 0.25)), control, gpParams,
+                         featuresX = colnames(X), featuresY = colnames(Y),
+                         verbose = TRUE) {
+  method <- match.arg(method)
+  normX <- match.arg(normX)
+  normY <- match.arg(normY)
+  controlvals <- switch(method,
+    "Moran's I" = moranControl(),
+    "GPs" = GPcontrol(),
+    "GAMs" = GAMcontrol()
+  )
+  if (!missing(control)) {
+    controlvals[names(control)] <- control
+  }
+  variogramModels <- match.arg(controlvals$variogramModels,
+    choices = formals(moranControl)$variogramModels,
+    several.ok = TRUE
+  )
+  stopifnot(
+    ncol(Cx) == 2, !is.null(colnames(Y)), all(featuresX %in% colnames(X)),
+    all(featuresY %in% colnames(Y)), !anyDuplicated(featuresX), !anyDuplicated(featuresY),
+    !is.null(colnames(X)), is.logical(verbose)
+  )
+  invisible(checkControlVals(method, controlvals, correlation, gpParams))
+  if (method == "Moran's I") {
+    wo <- match.arg(controlvals$wo, choices = formals(moranControl)$wo)
+  } else if (method == "GPs") {
+    GPmethod <- match.arg(controlvals$GPmethod, choices = formals(GPcontrol)$GPmethod)
+  }
+  invisible(checkInputSingle(X, Y, Cx, Ey))
+  colnames(Cx) <- c("x", "y")
+  X <- normMat(X, normX, pseudoCount)
+  Y <- normMat(Y, normY, pseudoCount)
+  Cx <- Cx[rownames(X), ] # Match coordinates to observations through rownames
+  featuresX <- make.names(featuresX)
+  featuresY <- make.names(featuresY)
+  if (missing(Ey)) {
+    if (nrow(X) != nrow(Y)) {
+      stop(strwrapPaste("Only one coordinate matrix supplied, but sample size of X and Y do not match!
+                 Please supply the 'Ey' argument and consider 'Moran's I' as method."))
     }
-    if (!identical(names(families), c("X", "Y"))) {
-        stop("Name families 'X' and 'Y' for unambiguous matching")
-    }
-    if (!missing(gpParams)) {
-        if (!is.list(gpParams) || names(gpParams) != c("X", "Y") ||
-            !all(vapply(gpParams, FUN.VALUE = TRUE, function(x) {
-                identical(sort(rownames(x), c("mean", "nugget", "range", "sigma")))
-            })) || !all(colnames(X) %in% colnames(gpParams$X) ||
-            !all(colnames(Y) %in% colnames(gpParams$Y)))) {
-            stop("gpParams must be a list with names 'X' and 'Y' consisting of
-            matrices with rownames 'mean', 'nugget', 'range', 'sigma',
-                 and colnames the same as matrices X and Y!")
-        }
-    }
-    if (((normX %in% c("rel", "log")) || (normY %in% c("rel", "log"))) && method == "GAMs") {
-        warning("Normalizing data is not recommended for GAMs!
-                try accounting for non-normality through the 'families' argument.", immediate. = TRUE)
-    }
+    # Run a joint analysis
     if (verbose) {
-        message(
-            "Starting sbivar analysis of a single image on ",
-            bpworkers(bpparam()), " computing cores"
-        )
+      message(strwrapPaste("Only one coordinate matrix Cx supplied, and dimensions of X and Y do match.
+                 Performing an analysis with joint coordinate sets."))
     }
-    out <- if (method == "Moran's I") {
-        (moranRes <- MoransISingle(
-            X = X, Y = Y, Cx = Cx, Ey = Ey, wo = wo, numNNs = selfName(numNNs),
-            variogramModels = variogramModels, etas = selfName(etas), width = width,
-            returnSEsMoransI = returnSEsMoransI, verbose = verbose, cutoff = cutoff, findMaxW = findMaxW,
-            featuresX = featuresX, featuresY = featuresY
-        ))$res
-    } else if (method == "GAMs") {
-        GAMsSingle(
-            X = X, Y = Y, Cx = Cx, Ey = Ey, families = families, n_points_grid = n_points_grid,
-            verbose = verbose, featuresX = featuresX, featuresY = featuresY, Gamm = Gamm, correlation = correlation
-        )
-    } else if (method == "GPs") {
-        GPsSingle(
-            X = X, Y = Y, Cx = Cx, Ey = Ey, gpParams = gpParams, Quants = Quants,
-            GPmethod = GPmethod, correlation = correlation, optControl = optControl,
-            numLscAlts = numLscAlts, verbose = verbose, featuresX = featuresX, featuresY = featuresY
-        )
-    } else if (method == "Modified t-test") {
-        sharedNames <- intersect(rownames(X), rownames(Y))
-        ModTtestSingle(
-            X = X[sharedNames, featuresX, drop = FALSE],
-            Y = Y[sharedNames, featuresY, drop = FALSE],
-            Cx = Cx[sharedNames, ], verbose = verbose
-        )
-    }
-    out <- cbind(out, "pAdj" = p.adjust(out[, "pVal"], method = "BH"))
-    out <- addFeatureColumn(out[order(out[, "pVal"]), , drop = FALSE])
-    res <- if (method == "Moran's I") {
-        new("sbivarResultsMoransI",
-            "result" = out, "method" = method, "multi" = FALSE, "normX" = normX,
-            "normY" = normY, "maxIxy" = moranRes$maxIxy, "wo" = wo, "estimateSEsMoransI" = returnSEsMoransI,
-            "wParams" = switch(wo,
-                "Gauss" = etas,
-                "nn" = numNNs
-            )
-        )
-    } else if (method == "GAMs") {
-        new("sbivarResultsGAMs",
-            "result" = out, "method" = method,
-            "multi" = FALSE, "normX" = normX, "normY" = normY, "families" = families,
-            "correlation" = if (Gamm) correlation, "Gamm" = Gamm
-        )
-    } else {
-        new("sbivarResults",
-            "result" = out, "method" = method,
-            "multi" = FALSE, "normX" = normX, "normY" = normY
-        )
-    }
-    return(res)
+    Ey <- Cx
+  } else if (method == "Modified t-test") {
+    stop(strwrapPaste("Two coordinate matrices supplied, whereas the modified t-test requires only one.
+            If coordinates are shared, omit Ey. If coordinates are disjoint, consider using method = 'MoransI'."))
+  } else {
+    Ey <- Ey[rownames(Y), ]
+    colnames(Ey) <- c("x", "y")
+  }
+  if (((normX %in% c("rel", "log")) || (normY %in% c("rel", "log"))) && method == "GAMs") {
+    warning(strwrapPaste("Normalizing data is not recommended for GAMs!
+                try accounting for non-normality through the 'families' argument."), immediate. = TRUE)
+  }
+  if (verbose) {
+    message(
+      strwrapPaste(
+        "Starting sbivar analysis of a single image on ",
+        bpworkers(bpparam()), " computing cores"
+      )
+    )
+  }
+  out <- if (method == "Moran's I") {
+    (moranRes <- MoransISingle(
+      X = X, Y = Y, Cx = Cx, Ey = Ey, verbose = verbose, wo = controlvals$wo, numNNs = selfName(controlvals$numNNs),
+      variogramModels = controlvals$variogramModels, etas = selfName(controlvals$etas), width = controlvals$width,
+      returnSEsMoransI = controlvals$returnSEsMoransI,
+      cutoff = controlvals$cutoff, findMaxW = controlvals$findMaxW,
+      featuresX = featuresX, featuresY = featuresY
+    ))$res
+  } else if (method == "GAMs") {
+    GAMsSingle(
+      X = X, Y = Y, Cx = Cx, Ey = Ey, families = controlvals$families, n_points_grid = controlvals$n_points_grid,
+      verbose = verbose, featuresX = featuresX, featuresY = featuresY, Gamm = controlvals$Gamm, correlation = correlation
+    )
+  } else if (method == "GPs") {
+    GPsSingle(
+      X = X, Y = Y, Cx = Cx, Ey = Ey, gpParams = gpParams, Quants = controlvals$Quants,
+      GPmethod = controlvals$GPmethod, correlation = correlation, optControl = controlvals$optControl,
+      numLscAlts = controlvals$numLscAlts, verbose = verbose, featuresX = featuresX, featuresY = featuresY
+    )
+  } else if (method == "Modified t-test") {
+    sharedNames <- intersect(rownames(X), rownames(Y))
+    ModTtestSingle(
+      X = X[sharedNames, featuresX, drop = FALSE],
+      Y = Y[sharedNames, featuresY, drop = FALSE],
+      Cx = Cx[sharedNames, ], verbose = verbose
+    )
+  }
+  out <- cbind(out, "pAdj" = p.adjust(out[, "pVal"], method = "BH"))
+  out <- addFeatureColumn(out[order(out[, "pVal"]), , drop = FALSE])
+  res <- if (method == "Moran's I") {
+    new("sbivarResultsMoransI",
+      "result" = out, "method" = method, "normX" = normX, "multi" = FALSE,
+      "normY" = normY, "maxIxy" = moranRes$maxIxy, "wo" = controlvals$wo,
+      "returnSEsMoransI" = controlvals$returnSEsMoransI,
+      "wParams" = switch(controlvals$wo,
+        "Gauss" = controlvals$etas,
+        "nn" = controlvals$numNNs
+      )
+    )
+  } else if (method == "GAMs") {
+    new("sbivarResultsGAMs",
+      "result" = out, "method" = method, "multi" = FALSE,
+      "normX" = normX, "normY" = normY, "families" = controlvals$families,
+      "correlation" = if (controlvals$Gamm) controlvals$correlation, "Gamm" = controlvals$Gamm
+    )
+  } else {
+    new("sbivarResults",
+      "result" = out, "method" = method, "multi" = FALSE,
+      "normX" = normX, "normY" = normY
+    )
+  }
+  return(res)
 }

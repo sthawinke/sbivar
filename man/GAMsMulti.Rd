@@ -9,8 +9,7 @@ GAMsMulti(
   Yl,
   Cxl,
   Eyl,
-  families,
-  n_points_grid,
+  control,
   verbose,
   featuresX,
   featuresY,
@@ -22,14 +21,15 @@ GAMsMulti(
 
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
-\item{families, n_points_grid}{See \link{GAMsSingle}}
+\item{control}{Control arguments passed onto \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, replacing defaults by \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, respectively}
 
 \item{verbose}{Should info on type of analysis be printed?}
 
-\item{featuresX, featuresY}{Features to be tested. Defaults to all features, but specifying them allows to test a limited feature set,
+\item{featuresX, featuresY}{Features to be tested. Defaults to all features,
+but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization.}
 
-\item{findVariances}{Should variances be calculated? For internal use only}
+\item{findVariances}{A boolean, should variances be found for bivariate Moran's I and GAMs}
 }
 \value{
 A list named like Xl, containing all results

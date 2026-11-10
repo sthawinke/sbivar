@@ -35,7 +35,7 @@ This is an important exploratory plot to visualize spot-wise sums
 \examples{
 data(Vicari)
 plotSpotSums(
-    Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
-    Vicari$TranscriptCoords, Vicari$MetaboliteCoords
+  Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
+  Vicari$TranscriptCoords, Vicari$MetaboliteCoords
 )
 }

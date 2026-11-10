@@ -3,35 +3,38 @@
 #' @inheritParams sbivarSingle
 #' @param Y Matrix or SpatialExperiment object of second modality
 setMethod("sbivar", c("matrix", "matrix"), function(X, Y, Cx, Ey, ...) {
-    if (!is.matrix(Cx) || (!missing(Ey) && !is.matrix(Ey))) {
-        stop(
-            "Since X and Y are matrices, Cx and Ey must be so too!",
-            if (is.data.frame(Cx) || (!missing(Ey) && is.data.frame(Ey))) {
-                "\nTry converting data frames with as.matrix()"
-            }
-        )
-    }
-    sbivarSingle(X, Y, Cx, Ey, ...)
+  if (!is.matrix(Cx) || (!missing(Ey) && !is.matrix(Ey))) {
+    stop(
+      "Since X and Y are matrices, Cx and Ey must be so too!",
+      if (is.data.frame(Cx) || (!missing(Ey) && is.data.frame(Ey))) {
+        "\nTry converting data frames with as.matrix()"
+      }
+    )
+  }
+  sbivarSingle(X, Y, Cx, Ey, ...)
 })
 #' @rdname sbivar
 #' @export
 #' @inheritParams sbivarMulti
 setMethod("sbivar", c("list", "list"), function(X, Y, Cx, Ey, assayX = NULL, assayY = NULL, ...) {
-    if (all(vapply(X, FUN.VALUE = TRUE, inherits, "SpatialExperiment"))) {
-        if (is.null(assayX)) {
-            stop("Provide the name of the assay through the 'assayX' argument!")
-        }
-        Cx <- lapply(X, SpatialExperiment::spatialCoords)
-        X <- lapply(X, assayT, assayX)
+  if (all(vapply(X, FUN.VALUE = TRUE, inherits, "SpatialExperiment"))) {
+    if (is.null(assayX)) {
+      stop("Provide the name of the assay through the 'assayX' argument!")
     }
-    if (all(vapply(Y, FUN.VALUE = TRUE, inherits, "SpatialExperiment"))) {
-        if (is.null(assayY)) {
-            stop("Provide the name of the assay through the 'assayY' argument!")
-        }
-        Ey <- lapply(Y, SpatialExperiment::spatialCoords)
-        Y <- lapply(Y, assayT, assayY)
+    Cx <- lapply(X, SpatialExperiment::spatialCoords)
+    X <- lapply(X, assayT, assayX)
+  }
+  if (all(vapply(Y, FUN.VALUE = TRUE, inherits, "SpatialExperiment"))) {
+    if (is.null(assayY)) {
+      stop("Provide the name of the assay through the 'assayY' argument!")
     }
-    c(sbivarMulti(X, Y, Cx, Ey, ...), "assayX" = assayX, "assayY" = assayY)
+    Ey <- lapply(Y, SpatialExperiment::spatialCoords)
+    Y <- lapply(Y, assayT, assayY)
+  }
+  foo <- sbivarMulti(X, Y, Cx, Ey, ...)
+  foo@assayX <- assayX
+  foo@assayY <- assayY
+  foo
 })
 #' @param assayX,assayY Assay names to be used in the analysis,
 #' see \link[SummarizedExperiment]{assay}
@@ -39,44 +42,42 @@ setMethod("sbivar", c("list", "list"), function(X, Y, Cx, Ey, assayX = NULL, ass
 #' included in the same SpatialExperiment objects X and Y. By default, they are assumed to be the same for both X and Y.
 #' @rdname sbivar
 #' @export
-setMethod("sbivar", c("SpatialExperiment", "SpatialExperiment"), function(
-      X, Y, assayX, assayY, sample_id_x,
-      sample_id_y = sample_id_x, ...
-) {
-    out <- if (missing(sample_id_x)) {
-        foo <- sbivar(
-            assayT(X, assayX), assayT(Y, assayY), SpatialExperiment::spatialCoords(X),
-            SpatialExperiment::spatialCoords(Y), ...
-        )
-        foo@assayX <- assayX
-        foo@assayY <- assayY
-        foo
-    } else {
-        sbivar(splitSpatialExperiment(X, sample_id_x),
-            splitSpatialExperiment(Y, sample_id_y),
-            assayX = assayX, assayY = assayY, ...
-        )
-    }
-    return(out)
+setMethod("sbivar", c("SpatialExperiment", "SpatialExperiment"), function(X, Y, assayX, assayY, sample_id_x = "sample_id",
+                                                                          sample_id_y = sample_id_x, ...) {
+  out <- if (missing(sample_id_x)) {
+    foo <- sbivar(
+      assayT(X, assayX), assayT(Y, assayY), SpatialExperiment::spatialCoords(X),
+      SpatialExperiment::spatialCoords(Y), ...
+    )
+    foo@assayX <- assayX
+    foo@assayY <- assayY
+    foo
+  } else {
+    sbivar(splitSpatialExperiment(X, sample_id_x),
+      splitSpatialExperiment(Y, sample_id_y),
+      assayX = assayX, assayY = assayY, ...
+    )
+  }
+  return(out)
 })
 #' @rdname sbivar
 #' @param experimentX,experimentY Names of the experiments in X and Y to be used in the analysis
 #' @export
 #' @importFrom MultiAssayExperiment MultiAssayExperiment
 setMethod("sbivar", "MultiAssayExperiment", function(
-      X, experimentX, experimentY,
-      assayX, assayY, ...
+  X, experimentX, experimentY,
+  assayX, assayY, ...
 ) {
-    stopifnot(
-        is.character(experimentX), is.character(experimentY),
-        all((experiments <- c(experimentX, experimentY)) %in% names(X))
-    )
-    if (!all(id <- vapply(experiments,
-        FUN.VALUE = TRUE,
-        function(nam) inherits(X[[nam]], "SpatialExperiment")
-    ))) {
-        stop("All components of the MultiAssayExperiment provided must be SpatialExperiment objects.
+  stopifnot(
+    is.character(experimentX), is.character(experimentY),
+    all((experiments <- c(experimentX, experimentY)) %in% names(X))
+  )
+  if (!all(id <- vapply(experiments,
+    FUN.VALUE = TRUE,
+    function(nam) inherits(X[[nam]], "SpatialExperiment")
+  ))) {
+    stop("All components of the MultiAssayExperiment provided must be SpatialExperiment objects.
              Components ", experiments[!id], " are not!")
-    }
-    sbivar(X[[experimentX]], X[[experimentY]], assayX = assayX, assayY = assayY, ...)
+  }
+  sbivar(X[[experimentX]], X[[experimentY]], assayX = assayX, assayY = assayY, ...)
 })

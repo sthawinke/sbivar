@@ -105,7 +105,7 @@ For the multi-image case, we use GAMs as measure of spatial association, with a 
 multiGAMRes <- sbivar(
   X = Vicari$TranscriptOutcomes, Y = Vicari$MetaboliteOutcomes,
   Cx = Vicari$TranscriptCoords, Ey = Vicari$MetaboliteCoords,
-  method = "GAM", families = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log"))
+  method = "GAM", control = list("families" = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log")))
 )
 ```
 

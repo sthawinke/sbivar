@@ -10,22 +10,20 @@
 #' @inheritParams sbivarSingle
 #' @importFrom BiocParallel bpparam bpworkers
 #' @seealso \link{fitLinModels}, \link{MoransIMulti}, \link{correlationsMulti}, \link{GAMsMulti}
-sbivarMulti <- function(Xl, Yl, Cxl, Eyl,
-                        method = c("Moran's I", "GAMs", "Correlation"), control, featuresX = getFeaturesList(Xl), featuresY = getFeaturesList(Yl),
-                        normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
-                       verbose = TRUE, findVariances = FALSE) {
+sbivarMulti <- function(Xl, Yl, Cxl, Eyl, method = c("Moran's I", "GAMs", "Correlation"),
+            control, featuresX = getFeaturesList(Xl), featuresY = getFeaturesList(Yl),
+            normX = c("none", "rel", "log"), normY = c("none", "rel", "log"),
+                       verbose = TRUE, findVariances = FALSE, findMaxW = TRUE) {
   method <- match.arg(method)
-  wo <- match.arg(wo)
   normX <- match.arg(normX)
   normY <- match.arg(normY)
-  controlvals <- switch(method,
-                        "Moran's I" = moranControl(),
+  controlvals <- switch(method, "Moran's I" = moranControl(),
                         "GAMs" = GAMcontrol()
   )
   if (!missing(control)) {
       controlvals[names(control)] <- control
   }
-  invisible(checkControlVals(method, controlvals, gpParams))
+  invisible(checkControlVals(method, controlvals))
   stopifnot(
     is.logical(verbose), is.character(method), is.character(featuresX), is.character(featuresY)
   )
@@ -47,8 +45,8 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl,
                 Consider providing another 'method' argument for a full spatial analysis", immediate. = TRUE)
   }
   # Normalization
-  Xl <- lapply(Xl, normMat, normX, pseudoCount)
-  Yl <- lapply(Yl, normMat, normY, pseudoCount)
+  Xl <- lapply(Xl, normMat, normX, pseudoCount, warnDrop = FALSE)
+  Yl <- lapply(Yl, normMat, normY, pseudoCount, warnDrop = FALSE)
   if (ccs) {
     Cxl <- lapply(selfName(names(Cxl)), function(i) {
       Cxl[[i]][rownames(Xl[[i]]), ]
@@ -64,6 +62,8 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl,
     )
   }
   res <- if (method == "Moran's I") {
+    wo <- match.arg(controlvals$wo, choices = formals(moranControl)$wo)
+    controlvals$findMaxW <- findMaxW
     if (wo == "nn" & !requireNamespace("RANN", quietly = TRUE)) {
       stop("Install 'RANN' package for nearest neighbour weighting matrices")
     }
@@ -83,14 +83,14 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl,
     )
   }
   out <- if (method == "Moran's I") {
+    wParams <- switch(controlvals$wo,
+                        "Gauss" = controlvals$etas,
+                        "nn" = controlvals$numNNs)
     new("sbivarResultsMoransI",
       "result" = lapply(res, function(x) x$res), "method" = method, "normX" = normX, "multi" = TRUE,
-      "normY" = normY, "maxIxy" = if (controlvals$findMaxW) vapply(res, FUN.VALUE = double(1), function(x) x$maxIxy),
+      "normY" = normY, "maxIxy" = if (controlvals$findMaxW) vapply(res, FUN.VALUE = wParams, function(x) x$maxIxy),
       "wo" = controlvals$wo, "returnSEsMoransI" = findVariances,
-      "wParams" = switch(controlvals$wo,
-        "Gauss" = controlvals$etas,
-        "nn" = controlvals$numNNs
-      )
+      "wParams" = wParams
     )
   } else if (method == "GAMs") {
     new("sbivarResultsGAMs",

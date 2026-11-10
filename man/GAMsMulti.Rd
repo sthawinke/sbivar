@@ -29,6 +29,8 @@ GAMsMulti(
 but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization.}
 
+\item{findVariances}{Should variances be calculated? For internal use only}
+
 \item{families, n_points_grid}{See \link{GAMsSingle}}
 }
 \value{

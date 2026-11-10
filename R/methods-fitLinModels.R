@@ -12,6 +12,9 @@ setMethod(
     if (!result@multi) {
       stop("Fitting linear models only makes sense for multi-image analyses!")
     }
+    if(is.list(result@models)){
+        stop("Linear models already present in object, proceed with extractResultsMulti()!")
+     }
     if (missing(designDf) && length(ncol(attr(terms(Formula), "factors"))) == 0) {
       designDf <- data.frame("foo" = seq_along(result@result))
     } # Allow for intercept only models
@@ -32,7 +35,7 @@ setMethod(
       "Correlation" = names,
       rownames
     )
-    Features <- selfName(unique(unlist(lapply(result@result, function(x) namesFun(x$res))))) # All feature pairs present
+    Features <- selfName(unique(unlist(lapply(result@result, namesFun)))) # All feature pairs present
     iter <- selfName(if (moran <- result@method == "Moran's I") {
       result@wParams
     } else {
@@ -47,16 +50,16 @@ setMethod(
       weightsArr <- outArr
     }
     for (i in names(result@result)) {
-      outArr[i, namesFun(result@result[[i]]$res), ] <- if (result@method == "Correlation") result@result[[i]]$res else result@result[[i]]$res[, seq_along(iter)]
+      outArr[i, namesFun(result@result[[i]]), ] <- if (result@method == "Correlation") result@result[[i]] else result@result[[i]][, seq_along(iter)]
       if (scaleByMax && (result@method == "Moran's I")) {
         # Scale estimates
-        outArr[i, namesFun(result@result[[i]]$res), ] <- t(t(outArr[i, namesFun(result@result[[i]]$res), ]) / result@result[[i]]$maxIxy)
+        outArr[i, namesFun(result@result[[i]]), ] <- t(t(outArr[i, namesFun(result@result[[i]]), ]) / result@maxIxy[,i])
       }
       if (inverseWeigh && (result@method %in% c("Moran's I", "GAMs"))) {
-        weightsArr[i, namesFun(result@result[[i]]$res), ] <- 1 / result@result[[i]]$res[, seq_along(iter) + length(iter)]^2
+        weightsArr[i, namesFun(result@result[[i]]), ] <- 1 / result@result[[i]][, seq_along(iter) + length(iter)]^2
         if (scaleByMax && (result@method == "Moran's I")) {
           # Scale variances too
-          weightsArr[i, namesFun(result@result[[i]]$res), ] <- t(t(weightsArr[i, namesFun(result@result[[i]]$res), ]) * result@result[[i]]$maxIxy^2)
+          weightsArr[i, namesFun(result@result[[i]]), ] <- t(t(weightsArr[i, namesFun(result@result[[i]]), ]) * result@maxIxy[,i]^2)
         }
       }
     }
@@ -88,7 +91,7 @@ setMethod(
         " effects models on ", bpworkers(bpparam()), " cores"
       )
     }
-    models <- loadBalanceBplapply(Features, function(feat) {
+    result@models <- loadBalanceBplapply(Features, function(feat) {
       lapply(selfName(names(iter)), function(it) {
         baseDf$out <- outArr[, feat, it]
         out <- if (sum(id <- !is.na(baseDf$out)) < 3) {
@@ -109,12 +112,6 @@ setMethod(
         }
       })
     })
-    return(c(
-      list("result" = models),
-      result[intersect(names(result), c(
-        "method", "families", "wo", "multi", "assayX", "assayY",
-        "wParams", "normX", "normY", "estimateSEsMoransI", "Gamm", "correlation"
-      ))]
-    ))
+    return(result)
   }
 )

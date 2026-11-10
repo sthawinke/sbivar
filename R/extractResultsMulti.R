@@ -1,29 +1,31 @@
-#' @description extractResultsMulti() returns the results as matrix, including adjusted p-values, and sorted by p-value.
+#' @description extractResultsMulti() adds the results as matrix to the object, including adjusted p-values, and sorted by p-value.
 #'
 #' @param method Multiplicity correction method passed onto p.adjust
 #'
 #' @importFrom stats p.adjust anova
 #' @importFrom methods is
-#' @return For extractResultsMulti() a list of matrices, all containing estimate, standard error,
-#' p-value and adjusted p-value
+#' @return The modified results object
 #' @export
 #' @rdname fitLinModels
 #' @order 2
-extractResultsMulti <- function(result, designDf, method = "BH") {
+setMethod(
+"fitLinModels",
+"sbivarResults",
+ function(result, designDf, method = "BH") {
   if (misDes <- missing(designDf)) {
     warning(immediate. = TRUE, "No design matrix supplied, extracting only results for intercept!")
   } else {
     categoricalVars <- getDiscreteVars(designDf)
   }
-  if (result$method == "Moran's I") {
-    wParChar <- switch(result$wo,
+  if (result@method == "Moran's I") {
+    wParChar <- switch(result@wo,
       "Gauss" = "eta_",
       "nn" = "numNN_"
     )
   }
-  outout <- loadBalanceBplapply(selfName(names(result$result)), function(nm) {
-    res <- result$result[[nm]]
-    if (result$method == "Moran's I") {
+  outout <- loadBalanceBplapply(selfName(names(result@result)), function(nm) {
+    res <- result@result[[nm]]
+    if (result@method == "Moran's I") {
       names(res) <- paste0(wParChar, names(res))
     }
     id <- vapply(res, FUN.VALUE = TRUE, function(x) {
@@ -78,7 +80,7 @@ extractResultsMulti <- function(result, designDf, method = "BH") {
         }
         cbind(coefMat, pVal = pVal)
       })
-      if (result$method == "Moran's I") {
+      if (result@method == "Moran's I") {
         intRes <- c(ints[, "Estimate"], "pVal" = CCT(ints[, "pVal"]))
         fixRes <- lapply(fixedOut, function(x) {
           coefs <- c(x[, colnames(x) != "pVal"])
@@ -102,23 +104,6 @@ extractResultsMulti <- function(result, designDf, method = "BH") {
     tmpMat <- tmpMat[order(tmpMat[, "pVal"]), ]
     addFeatureColumn(cbind(tmpMat, "pAdj" = p.adjust(tmpMat[, "pVal"], method = method)))
   })
-  sbivarResultObj <- if (result$method == "Moran's I") {
-    new("sbivarResultsMoransI",
-      "result" = fixResOut, "method" = result$method, "multi" = TRUE, "normX" = result$normX,
-      "normY" = result$normY, "maxIxy" = result$maxIxy, "wo" = result$wo,
-      "wParams" = result$wParams
-    )
-  } else if (result$method == "GAMs") {
-    new("sbivarResultsGAMs",
-      "result" = fixResOut, "method" = result$method,
-      "multi" = TRUE, "normX" = result$normX, "normY" = result$normY, "families" = result$families,
-      "correlation" = if (result$Gamm) result$correlation, "Gamm" = result$Gamm
-    )
-  } else {
-    new("sbivarResults",
-      "result" = fixResOut, "method" = result$method,
-      "multi" = TRUE, "normX" = result$normX, "normY" = result$normY
-    )
-  }
-  return(sbivarResultObj)
-}
+  result@result <- fixResOut
+  return(result)
+})

@@ -52,13 +52,12 @@ from a call to the \link{sbivar} function with multiple images}
 \item{Control}{A control list for lmerTest::lmer}
 }
 \value{
-For extractResultsMulti() a list of matrices, all containing estimate, standard error,
-p-value and adjusted p-value
+The modified results object
 
 For fitLinModels(), a list of linear models
 }
 \description{
-extractResultsMulti() returns the results as matrix, including adjusted p-values, and sorted by p-value.
+extractResultsMulti() adds the results as matrix to the object, including adjusted p-values, and sorted by p-value.
 
 Given result estimated from replicated images using \link{sbivarMulti},
 fit linear models to determine significance.

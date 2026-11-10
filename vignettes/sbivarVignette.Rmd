@@ -162,7 +162,7 @@ plotTopPair(moransIRes,
 
 We see a clear negative relationship.
 
-In addition, we employ generalized additive models (GAMs), with a negative binomial outcome distribution for the transcriptome data, and a gamma outcome distribution for the metabolome data. A log-link is used in both cases. For non-normal data, such as spatial transcriptomics and metabolomics data, this approach is usually preferable to the bivariate Moran's I, as this latter one fails to account for heteroskedasticity,
+In addition, we employ generalized additive models (GAMs), with a negative binomial outcome distribution for the transcriptome data, and a gamma outcome distribution for the metabolome data. A log-link is used in both cases. For non-normal data, such as spatial transcriptomics and metabolomics data, this approach is usually preferable to the bivariate Moran's I, as this latter one fails to account for heteroskedasticity.
 
 ```{r fitgam}
 FamiliesVicari <- list("X" = mgcv::nb(), "Y" = Gamma(lin = "log"))
@@ -233,13 +233,13 @@ Note that for this analysis, we only calculate the bivariate Moran's I statistic
 
 ```{r multiLmms}
 designDf <- data.frame("mouse" = mouse, "bogus" = factor(c(1, 2, 1, 2, 1, 2)))
-multiMoranLmms <- fitLinModels(multiMoranRes, designDf, Formula = ~ bogus + (1 | mouse))
+multiMoranRes <- fitLinModels(multiMoranRes, designDf, Formula = ~ bogus + (1 | mouse))
 ```
 
 Extract the results and show the results for the intercept, i.e. the overall effect
 
 ```{r extractMulti}
-multiMoranLmmsRes <- extractResultsMulti(multiMoranLmms, designDf)
+multiMoranLmmsRes <- extractResultsMulti(multiMoranRes, designDf)
 topPairs(multiMoranLmmsRes, parameter = "Intercept")
 ```
 

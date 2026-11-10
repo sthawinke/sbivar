@@ -4,12 +4,14 @@
 \alias{checkControlVals}
 \title{Check validity of control list}
 \usage{
-checkControlVals(method, controlvals, gpParams)
+checkControlVals(method, controlvals, correlation, gpParams)
 }
 \arguments{
 \item{method}{A character string, indicating which method to apply}
 
 \item{controlvals}{The list of control values}
+
+\item{correlation}{Correlation structure, passed onto \link{fitGP} or \link{fitGAM}}
 }
 \value{
 Finishes silently if no problems found

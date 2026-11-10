@@ -79,6 +79,7 @@ scaleHelpFun <- function(X, feat) {
 #' @param x The matrix
 #' @param norm A character string, either "none", "log" or "rel"
 #' @param pseudoCount A pseudocount added prior to log-normalization to avoid taking the log of zero
+#' @param warnDrop Is a warning to be emitted when spots are dropped?
 #' @details norm = "none" is pass-through, norm = "rel" divides by sample sums,
 #' "log" adds a pseudocount, divides by sample sums and log-normalizes.
 #' @returns A normalized matrix
@@ -86,7 +87,7 @@ scaleHelpFun <- function(X, feat) {
 #' @examples
 #' mat <- matrix(rpois(2000, lambda = 3), 40, 50)
 #' nMat <- normMat(mat, norm = "rel")
-normMat <- function(x, norm, pseudoCount = 1e-8) {
+normMat <- function(x, norm, pseudoCount = 1e-8, warnDrop = TRUE) {
   stopifnot(is.matrix(x))
   if (norm == "none") {
     out <- x
@@ -96,7 +97,7 @@ normMat <- function(x, norm, pseudoCount = 1e-8) {
     }
     id <- ((rs <- rowSums(x)) > 0)
     x <- x[id, , drop = FALSE]
-    if (!all(id)) {
+    if (warnDrop && !all(id)) {
       warning(sum(!id), " empty spots dropped!")
     }
     dn <- dimnames(x)
@@ -292,7 +293,7 @@ strwrapPaste <- function(...) {
 #' @param controlvals The list of control values
 #'
 #' @returns Finishes silently if no problems found
-checkControlVals = function(method, controlvals, gpParams){
+checkControlVals = function(method, controlvals, correlation, gpParams){
     if (method == "Moran's I") {
         stopifnot(
             is.numeric(controlvals$numNNs), all(controlvals$numNNs > 0), is.numeric(controlvals$etas),
@@ -325,4 +326,12 @@ checkControlVals = function(method, controlvals, gpParams){
             }
         }
     }
+}
+#' Derive a default length scale to start GP fitting
+#'
+#' @param Cx The coordinate matrix
+#'
+#' @returns 90% The maximal dimension of the coordinates
+getLengthScale = function(Cx){
+    0.9 * max(apply(Cx, 2, function(x) diff(range(x))))
 }

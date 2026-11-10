@@ -4,7 +4,18 @@
 \alias{MoransIMulti}
 \title{Find all Moran's I statistics for a list of matrices}
 \usage{
-MoransIMulti(Xl, Yl, Cxl, Eyl, verbose, featuresX, featuresY, control, ...)
+MoransIMulti(
+  Xl,
+  Yl,
+  Cxl,
+  Eyl,
+  verbose,
+  featuresX,
+  featuresY,
+  findVariances = FALSE,
+  control,
+  ...
+)
 }
 \arguments{
 \item{Xl, Yl}{Lists of matrices of omics measurements}
@@ -16,6 +27,8 @@ MoransIMulti(Xl, Yl, Cxl, Eyl, verbose, featuresX, featuresY, control, ...)
 \item{featuresX, featuresY}{Features to be tested. Defaults to all features,
 but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization.}
+
+\item{findVariances}{Should variances be calculated? For internal use only}
 
 \item{control}{Control arguments passed onto \link{MoransIsingle}, \link{fitGPs} or \link{fitGAMs}, replacing defaults by \link{MoransIsingle}, \link{fitGPs} or \link{fitGAMs}, respectively}
 

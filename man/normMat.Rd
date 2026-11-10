@@ -4,7 +4,7 @@
 \alias{normMat}
 \title{Normalize a data matrix, and ensure correct column names}
 \usage{
-normMat(x, norm, pseudoCount = 1e-08)
+normMat(x, norm, pseudoCount = 1e-08, warnDrop = TRUE)
 }
 \arguments{
 \item{x}{The matrix}
@@ -12,6 +12,8 @@ normMat(x, norm, pseudoCount = 1e-08)
 \item{norm}{A character string, either "none", "log" or "rel"}
 
 \item{pseudoCount}{A pseudocount added prior to log-normalization to avoid taking the log of zero}
+
+\item{warnDrop}{Is a warning to be emitted when spots are dropped?}
 }
 \value{
 A normalized matrix

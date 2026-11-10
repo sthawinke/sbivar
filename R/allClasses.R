@@ -1,4 +1,5 @@
 setClassUnion("characterOrNULL", c("character", "NULL"))
+setClassUnion("listOrNULL", c("list", "NULL"))
 setClassUnion("dataframeOrList", c("data.frame", "list"))
 setClass(
   "sbivarResults",
@@ -9,15 +10,16 @@ setClass(
     normY = "character",
     multi = "logical",
     assayX = "characterOrNULL",
-    assayY = "characterOrNULL"
+    assayY = "characterOrNULL",
+    models = "listOrNULL"
   )
 )
-setClassUnion("numericOrNULL", c("numeric", "NULL"))
+setClassUnion("numericOrmatrixOrNULL", c("numeric", "matrix", "NULL"))
 setClass(
   "sbivarResultsMoransI",
   contains = "sbivarResults",
   slots = c(
-    maxIxy = "numericOrNULL",
+    maxIxy = "numericOrmatrixOrNULL",
     returnSEsMoransI = "logical",
     wo = "character",
     wParams = "numeric"
@@ -46,9 +48,9 @@ setMethod(
     cat(
       "Sbivar fit with ", object@method, " method on",
       if (object@multi) {
-        cat(length(object$res), "images")
+        c(length(object@result), "images")
       } else {
-        "single image"
+        c("single image with", nrow(object@result), "feature pairs tested")
       }
     )
   }
@@ -72,5 +74,8 @@ setValidity("sbivarResults", function(object) {
   if (!is.logical(object@multi)) {
     return("multi must be a boolean")
   }
+  if (!object@multi && is.list(object@models)) {
+        return("Models can only be attached for multi-image analysis")
+   }
   TRUE
 })

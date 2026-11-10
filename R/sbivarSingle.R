@@ -33,7 +33,7 @@
 #' @seealso \link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle}, \link{GPsSingle}
 sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
                          normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
-                         correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(0.9 * max(apply(Cx, 2, function(x) diff(range(x)))), 0.25)), control, gpParams,
+                         correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(getLengthScale(Cx), 0.25)), control, gpParams,
                          featuresX = colnames(X), featuresY = colnames(Y),
                          verbose = TRUE) {
   method <- match.arg(method)
@@ -56,7 +56,7 @@ sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified
     all(featuresY %in% colnames(Y)), !anyDuplicated(featuresX), !anyDuplicated(featuresY),
     !is.null(colnames(X)), is.logical(verbose)
   )
-  invisible(checkControlVals(method, controlvals, gpParams))
+  invisible(checkControlVals(method, controlvals, correlation, gpParams))
   if (method == "Moran's I") {
     wo <- match.arg(controlvals$wo, choices = formals(moranControl)$wo)
   } else if (method == "GPs") {

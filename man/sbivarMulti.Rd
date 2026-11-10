@@ -16,7 +16,8 @@ sbivarMulti(
   normX = c("none", "rel", "log"),
   normY = c("none", "rel", "log"),
   verbose = TRUE,
-  findVariances = FALSE
+  findVariances = FALSE,
+  findMaxW = TRUE
 )
 }
 \arguments{

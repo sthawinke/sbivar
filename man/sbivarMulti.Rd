@@ -38,6 +38,8 @@ while using the whole matrix to calculate library sizes as offset or for normali
 
 \item{verbose}{Should info on type of analysis be printed?}
 
+\item{findVariances}{A boolean, should variances be found for bivariate Moran's I and GAMs}
+
 \item{findMaxW}{A boolean, should maximum values be found for bivariate Moran's I}
 }
 \value{

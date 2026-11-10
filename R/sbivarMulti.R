@@ -6,6 +6,7 @@
 #' @param Xl,Yl Lists of matrices of omics measurements
 #' @param Cxl,Eyl Lists of corresponding coordinate matrices of dimension two
 #' @param findMaxW A boolean, should maximum values be found for bivariate Moran's I
+#' @param findVariances A boolean, should variances be found for bivariate Moran's I and GAMs
 #' @returns A \link{sbivarResults} object with multi = TRUE
 #' @note All methods use multithreading on the cluster provided using the BiocParallel package
 #' @inheritParams sbivarSingle

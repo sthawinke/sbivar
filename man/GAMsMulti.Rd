@@ -29,7 +29,7 @@ GAMsMulti(
 but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization.}
 
-\item{findVariances}{Should variances be calculated? For internal use only}
+\item{findVariances}{A boolean, should variances be found for bivariate Moran's I and GAMs}
 }
 \value{
 A list named like Xl, containing all results

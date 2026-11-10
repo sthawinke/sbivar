@@ -3,6 +3,7 @@
 #' Define default argument lists for the MoransISingle(), GAMsSingle() and GPsingle() functions
 #'
 #' @inheritParams MoransISingle
+#' @inheritParams sbivarSingle
 #' @order 1
 #' @seealso \link{MoransISingle}, \link{fitGAM}, \link{fitGP}
 #' @rdname controlLists
@@ -25,6 +26,7 @@ GAMcontrol <- function(Gamm = FALSE, Cx, n_points_grid = 6e2,
   list(Gamm = Gamm, n_points_grid = n_points_grid, families = families)
 }
 #' @inheritParams fitGP
+#' @inheritParams testGP
 #' @order 3
 #' @importFrom nlme lmeControl
 #' @rdname controlLists

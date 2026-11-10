@@ -43,7 +43,7 @@ while using the whole matrix to calculate library sizes as offset or for normali
 \item{findMaxW}{A boolean, should maximum values be found for bivariate Moran's I}
 }
 \value{
-A \link{sbivarResults} object with multi = TRUE
+A \link{sbivarResults-class} object with multi = TRUE
 }
 \description{
 This function calculates measures of spatial association for every image.

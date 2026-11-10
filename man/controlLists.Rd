@@ -49,6 +49,8 @@ Currently, only "Exp" and "Lin" are implemented for computational reasons.}
 
 \item{Gamm}{A boolean, should a gamm with Gaussian covariance kernel be fitted? See \link[mgcv]{gamm}}
 
+\item{Cx}{Coordinate matrix of the first modality}
+
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.}
 
@@ -57,6 +59,10 @@ for the outcome values. See details of \link{sbivarSingle}.}
 
 \item{GPmethod}{The method by which to fit the Gaussian processes,
 passed onto \link[nlme]{gls} as "method".}
+
+\item{Quants}{Most extreme quantiles of the distance distribution to take as length scales}
+
+\item{numLscAlts}{Number of length scales to be tested for bivariate association}
 
 \item{optControl}{List of control values for \link[nlme]{gls}, see \link[nlme]{glsControl}.}
 }

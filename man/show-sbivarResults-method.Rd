@@ -6,6 +6,9 @@
 \usage{
 \S4method{show}{sbivarResults}(object)
 }
+\arguments{
+\item{object}{The sbivarResults object}
+}
 \description{
 Show basic properties of a sbivarResults object
 }

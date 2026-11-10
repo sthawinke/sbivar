@@ -21,12 +21,14 @@ moranControl <- function(etas = c(5e-6, 2e-4, 2e-2), findMaxW = FALSE, returnSEs
 #' @inheritParams sbivarSingle
 #' @order 2
 #' @rdname controlLists
+#' @param Cx Coordinate matrix of the first modality
 GAMcontrol <- function(Gamm = FALSE, Cx, n_points_grid = 6e2,
                        families = list("X" = gaussian(), "Y" = gaussian())) {
   list(Gamm = Gamm, n_points_grid = n_points_grid, families = families)
 }
 #' @inheritParams fitGP
-#' @inheritParams testGP
+#' @inheritParams GPsSingle
+#' @inheritParams sbivarSingle
 #' @order 3
 #' @importFrom nlme lmeControl
 #' @rdname controlLists

@@ -1,7 +1,7 @@
 setClassUnion("characterOrNULL", c("character", "NULL"))
 setClassUnion("listOrNULL", c("list", "NULL"))
 setClassUnion("dataframeOrList", c("data.frame", "list"))
-#' sbivarResults
+#' sbivarResults class
 #'
 #' An S4 class representing the result of a sbivar call, testing for bivariate spatial association in one or more images
 #'
@@ -80,6 +80,7 @@ setValidity("sbivarResults", function(object) {
 })
 #' Show basic properties of a sbivarResults object
 #' @importFrom methods show
+#' @param object The sbivarResults object
 #' @export
 setMethod(
     "show",

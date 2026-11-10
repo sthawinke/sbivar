@@ -25,7 +25,7 @@
 #' the outcome distribution, offset and link functions. Currently, identity,
 #' inverse and log-link are implemented.
 #'
-#' @returns A \link{sbivarResults} object with multi = FALSE
+#' @returns A \link{sbivarResults-class} object with multi = FALSE
 #' @importFrom stats p.adjust
 #' @importFrom methods is new
 #' @importFrom nlme corRatio corGaus corSpher corExp corLin lmeControl

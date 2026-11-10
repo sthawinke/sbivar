@@ -44,7 +44,7 @@ while using the whole matrix to calculate library sizes as offset or for normali
 \item{verbose}{Should info on type of analysis be printed?}
 }
 \value{
-A \link{sbivarResults} object with multi = FALSE
+A \link{sbivarResults-class} object with multi = FALSE
 }
 \description{
 The tests can be applied to either joint or disjoint coordinate sets.

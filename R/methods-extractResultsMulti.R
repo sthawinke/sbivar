@@ -34,7 +34,7 @@ setMethod(
         character(0)
       } else {
         selfName(unique(unlist(lapply(res[id], function(x) {
-          all.vars(terms(x))[-1]
+          all.vars(nobars(terms(x)))[-1]
         }))))
       }
       fixedOut <- lapply(fixedVars, function(Var) {

@@ -134,7 +134,7 @@ spe_prot2 <- SpatialExperiment(
   spatialCoords = prot_coords
 )
 test_that("Sbivar works and yields list on two SpatialExperiment objects to be split", {
-    expect_s4_class(sbivar(spe_rna2, spe_prot2, assayX = "counts", assayY = "counts", sample_id_x = "idX", sample_id_y = "idY", families = list("X" = mgcv::nb(), "Y" = mgcv::nb())), "sbivarResults")
+    expect_s4_class(sbivar(spe_rna2, spe_prot2, assayX = "counts", assayY = "counts", sample_id_x = "idX", sample_id_y = "idY", control = list("families" = list("X" = mgcv::nb(), "Y" = mgcv::nb()))), "sbivarResults")
 })
 # --- Combine into MultiAssayExperiment ---
 mae <- MultiAssayExperiment(experiments = list(RNA = spe_rna, Protein = spe_prot))

@@ -220,6 +220,7 @@ setGeneric(
 #'
 #' @importFrom stats p.adjust anova
 #' @importFrom methods is
+#' @importFrom reformulas nobars
 #' @return The modified results object
 #' @export
 #' @rdname fitLinModels

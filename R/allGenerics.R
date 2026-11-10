@@ -213,3 +213,19 @@ setGeneric(
     standardGeneric("fitLinModels")
   }
 )
+#' Extract results from linear models
+#' @description extractResultsMulti() adds the results as matrix to the object, including adjusted p-values, and sorted by p-value.
+#'
+#' @param method Multiplicity correction method passed onto p.adjust
+#'
+#' @importFrom stats p.adjust anova
+#' @importFrom methods is
+#' @return The modified results object
+#' @export
+setGeneric(
+    "extractResultsMulti",
+    function(result, designDf, method = "BH"
+    ) {
+        standardGeneric("extractResultsMulti")
+    }
+)

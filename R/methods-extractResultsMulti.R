@@ -1,15 +1,7 @@
-#' @description extractResultsMulti() adds the results as matrix to the object, including adjusted p-values, and sorted by p-value.
-#'
-#' @param method Multiplicity correction method passed onto p.adjust
-#'
-#' @importFrom stats p.adjust anova
-#' @importFrom methods is
-#' @return The modified results object
-#' @export
 #' @rdname fitLinModels
 #' @order 2
 setMethod(
-"fitLinModels",
+"extractResultsMulti",
 "sbivarResults",
  function(result, designDf, method = "BH") {
   if (misDes <- missing(designDf)) {

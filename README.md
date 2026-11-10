@@ -201,7 +201,7 @@ nevertheless:
 ``` r
 plotTopPair(multiGAMLmmsRes,
   Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes,
-  Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.3
+  Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.1
 )
 ```
 

@@ -7,17 +7,17 @@
 #' @returns A list of named correlation vectors
 #' @importFrom stats cor
 correlationsMulti <- function(Xl, Yl, featuresX, featuresY, verbose) {
-    lapply(selfName(names(Xl)), function(nam) {
-        if (verbose) {
-            printIteration(nam, names(Xl))
-        }
-        commonNames <- intersect(rownames(Xl[[nam]]), rownames(Yl[[nam]]))
-        # Ensure same dimensions
-        out <- c(cor(
-            Xl[[nam]][commonNames, featuresX <- intersect(featuresX, colnames(Xl[[nam]]))],
-            Yl[[nam]][commonNames, featuresY <- intersect(featuresY, colnames(Yl[[nam]]))]
-        ))
-        names(out) <- makeNames(featuresX, featuresY)
-        out
-    })
+  lapply(selfName(names(Xl)), function(nam) {
+    if (verbose) {
+      printIteration(nam, names(Xl))
+    }
+    commonNames <- intersect(rownames(Xl[[nam]]), rownames(Yl[[nam]]))
+    # Ensure same dimensions
+    out <- c(cor(
+      Xl[[nam]][commonNames, featuresX <- intersect(featuresX, colnames(Xl[[nam]]))],
+      Yl[[nam]][commonNames, featuresY <- intersect(featuresY, colnames(Yl[[nam]]))]
+    ))
+    names(out) <- makeNames(featuresX, featuresY)
+    out
+  })
 }

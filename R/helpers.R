@@ -5,51 +5,51 @@
 #' @examples
 #' selfName(LETTERS[1:5])
 selfName <- function(x) {
-    names(x) <- x
-    x
+  names(x) <- x
+  x
 }
 #' Convert z-value to p-value
 #'
 #' @param z The z-value to be converted
 #' @return The p-value
 makePval <- function(z) {
-    z[is.na(z)] <- 0
-    tmp <- pnorm(z, lower.tail = TRUE)
-    tmp[z > 0] <- pnorm(z[z > 0], lower.tail = FALSE)
-    out <- 2 * unname(tmp)
-    if (is.array(z)) {
-        dimnames(out) <- dimnames(z)
-    }
-    return(out)
+  z[is.na(z)] <- 0
+  tmp <- pnorm(z, lower.tail = TRUE)
+  tmp[z > 0] <- pnorm(z[z > 0], lower.tail = FALSE)
+  out <- 2 * unname(tmp)
+  if (is.array(z)) {
+    dimnames(out) <- dimnames(z)
+  }
+  return(out)
 }
 #' Scale to [0,1] range
 #' @param y The vector to be scaled
 #' @param na.rm passed onto \link[base]{min} and \link[base]{range}
 #' @return The scaled vector
 scaleZeroOne <- function(y, na.rm = TRUE) {
-    (y - min(y, na.rm = na.rm)) / diff(range(y, na.rm = na.rm))
+  (y - min(y, na.rm = na.rm)) / diff(range(y, na.rm = na.rm))
 }
 #' Scale to [-1,1] range
 #' @inheritParams scaleZeroOne
 #' @return The scaled vector
 scaleMinusOne <- function(y, na.rm = TRUE) {
-    scaleZeroOne(y, na.rm = na.rm) * 2 - 1
+  scaleZeroOne(y, na.rm = na.rm) * 2 - 1
 }
 #' Make unique names
 #' @param featX,featY vectors of feature names
 #' @return A vector of names
 makeNames <- function(featX, featY) {
-    make.names(apply(expand.grid(featX, featY), 1, paste, collapse = "__"))
+  make.names(apply(expand.grid(featX, featY), 1, paste, collapse = "__"))
 }
 #' A wrapper for Matrix::bdiag maintaining names
 #'
 #' @param A,B Matrix to be used in \link[Matrix]{bdiag}
 #' @return Same as \link[Matrix]{bdiag} but with dimnames
 bdiagn <- function(A, B) {
-    M <- bdiag(A, B)
-    # Build new dimnames from components
-    dimnames(M) <- list(c(rownames(A), rownames(B)), c(colnames(A), colnames(B)))
-    M
+  M <- bdiag(A, B)
+  # Build new dimnames from components
+  dimnames(M) <- list(c(rownames(A), rownames(B)), c(colnames(A), colnames(B)))
+  M
 }
 #' Get all categrocial variables from a dataframe
 #'
@@ -57,7 +57,7 @@ bdiagn <- function(A, B) {
 #'
 #' @returns A character vector of variable names
 getDiscreteVars <- function(df) {
-    colnames(df)[!vapply(df, FUN.VALUE = TRUE, is.numeric)]
+  colnames(df)[!vapply(df, FUN.VALUE = TRUE, is.numeric)]
 }
 #' Wrapper to normalize, select feature and scale
 #'
@@ -67,11 +67,11 @@ getDiscreteVars <- function(df) {
 #'
 #' @returns A vector of values
 scaleHelpFun <- function(X, feat) {
-    if (feat %in% colnames(X)) {
-        scaleZeroOne(X[, feat])
-    } else {
-        rep(NA, nrow(X))
-    }
+  if (feat %in% colnames(X)) {
+    scaleZeroOne(X[, feat])
+  } else {
+    rep(NA, nrow(X))
+  }
 }
 #' Normalize a data matrix, and ensure correct column names
 #'
@@ -87,28 +87,28 @@ scaleHelpFun <- function(X, feat) {
 #' mat <- matrix(rpois(2000, lambda = 3), 40, 50)
 #' nMat <- normMat(mat, norm = "rel")
 normMat <- function(x, norm, pseudoCount = 1e-8) {
-    stopifnot(is.matrix(x))
-    if (norm == "none") {
-        out <- x
-    } else {
-        if (min(x) < 0) {
-            warning("Normalization '", norm, "'is not recommended for real valued data!")
-        }
-        id <- ((rs <- rowSums(x)) > 0)
-        x <- x[id, , drop = FALSE]
-        if (!all(id)) {
-            warning(sum(!id), " empty spots dropped!")
-        }
-        dn <- dimnames(x)
-        out <- if (norm == "rel") {
-            x / rs[id]
-        } else if (norm == "log") {
-            log((x + pseudoCount) / rs[id])
-        }
-        dimnames(out) <- dn
+  stopifnot(is.matrix(x))
+  if (norm == "none") {
+    out <- x
+  } else {
+    if (min(x) < 0) {
+      warning("Normalization '", norm, "'is not recommended for real valued data!")
     }
-    colnames(out) <- make.names(colnames(out))
-    return(out)
+    id <- ((rs <- rowSums(x)) > 0)
+    x <- x[id, , drop = FALSE]
+    if (!all(id)) {
+      warning(sum(!id), " empty spots dropped!")
+    }
+    dn <- dimnames(x)
+    out <- if (norm == "rel") {
+      x / rs[id]
+    } else if (norm == "log") {
+      log((x + pseudoCount) / rs[id])
+    }
+    dimnames(out) <- dn
+  }
+  colnames(out) <- make.names(colnames(out))
+  return(out)
 }
 #' Split a string
 #'
@@ -117,7 +117,7 @@ normMat <- function(x, norm, pseudoCount = 1e-8) {
 #'
 #' @returns A character vector of length 2
 sund <- function(string, split = "__") {
-    strsplit(string, split = split)[[1]]
+  strsplit(string, split = split)[[1]]
 }
 #' Replace the left hand side of a formula by a fixed string
 #'
@@ -127,8 +127,8 @@ sund <- function(string, split = "__") {
 #' @returns A formula
 #' @importFrom stats formula
 replaceLhs <- function(x, repl = "out") {
-    out <- paste(repl, "~", deparse(x[[length(x)]]))
-    return(formula(out))
+  out <- paste(repl, "~", deparse(x[[length(x)]]))
+  return(formula(out))
 }
 #' Is there any double underscore in the character vector?
 #'
@@ -136,7 +136,7 @@ replaceLhs <- function(x, repl = "out") {
 #'
 #' @returns A boolean
 findDoubleUnderScore <- function(charVec) {
-    any(grepl("__", charVec, fixed = TRUE))
+  any(grepl("__", charVec, fixed = TRUE))
 }
 #' Extract an assay, and transpose
 #'
@@ -146,7 +146,7 @@ findDoubleUnderScore <- function(charVec) {
 #' @returns The required assay, transposed
 #' @importFrom SummarizedExperiment assay
 assayT <- function(x, assayName) {
-    t(assay(x, assayName))
+  t(assay(x, assayName))
 }
 #' Split a SpatialExperiment object into images
 #'
@@ -159,8 +159,8 @@ assayT <- function(x, assayName) {
 #' @returns A list of SpatialExperiment objects
 #' @importFrom SummarizedExperiment colData
 splitSpatialExperiment <- function(spe, sample_id) {
-    spe_list <- split(seq_len(ncol(spe)), colData(spe)[, sample_id])
-    lapply(spe_list, function(cols) spe[, cols])
+  spe_list <- split(seq_len(ncol(spe)), colData(spe)[, sample_id])
+  lapply(spe_list, function(cols) spe[, cols])
 }
 #' Print a message for the current iteration
 #'
@@ -169,7 +169,7 @@ splitSpatialExperiment <- function(spe, sample_id) {
 #'
 #' @returns prints message to output
 printIteration <- function(current, all) {
-    message("Image ", which(all == current), " of ", length(all))
+  message("Image ", which(all == current), " of ", length(all))
 }
 #' Extract data matrix
 #'
@@ -178,13 +178,13 @@ printIteration <- function(current, all) {
 #'
 #' @returns A matrix
 getX <- function(X, assay) {
-    if (inherits(X, "SpatialExperiment")) {
-        assayT(X, assay)
-    } else if (is.list(X)) {
-        lapply(X, getX, assay = assay)
-    } else {
-        X
-    }
+  if (inherits(X, "SpatialExperiment")) {
+    assayT(X, assay)
+  } else if (is.list(X)) {
+    lapply(X, getX, assay = assay)
+  } else {
+    X
+  }
 }
 #' Extract coordinate matrix
 #'
@@ -193,19 +193,19 @@ getX <- function(X, assay) {
 #'
 #' @returns A coordinate matrix
 getSpatialCoords <- function(X, Cx) {
-    out <- if (inherits(X, "SpatialExperiment")) {
-        SpatialExperiment::spatialCoords(X)
-    } else if (is.list(X)) {
-        lapply(selfName(names(X)), function(i) {
-            getSpatialCoords(X[[i]], Cx[[i]])
-        })
-    } else {
-        Cx
-    }
-    if (is.matrix(out)) {
-        rownames(out) <- rownames(X)
-    }
-    out
+  out <- if (inherits(X, "SpatialExperiment")) {
+    SpatialExperiment::spatialCoords(X)
+  } else if (is.list(X)) {
+    lapply(selfName(names(X)), function(i) {
+      getSpatialCoords(X[[i]], Cx[[i]])
+    })
+  } else {
+    Cx
+  }
+  if (is.matrix(out)) {
+    rownames(out) <- rownames(X)
+  }
+  out
 }
 #' Move two sets of coordinates to 0-1. without shifting them with respect to each other
 #'
@@ -213,17 +213,17 @@ getSpatialCoords <- function(X, Cx) {
 #'
 #' @returns A list with the shifted and scaled coordinates
 moveTwoCoords <- function(Cx, Ey) {
-    # Bring coordinates to 0-1
-    minX <- min(c(Cx[, "x"], Ey[, "x"]))
-    minY <- min(c(Cx[, "y"], Ey[, "y"]))
-    Cx[, "x"] <- Cx[, "x"] - minX
-    Cx[, "y"] <- Cx[, "y"] - minY
-    Ey[, "x"] <- Ey[, "x"] - minX
-    Ey[, "y"] <- Ey[, "y"] - minY
-    MaxCoord <- max(c(Cx, Ey))
-    Cx <- Cx / MaxCoord
-    Ey <- Ey / MaxCoord
-    list("Cx" = Cx, "Ey" = Ey)
+  # Bring coordinates to 0-1
+  minX <- min(c(Cx[, "x"], Ey[, "x"]))
+  minY <- min(c(Cx[, "y"], Ey[, "y"]))
+  Cx[, "x"] <- Cx[, "x"] - minX
+  Cx[, "y"] <- Cx[, "y"] - minY
+  Ey[, "x"] <- Ey[, "x"] - minX
+  Ey[, "y"] <- Ey[, "y"] - minY
+  MaxCoord <- max(c(Cx, Ey))
+  Cx <- Cx / MaxCoord
+  Ey <- Ey / MaxCoord
+  list("Cx" = Cx, "Ey" = Ey)
 }
 #' Print feature progress
 #'
@@ -233,12 +233,12 @@ moveTwoCoords <- function(Cx, Ey) {
 
 #' @returns Prints progress message to output
 printProgress <- function(feat, allFeats, verbose) {
-    if (verbose && (la <- length(allFeats)) >= 10) {
-        keyFeats <- allFeats[round(la * seq(0.1, 1, by = 0.1))]
-        if (!is.na(id <- match(feat, keyFeats))) {
-            message(round(10 * id), "% of tests completed")
-        }
+  if (verbose && (la <- length(allFeats)) >= 10) {
+    keyFeats <- allFeats[round(la * seq(0.1, 1, by = 0.1))]
+    if (!is.na(id <- match(feat, keyFeats))) {
+      message(round(10 * id), "% of tests completed")
     }
+  }
 }
 #' Add columns with feature names to a matrix by splitting rownames, and remove rownames
 #'
@@ -246,10 +246,10 @@ printProgress <- function(feat, allFeats, verbose) {
 #'
 #' @returns The matrix extended with two columns of feature names in front
 addFeatureColumn <- function(x) {
-    featureMet <- t(vapply(rownames(x), FUN.VALUE = character(2), sund))
-    dimnames(featureMet) <- list(NULL, c("Modality_X", "Modality_Y"))
-    rownames(x) <- NULL
-    data.frame(featureMet, x)
+  featureMet <- t(vapply(rownames(x), FUN.VALUE = character(2), sund))
+  dimnames(featureMet) <- list(NULL, c("Modality_X", "Modality_Y"))
+  rownames(x) <- NULL
+  data.frame(featureMet, x)
 }
 #' Construct the size variable
 #'
@@ -259,16 +259,16 @@ addFeatureColumn <- function(x) {
 #'
 #' @returns The final point size
 getSize <- function(X, Y, normX, normY, size, scaleBySampleSums) {
-    size <- if (scaleBySampleSums && ((normX != "none") && (normY != "none"))) {
-        rsx <- rowSums(X)
-        rsy <- rowSums(Y)
-        c(rsx / max(rsx), rsy / max(rsy)) * size
-    } else {
-        tmp <- rep(size, nrow(X) + nrow(Y))
-        names(tmp) <- c(rownames(X), rownames(Y))
-        tmp
-    }
-    return(size)
+  size <- if (scaleBySampleSums && ((normX != "none") && (normY != "none"))) {
+    rsx <- rowSums(X)
+    rsy <- rowSums(Y)
+    c(rsx / max(rsx), rsy / max(rsy)) * size
+  } else {
+    tmp <- rep(size, nrow(X) + nrow(Y))
+    names(tmp) <- c(rownames(X), rownames(Y))
+    tmp
+  }
+  return(size)
 }
 #' Return feature names from a list
 #'
@@ -276,7 +276,7 @@ getSize <- function(X, Y, normX, normY, size, scaleBySampleSums) {
 #'
 #' @returns A vector of feature names
 getFeaturesList <- function(Xl) {
-    make.names(unique(unlist(lapply(Xl, colnames))))
+  make.names(unique(unlist(lapply(Xl, colnames))))
 }
 #' Collapse a set of character vectors, and wrap the string
 #'
@@ -284,5 +284,45 @@ getFeaturesList <- function(Xl) {
 #'
 #' @returns Formats the character vector
 strwrapPaste <- function(...) {
-    strwrap(paste(..., collapse = " "))
+  strwrap(paste(..., collapse = " "))
+}
+#' Check validity of control list
+#'
+#' @inheritParams sbivarSingle
+#' @param controlvals The list of control values
+#'
+#' @returns Finishes silently if no problems found
+checkControlVals = function(method, controlvals, gpParams){
+    if (method == "Moran's I") {
+        stopifnot(
+            is.numeric(controlvals$numNNs), all(controlvals$numNNs > 0), is.numeric(controlvals$etas),
+            is.logical(controlvals$findMaxW)
+        )
+    } else if (method == "GAMs") {
+        stopifnot(
+            is.numeric(controlvals$n_points_grid),
+            all(vapply(controlvals$families, FUN.VALUE = character(1), function(x) x$link) %in% c("identity", "log", "inverse")),
+            all(vapply(controlvals$families, FUN.VALUE = TRUE, is, "family")),
+            is.logical(controlvals$Gamm), inherits(correlation, "corSpatial")
+        )
+        if (!identical(names(controlvals$families), c("X", "Y"))) {
+            stop("Name families 'X' and 'Y' for unambiguous matching")
+        }
+    } else if (method == "GPs") {
+        stopifnot(
+            inherits(correlation, "corGaus"), is.list(controlvals$optControl),
+            length(controlvals$Quants) == 2, is.numeric(controlvals$Quants)
+        )
+        if (!missing(gpParams)) {
+            if (!is.list(gpParams) || !identical(names(gpParams), c("X", "Y")) ||
+                !all(vapply(gpParams, FUN.VALUE = TRUE, function(x) {
+                    setequal(rownames(x), c("mean", "nugget", "range", "sigma"))
+                })) || !all(colnames(X) %in% colnames(gpParams$X) ||
+                            !all(colnames(Y) %in% colnames(gpParams$Y)))) {
+                stop(strwrapPaste("gpParams must be a list with names 'X' and 'Y' consisting of
+            matrices with rownames 'mean', 'nugget', 'range', 'sigma',
+                 and colnames the same as matrices X and Y!"))
+            }
+        }
+    }
 }

@@ -1,10 +1,10 @@
 test_that("Single image plotting function works", {
-    expect_s3_class(plotTopPair(resMoranTest, X = X, Y = Y, Cx = Cx, Ey = Ey), "ggplot")
-    expect_s3_class(plotPairSingle(X = X, Y = Y, Cx = Cx, Ey = Ey, features = c("X1", "Y1")), "ggplot")
-    expect_s3_class(plotPairSingle(X = X, Y = Y, Cx = Cx, Ey = Ey, scaleBySampleSums = TRUE, features = c("X1", "Y1")), "ggplot")
+  expect_s3_class(plotTopPair(resMoranTest, X = X, Y = Y, Cx = Cx, Ey = Ey), "ggplot")
+  expect_s3_class(plotPairSingle(X = X, Y = Y, Cx = Cx, Ey = Ey, features = c("X1", "Y1")), "ggplot")
+  expect_s3_class(plotPairSingle(X = X, Y = Y, Cx = Cx, Ey = Ey, scaleBySampleSums = TRUE, features = c("X1", "Y1")), "ggplot")
 })
 test_that("Multi-image plotting function works", {
-    expect_s3_class(plotTopPair(resGAMsMulti, Xl = Xl, Yl = Yl, Cxl = Cxl, Eyl = Eyl), "ggplot")
-    expect_s3_class(plotTopPair(resGAMsMulti, Xl, Yl, Cxl, Eyl, parameter = "cofactor"), "ggplot")
-    expect_s3_class(plotPairMulti(Xl, Yl, Cxl, Eyl, features = c("X1", "Y1")), "ggplot")
+  expect_s3_class(plotTopPair(resGAMsMulti, Xl = Xl, Yl = Yl, Cxl = Cxl, Eyl = Eyl), "ggplot")
+  expect_s3_class(plotTopPair(resGAMsMulti, Xl, Yl, Cxl, Eyl, parameter = "cofactor"), "ggplot")
+  expect_s3_class(plotPairMulti(Xl, Yl, Cxl, Eyl, features = c("X1", "Y1")), "ggplot")
 })

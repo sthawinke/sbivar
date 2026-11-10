@@ -75,8 +75,8 @@ data(Vicari)
 # Subset to 5 images and 500 spots limit computing time
 VicariMultiTest <- lapply(Vicari, function(x) lapply(x[1:5], function(y) y[1:500, ]))
 VicariRes <- sbivar(VicariMultiTest$TranscriptOutcomes, VicariMultiTest$MetaboliteOutcomes,
-    VicariMultiTest$TranscriptCoords, VicariMultiTest$MetaboliteCoords,
-    normX = "rel", normY = "rel", method = "GAMs"
+  VicariMultiTest$TranscriptCoords, VicariMultiTest$MetaboliteCoords,
+  method = "GAMs", control = list("families" = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log")))
 )
 mouse <- substr(names(Vicari$TranscriptOutcomes)[1:5], 1, 10)
 designDf <- data.frame("mouse" = mouse) # The design matrix

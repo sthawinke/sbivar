@@ -9,8 +9,7 @@ GAMsMulti(
   Yl,
   Cxl,
   Eyl,
-  families,
-  n_points_grid,
+  control,
   verbose,
   featuresX,
   featuresY,
@@ -22,7 +21,7 @@ GAMsMulti(
 
 \item{Cxl, Eyl}{Lists of corresponding coordinate matrices of dimension two}
 
-\item{families, n_points_grid}{See \link{GAMsSingle}}
+\item{control}{Control arguments passed onto \link{MoransIsingle}, \link{fitGPs} or \link{fitGAMs}, replacing defaults by \link{MoransIsingle}, \link{fitGPs} or \link{fitGAMs}, respectively}
 
 \item{verbose}{Should info on type of analysis be printed?}
 
@@ -30,7 +29,7 @@ GAMsMulti(
 but specifying them allows to test a limited feature set,
 while using the whole matrix to calculate library sizes as offset or for normalization.}
 
-\item{findVariances}{Should variances be calculated? For internal use only}
+\item{families, n_points_grid}{See \link{GAMsSingle}}
 }
 \value{
 A list named like Xl, containing all results

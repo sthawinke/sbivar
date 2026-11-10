@@ -46,5 +46,6 @@ while using the whole matrix to calculate library sizes as offset or for normali
 A named list of results
 }
 \description{
-Fit univariate GAMs with 2D cubic smoothing splines for both modalities, and test for correlation between all bivariate combinations.
+Fit univariate GAMs with 2D cubic smoothing splines for both modalities,
+and test for correlation between all bivariate combinations.
 }

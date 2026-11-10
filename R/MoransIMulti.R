@@ -10,16 +10,18 @@
 #'
 #' @returns A list of Moran's I estimates, standard errors and maximum values
 #' @seealso \link{MoransISingle}
-MoransIMulti <- function(Xl, Yl, Cxl, Eyl, findVariances, verbose, featuresX, featuresY, findMaxW, ...) {
-    lapply(selfName(names(Xl)), function(nam) {
-        if (verbose) {
-            printIteration(nam, names(Xl))
-        }
-        MoransISingle(
-            X = Xl[[nam]], Y = Yl[[nam]], Cx = Cxl[[nam]], Ey = Eyl[[nam]],
-            verbose = FALSE, findMaxW = findMaxW, findVariances = findVariances,
-            returnSEsMoransI = findVariances, featuresX = intersect(featuresX, colnames(Xl[[nam]])),
-            featuresY = intersect(featuresY, colnames(Yl[[nam]])), ...
-        )[c("res", "maxIxy")]
-    })
+MoransIMulti <- function(Xl, Yl, Cxl, Eyl, verbose, featuresX, featuresY, control, ...) {
+  lapply(selfName(names(Xl)), function(nam) {
+    if (verbose) {
+      printIteration(nam, names(Xl))
+    }
+    MoransISingle(
+      X = Xl[[nam]], Y = Yl[[nam]], Cx = Cxl[[nam]], Ey = Eyl[[nam]],
+      verbose = FALSE, wo = controlvals$wo, numNNs = selfName(controlvals$numNNs),
+      variogramModels = controlvals$variogramModels, etas = selfName(controlvals$etas), width = controlvals$width,
+      cutoff = controlvals$cutoff, findMaxW = controlvals$findMaxW, findVariances = findVariances,
+      returnSEsMoransI = findVariances, featuresX = intersect(featuresX, colnames(Xl[[nam]])),
+      featuresY = intersect(featuresY, colnames(Yl[[nam]])), ...
+    )[c("res", "maxIxy")]
+  })
 }

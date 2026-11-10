@@ -7,18 +7,16 @@
 #' @inheritParams MoransIMulti
 #'
 #' @returns A list named like Xl, containing all results
-GAMsMulti <- function(
-      Xl, Yl, Cxl, Eyl, families, n_points_grid, verbose,
-      featuresX, featuresY, findVariances = FALSE
-) {
-    lapply(selfName(names(Xl)), function(nam) {
-        if (verbose) {
-            printIteration(nam, names(Xl))
-        }
-        GAMsSingle(Xl[[nam]], Yl[[nam]], Cxl[[nam]], Eyl[[nam]],
-            families = families, n_points_grid = n_points_grid, Gamm = FALSE,
-            verbose = FALSE, findVariances = findVariances, featuresX = intersect(featuresX, colnames(Xl[[nam]])),
-            featuresY = intersect(featuresY, colnames(Yl[[nam]]))
-        )
-    })
+GAMsMulti <- function(Xl, Yl, Cxl, Eyl, control, verbose,
+                      featuresX, featuresY, findVariances = FALSE) {
+  lapply(selfName(names(Xl)), function(nam) {
+    if (verbose) {
+      printIteration(nam, names(Xl))
+    }
+    GAMsSingle(Xl[[nam]], Yl[[nam]], Cxl[[nam]], Eyl[[nam]],
+      families = control$families, n_points_grid = control$n_points_grid, Gamm = FALSE,
+      verbose = FALSE, findVariances = findVariances, featuresX = intersect(featuresX, colnames(Xl[[nam]])),
+      featuresY = intersect(featuresY, colnames(Yl[[nam]]))
+    )
+  })
 }

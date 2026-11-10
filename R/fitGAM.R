@@ -12,33 +12,33 @@
 #' @seealso \link[mgcv]{gam}, \link[mgcv]{s}
 #' @inheritParams GAMsSingle
 fitGAM <- function(df, outcome, family = gaussian(), Gamm, correlation) {
-    Form <- paste(
-        outcome, "~ s(x, y, bs = 'tp', id = 'trend')",
-        if (Gamm && !is.null(df$Offset)) "+offset(Offset)"
+  Form <- paste(
+    outcome, "~ s(x, y, bs = 'tp', id = 'trend')",
+    if (Gamm && !is.null(df$Offset)) "+offset(Offset)"
+  )
+  fit <- if (Gamm) {
+    try(gamm(as.formula(Form),
+      correlation = correlation,
+      data = df, family = family
+    )$gam, silent = TRUE)
+  } else {
+    fit <- try(gam(as.formula(Form),
+      data = df, family = family, offset = df$Offset
+    ), silent = TRUE)
+  }
+  if (Gamm && is(fit, "try-error")) {
+    fit <- fitGAM(
+      df = df, outcome = outcome, family = family,
+      Gamm = FALSE
     )
-    fit <- if (Gamm) {
-        try(gamm(as.formula(Form),
-            correlation = correlation,
-            data = df, family = family
-        )$gam, silent = TRUE)
-    } else {
-        fit <- try(gam(as.formula(Form),
-            data = df, family = family, offset = df$Offset
-        ), silent = TRUE)
-    }
-    if (Gamm && is(fit, "try-error")) {
-        fit <- fitGAM(
-            df = df, outcome = outcome, family = family,
-            Gamm = FALSE
-        )
-    }
-    if (is(fit, "try-error") && family$family == "Gamma") {
-        fit <- fitGAM(
-            df = df, outcome = outcome, family = mgcv::nb(),
-            Gamm = Gamm, correlation = correlation
-        )
-    }
-    return(fit)
+  }
+  if (is(fit, "try-error") && family$family == "Gamma") {
+    fit <- fitGAM(
+      df = df, outcome = outcome, family = mgcv::nb(),
+      Gamm = Gamm, correlation = correlation
+    )
+  }
+  return(fit)
 }
 #' Fit GAMs to all columns of a dataframe, as a wrapper for fitGAM
 #'
@@ -54,31 +54,33 @@ fitGAM <- function(df, outcome, family = gaussian(), Gamm, correlation) {
 #' @returns A list of GAM models
 #' @importFrom smoppix loadBalanceBplapply
 #' @importFrom BiocParallel bplapply
-fitManyGAMs <- function(mat, coord, family = gaussian(), modality, features,
-    Gamm, correlation, pseudoCount = 1e-8, ...) {
-    if (family$family == "Gamma") {
-        mat <- mat + pseudoCount
-    }
-    df <- data.frame(as.matrix(mat), coord)
-    libSizes <- rowSums(mat)
-    if (family$family != "gaussian") {
-        df <- df[id <- (libSizes > 0), ]
-        libSizes <- libSizes[id]
-    }
-    df$Offset <- switch(family$link,
-        "inverse" = 1 / libSizes,
-        "log" = log(libSizes),
-        NULL
+fitManyGAMs <- function(
+  mat, coord, family = gaussian(), modality, features,
+  Gamm, correlation, pseudoCount = 1e-8, ...
+) {
+  if (family$family == "Gamma") {
+    mat <- mat + pseudoCount
+  }
+  df <- data.frame(as.matrix(mat), coord)
+  libSizes <- rowSums(mat)
+  if (family$family != "gaussian") {
+    df <- df[id <- (libSizes > 0), ]
+    libSizes <- libSizes[id]
+  }
+  df$Offset <- switch(family$link,
+    "inverse" = 1 / libSizes,
+    "log" = log(libSizes),
+    NULL
+  )
+  fits <- loadBalanceBplapply(selfName(features), function(cn) {
+    fitGAM(df, outcome = cn, family = family, Gamm = Gamm, correlation = correlation, ...)
+  })
+  if (!all(id <- vapply(fits, FUN.VALUE = TRUE, is, "gam"))) {
+    warning(
+      immediate. = TRUE,
+      sum(!id), " GAM fits failed in modality ", modality,
+      ", please investigate cause! First failure:\n", fits[[which.min(id)]]
     )
-    fits <- loadBalanceBplapply(selfName(features), function(cn) {
-        fitGAM(df, outcome = cn, family = family, Gamm = Gamm, correlation = correlation, ...)
-    })
-    if (!all(id <- vapply(fits, FUN.VALUE = TRUE, is, "gam"))) {
-        warning(
-            immediate. = TRUE,
-            sum(!id), " GAM fits failed in modality ", modality,
-            ", please investigate cause! First failure:\n", fits[[which.min(id)]]
-        )
-    }
-    return(fits[id])
+  }
+  return(fits[id])
 }

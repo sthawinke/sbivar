@@ -18,35 +18,35 @@
 #' p <- 3
 #' k <- 2
 #' X <- matrix(rnorm(n * p), n, p,
-#'     dimnames =
-#'         list(paste0("sampleX", seq_len(n)), paste0("X", seq_len(p)))
+#'   dimnames =
+#'     list(paste0("sampleX", seq_len(n)), paste0("X", seq_len(p)))
 #' )
 #' Y <- matrix(rnorm(m * k), m, k,
-#'     dimnames =
-#'         list(paste0("sampleY", seq_len(m)), paste0("Y", seq_len(k)))
+#'   dimnames =
+#'     list(paste0("sampleY", seq_len(m)), paste0("Y", seq_len(k)))
 #' )
 #' Cx <- matrix(runif(n * 2), n, 2, dimnames = list(rownames(X), c("x", "y")))
 #' Ey <- matrix(runif(m * 2), m, 2, dimnames = list(rownames(Y), c("x", "y")))
 #' resMoransI <- sbivar(X, Y, Cx, Ey, method = "Moran's I")
 #' resGAMs <- sbivar(X, Y, Cx, Ey, method = "GAMs")
 #' Y2 <- matrix(rnorm(n * k), n, k,
-#'     dimnames =
-#'         list(paste0("sampleX", seq_len(n)), paste0("Y", seq_len(k)))
+#'   dimnames =
+#'     list(paste0("sampleX", seq_len(n)), paste0("Y", seq_len(k)))
 #' )
 #' resModtTestJoint <- sbivar(X, Y2, Cx, method = "Modified t-test")
 #' # Single image analysis on synthetic data, converted to SpatialExperiment
 #' library(SpatialExperiment)
 #' seX <- SpatialExperiment(
-#'     assays = list("transcripts" = t(X)),
-#'     spatialCoords = Cx
+#'   assays = list("transcripts" = t(X)),
+#'   spatialCoords = Cx
 #' )
 #' seY <- SpatialExperiment(
-#'     assays = list("metabolites" = t(Y)),
-#'     spatialCoords = Ey
+#'   assays = list("metabolites" = t(Y)),
+#'   spatialCoords = Ey
 #' )
 #' resModtGPs <- sbivar(seX, seY,
-#'     assayX = "transcripts", assayY = "metabolites",
-#'     method = "GPs"
+#'   assayX = "transcripts", assayY = "metabolites",
+#'   method = "GPs"
 #' )
 setGeneric("sbivar", function(X, Y, ...) standardGeneric("sbivar"))
 #' Return the top results found by sbivar
@@ -55,8 +55,8 @@ setGeneric("sbivar", function(X, Y, ...) standardGeneric("sbivar"))
 #' @return A dataframe of top results
 #' @export
 setGeneric(
-    "topPairs",
-    function(x, ...) standardGeneric("topPairs")
+  "topPairs",
+  function(x, ...) standardGeneric("topPairs")
 )
 #' @title Plot a the top feature pair according to a sbivar analysis
 #' @description Plot a chosen feature pair, or the highest ranking feature pair,
@@ -85,12 +85,12 @@ setGeneric(
 #' p <- 3
 #' k <- 2
 #' X <- matrix(rnorm(n * p), n, p,
-#'     dimnames =
-#'         list(paste0("sampleX", seq_len(n)), paste0("X", seq_len(p)))
+#'   dimnames =
+#'     list(paste0("sampleX", seq_len(n)), paste0("X", seq_len(p)))
 #' )
 #' Y <- matrix(rnorm(m * k), m, k,
-#'     dimnames =
-#'         list(paste0("sampleY", seq_len(m)), paste0("Y", seq_len(k)))
+#'   dimnames =
+#'     list(paste0("sampleY", seq_len(m)), paste0("Y", seq_len(k)))
 #' )
 #' Cx <- matrix(runif(n * 2), n, 2, dimnames = list(rownames(X), c("x", "y")))
 #' Ey <- matrix(runif(m * 2), m, 2, dimnames = list(rownames(Y), c("x", "y")))
@@ -103,15 +103,17 @@ setGeneric(
 #' data(Vicari)
 #' # Plot an arbitrary feature pair
 #' plotPairMulti(Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
-#'     Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
-#'     normX = "rel", normY = "rel", features = c("Gnas", "Tocopherol")
+#'   Vicari$TranscriptCoords, Vicari$MetaboliteCoords,
+#'   normX = "rel", normY = "rel", features = c("Gnas", "Tocopherol")
 #' )
 setGeneric(
-    "plotTopPair",
-    function(x, ..., topRank = 1, parameter = "Intercept", scaleBySampleSums = FALSE,
-    normX = x@normX, normY = x@normY) {
-        standardGeneric("plotTopPair")
-    }
+  "plotTopPair",
+  function(
+    x, ..., topRank = 1, parameter = "Intercept", scaleBySampleSums = FALSE,
+    normX = x@normX, normY = x@normY
+  ) {
+    standardGeneric("plotTopPair")
+  }
 )
 #' Plot GAMs of top features
 #' @description Fit GAMS for the top feature pair chosen, and plot the resulting spline surfaces
@@ -119,10 +121,10 @@ setGeneric(
 #' @inheritParams plotTopPair
 #' @inheritParams sbivarSingle
 setGeneric(
-    "plotGAMsTopPair",
-    function(x, X, Y, Cx, Ey, topRank = 1, parameter = "Intercept", ...) {
-        standardGeneric("plotGAMsTopPair")
-    }
+  "plotGAMsTopPair",
+  function(x, X, Y, Cx, Ey, topRank = 1, parameter = "Intercept", ...) {
+    standardGeneric("plotGAMsTopPair")
+  }
 )
 #' Write \emph{sbivar} results to an excel worksheet
 #'
@@ -153,8 +155,8 @@ setGeneric(
 #' writeSbivarToXlsx(resGAMs, file = tmpFile <- tempfile(fileext = ".xlsx"), sigLevel = 1)
 #' file.exists(tmpFile)
 setGeneric(
-    "writeSbivarToXlsx",
-    function(x, file, overwrite = FALSE, digits = 3, sigLevel = 0.05) standardGeneric("writeSbivarToXlsx")
+  "writeSbivarToXlsx",
+  function(x, file, overwrite = FALSE, digits = 3, sigLevel = 0.05) standardGeneric("writeSbivarToXlsx")
 )
 #' Fit linear models on result calculated for replicated images, and extract the results
 #' @description Given result estimated from replicated images using \link{sbivarMulti},
@@ -181,8 +183,8 @@ setGeneric(
 #' # Subset to 5 images and 500 spots limit computing time
 #' VicariMultiTest <- lapply(Vicari, function(x) lapply(x[1:5], function(y) y[1:500, ]))
 #' VicariRes <- sbivar(VicariMultiTest$TranscriptOutcomes, VicariMultiTest$MetaboliteOutcomes,
-#'     VicariMultiTest$TranscriptCoords, VicariMultiTest$MetaboliteCoords,
-#'     normX = "rel", normY = "rel", method = "GAMs"
+#'   VicariMultiTest$TranscriptCoords, VicariMultiTest$MetaboliteCoords,
+#'   method = "GAMs", control = list("families" = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log")))
 #' )
 #' mouse <- substr(names(Vicari$TranscriptOutcomes)[1:5], 1, 10)
 #' designDf <- data.frame("mouse" = mouse) # The design matrix
@@ -199,13 +201,15 @@ setGeneric(
 #' @importFrom BiocParallel bplapply bpparam bpworkers
 #' @seealso \link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}, \link[stats]{p.adjust}
 setGeneric(
-    "fitLinModels",
-    function(result, designDf, Formula, verbose = TRUE, inverseWeigh = FALSE, scaleByMax = TRUE,
+  "fitLinModels",
+  function(
+    result, designDf, Formula, verbose = TRUE, inverseWeigh = FALSE, scaleByMax = TRUE,
     Control = lmerControl(
-        check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
-        check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
-        check.conv.hess = .makeCC(action = "ignore", tol = 1e-06)
-    )) {
-        standardGeneric("fitLinModels")
-    }
+      check.conv.grad = .makeCC("ignore", tol = 0.002, relTol = NULL),
+      check.conv.singular = .makeCC(action = "ignore", tol = 1e-4),
+      check.conv.hess = .makeCC(action = "ignore", tol = 1e-06)
+    )
+  ) {
+    standardGeneric("fitLinModels")
+  }
 )

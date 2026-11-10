@@ -46,7 +46,7 @@ setMethod(
   signature(object = "sbivarResults"),
   function(object) {
     cat(
-      "Sbivar fit with ", object@method, " method on",
+      "Sbivar fit with method", object@method, "on",
       if (object@multi) {
         c(length(object@result), "images")
       } else {

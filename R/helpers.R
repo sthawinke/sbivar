@@ -304,14 +304,14 @@ checkControlVals = function(method, controlvals, correlation, gpParams){
             is.numeric(controlvals$n_points_grid),
             all(vapply(controlvals$families, FUN.VALUE = character(1), function(x) x$link) %in% c("identity", "log", "inverse")),
             all(vapply(controlvals$families, FUN.VALUE = TRUE, is, "family")),
-            is.logical(controlvals$Gamm), inherits(correlation, "corSpatial")
+            is.logical(controlvals$Gamm), missing(correlation) || inherits(correlation, "corSpatial")
         )
         if (!identical(names(controlvals$families), c("X", "Y"))) {
             stop("Name families 'X' and 'Y' for unambiguous matching")
         }
     } else if (method == "GPs") {
         stopifnot(
-            inherits(correlation, "corGaus"), is.list(controlvals$optControl),
+            missing(correlation) || inherits(correlation, "corGaus"), is.list(controlvals$optControl),
             length(controlvals$Quants) == 2, is.numeric(controlvals$Quants)
         )
         if (!missing(gpParams)) {

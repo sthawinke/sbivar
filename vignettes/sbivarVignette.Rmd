@@ -256,7 +256,7 @@ plotTopPair(multiMoranLmmsRes,
 Again, the results of the multi-image analysis can be written to an external spreadsheet. Setting _sigLevel_ to 1 means all feature pairs are written to the file:
 
 ```{r sbivarMultiOut, eval = FALSE}
-writeSbivarToXlsx(multiMoranLmmsRes, file = "myfile2.xlsx", sigLevel = 1)
+writeSbivarToXlsx(multiMoranLmmsRes, file = tempfile(fileext = ".xlsx"), sigLevel = 1)
 ```
 
 # Other common input formats
@@ -355,34 +355,14 @@ SEmultiStx
 Run the analysis:
 
 ```{r multiSEanalysis}
-sbivarMultiSingleSE <- sbivar(SEmultiStx, SEmultiMet,
-  assayX = "transcripts", assayY = "metabolites",
+sbivarMultiSE <- sbivar(SEmultiStx, SEmultiMet,
+  assayX = "transcripts", assayY = "metabolites", sample_id_x = "sample_id",
   method = "GAMs", control = list("families" = FamiliesVicari)
 )
-multiMoranLmmsSingleSE <- fitLinModels(sbivarMultiSingleSE, designDf,
+sbivarMultiSE <- fitLinModels(sbivarMultiSE, designDf,
   Formula = ~ (1 | mouse)
 )
-multiMoranLmmsResSingleSE <- extractResultsMulti(multiMoranLmmsSingleSE, designDf)
-```
-
-Alternatively, based on the _MultiAssayExperiment_, we include the design in the _colData_ slot:
-
-```{r multiMAEanalysis, eval = FALSE}
-MAEmulti <- MultiAssayExperiment(
-  experiments = list(
-    "Stx" = SEmultiStx,
-    "Msi" = SEmultiMet
-  ),
-  colData = designDf
-)
-sbivarMultiSingleSE <- sbivar(SEmultiStx, SEmultiMet,
-  assayX = "transcripts", assayY = "metabolites",
-  method = "GAMs", normX = "rel", normY = "rel"
-)
-multiMoranLmmsSingleSE <- fitLinModels(sbivarMultiSingleSE, colData(MAEmulti),
-  Formula = ~ (1 | mouse)
-)
-multiMoranLmmsResSingleSE <- extractResultsMulti(multiMoranLmmsSingleSE, colData(MAEmulti))
+sbivarMultiSE <- extractResultsMulti(sbivarMultiSE, designDf)
 ```
 
 ## AnnData

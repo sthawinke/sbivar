@@ -15,8 +15,8 @@ setMethod(
       "nn" = "numNN_"
     )
   }
-  outout <- loadBalanceBplapply(selfName(names(result@result)), function(nm) {
-    res <- result@result[[nm]]
+  outout <- loadBalanceBplapply(selfName(names(result@models)), function(nm) {
+    res <- result@models[[nm]]
     if (result@method == "Moran's I") {
       names(res) <- paste0(wParChar, names(res))
     }
@@ -97,5 +97,6 @@ setMethod(
     addFeatureColumn(cbind(tmpMat, "pAdj" = p.adjust(tmpMat[, "pVal"], method = method)))
   })
   result@result <- fixResOut
+  result@models <- NULL
   return(result)
 })

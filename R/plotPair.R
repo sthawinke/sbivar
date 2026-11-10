@@ -20,8 +20,8 @@ plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "
   normY <- match.arg(normY)
   dfList <- do.call(rbind, lapply(names(Xl), function(nam) {
     size <- getSize(Xl[[nam]], Yl[[nam]], normX, normY, scaleBySampleSums, size = size)
-    X <- normMat(Xl[[nam]], normX)
-    Y <- normMat(Yl[[nam]], normY)
+    X <- normMat(Xl[[nam]], normX, warnDrop = FALSE)
+    Y <- normMat(Yl[[nam]], normY, warnDrop = FALSE)
     coordMat <- rbind(Cxl[[nam]][rownames(X), ], Eyl[[nam]][rownames(Y), ])
     colnames(coordMat) <- c("x", "y")
     data.frame(

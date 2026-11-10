@@ -1,7 +1,7 @@
 test_that("SbivarSingle works for correct input", {
   sbiRes <- sbivar(X, Y, Cx, Ey, method = "GAMs")
   expect_s4_class(sbiRes, "sbivarResultsGAMs")
-  expect_message(show(sbiRes))
+  expect_output(show(sbiRes))
   expect_s4_class(sbiRes, "sbivarResults")
   expect_s4_class(sbivar(X, Y, Cx, Ey, method = "GPs"), "sbivarResults")
   expect_s4_class(

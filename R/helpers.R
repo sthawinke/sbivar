@@ -319,8 +319,8 @@ checkControlVals <- function(method, controlvals, correlation, gpParams){
             if (!is.list(gpParams) || !identical(names(gpParams), c("X", "Y")) ||
                 !all(vapply(gpParams, FUN.VALUE = TRUE, function(x) {
                     setequal(rownames(x), c("mean", "nugget", "range", "sigma"))
-                })) || !all(colnames(X) %in% colnames(gpParams$X) ||
-                            !all(colnames(Y) %in% colnames(gpParams$Y)))) {
+                })) || !all(colnames(X) %in% colnames(gpParams$X)) ||
+                            !all(colnames(Y) %in% colnames(gpParams$Y))) {
                 stop(strwrapPaste("gpParams must be a list with names 'X' and 'Y' consisting of
             matrices with rownames 'mean', 'nugget', 'range', 'sigma',
                  and colnames the same as matrices X and Y!"))

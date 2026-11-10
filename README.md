@@ -68,11 +68,11 @@ Prepare multithreading
 library(BiocParallel)
 nCores <- 2
 if (.Platform$OS.type == "unix") {
-    # On unix-based systems (linux and macOS), use MulticoreParam
-    register(MulticoreParam(nCores, stop.on.error = FALSE))
+  # On unix-based systems (linux and macOS), use MulticoreParam
+  register(MulticoreParam(nCores, stop.on.error = FALSE))
 } else {
-    # On windows, use SnowParam
-    register(SnowParam(workers = nCores, type = "SOCK", stop.on.error = FALSE))
+  # On windows, use SnowParam
+  register(SnowParam(workers = nCores, type = "SOCK", stop.on.error = FALSE))
 }
 ```
 
@@ -80,7 +80,7 @@ Now analyse this single sample using bivariate Moran’s I.
 
 ``` r
 moranRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
-    method = "Moran's I"
+  method = "Moran's I"
 )
 ```
 
@@ -149,9 +149,9 @@ log-link is used in both cases.
 
 ``` r
 multiGAMRes <- sbivar(
-    X = Vicari$TranscriptOutcomes, Y = Vicari$MetaboliteOutcomes,
-    Cx = Vicari$TranscriptCoords, Ey = Vicari$MetaboliteCoords,
-    method = "GAM", families = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log"))
+  X = Vicari$TranscriptOutcomes, Y = Vicari$MetaboliteOutcomes,
+  Cx = Vicari$TranscriptCoords, Ey = Vicari$MetaboliteCoords,
+  method = "GAMs", control = list("families" = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log")))
 )
 ```
 
@@ -186,13 +186,13 @@ multiGAMLmmsRes <- extractResultsMulti(multiGAMLmms, design)
 topPairs(multiGAMLmmsRes, parameter = "Intercept")
 ```
 
-    ##   Modality_X Modality_Y   Estimate         SE       pVal      pAdj
-    ## 1      Sparc Tocopherol -0.1969455 0.05512814 0.01600122 0.4000305
-    ## 2       Gnas Tocopherol  0.2058657 0.08376740 0.05739854 0.5648194
-    ## 3       Gnas       GABA  0.2549455 0.10973641 0.06777833 0.5648194
-    ## 4       Gnas  Histidine  0.2027837 0.11076368 0.12664093 0.7915058
-    ## 5       Fth1       GABA  0.4125944 0.19797769 0.28481526 0.9377581
-    ## 6       Gnas   Dopamine -0.2579455 0.15311234 0.34103084 0.9377581
+    ##   Modality_X Modality_Y   Estimate         SE        pVal      pAdj
+    ## 1       Fth1       GABA  0.4125944 0.10215786 0.009934558 0.1616965
+    ## 2      Sparc Tocopherol -0.1969455 0.05512814 0.016001220 0.1616965
+    ## 3    mt.Atp6       GABA -0.4230801 0.12470185 0.019403575 0.1616965
+    ## 4      Sparc    Taurine -0.3736672 0.12022088 0.026605784 0.1662862
+    ## 5       Gnas   Dopamine -0.2579455 0.10237119 0.053193609 0.2207701
+    ## 6       Gnas Tocopherol  0.2058657 0.08376740 0.057398540 0.2207701
 
 No features are significantly associated after multiplicity correction.
 For illustration, we plot the feature pair with the smallest p-values
@@ -200,8 +200,8 @@ nevertheless:
 
 ``` r
 plotTopPair(multiGAMLmmsRes,
-    Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes,
-    Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.3
+  Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes,
+  Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.3
 )
 ```
 

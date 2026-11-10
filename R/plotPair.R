@@ -39,7 +39,7 @@ plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "
     scale_colour_gradient(low = "yellow", high = "blue", name = "Outcome") +
     xlab("x coordinate") +
     ylab("y coordinate") +
-    coord_fixed() +
+    coord_fixed() + guides(size = "none") +
     theme(axis.text = element_blank(), axis.ticks = element_blank())
 }
 #' @inheritParams sbivar
@@ -98,12 +98,12 @@ plotPairSingleVectors <- function(x, y, Cx, Ey, size,
     ),
     "size" = size
   )
-  ggplot(data = plotDf, aes(x = x, y = y, col = outcome)) +
-    geom_point(size = size) +
+  ggplot(data = plotDf, aes(x = x, y = y, col = outcome, size = size)) +
+    geom_point() +
     facet_grid(~feature) +
     scale_colour_gradient(low = "yellow", high = "blue", name = "Outcome") +
     xlab("x coordinate") +
     ylab("y coordinate") +
-    coord_fixed() +
+    coord_fixed() + guides(size = "none") +
     theme(axis.text = element_blank(), axis.ticks = element_blank())
 }

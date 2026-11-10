@@ -222,6 +222,8 @@ setGeneric(
 #' @importFrom methods is
 #' @return The modified results object
 #' @export
+#' @rdname fitLinModels
+#' @order 2
 setGeneric(
     "extractResultsMulti",
     function(result, designDf, method = "BH"

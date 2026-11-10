@@ -6,6 +6,7 @@
 #' @order 1
 #' @seealso \link{MoransISingle, fitGAM, fitGP}
 #' @rdname controlLists
+#' @return A list of control elements
 moranControl <- function(etas = c(5e-6, 2e-4, 2e-2), findMaxW = FALSE, returnSEsMoransI = TRUE,
                          variogramModels = c("Exp", "Lin"), width = cutoff / 15, cutoff = sqrt(2) / 3,
                          wo = c("Gauss", "nn"), numNNs = c(4, 8, 24)) {

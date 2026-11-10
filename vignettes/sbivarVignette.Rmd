@@ -9,7 +9,7 @@ output:
     citation_package: biblatex
 vignette: >
   %\VignetteIndexEntry{Vignette of the sbivar package}
-  %\VignetteEngine{knitr::knitr}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 bibliography: ../inst/REFERENCES.bib 
 ---

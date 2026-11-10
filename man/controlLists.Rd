@@ -54,6 +54,9 @@ passed onto \link[nlme]{gls} as "method".}
 
 \item{optControl}{List of control values for \link[nlme]{gls}, see \link[nlme]{glsControl}.}
 }
+\value{
+A list of control elements
+}
 \description{
 Define default argument lists for the MoransISingle(), GAMsSingle() and GPsingle() functions
 }

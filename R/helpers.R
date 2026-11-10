@@ -293,7 +293,7 @@ strwrapPaste <- function(...) {
 #' @param controlvals The list of control values
 #'
 #' @returns Finishes silently if no problems found
-checkControlVals = function(method, controlvals, correlation, gpParams){
+checkControlVals <- function(method, controlvals, correlation, gpParams){
     if (method == "Moran's I") {
         stopifnot(
             is.numeric(controlvals$numNNs), all(controlvals$numNNs > 0), is.numeric(controlvals$etas),
@@ -332,6 +332,6 @@ checkControlVals = function(method, controlvals, correlation, gpParams){
 #' @param Cx The coordinate matrix
 #'
 #' @returns 90% The maximal dimension of the coordinates
-getLengthScale = function(Cx){
+getLengthScale <- function(Cx){
     0.9 * max(apply(Cx, 2, function(x) diff(range(x))))
 }

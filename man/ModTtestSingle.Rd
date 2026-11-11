@@ -14,11 +14,13 @@ ModTtestSingle(X, Y, Cx, verbose)
 \item{verbose}{Should info on type of analysis be printed?}
 }
 \value{
-A dataframe of results sorted by p-value, also containing effective sample size (ESS) and correlation estimate.
+A dataframe of results sorted by p-value, also containing effective
+  sample size (ESS) and correlation estimate.
 }
 \description{
 The modified t-test is applied to all pairs, which tests for the significance
-of the Pearson correlation while accounting for spatial autocorrelation \insertCite{Clifford1989}{sbivar}.
+of the Pearson correlation while accounting for spatial autocorrelation
+\insertCite{Clifford1989}{sbivar}.
 }
 \references{
 \insertAllCited{}

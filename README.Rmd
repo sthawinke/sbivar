@@ -82,7 +82,7 @@ topPairs(moranRes)
 Plot the most significantly spatially associated gene-metabolite pair `r paste(c(topPairs(moranRes)[1, 1:2]), collapse = "--")`:
 
 ```{r toppairsingle, fig.height = 2.5}
-plotTopPair(moranRes, singleStx, singleMet, singleStxCoords, singleMetCoords, size = 1)
+plotTopPair(moranRes, singleStx, singleMet, singleStxCoords, singleMetCoords)
 ```
 
 Write the results to a spreadsheet
@@ -128,7 +128,7 @@ No features are significantly associated after multiplicity correction. For illu
 ```{r topPairMulti, fig.height = 9}
 plotTopPair(multiGAMLmmsRes,
   Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes,
-  Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.1
+  Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords
 )
 ```
 

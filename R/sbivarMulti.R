@@ -13,17 +13,18 @@
 #' @importFrom BiocParallel bpparam bpworkers
 #' @seealso \link{fitLinModels}, \link{MoransIMulti}, \link{correlationsMulti}, \link{GAMsMulti}
 sbivarMulti <- function(Xl, Yl, Cxl, Eyl, method = c("Moran's I", "GAMs", "Correlation"),
-            control, featuresX = getFeaturesList(Xl), featuresY = getFeaturesList(Yl),
-            normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
-                       verbose = TRUE, findVariances = FALSE, findMaxW = TRUE) {
+                        control, featuresX = getFeaturesList(Xl), featuresY = getFeaturesList(Yl),
+                        normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
+                        verbose = TRUE, findVariances = FALSE, findMaxW = TRUE) {
   method <- match.arg(method)
   normX <- match.arg(normX)
   normY <- match.arg(normY)
-  controlvals <- switch(method, "Moran's I" = moranControl(),
-                        "GAMs" = GAMcontrol()
+  controlvals <- switch(method,
+    "Moran's I" = moranControl(),
+    "GAMs" = GAMcontrol()
   )
   if (!missing(control)) {
-      controlvals[names(control)] <- control
+    controlvals[names(control)] <- control
   }
   invisible(checkControlVals(method, controlvals))
   stopifnot(
@@ -71,12 +72,12 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, method = c("Moran's I", "GAMs", "Corre
     }
     MoransIMulti(Xl, Yl, Cxl, Eyl,
       featuresX = featuresX, featuresY = featuresY,
-     control = controlvals, verbose = verbose, findVariances = findVariances
+      control = controlvals, verbose = verbose, findVariances = findVariances
     )
   } else if (method == "GAMs") {
     GAMsMulti(Xl, Yl, Cxl, Eyl,
       featuresX = featuresX, featuresY = featuresY,
-     findVariances = findVariances,
+      findVariances = findVariances,
       control = controlvals, verbose = verbose
     )
   } else if (method == "Correlation") {
@@ -86,8 +87,9 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, method = c("Moran's I", "GAMs", "Corre
   }
   out <- if (method == "Moran's I") {
     wParams <- switch(controlvals$wo,
-                        "Gauss" = controlvals$etas,
-                        "nn" = controlvals$numNNs)
+      "Gauss" = controlvals$etas,
+      "nn" = controlvals$numNNs
+    )
     new("sbivarResultsMoransI",
       "result" = lapply(res, function(x) x$res), "method" = method, "normX" = normX, "multi" = TRUE,
       "normY" = normY, "maxIxy" = if (controlvals$findMaxW) vapply(res, FUN.VALUE = wParams, function(x) x$maxIxy),

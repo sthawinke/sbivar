@@ -7,7 +7,7 @@
 #' @param theme the ggplot2 theme
 #' @return a ggplot2 object
 plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "log"), scaleBySampleSums = FALSE,
-                          normY = c("none", "rel", "log"), size = 1.25, assayX, assayY, theme = theme_bw()) {
+                          normY = c("none", "rel", "log"), size = 0.25, assayX, assayY, theme = theme_bw()) {
   stopifnot(is.logical(scaleBySampleSums), is.numeric(size))
   Xl <- getX(Xl, assayX)
   Yl <- getX(Yl, assayY)
@@ -39,7 +39,8 @@ plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "
     scale_colour_gradient(low = "yellow", high = "blue", name = "Outcome") +
     xlab("x coordinate") +
     ylab("y coordinate") +
-    coord_fixed() + guides(size = "none") +
+    coord_fixed() +
+    guides(size = "none") +
     theme(axis.text = element_blank(), axis.ticks = element_blank())
 }
 #' @inheritParams sbivar
@@ -57,7 +58,7 @@ plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "
 #' plotPairSingle(X, Y, Cx, Ey, features = c("X1", "Y1"))
 plotPairSingle <- function(
   X, Y, Cx, Ey, features, normX = c("none", "rel", "log"),
-  normY = c("none", "rel", "log"), assayX, assayY, scaleBySampleSums = FALSE, size = 1.5, ...
+  normY = c("none", "rel", "log"), assayX, assayY, scaleBySampleSums = FALSE, size = 0.25, ...
 ) {
   stopifnot(length(features) == 2, is.numeric(size), is.logical(scaleBySampleSums))
   if (inherits(X, "SpatialExperiment")) {
@@ -104,6 +105,7 @@ plotPairSingleVectors <- function(x, y, Cx, Ey, size,
     scale_colour_gradient(low = "yellow", high = "blue", name = "Outcome") +
     xlab("x coordinate") +
     ylab("y coordinate") +
-    coord_fixed() + guides(size = "none") +
+    coord_fixed() +
+    guides(size = "none") +
     theme(axis.text = element_blank(), axis.ticks = element_blank())
 }

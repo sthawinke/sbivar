@@ -12,9 +12,9 @@ setMethod(
     if (!result@multi) {
       stop("Fitting linear models only makes sense for multi-image analyses!")
     }
-    if(is.list(result@models)){
-        stop("Linear models already present in object, proceed with extractResultsMulti()!")
-     }
+    if (is.list(result@models)) {
+      stop("Linear models already present in object, proceed with extractResultsMulti()!")
+    }
     if (missing(designDf) && length(ncol(attr(terms(Formula), "factors"))) == 0) {
       designDf <- data.frame("foo" = seq_along(result@result))
     } # Allow for intercept only models
@@ -53,13 +53,13 @@ setMethod(
       outArr[i, namesFun(result@result[[i]]), ] <- if (result@method == "Correlation") result@result[[i]] else result@result[[i]][, seq_along(iter)]
       if (scaleByMax && (result@method == "Moran's I")) {
         # Scale estimates
-        outArr[i, namesFun(result@result[[i]]), ] <- t(t(outArr[i, namesFun(result@result[[i]]), ]) / result@maxIxy[,i])
+        outArr[i, namesFun(result@result[[i]]), ] <- t(t(outArr[i, namesFun(result@result[[i]]), ]) / result@maxIxy[, i])
       }
       if (inverseWeigh && (result@method %in% c("Moran's I", "GAMs"))) {
         weightsArr[i, namesFun(result@result[[i]]), ] <- 1 / result@result[[i]][, seq_along(iter) + length(iter)]^2
         if (scaleByMax && (result@method == "Moran's I")) {
           # Scale variances too
-          weightsArr[i, namesFun(result@result[[i]]), ] <- t(t(weightsArr[i, namesFun(result@result[[i]]), ]) * result@maxIxy[,i]^2)
+          weightsArr[i, namesFun(result@result[[i]]), ] <- t(t(weightsArr[i, namesFun(result@result[[i]]), ]) * result@maxIxy[, i]^2)
         }
       }
     }

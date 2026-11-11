@@ -9,6 +9,9 @@
 \arguments{
 \item{object}{The sbivarResults object}
 }
+\value{
+Prints a description to console
+}
 \description{
 Show basic properties of a sbivarResults object
 }

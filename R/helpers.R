@@ -294,45 +294,45 @@ strwrapPaste <- function(...) {
 #'
 #'
 #' @returns Finishes silently if no problems found
-checkControlVals <- function(method, controlvals, correlation, gpParams){
-    if (method == "Moran's I") {
-        stopifnot(
-            is.numeric(controlvals$numNNs), all(controlvals$numNNs > 0), is.numeric(controlvals$etas),
-            is.logical(controlvals$findMaxW)
-        )
-    } else if (method == "GAMs") {
-        stopifnot(
-            is.numeric(controlvals$n_points_grid),
-            all(vapply(controlvals$families, FUN.VALUE = character(1), function(x) x$link) %in% c("identity", "log", "inverse")),
-            all(vapply(controlvals$families, FUN.VALUE = TRUE, is, "family")),
-            is.logical(controlvals$Gamm), missing(correlation) || inherits(correlation, "corSpatial")
-        )
-        if (!identical(names(controlvals$families), c("X", "Y"))) {
-            stop("Name families 'X' and 'Y' for unambiguous matching")
-        }
-    } else if (method == "GPs") {
-        stopifnot(
-            missing(correlation) || inherits(correlation, "corGaus"), is.list(controlvals$optControl),
-            length(controlvals$Quants) == 2, is.numeric(controlvals$Quants)
-        )
-        if (!missing(gpParams)) {
-            if (!is.list(gpParams) || !identical(names(gpParams), c("X", "Y")) ||
-                !all(vapply(gpParams, FUN.VALUE = TRUE, function(x) {
-                    setequal(rownames(x), c("mean", "nugget", "range", "sigma"))
-                })) || !all(colnames(X) %in% colnames(gpParams$X)) ||
-                            !all(colnames(Y) %in% colnames(gpParams$Y))) {
-                stop(strwrapPaste("gpParams must be a list with names 'X' and 'Y' consisting of
+checkControlVals <- function(method, controlvals, correlation, gpParams) {
+  if (method == "Moran's I") {
+    stopifnot(
+      is.numeric(controlvals$numNNs), all(controlvals$numNNs > 0), is.numeric(controlvals$etas),
+      is.logical(controlvals$findMaxW)
+    )
+  } else if (method == "GAMs") {
+    stopifnot(
+      is.numeric(controlvals$n_points_grid),
+      all(vapply(controlvals$families, FUN.VALUE = character(1), function(x) x$link) %in% c("identity", "log", "inverse")),
+      all(vapply(controlvals$families, FUN.VALUE = TRUE, is, "family")),
+      is.logical(controlvals$Gamm), missing(correlation) || inherits(correlation, "corSpatial")
+    )
+    if (!identical(names(controlvals$families), c("X", "Y"))) {
+      stop("Name families 'X' and 'Y' for unambiguous matching")
+    }
+  } else if (method == "GPs") {
+    stopifnot(
+      missing(correlation) || inherits(correlation, "corGaus"), is.list(controlvals$optControl),
+      length(controlvals$Quants) == 2, is.numeric(controlvals$Quants)
+    )
+    if (!missing(gpParams)) {
+      if (!is.list(gpParams) || !identical(names(gpParams), c("X", "Y")) ||
+        !all(vapply(gpParams, FUN.VALUE = TRUE, function(x) {
+          setequal(rownames(x), c("mean", "nugget", "range", "sigma"))
+        })) || !all(colnames(X) %in% colnames(gpParams$X)) ||
+        !all(colnames(Y) %in% colnames(gpParams$Y))) {
+        stop(strwrapPaste("gpParams must be a list with names 'X' and 'Y' consisting of
             matrices with rownames 'mean', 'nugget', 'range', 'sigma',
                  and colnames the same as matrices X and Y!"))
-            }
-        }
+      }
     }
+  }
 }
 #' Derive a default length scale to start GP fitting
 #'
 #' @param Cx The coordinate matrix
 #'
 #' @returns 90% The maximal dimension of the coordinates
-getLengthScale <- function(Cx){
-    0.9 * max(apply(Cx, 2, function(x) diff(range(x))))
+getLengthScale <- function(Cx) {
+  0.9 * max(apply(Cx, 2, function(x) diff(range(x))))
 }

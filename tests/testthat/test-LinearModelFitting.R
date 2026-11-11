@@ -6,16 +6,16 @@ test_that("fitLinModels works for GAM input", {
       Formula = out ~ covariate + cofactor + (1 | group)
     )
   )
-    expect_s4_class(
-        class = "sbivarResults",
+  expect_s4_class(
+    class = "sbivarResults",
     multiFitGams2 <- fitLinModels(estGAMs,
       inverseWeigh = FALSE,
       designDf = toyDesign,
       Formula = out ~ covariate + cofactor + (1 | group)
     )
   )
-    expect_s4_class(
-        class = "sbivarResults",
+  expect_s4_class(
+    class = "sbivarResults",
     multiFitGams3 <- fitLinModels(estGAMs,
       inverseWeigh = FALSE,
       Formula = out ~ 1
@@ -36,14 +36,14 @@ test_that("fitLinModels works for GAM input", {
 })
 test_that("fitLinModels works for Moran's I input", {
   expect_s4_class(
-        class = "sbivarResults",
+    class = "sbivarResults",
     multiFitMoran <- fitLinModels(estMoran,
       designDf = toyDesign,
       Formula = out ~ covariate + cofactor + (1 | group)
     )
   )
   expect_s4_class(
-        class = "sbivarResults",
+    class = "sbivarResults",
     multiFitMoran2 <- fitLinModels(estMoran,
       inverseWeigh = FALSE,
       designDf = toyDesign,
@@ -51,7 +51,7 @@ test_that("fitLinModels works for Moran's I input", {
     )
   )
   expect_s4_class(
-        class = "sbivarResults",
+    class = "sbivarResults",
     multiFitMoran3 <- fitLinModels(estMoran,
       inverseWeigh = FALSE, scaleByMax = FALSE,
       designDf = toyDesign,
@@ -59,7 +59,7 @@ test_that("fitLinModels works for Moran's I input", {
     )
   )
   expect_s4_class(
-      class = "sbivarResults",
+    class = "sbivarResults",
     multiFitMoran4 <- fitLinModels(estMoran,
       inverseWeigh = TRUE, scaleByMax = FALSE,
       designDf = toyDesign,
@@ -68,8 +68,8 @@ test_that("fitLinModels works for Moran's I input", {
   )
 })
 test_that("fitLinModels works for correlation input", {
-    expect_s4_class(
-        class = "sbivarResults",
+  expect_s4_class(
+    class = "sbivarResults",
     multiFitCors <- fitLinModels(estMultiCor,
       designDf = toyDesign,
       Formula = out ~ covariate + cofactor + (1 | group)

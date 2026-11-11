@@ -226,9 +226,8 @@ setGeneric(
 #' @rdname fitLinModels
 #' @order 2
 setGeneric(
-    "extractResultsMulti",
-    function(result, designDf, method = "BH"
-    ) {
-        standardGeneric("extractResultsMulti")
-    }
+  "extractResultsMulti",
+  function(result, designDf, method = "BH") {
+    standardGeneric("extractResultsMulti")
+  }
 )

@@ -17,7 +17,7 @@ plotPairSingle(
   assayX,
   assayY,
   scaleBySampleSums = FALSE,
-  size = 1.5,
+  size = 0.25,
   ...
 )
 
@@ -30,7 +30,7 @@ plotPairMulti(
   normX = c("none", "rel", "log"),
   scaleBySampleSums = FALSE,
   normY = c("none", "rel", "log"),
-  size = 1.25,
+  size = 0.25,
   assayX,
   assayY,
   theme = theme_bw()

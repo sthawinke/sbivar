@@ -74,25 +74,26 @@ setValidity("sbivarResults", function(object) {
     return("multi must be a boolean")
   }
   if (!object@multi && is.list(object@models)) {
-        return("Models can only be attached for multi-image analysis")
-   }
+    return("Models can only be attached for multi-image analysis")
+  }
   TRUE
 })
 #' Show basic properties of a sbivarResults object
 #' @importFrom methods show
 #' @param object The sbivarResults object
+#' @return Prints a description to console
 #' @export
 setMethod(
-    "show",
-    signature(object = "sbivarResults"),
-    function(object) {
-        cat(
-            "Sbivar fit with method", object@method, "on",
-            if (object@multi) {
-                c(length(object@result), "images")
-            } else {
-                c("single image with", nrow(object@result), "feature pairs tested")
-            }
-        )
-    }
+  "show",
+  signature(object = "sbivarResults"),
+  function(object) {
+    cat(
+      "Sbivar fit with method", object@method, "on",
+      if (object@multi) {
+        c(length(object@result), "images")
+      } else {
+        c("single image with", nrow(object@result), "feature pairs tested")
+      }
+    )
+  }
 )

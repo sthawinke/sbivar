@@ -7,7 +7,7 @@
 #' @param theme the ggplot2 theme
 #' @return a ggplot2 object
 plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "log"), scaleBySampleSums = FALSE,
-                          normY = c("none", "rel", "log"), size = 0.25, assayX, assayY, theme = theme_bw()) {
+                          normY = c("none", "rel", "log"), size = 0.05, assayX, assayY, theme = theme_bw()) {
   stopifnot(is.logical(scaleBySampleSums), is.numeric(size))
   Xl <- getX(Xl, assayX)
   Yl <- getX(Yl, assayY)
@@ -58,7 +58,7 @@ plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "
 #' plotPairSingle(X, Y, Cx, Ey, features = c("X1", "Y1"))
 plotPairSingle <- function(
   X, Y, Cx, Ey, features, normX = c("none", "rel", "log"),
-  normY = c("none", "rel", "log"), assayX, assayY, scaleBySampleSums = FALSE, size = 0.25, ...
+  normY = c("none", "rel", "log"), assayX, assayY, scaleBySampleSums = FALSE, size = 0.05, ...
 ) {
   stopifnot(length(features) == 2, is.numeric(size), is.logical(scaleBySampleSums))
   if (inherits(X, "SpatialExperiment")) {

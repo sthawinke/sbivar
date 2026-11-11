@@ -1,10 +1,19 @@
 ---
-title: "Vignette of the sbivar package" author: Stijn Hawinkel and Wangjun Hu
-output: rmarkdown::html_vignette: toc: true number_sections: true keep_md: true
-citation_package: biblatex vignette: > %\VignetteIndexEntry{Vignette of the
-sbivar package} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
-bibliography: ../inst/REFERENCES.bib
+title: "Vignette of the sbivar package"
+author: Stijn Hawinkel and Wangjun Hu
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    number_sections: true
+    keep_md: true
+    citation_package: biblatex
+vignette: >
+  %\VignetteIndexEntry{Vignette of the sbivar package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: ../inst/REFERENCES.bib 
 ---
+
 ```{r image, echo=FALSE}
 htmltools::img(
   src = knitr::image_uri(system.file("Sbivar.png", package = "sbivar")),
@@ -12,9 +21,11 @@ htmltools::img(
   alt = "logo", width = "280px", heigth = "200px"
 )
 ```
+
 ```{r setup, include=FALSE, echo=FALSE}
-knitr::opts_chunk$set(fig.height = 2.5, fig.width = 5.5, dpi = 300)
+knitr::opts_chunk$set(fig.height = 2.5, fig.width = 7.5)
 ```
+
 # Introduction
 This vignette demonstrates the use of the _sbivar_ package: Spatial BIVARiate
 association tests. It provides a suite of tests for bivariate spatial
@@ -88,8 +99,11 @@ or [Apple's accelerate](https://developer.apple.com/documentation/accelerate),
 that employ threading and optimal memory usage for key matrix manipulations used
 throughout the package. Further instructions for OpenBLAS for windows users can
 be found [in this repo](https://github.com/david-cortes/R-openblas-in-windows).
+
 # Example analysis on data by Vicari et al. (2024)
+
 ## Data exploration
+
 As example dataset, we use the one by @Vicari2024, which includes replicated
 measurements of spatial transcriptomics and metabolomics coprofiled on mouse
 brain sections. A subset of the data is available in the _sbivar_ package and
@@ -123,7 +137,9 @@ plotSpotSums(
 These spot sums are usually considered to be technical artefacts, but since they
 can affect the statistical analysis it is good to be aware of them and their
 spatial distribution.
+
 ## Single-image analysis
+
 The Vicari data consist of six images which can be analysed jointly, but for
 didactic purposes we first analyse a single image here, the sample
 "V11T16-085_A1".
@@ -145,12 +161,12 @@ Have a look at the results, which are sorted by increasing p-value:
 ```{r headres}
 topPairs(moransIRes)
 ```
-Plot the most significantly spatially associated gene-metabolite pair `r gpMoran
-<- rownames(topPairs(moransIRes))[1]`:
+Plot the most significantly spatially associated gene-metabolite pair 
+`r gpMoran <- rownames(topPairs(moransIRes))[1]`:
 ```{r plottoppairmoran}
 plotTopPair(moransIRes,
   X = singleStx, Y = singleMet, Cx = singleStxCoords,
-  Ey = singleMetCoords, size = 1
+  Ey = singleMetCoords
 )
 ```
 We see a clear negative relationship.
@@ -198,7 +214,9 @@ gpRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
 )
 topPairs(gpRes)
 ```
+
 ## Multi-image analysis
+
 Next, we analyse the six images jointly. Let's look at their names:
 ```{r namesVic}
 names(Vicari$TranscriptOutcomes)
@@ -245,7 +263,7 @@ nevertheless:
 plotTopPair(multiMoranLmmsRes,
   parameter = "Intercept",
   Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes,
-  Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.1
+  Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords
 )
 ```
 Again, the results of the multi-image analysis can be written to an external
@@ -254,10 +272,14 @@ file:
 ```{r sbivarMultiOut, eval = FALSE}
 writeSbivarToXlsx(multiMoranLmmsRes, file = tempfile(fileext = ".xlsx"), sigLevel = 1)
 ```
+
 # Other common input formats
+
 Apart from matrices and lists, also other data objects from the Bioconductor
 universe can be analysed by _sbivar_.
+
 ## SpatialExperiment and MultiAssayExperiment
+
 The [SpatialExperiment](https://doi.org/doi:10.18129/B9.bioc.SpatialExperiment)
 and
 [MultiAssayExperiment](https://doi.org/doi:10.18129/B9.bioc.MultiAssayExperiment)
@@ -265,7 +287,9 @@ classes are used in Bioconductor to store spatial (multi) omics experiments. The
 _sbivar_ package provides functionality for doing analysis on these objects
 directly, for the general case of disjoint coordinate sets between the
 modalities.
+
 ### Single-image
+
 For illustration, we first construct _SpatialExperiment_ objects for the
 single-image case:
 ```{r SEConstruct, message = FALSE}
@@ -295,7 +319,7 @@ resSpatExp <- sbivar(StxSE, MetSE,
 Plot the second most significant result, again providing the _SpatialExperiment_
 objects
 ```{r plotTopSE}
-plotTopPair(resSpatExp, X = StxSE, Y = MetSE, topRank = 2, size = 0.4)
+plotTopPair(resSpatExp, X = StxSE, Y = MetSE, topRank = 2)
 ```
 Now we construct a _MultiAssayExperiment_ object
 ```{r makeMAE}
@@ -316,7 +340,9 @@ resMAE <- sbivar(MAE,
   control = list("families" = FamiliesVicari), method = "GAMs"
 )
 ```
+
 ### Multi-image
+
 For the multi-image case, there are several options. One is to provide two
 _SpatialExperiment_ objects, with provide a _sample_id_ argument that identifies
 the different images. For illustration, we construct such objects from the
@@ -352,7 +378,9 @@ sbivarMultiSE <- fitLinModels(sbivarMultiSE, designDf,
 )
 sbivarMultiSE <- extractResultsMulti(sbivarMultiSE, designDf)
 ```
+
 ## AnnData
+
 AnnData is python data format often used to store spatial experiment results,
 which can also be read into R. An AnnData object is e.g. created by reading an
 '.h5ad' with the functionality of the _anndataR_ R-package. Here we adapted one
@@ -416,8 +444,11 @@ if (reqann) {
   plotTopPair(GodfreyRes, X = speStx, Y = speMet)
 }
 ```
+
 # Troubleshooting
+
 ## Sbivar takes forever
+
 If _sbivar_ runs a long time for small datasets, check that you have OpenBLAS or
 equivalent installed, \textit{and that your R uses it}. Check with
 ```{r sessionInfoopenblas, eval = FALSE, echo = TRUE}
@@ -426,7 +457,9 @@ sessionInfo()
 and look for the BLAS field. It should mention "openblas" or equivalent
 somewhere. Switching to OpenBLAS comes with a 20-50x speed increase for the
 rate-limiting steps in the _sbivar_ package.
+
 ## Job did not deliver a result
+
 An error like
 > Error in reducer$value.cache[[as.character(idx)]] <- values : >  wrong args
 for environment subassignment > In addition: Warning message: > In
@@ -435,8 +468,11 @@ deliver a result
 often indicates insufficient memory. Try reducing the number of cores requested
 with _MultiCoreParam()_, or switch to serial processing with
 _register(SerialParam())_.
+
 ## Warnings
+
 ### Variogram fitting
+
 The following warning
 > In fit.variogram(vg, vgm(model = vv, nugget = NA)) : > No convergence after
 200 iterations: try different initial values?
@@ -454,9 +490,13 @@ Mac users often encounter trouble installing the _sbivar_ package because of a
 missing _gfortran_ dependency. This is a common issue on Mac, unrelated to
 _sbivar_. Many solutions are available online, e.g. in [this
 blogpost](https://stackoverflow.com/questions/77836548/library-gfortran-not-found-when-installing-r-packages).
+
 # Session info
+
 ```{r sessionInfo}
 sessionInfo()
 ```
+
 # Bibliography
+
 \printbibliography

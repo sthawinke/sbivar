@@ -44,7 +44,9 @@ available in our
 [preprint](https://www.biorxiv.org/content/10.64898/2026.06.19.732250v1)
 (@Hawinkel2026).
 \setcounter{tocdepth}{5} \tableofcontents
+
 # Installation
+
 The package can be installed from Bioconductor as follows:
 ```{r install, eval = FALSE}
 BiocManager::install("sbivar")
@@ -57,7 +59,9 @@ Once installed, we can load the package:
 ```{r load}
 library(sbivar)
 ```
+
 # Multithreading
+
 The _sbivar_ package can be computationally intensive, since the number of
 bivariate tests equals the product of the numbers of features of both
 modalities. For this reason we provide multithreading through the _BiocParallel_
@@ -487,7 +491,9 @@ The following warning often recurs a couple of times when fitting many GAMS:
 It indicates that the _mgcv::gam()_ function had trouble modelling the spatial
 trend in the data for one or more features. This could, but need not always,
 lead to odd results. Always inspect significant pairs visually.
+
 ## gfortran not found on Mac
+
 Mac users often encounter trouble installing the _sbivar_ package because of a
 missing _gfortran_ dependency. This is a common issue on Mac, unrelated to
 _sbivar_. Many solutions are available online, e.g. in [this

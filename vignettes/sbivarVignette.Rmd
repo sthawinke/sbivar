@@ -23,7 +23,7 @@ htmltools::img(
 ```
 
 ```{r setup, include=FALSE, echo=FALSE}
-knitr::opts_chunk$set(fig.height = 2.5, fig.width = 7.5, dpi = 100)
+knitr::opts_chunk$set(fig.height = 2.5, fig.width = 7.5, dpi = 72)
 ```
 
 # Introduction

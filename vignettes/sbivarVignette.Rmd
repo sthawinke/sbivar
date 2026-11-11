@@ -479,7 +479,9 @@ The following warning
 indicate variogram fitting did not reach convergence, but since this is just a
 nuisance quantity, a rough estimate is sufficient for inference and this warning
 can be safely ignored.
+
 ### GAM fitting
+
 The following warning often recurs a couple of times when fitting many GAMS:
 > step size truncated due to divergence
 It indicates that the _mgcv::gam()_ function had trouble modelling the spatial

@@ -9,24 +9,25 @@ buildNewGrid(Cx, Ey, n_points_grid)
 \arguments{
 \item{Cx, Ey}{The coordinate matrices}
 
-\item{n_points_grid}{An integer, the number of points desired for the new grid}
+\item{n_points_grid}{An integer, the number of points desired for the new
+grid}
 }
 \value{
-A data frame of two columns with all points of the grid,
-with column names x and y.
+A data frame of two columns with all points of the grid, with column
+  names x and y.
 }
 \description{
-Given two coordinate matrices, concave hulls are found around them. The intersection
-between these two hulls is found, and in that area an evenly spaced, discrete
-grid is constructed.
+Given two coordinate matrices, concave hulls are found around them. The
+intersection between these two hulls is found, and in that area an evenly
+spaced, discrete grid is constructed.
 }
 \details{
-The new grid will contain approximately the number of new points requested,
-depending on the size of the concave hull
+The new grid will contain approximately the number of new points
+  requested, depending on the size of the concave hull
 }
 \note{
-This function is mainly used to create a grid on which two fitted GAMs can be
-evaluated to calculate correlations.
+This function is mainly used to create a grid on which two fitted GAMs
+  can be evaluated to calculate correlations.
 }
 \examples{
 Cx <- matrix(runif(40, 0, 1), 20, 2)

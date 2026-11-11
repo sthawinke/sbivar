@@ -65,10 +65,12 @@ setValidity("sbivarResults", function(object) {
   if (length(object@method) != 1 || !is.character(object@method)) {
     return("method must have length 1 and be a character")
   }
-  if (!is.null(object@assayX) && !(length(object@assayX) == 1 && is.character(object@assayX))) {
+  if (!is.null(object@assayX) && !(length(object@assayX) == 1 &&
+                                   is.character(object@assayX))) {
     return("assayX must be null or have length 1 and be a character")
   }
-  if (!is.null(object@assayY) && !(length(object@assayY) == 1 && is.character(object@assayY))) {
+  if (!is.null(object@assayY) && !(length(object@assayY) == 1 &&
+                                   is.character(object@assayY))) {
     return("assayY must be null or have length 1 and be a character")
   }
   if (!is.logical(object@multi)) {

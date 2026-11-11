@@ -39,7 +39,7 @@ plotPairMulti <- function(Xl, Yl, Cxl, Eyl, features, normX = c("none", "rel", "
     scale_colour_gradient(low = "yellow", high = "blue", name = "Outcome") +
     xlab("x coordinate") +
     ylab("y coordinate") +
-    coord_fixed() +
+    coord_fixed() + scale_size_continuous(range = c(1e-3, 1)) +
     guides(size = "none") +
     theme(axis.text = element_blank(), axis.ticks = element_blank())
 }
@@ -105,7 +105,7 @@ plotPairSingleVectors <- function(x, y, Cx, Ey, size,
     scale_colour_gradient(low = "yellow", high = "blue", name = "Outcome") +
     xlab("x coordinate") +
     ylab("y coordinate") +
-    coord_fixed() +
+    coord_fixed() + scale_size_continuous(range = c(1e-3, 1)) +
     guides(size = "none") +
     theme(axis.text = element_blank(), axis.ticks = element_blank())
 }

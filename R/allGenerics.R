@@ -162,7 +162,8 @@ setGeneric(
 #' # The significance level is set to 1 here for illustration,
 #' # meaning that all feature pairs will be written to the spreadsheet.
 #' # Single result
-#' writeSbivarToXlsx(resGAMs, file = tmpFile <- tempfile(fileext = ".xlsx"), sigLevel = 1)
+#' writeSbivarToXlsx(resGAMs, file = tmpFile <- tempfile(fileext = ".xlsx"),
+#' sigLevel = 1)
 #' file.exists(tmpFile)
 setGeneric(
   "writeSbivarToXlsx",
@@ -198,9 +199,11 @@ setGeneric(
 #' data(Vicari)
 #' # Subset to 5 images and 500 spots limit computing time
 #' VicariMultiTest <- lapply(Vicari, function(x) lapply(x[1:5], function(y) y[1:500, ]))
-#' VicariRes <- sbivar(VicariMultiTest$TranscriptOutcomes, VicariMultiTest$MetaboliteOutcomes,
+#' VicariRes <- sbivar(VicariMultiTest$TranscriptOutcomes,
+#' VicariMultiTest$MetaboliteOutcomes,
 #'   VicariMultiTest$TranscriptCoords, VicariMultiTest$MetaboliteCoords,
-#'   method = "GAMs", control = list("families" = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log")))
+#'   method = "GAMs", control = list("families" =
+#'   list("X" = mgcv::nb(), "Y" = Gamma(lin = "log")))
 #' )
 #' mouse <- substr(names(Vicari$TranscriptOutcomes)[1:5], 1, 10)
 #' designDf <- data.frame("mouse" = mouse) # The design matrix

@@ -46,7 +46,7 @@ if (.Platform$OS.type == "unix") {
   # On windows, use SnowParam
   register(SnowParam(workers = nCores, type = "SOCK", stop.on.error = FALSE))
 }
-register(SerialParam()) # Switch on when mapping test coverage
+# register(SerialParam()) # Switch on when mapping test coverage
 resMoranTest <- sbivar(X, Y, Cx, Ey, method = "Moran's I")
 resGAMsSingle <- sbivar(X, Y, Cx, Ey, method = "GAMs")
 estGAMs <- sbivar(Xl, Yl, Cxl, Eyl, method = "GAMs", findVariances = TRUE)

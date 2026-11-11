@@ -18,7 +18,7 @@ test_that("SbivarSingle works for correct input", {
   expect_message(sbivar(X, Y, Cx, Ey, method = "GAMs", control = list(Gamm = TRUE), correlation = corExp(~ x + y, nugget = TRUE)))
   expect_message(sbiResMoran <- sbivar(X, Y, Cx, Ey, method = "Moran's I"))
   expect_message(sbiResMod <- sbivar(X, X, Cx, method = "Modified t-test"))
-  expect_true(all(c("pVal", "pAdj") %in% colnames(topPairs(sbiResMoran))))
+  expect_contains(colnames(topPairs(sbiResMoran)), c("pVal", "pAdj"))
   expect_false(is.unsorted(topPairs(sbiRes, Inf)[, "pVal"]))
   expect_silent(sbivar(X, Y, Cx, Ey, method = "GAMs", verbose = FALSE))
   expect_s4_class(sbivar(X, Y, Cx, Ey,

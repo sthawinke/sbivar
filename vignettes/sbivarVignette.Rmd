@@ -138,6 +138,7 @@ plotSpotSums(
   Vicari$TranscriptCoords, Vicari$MetaboliteCoords
 )
 ```
+
 These spot sums are usually considered to be technical artefacts, but since they
 can affect the statistical analysis it is good to be aware of them and their
 spatial distribution.
@@ -173,6 +174,7 @@ plotTopPair(moransIRes,
   Ey = singleMetCoords
 )
 ```
+
 We see a clear negative relationship.
 In addition, we employ generalized additive models (GAMs), with a negative
 binomial outcome distribution for the transcriptome data, and a gamma outcome
@@ -186,15 +188,18 @@ gamRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
   method = "GAMs", control = list("families" = FamiliesVicari)
 )
 ```
+
 Plot the most significant pair. Normalized data are shown, while the original
 analysis is on raw data, but we scale the size of the spots by the sample sums
 to reflect their higher weight in the analysis:
+
 ```{r plottoppairgam}
 plotTopPair(gamRes,
   X = singleStx, Y = singleMet, Cx = singleStxCoords, scaleBySampleSums = TRUE,
   Ey = singleMetCoords, normX = "rel", normY = "rel"
 )
 ```
+
 An other feature is found most significant by GAMs, now with a positive
 relationship. For GAMs, we can also plot the corresponding spline fit, with the
 contributions to the correlation `r round(topPairs(gamRes)[1, "corxy"], 3)`:
@@ -204,11 +209,13 @@ plotGAMsTopPair(gamRes,
   Ey = singleMetCoords
 )
 ```
+
 The analysis results can be written to an external spreadsheet using the
 following one-liner, e.g. for the GAM results.
 ```{r sbivarSingleOut, eval = FALSE}
 writeSbivarToXlsx(gamRes, file = tmpFile <- tempfile(fileext = ".xlsx"))
 ```
+
 Another available analysis for single images are bivariate Gaussian processes
 (GPs). Yet fitting GPs and calculating the score tests statistics can be
 computation and memory intensive! Hence the code is shown, but not run:
@@ -252,17 +259,21 @@ fixed variable for illustrative purposes:
 designDf <- data.frame("mouse" = mouse, "bogus" = factor(c(1, 2, 1, 2, 1, 2)))
 multiMoranRes <- fitLinModels(multiMoranRes, designDf, Formula = ~ bogus + (1 | mouse))
 ```
+
 Extract the results and show the results for the intercept, i.e. the overall
 effect
+
 ```{r extractMulti}
 multiMoranLmmsRes <- extractResultsMulti(multiMoranRes, designDf)
 topPairs(multiMoranLmmsRes, parameter = "Intercept")
 ```
+
 No features are significantly associated after multiplicity correction. This is
 in part caused by different experimental procedures used for the different
 sections, i.e. these are not real replicates yet, as technology is still being
 developed. For illustration, we plot the feature pair with the smallest p-values
 nevertheless:
+
 ```{r plottopMulti, fig.height = 9}
 plotTopPair(multiMoranLmmsRes,
   parameter = "Intercept",
@@ -270,6 +281,7 @@ plotTopPair(multiMoranLmmsRes,
   Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords
 )
 ```
+
 Again, the results of the multi-image analysis can be written to an external
 spreadsheet. Setting _sigLevel_ to 1 means all feature pairs are written to the
 file:
@@ -307,25 +319,33 @@ MetSE <- SpatialExperiment(
   spatialCoords = singleMetCoords
 )
 ```
+
 Look at the first object:
+
 ```{r lookatStxSE}
 StxSE
 ```
+
 Next we call the _sbivar_ function with these as arguments, providing the names
 of the assays we want analysed. We set _verbose_ to FALSE to prevent printing
 output:
+
 ```{r SEanalysis}
 resSpatExp <- sbivar(StxSE, MetSE,
   assayX = "transcripts", assayY = "metabolites",
   control = list("families" = FamiliesVicari), method = "GAMs", verbose = FALSE
 )
 ```
+
 Plot the second most significant result, again providing the _SpatialExperiment_
 objects
+
 ```{r plotTopSE}
 plotTopPair(resSpatExp, X = StxSE, Y = MetSE, topRank = 2)
 ```
+
 Now we construct a _MultiAssayExperiment_ object
+
 ```{r makeMAE}
 library(MultiAssayExperiment)
 MAE <- MultiAssayExperiment(experiments = list(
@@ -334,9 +354,11 @@ MAE <- MultiAssayExperiment(experiments = list(
 ))
 MAE
 ```
+
 We run a the same analysis, now providing the experiment names on top of the
 assay names (since a _MultiAssayExperiment_ can contain more than two
 modalities):
+
 ```{r analyseMAE, eval = FALSE}
 resMAE <- sbivar(MAE,
   assayX = "transcripts", assayY = "metabolites",
@@ -351,6 +373,7 @@ For the multi-image case, there are several options. One is to provide two
 _SpatialExperiment_ objects, with provide a _sample_id_ argument that identifies
 the different images. For illustration, we construct such objects from the
 Vicari data, and fit GAMs:
+
 ```{r SEidentifier}
 SEmultiStx <- Reduce(f = cbind, lapply(names(Vicari$TranscriptOutcomes), function(nam) {
   SpatialExperiment(
@@ -367,10 +390,12 @@ SEmultiMet <- Reduce(f = cbind, lapply(names(Vicari$MetaboliteOutcomes), functio
   )
 }))
 ```
+
 A quick look:
 ```{r multiStxLook}
 SEmultiStx
 ```
+
 Run the analysis:
 ```{r multiSEanalysis}
 sbivarMultiSE <- sbivar(SEmultiStx, SEmultiMet,

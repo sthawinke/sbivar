@@ -1,19 +1,10 @@
 ---
-title: "Vignette of the sbivar package"
-author: Stijn Hawinkel and Wangjun Hu
-output: 
-  rmarkdown::html_vignette:
-    toc: true
-    number_sections: true
-    keep_md: true
-    citation_package: biblatex
-vignette: >
-  %\VignetteIndexEntry{Vignette of the sbivar package}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
-bibliography: ../inst/REFERENCES.bib 
+title: "Vignette of the sbivar package" author: Stijn Hawinkel and Wangjun Hu
+output: rmarkdown::html_vignette: toc: true number_sections: true keep_md: true
+citation_package: biblatex vignette: > %\VignetteIndexEntry{Vignette of the
+sbivar package} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
+bibliography: ../inst/REFERENCES.bib
 ---
-
 ```{r image, echo=FALSE}
 htmltools::img(
   src = knitr::image_uri(system.file("Sbivar.png", package = "sbivar")),
@@ -21,54 +12,55 @@ htmltools::img(
   alt = "logo", width = "280px", heigth = "200px"
 )
 ```
-
 ```{r setup, include=FALSE, echo=FALSE}
-knitr::opts_chunk$set(fig.height = 2.5, fig.width = 7.5)
+knitr::opts_chunk$set(fig.height = 2.5, fig.width = 5.5, dpi = 300)
 ```
-
 # Introduction
-
-This vignette demonstrates the use of the _sbivar_ package: Spatial BIVARiate association tests. It provides a suite of tests for bivariate spatial association across two spatial omics modalities that have been aligned, but do not necessarily share the same coordinate grid, e.g. due to differences in resolution between measurement technologies. Unlike many existing methods, _sbivar_ accounts for spatial autocorrelation (SAC) in each of the modalities before testing for bivariate association, thus maintaining control of the type I error rate. _sbivar_ is suited for a single section per modality, as well as replicated studies with multiple sections. Implemented methods are bivariate Moran's I, generalised additive models (GAMs) and bivariate Gaussian processes (GPs); the modified t-test as implemented in the _SpatialPack_ package is also wrapped for convenience. Basic plotting functions for checking alignment and visualizing results are included. An extensive description of the methods is available in our [preprint](https://www.biorxiv.org/content/10.64898/2026.06.19.732250v1) (@Hawinkel2026).
-
-\setcounter{tocdepth}{5}
-\tableofcontents
-
+This vignette demonstrates the use of the _sbivar_ package: Spatial BIVARiate
+association tests. It provides a suite of tests for bivariate spatial
+association across two spatial omics modalities that have been aligned, but do
+not necessarily share the same coordinate grid, e.g. due to differences in
+resolution between measurement technologies. Unlike many existing methods,
+_sbivar_ accounts for spatial autocorrelation (SAC) in each of the modalities
+before testing for bivariate association, thus maintaining control of the type I
+error rate. _sbivar_ is suited for a single section per modality, as well as
+replicated studies with multiple sections. Implemented methods are bivariate
+Moran's I, generalised additive models (GAMs) and bivariate Gaussian processes
+(GPs); the modified t-test as implemented in the _SpatialPack_ package is also
+wrapped for convenience. Basic plotting functions for checking alignment and
+visualizing results are included. An extensive description of the methods is
+available in our
+[preprint](https://www.biorxiv.org/content/10.64898/2026.06.19.732250v1)
+(@Hawinkel2026).
+\setcounter{tocdepth}{5} \tableofcontents
 # Installation
-
 The package can be installed from Bioconductor as follows:
-
 ```{r install, eval = FALSE}
 BiocManager::install("sbivar")
 ```
-
 Alternatively, the latest version can be installed from github as:
-
 ```{r installAndLoadGitHub, eval = FALSE}
 remotes::install_github("sthawinke/sbivar", build_vignettes = TRUE)
 ```
-
 Once installed, we can load the package:
-
 ```{r load}
 library(sbivar)
 ```
-
 # Multithreading
-
-The _sbivar_ package can be computationally intensive, since the number of bivariate tests equals the product of the numbers of features of both modalities. For this reason we provide multithreading through the _BiocParallel_ package. 
-
+The _sbivar_ package can be computationally intensive, since the number of
+bivariate tests equals the product of the numbers of features of both
+modalities. For this reason we provide multithreading through the _BiocParallel_
+package.
 ```{r loadBiocparallel}
 library(BiocParallel)
 ```
-
-All the user needs to do, is choose the number of cores: 
-
+All the user needs to do, is choose the number of cores:
 ```{r nCores}
 nCores <- 2 # The number of CPUs
 ```
-
-and prepare the parallel backend. The code is different for windows or unix-based systems (linux and macOS), but is taken care of by the following code snippet:
-
+and prepare the parallel backend. The code is different for windows or
+unix-based systems (linux and macOS), but is taken care of by the following code
+snippet:
 ```{r nonwindows}
 param <- if (.Platform$OS.type == "unix") {
   # On unix-based systems (linux and macOS), use MulticoreParam
@@ -79,56 +71,62 @@ param <- if (.Platform$OS.type == "unix") {
 }
 register(param)
 ```
-
 On windows, once the package has been built, for multithreading use
-
 ```{r multiThreadWindows, eval = FALSE}
 register(SnowParam(workers = nCores, type = "SOCK", stop.on.error = FALSE)) # or doParallel
 ```
-
-Wherever applicable, the registered backend will be used throughout the analysis.
-For serial calculations, for instance if memory is limiting, choose instead
-
+Wherever applicable, the registered backend will be used throughout the
+analysis. For serial calculations, for instance if memory is limiting, choose
+instead
 ```{r registerserial, eval = FALSE}
 register(SerialParam(stop.on.error = FALSE))
 ```
-
-Furthermore, it is highly recommended to install a matrix library such as [OpenBLAS](http://www.openmathlib.org/OpenBLAS/), [Intel MKL](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-download.html) or [Apple's accelerate](https://developer.apple.com/documentation/accelerate), that employ threading and optimal memory usage for key matrix manipulations used throughout the package. Further instructions for OpenBLAS for windows users can be found [in this repo](https://github.com/david-cortes/R-openblas-in-windows).
-
+Furthermore, it is highly recommended to install a matrix library such as
+[OpenBLAS](http://www.openmathlib.org/OpenBLAS/), [Intel
+MKL](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-download.html)
+or [Apple's accelerate](https://developer.apple.com/documentation/accelerate),
+that employ threading and optimal memory usage for key matrix manipulations used
+throughout the package. Further instructions for OpenBLAS for windows users can
+be found [in this repo](https://github.com/david-cortes/R-openblas-in-windows).
 # Example analysis on data by Vicari et al. (2024)
-
 ## Data exploration
-
-As example dataset, we use the one by @Vicari2024, which includes replicated measurements of spatial transcriptomics and metabolomics coprofiled on mouse brain sections. A subset of the data is available in the _sbivar_ package and can be loaded as:
-
+As example dataset, we use the one by @Vicari2024, which includes replicated
+measurements of spatial transcriptomics and metabolomics coprofiled on mouse
+brain sections. A subset of the data is available in the _sbivar_ package and
+can be loaded as:
 ```{r datavicari}
 data(Vicari)
 names(Vicari)
 ```
-
-This object consists of four lists of length six: _TranscriptCoords_ and _MetaboliteCoords_ for the coordinates, and _TranscriptOutcomes_ and _MetaboliteOutcomes_ for the feature measurements. Only the 5 most abundant features per modality are included in the package, for real datasets we also recommend to filter on the most abundant features, or apply the method to the entire dataset. The _sbivar_ package assumes that the data have been pre-aligned, hence it is always a good idea to check the alignment visually:
-
+This object consists of four lists of length six: _TranscriptCoords_ and
+_MetaboliteCoords_ for the coordinates, and _TranscriptOutcomes_ and
+_MetaboliteOutcomes_ for the feature measurements. Only the 5 most abundant
+features per modality are included in the package, for real datasets we also
+recommend to filter on the most abundant features, or apply the method to the
+entire dataset. The _sbivar_ package assumes that the data have been
+pre-aligned, hence it is always a good idea to check the alignment visually:
 ```{r plotcoordsVicari, fig.height = 5}
 par(mfrow = c(2, 3))
 plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.1)
 par(mfrow = c(1, 1))
 ```
-
-The alignment seems successful, notice that some tissue areas are only covered by one modality though. Next we explore the spatial distributions of the spot-wise sums, in our case these are the library sizes for the transcriptomics data and the total ion counts for the metabolomics data.
-
+The alignment seems successful, notice that some tissue areas are only covered
+by one modality though. Next we explore the spatial distributions of the
+spot-wise sums, in our case these are the library sizes for the transcriptomics
+data and the total ion counts for the metabolomics data.
 ```{r plotSpotSums, fig.height = 7}
 plotSpotSums(
   Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
   Vicari$TranscriptCoords, Vicari$MetaboliteCoords
 )
 ```
-
-These spot sums are usually considered to be technical artefacts, but since they can affect the statistical analysis it is good to be aware of them and their spatial distribution.
-
+These spot sums are usually considered to be technical artefacts, but since they
+can affect the statistical analysis it is good to be aware of them and their
+spatial distribution.
 ## Single-image analysis
-
-The Vicari data consist of six images which can be analysed jointly, but for didactic purposes we first analyse a single image here, the sample "V11T16-085_A1".
-
+The Vicari data consist of six images which can be analysed jointly, but for
+didactic purposes we first analyse a single image here, the sample
+"V11T16-085_A1".
 ```{r getsinglesample}
 singleSample <- "V11T16-085_A1"
 singleStxCoords <- Vicari$TranscriptCoords[[singleSample]]
@@ -136,90 +134,85 @@ singleStx <- Vicari$TranscriptOutcomes[[singleSample]]
 singleMetCoords <- Vicari$MetaboliteCoords[[singleSample]]
 singleMet <- Vicari$MetaboliteOutcomes[[singleSample]]
 ```
-
-We analyse this single sample using bivariate Moran's I. We choose to normalize both modalities to relative abundances (see ?normMat). 
-
+We analyse this single sample using bivariate Moran's I. We choose to normalize
+both modalities to relative abundances (see ?normMat).
 ```{r testmoran}
 moransIRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
   method = "Moran's I", normX = "rel", normY = "rel"
 )
 ```
-
 Have a look at the results, which are sorted by increasing p-value:
-
 ```{r headres}
 topPairs(moransIRes)
 ```
-
-Plot the most significantly spatially associated gene-metabolite pair `r gpMoran <- rownames(topPairs(moransIRes))[1]`:
-
+Plot the most significantly spatially associated gene-metabolite pair `r gpMoran
+<- rownames(topPairs(moransIRes))[1]`:
 ```{r plottoppairmoran}
 plotTopPair(moransIRes,
   X = singleStx, Y = singleMet, Cx = singleStxCoords,
   Ey = singleMetCoords, size = 1
 )
 ```
-
 We see a clear negative relationship.
-
-In addition, we employ generalized additive models (GAMs), with a negative binomial outcome distribution for the transcriptome data, and a gamma outcome distribution for the metabolome data. A log-link is used in both cases. For non-normal data, such as spatial transcriptomics and metabolomics data, this approach is usually preferable to the bivariate Moran's I, as this latter one fails to account for heteroskedasticity.
-
+In addition, we employ generalized additive models (GAMs), with a negative
+binomial outcome distribution for the transcriptome data, and a gamma outcome
+distribution for the metabolome data. A log-link is used in both cases. For
+non-normal data, such as spatial transcriptomics and metabolomics data, this
+approach is usually preferable to the bivariate Moran's I, as this latter one
+fails to account for heteroskedasticity.
 ```{r fitgam}
 FamiliesVicari <- list("X" = mgcv::nb(), "Y" = Gamma(lin = "log"))
 gamRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
   method = "GAMs", control = list("families" = FamiliesVicari)
 )
 ```
-
-Plot the most significant pair. Normalized data are shown, while the original analysis is on raw data, but we scale the size of the spots by the sample sums to reflect their higher weight in the analysis:
-
+Plot the most significant pair. Normalized data are shown, while the original
+analysis is on raw data, but we scale the size of the spots by the sample sums
+to reflect their higher weight in the analysis:
 ```{r plottoppairgam}
 plotTopPair(gamRes,
   X = singleStx, Y = singleMet, Cx = singleStxCoords, scaleBySampleSums = TRUE,
   Ey = singleMetCoords, normX = "rel", normY = "rel"
 )
 ```
-
-An other feature is found most significant by GAMs, now with a positive relationship. For GAMs, we can also plot the corresponding spline fit, with the contributions to the correlation `r round(topPairs(gamRes)[1, "corxy"], 3)`:
-
+An other feature is found most significant by GAMs, now with a positive
+relationship. For GAMs, we can also plot the corresponding spline fit, with the
+contributions to the correlation `r round(topPairs(gamRes)[1, "corxy"], 3)`:
 ```{r plotGAM}
 plotGAMsTopPair(gamRes,
   X = singleStx, Y = singleMet, Cx = singleStxCoords,
   Ey = singleMetCoords
 )
 ```
-
-The analysis results can be written to an external spreadsheet using the following one-liner, e.g. for the GAM results.
-
+The analysis results can be written to an external spreadsheet using the
+following one-liner, e.g. for the GAM results.
 ```{r sbivarSingleOut, eval = FALSE}
 writeSbivarToXlsx(gamRes, file = tmpFile <- tempfile(fileext = ".xlsx"))
 ```
-
-Another available analysis for single images are bivariate Gaussian processes (GPs). Yet fitting GPs and calculating the score tests statistics can be computation and memory intensive! Hence the code is shown, but not run:
-
+Another available analysis for single images are bivariate Gaussian processes
+(GPs). Yet fitting GPs and calculating the score tests statistics can be
+computation and memory intensive! Hence the code is shown, but not run:
 ```{r gp, eval = FALSE}
 gpRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
   method = "GPs", normX = "rel", normY = "rel"
 )
 topPairs(gpRes)
 ```
-
 ## Multi-image analysis
-
 Next, we analyse the six images jointly. Let's look at their names:
-
 ```{r namesVic}
 names(Vicari$TranscriptOutcomes)
 ```
-
-We see that the first three and the last three are replicates from different mice (V11L12-109 and V11T16-085). We construct a variable identifying the mouse, consisting of the first 10 characters of the names:
-
+We see that the first three and the last three are replicates from different
+mice (V11L12-109 and V11T16-085). We construct a variable identifying the mouse,
+consisting of the first 10 characters of the names:
 ```{r mouseVariable}
 mouse <- substr(names(Vicari$TranscriptOutcomes), 1, 10)
 ```
-
-For the multi-image case, we can also use bivariate Moran's I as measure of spatial association, here with a nearest-neighbour (nn) weighting scheme for illustration (if the required _RANN_ package is available). For computational reasons, we limit calculations to the first 500 observations:
-
+For the multi-image case, we can also use bivariate Moran's I as measure of
+spatial association, here with a nearest-neighbour (nn) weighting scheme for
+illustration (if the required _RANN_ package is available). For computational
+reasons, we limit calculations to the first 500 observations:
 ```{r multiMoran}
 VicariMultiTest <- lapply(Vicari, function(x) lapply(x, function(y) y[1:500, ]))
 multiMoranRes <- sbivar(VicariMultiTest$TranscriptOutcomes, VicariMultiTest$MetaboliteOutcomes,
@@ -228,23 +221,26 @@ multiMoranRes <- sbivar(VicariMultiTest$TranscriptOutcomes, VicariMultiTest$Meta
   method = "Moran's I", control = list(wo = if (require(RANN)) "nn" else "Gauss")
 )
 ```
-
-Note that for this analysis, we only calculate the bivariate Moran's I statistics and their maxima, but not their variances, as we will quantify variability across replicates. Next we plug the calculated Moran's I values into a linear model, with random effects for the individual mice, and adding a bogus fixed variable for illustrative purposes:
-
+Note that for this analysis, we only calculate the bivariate Moran's I
+statistics and their maxima, but not their variances, as we will quantify
+variability across replicates. Next we plug the calculated Moran's I values into
+a linear model, with random effects for the individual mice, and adding a bogus
+fixed variable for illustrative purposes:
 ```{r multiLmms}
 designDf <- data.frame("mouse" = mouse, "bogus" = factor(c(1, 2, 1, 2, 1, 2)))
 multiMoranRes <- fitLinModels(multiMoranRes, designDf, Formula = ~ bogus + (1 | mouse))
 ```
-
-Extract the results and show the results for the intercept, i.e. the overall effect
-
+Extract the results and show the results for the intercept, i.e. the overall
+effect
 ```{r extractMulti}
 multiMoranLmmsRes <- extractResultsMulti(multiMoranRes, designDf)
 topPairs(multiMoranLmmsRes, parameter = "Intercept")
 ```
-
-No features are significantly associated after multiplicity correction. This is in part caused by different experimental procedures used for the different sections, i.e. these are not real replicates yet, as technology is still being developed. For illustration, we plot the feature pair with the smallest p-values nevertheless:
-
+No features are significantly associated after multiplicity correction. This is
+in part caused by different experimental procedures used for the different
+sections, i.e. these are not real replicates yet, as technology is still being
+developed. For illustration, we plot the feature pair with the smallest p-values
+nevertheless:
 ```{r plottopMulti, fig.height = 9}
 plotTopPair(multiMoranLmmsRes,
   parameter = "Intercept",
@@ -252,25 +248,26 @@ plotTopPair(multiMoranLmmsRes,
   Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords, size = 0.1
 )
 ```
-
-Again, the results of the multi-image analysis can be written to an external spreadsheet. Setting _sigLevel_ to 1 means all feature pairs are written to the file:
-
+Again, the results of the multi-image analysis can be written to an external
+spreadsheet. Setting _sigLevel_ to 1 means all feature pairs are written to the
+file:
 ```{r sbivarMultiOut, eval = FALSE}
 writeSbivarToXlsx(multiMoranLmmsRes, file = tempfile(fileext = ".xlsx"), sigLevel = 1)
 ```
-
 # Other common input formats
-
-Apart from matrices and lists, also other data objects from the Bioconductor universe can be analysed by _sbivar_.
-
+Apart from matrices and lists, also other data objects from the Bioconductor
+universe can be analysed by _sbivar_.
 ## SpatialExperiment and MultiAssayExperiment
-
-The [SpatialExperiment](https://doi.org/doi:10.18129/B9.bioc.SpatialExperiment) and [MultiAssayExperiment](https://doi.org/doi:10.18129/B9.bioc.MultiAssayExperiment) classes are used in Bioconductor to store spatial (multi) omics experiments. The _sbivar_ package provides functionality for doing analysis on these objects directly, for the general case of disjoint coordinate sets between the modalities. 
-
+The [SpatialExperiment](https://doi.org/doi:10.18129/B9.bioc.SpatialExperiment)
+and
+[MultiAssayExperiment](https://doi.org/doi:10.18129/B9.bioc.MultiAssayExperiment)
+classes are used in Bioconductor to store spatial (multi) omics experiments. The
+_sbivar_ package provides functionality for doing analysis on these objects
+directly, for the general case of disjoint coordinate sets between the
+modalities.
 ### Single-image
-
-For illustration, we first construct _SpatialExperiment_ objects for the single-image case:
-
+For illustration, we first construct _SpatialExperiment_ objects for the
+single-image case:
 ```{r SEConstruct, message = FALSE}
 library(SpatialExperiment, quietly = TRUE)
 StxSE <- SpatialExperiment(
@@ -282,30 +279,25 @@ MetSE <- SpatialExperiment(
   spatialCoords = singleMetCoords
 )
 ```
-
 Look at the first object:
-
 ```{r lookatStxSE}
 StxSE
 ```
-
-Next we call the _sbivar_ function with these as arguments, providing the names of the assays we want analysed. We set _verbose_ to FALSE to prevent printing output:
-
+Next we call the _sbivar_ function with these as arguments, providing the names
+of the assays we want analysed. We set _verbose_ to FALSE to prevent printing
+output:
 ```{r SEanalysis}
 resSpatExp <- sbivar(StxSE, MetSE,
   assayX = "transcripts", assayY = "metabolites",
   control = list("families" = FamiliesVicari), method = "GAMs", verbose = FALSE
 )
 ```
-
-Plot the second most significant result, again providing the _SpatialExperiment_ objects
-
+Plot the second most significant result, again providing the _SpatialExperiment_
+objects
 ```{r plotTopSE}
 plotTopPair(resSpatExp, X = StxSE, Y = MetSE, topRank = 2, size = 0.4)
 ```
-
 Now we construct a _MultiAssayExperiment_ object
-
 ```{r makeMAE}
 library(MultiAssayExperiment)
 MAE <- MultiAssayExperiment(experiments = list(
@@ -314,9 +306,9 @@ MAE <- MultiAssayExperiment(experiments = list(
 ))
 MAE
 ```
-
-We run a the same analysis, now providing the experiment names on top of the assay names (since a _MultiAssayExperiment_ can contain more than two modalities):
-
+We run a the same analysis, now providing the experiment names on top of the
+assay names (since a _MultiAssayExperiment_ can contain more than two
+modalities):
 ```{r analyseMAE, eval = FALSE}
 resMAE <- sbivar(MAE,
   assayX = "transcripts", assayY = "metabolites",
@@ -324,11 +316,11 @@ resMAE <- sbivar(MAE,
   control = list("families" = FamiliesVicari), method = "GAMs"
 )
 ```
-
 ### Multi-image
-
-For the multi-image case, there are several options. One is to provide two _SpatialExperiment_ objects, with provide a _sample_id_ argument that identifies the different images. For illustration, we construct such objects from the Vicari data, and fit GAMs:
-
+For the multi-image case, there are several options. One is to provide two
+_SpatialExperiment_ objects, with provide a _sample_id_ argument that identifies
+the different images. For illustration, we construct such objects from the
+Vicari data, and fit GAMs:
 ```{r SEidentifier}
 SEmultiStx <- Reduce(f = cbind, lapply(names(Vicari$TranscriptOutcomes), function(nam) {
   SpatialExperiment(
@@ -345,15 +337,11 @@ SEmultiMet <- Reduce(f = cbind, lapply(names(Vicari$MetaboliteOutcomes), functio
   )
 }))
 ```
-
 A quick look:
-
 ```{r multiStxLook}
 SEmultiStx
 ```
-
 Run the analysis:
-
 ```{r multiSEanalysis}
 sbivarMultiSE <- sbivar(SEmultiStx, SEmultiMet,
   assayX = "transcripts", assayY = "metabolites", sample_id_x = "sample_id",
@@ -364,11 +352,16 @@ sbivarMultiSE <- fitLinModels(sbivarMultiSE, designDf,
 )
 sbivarMultiSE <- extractResultsMulti(sbivarMultiSE, designDf)
 ```
-
 ## AnnData
-
-AnnData is python data format often used to store spatial experiment results, which can also be read into R. An AnnData object is e.g. created by reading an '.h5ad' with the functionality of the _anndataR_ R-package. Here we adapted one a file from the [study](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/GZFCWC) by @Godfrey2025, keeping its structure but subsetting it to only necessary components and the 10 most abundant features per modality. For illustration, this file is included in the _sbivar_ package and can be read in (if the _anndataR_ and _rhdf5_ packages are installed) as:
-
+AnnData is python data format often used to store spatial experiment results,
+which can also be read into R. An AnnData object is e.g. created by reading an
+'.h5ad' with the functionality of the _anndataR_ R-package. Here we adapted one
+a file from the
+[study](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/GZFCWC)
+by @Godfrey2025, keeping its structure but subsetting it to only necessary
+components and the 10 most abundant features per modality. For illustration,
+this file is included in the _sbivar_ package and can be read in (if the
+_anndataR_ and _rhdf5_ packages are installed) as:
 ```{r readh5ad, message = FALSE}
 if (reqann <- (require(anndataR) && require(rhdf5))) {
   annDataObj <- read_h5ad(system.file("h5adData", "LC_170_subset.h5ad", package = "sbivar"),
@@ -376,17 +369,23 @@ if (reqann <- (require(anndataR) && require(rhdf5))) {
   )
 }
 ```
-
-Next, convert it to a _SingleCellExperiment_ object from the eponymous R-package:
-
+Next, convert it to a _SingleCellExperiment_ object from the eponymous
+R-package:
 ```{r anndata}
 if (reqann) {
   sceStx <- annDataObj$as_SingleCellExperiment()
 }
 ```
-
-Note that a _SingleCellExperiment_ object can only contain one modality at the time, here the transcriptomics. From there on, it is only a small step to a _SpatialExperiment_ object as accepted by _sbivar_. The only tricky part are the spatial coordinates, which have no fixed slot in the _AnnData_ object. Here, they have been stored in the "obsm" slot of the _AnnData_ object, which means they have ended up in the "reducedDims" slot of the _SingleCellExperiment_ object. In addition, we create a _SpatialExperiment_ object for the metabolomics data, which has oddly been stored in the unstructured ("uns") slot of the _AnnData_ object. To keep build times of this vignette low, we again only look at a subset of 10 features.
-
+Note that a _SingleCellExperiment_ object can only contain one modality at the
+time, here the transcriptomics. From there on, it is only a small step to a
+_SpatialExperiment_ object as accepted by _sbivar_. The only tricky part are the
+spatial coordinates, which have no fixed slot in the _AnnData_ object. Here,
+they have been stored in the "obsm" slot of the _AnnData_ object, which means
+they have ended up in the "reducedDims" slot of the _SingleCellExperiment_
+object. In addition, we create a _SpatialExperiment_ object for the metabolomics
+data, which has oddly been stored in the unstructured ("uns") slot of the
+_AnnData_ object. To keep build times of this vignette low, we again only look
+at a subset of 10 features.
 ```{r scetospe}
 if (reqann) {
   library(SpatialExperiment)
@@ -403,9 +402,11 @@ if (reqann) {
   # Need to set column names manually
 }
 ```
-
-Note that in this example, the samples of the two modalities have been pre-matched (the "spatialCoords" slot is the same), which is in general not recommended. The above code chunks should not be applied thoughtlessly, as the _AnnData_ structure is not very strict on the data types it includes. The analysis is then run and plotted as:
-
+Note that in this example, the samples of the two modalities have been
+pre-matched (the "spatialCoords" slot is the same), which is in general not
+recommended. The above code chunks should not be applied thoughtlessly, as the
+_AnnData_ structure is not very strict on the data types it includes. The
+analysis is then run and plotted as:
 ```{r speanalyse}
 if (reqann) {
   GodfreyRes <- sbivar(speStx, speMet,
@@ -415,61 +416,47 @@ if (reqann) {
   plotTopPair(GodfreyRes, X = speStx, Y = speMet)
 }
 ```
-
 # Troubleshooting
-
 ## Sbivar takes forever
-
-If _sbivar_ runs a long time for small datasets, check that you have OpenBLAS or equivalent installed, \textit{and that your R uses it}. Check with
-
+If _sbivar_ runs a long time for small datasets, check that you have OpenBLAS or
+equivalent installed, \textit{and that your R uses it}. Check with
 ```{r sessionInfoopenblas, eval = FALSE, echo = TRUE}
 sessionInfo()
 ```
-
-and look for the BLAS field. It should mention "openblas" or equivalent somewhere. Switching to OpenBLAS comes with a 20-50x speed increase for the rate-limiting steps in the _sbivar_ package.
-
+and look for the BLAS field. It should mention "openblas" or equivalent
+somewhere. Switching to OpenBLAS comes with a 20-50x speed increase for the
+rate-limiting steps in the _sbivar_ package.
 ## Job did not deliver a result
-
-An error like 
-
-> Error in reducer$value.cache[[as.character(idx)]] <- values : 
->  wrong args for environment subassignment
-> In addition: Warning message:
-> In parallel::mccollect(wait = FALSE, timeout = 1) :
->  1 parallel job did not deliver a result
-
-often indicates insufficient memory. Try reducing the number of cores requested with _MultiCoreParam()_,
-or switch to serial processing with _register(SerialParam())_.
- 
+An error like
+> Error in reducer$value.cache[[as.character(idx)]] <- values : >  wrong args
+for environment subassignment > In addition: Warning message: > In
+parallel::mccollect(wait = FALSE, timeout = 1) : >  1 parallel job did not
+deliver a result
+often indicates insufficient memory. Try reducing the number of cores requested
+with _MultiCoreParam()_, or switch to serial processing with
+_register(SerialParam())_.
 ## Warnings
-
 ### Variogram fitting
-
 The following warning
-
-> In fit.variogram(vg, vgm(model = vv, nugget = NA)) :
-> No convergence after 200 iterations: try different initial values?
-
-indicate variogram fitting did not reach convergence, but since this is just a nuisance quantity, a rough estimate is sufficient for inference and this warning can be safely ignored.
-
+> In fit.variogram(vg, vgm(model = vv, nugget = NA)) : > No convergence after
+200 iterations: try different initial values?
+indicate variogram fitting did not reach convergence, but since this is just a
+nuisance quantity, a rough estimate is sufficient for inference and this warning
+can be safely ignored.
 ### GAM fitting
-
 The following warning often recurs a couple of times when fitting many GAMS:
-
-> step size truncated due to divergence 
-
-It indicates that the _mgcv::gam()_ function had trouble modelling the spatial trend in the data for one or more features. This could, but need not always, lead to odd results. Always inspect significant pairs visually.
-
+> step size truncated due to divergence
+It indicates that the _mgcv::gam()_ function had trouble modelling the spatial
+trend in the data for one or more features. This could, but need not always,
+lead to odd results. Always inspect significant pairs visually.
 ## gfortran not found on Mac
-
-Mac users often encounter trouble installing the _sbivar_ package because of a missing _gfortran_ dependency. This is a common issue on Mac, unrelated to _sbivar_. Many solutions are available online, e.g. in [this blogpost](https://stackoverflow.com/questions/77836548/library-gfortran-not-found-when-installing-r-packages).
- 
+Mac users often encounter trouble installing the _sbivar_ package because of a
+missing _gfortran_ dependency. This is a common issue on Mac, unrelated to
+_sbivar_. Many solutions are available online, e.g. in [this
+blogpost](https://stackoverflow.com/questions/77836548/library-gfortran-not-found-when-installing-r-packages).
 # Session info
-
 ```{r sessionInfo}
 sessionInfo()
 ```
-
 # Bibliography
-
-\printbibliography 
+\printbibliography

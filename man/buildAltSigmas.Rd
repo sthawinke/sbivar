@@ -7,8 +7,9 @@
 buildAltSigmas(distMat, numLscAlts, Quants, idN, idM)
 }
 \arguments{
-\item{distMat}{The complete distance matrix of Cx and Ey stacked. Only needed when
-\code{sx}, \code{sy}, \code{derivX}, or \code{derivY} are not supplied.}
+\item{distMat}{The complete distance matrix of Cx and Ey stacked. Only needed
+when \code{sx}, \code{sy}, \code{derivX}, or \code{derivY} are not
+supplied.}
 
 \item{numLscAlts}{Number of length scales (and thus number of cross-blocks to be built)}
 

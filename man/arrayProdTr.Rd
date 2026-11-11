@@ -2,7 +2,8 @@
 % Please edit documentation in R/arrayProd.R
 \name{arrayProdTr}
 \alias{arrayProdTr}
-\title{Find traces of all inner products of matrices composing arrays A and B, after transposing the second yielding a pxp matrix}
+\title{Find traces of all inner products of matrices composing arrays A and B, after
+transposing the second yielding a pxp matrix}
 \usage{
 arrayProdTr(A, B)
 }
@@ -13,8 +14,9 @@ arrayProdTr(A, B)
 A pxp matrix of traces
 }
 \description{
-Returns the matrix resulting from the traces of all matrix products of slices of array A mxmxp
-with those of array B of the same dimensions. It is a faster version of
+Returns the matrix resulting from the traces of all matrix
+  products of slices of array A mxmxp with those of array B of the same
+  dimensions. It is a faster version of
 \code{vapply(seq_len(p), FUN.VALUE = double(p), function(i)\{
      vapply(seq_len(p), FUN.VALUE = double(1), function(j)\{
          tr(crossprod(arr2[,,i], arr[,,j]))
@@ -22,5 +24,6 @@ with those of array B of the same dimensions. It is a faster version of
 \})}
 }
 \details{
-The speedup comes from a single call to crossprod, very efficient in BLAS.
+The speedup comes from a single call to crossprod, very efficient in
+  BLAS.
 }

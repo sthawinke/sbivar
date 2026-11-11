@@ -14,12 +14,14 @@ plotGAMsTopPair(x, X, Y, Cx, Ey, topRank = 1, parameter = "Intercept", ...)
 
 \item{X, Y}{Matrices of omics measurements}
 
-\item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y respectively}
+\item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y
+respectively}
 
-\item{topRank}{An integer, the feature pair with the rank-th smallest p-value is plotted}
+\item{topRank}{An integer, the feature pair with the rank-th smallest p-value
+is plotted}
 
-\item{parameter}{The linear model parameter used to find the feature with the strongest effect.
-The default is the intercept, i.e. the overall effect.}
+\item{parameter}{The linear model parameter used to find the feature with the
+strongest effect. The default is the intercept, i.e. the overall effect.}
 
 \item{...}{passed onto lower level functions}
 }
@@ -27,7 +29,8 @@ The default is the intercept, i.e. the overall effect.}
 a ggplot2 object
 }
 \description{
-Fit GAMS for the top feature pair chosen, and plot the resulting spline surfaces
+Fit GAMS for the top feature pair chosen, and plot the resulting
+  spline surfaces
 }
 \examples{
 example(sbivar, "sbivar")

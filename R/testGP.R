@@ -1,30 +1,33 @@
-#' Perform a score test on the bivariate spatial association in a Gaussian process.
+#' Perform a score test on the bivariate spatial association in a Gaussian
+#' process.
 #'
-#' This function tests for the variance of a random effect, causing the covariance, to be zero.
-#' It is a score test as developed by \insertCite{Zhang2003}{sbivar}, with the test statistic
-#' having a scaled chi-square distribution.
+#' This function tests for the variance of a random effect, causing the
+#' covariance, to be zero. It is a score test as developed by
+#' \insertCite{Zhang2003}{sbivar}, with the test statistic having a scaled
+#' chi-square distribution.
 #'
 #' @param x,y outcome vectors
-#' @param crossBlocks An \eqn{n \times m \times L} array of cross-blocks \eqn{C_l} from
-#'   \code{\link{buildAltSigmas}}
-#' @param distMat The complete distance matrix of Cx and Ey stacked. Only needed when
-#'   \code{sx}, \code{sy}, \code{derivX}, or \code{derivY} are not supplied.
+#' @param crossBlocks An \eqn{n \times m \times L} array of cross-blocks
+#'   \eqn{C_l} from \code{\link{buildAltSigmas}}
+#' @param distMat The complete distance matrix of Cx and Ey stacked. Only needed
+#'   when \code{sx}, \code{sy}, \code{derivX}, or \code{derivY} are not
+#'   supplied.
 #' @param solXonly,solYonly Parameters of the Gaussian processes of x and y
 #' @param sx,sy Inverses of the covariance matrices of x and y respectively.
-#'   Computed from \code{distMat} and \code{solXonly}/\code{solYonly} when missing.
-#' @param derivX,derivY \eqn{n \times n \times 3} / \eqn{m \times m \times 3} arrays of
-#'   covariance-parameter derivative matrices. Computed when missing.
-#' @details Two tests are performed, one for positive and one for negative association,
-#' and two times the smallest p-value to achieve a two-sided test. The sign indicates
-#' which direction was most significant.
+#'   Computed from \code{distMat} and \code{solXonly}/\code{solYonly} when
+#'   missing.
+#' @param derivX,derivY \eqn{n \times n \times 3} / \eqn{m \times m \times 3}
+#'   arrays of covariance-parameter derivative matrices. Computed when missing.
+#' @details Two tests are performed, one for positive and one for negative
+#'   association, and two times the smallest p-value to achieve a two-sided
+#'   test. The sign indicates which direction was most significant.
 #'
-#' @returns A vector of length 2: a p-value and an indicator of the sign:
-#' +1 for positive association, -1 for negative
+#' @returns A vector of length 2: a p-value and an indicator of the sign: +1 for
+#'   positive association, -1 for negative
 #' @importFrom stats pchisq
 #' @importFrom abind abind
 #' @importFrom Matrix bdiag
-#' @references
-#' \insertAllCited{}
+#' @references \insertAllCited{}
 testGP <- function(x, y, crossBlocks, solXonly, solYonly,
                    sx, sy, derivX, derivY, distMat) {
   n <- dim(crossBlocks)[1]

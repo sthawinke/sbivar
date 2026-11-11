@@ -1,14 +1,15 @@
 #' Perform modified t-tests for all pairs
 #'
 #' The modified t-test is applied to all pairs, which tests for the significance
-#' of the Pearson correlation while accounting for spatial autocorrelation \insertCite{Clifford1989}{sbivar}.
+#' of the Pearson correlation while accounting for spatial autocorrelation
+#' \insertCite{Clifford1989}{sbivar}.
 #'
 #' @inheritParams sbivarSingle
 #'
-#' @returns A dataframe of results sorted by p-value, also containing effective sample size (ESS) and correlation estimate.
+#' @returns A dataframe of results sorted by p-value, also containing effective
+#'   sample size (ESS) and correlation estimate.
 #' @seealso \link[SpatialPack]{modified.ttest}
-#' @references
-#' \insertAllCited{}
+#' @references \insertAllCited{}
 #' @importFrom Rdpack reprompt
 #' @param Cx The shared coordinate matrix
 #' @importFrom SpatialPack modified.ttest

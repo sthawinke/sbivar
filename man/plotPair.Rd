@@ -48,11 +48,13 @@ plotPairSingleVectors(
 )
 }
 \arguments{
-\item{X}{the input object, containing measurements of the first modality, see methods('sbivar')}
+\item{X}{the input object, containing measurements of the first modality, see
+methods('sbivar')}
 
 \item{Y}{Matrix or SpatialExperiment object of second modality}
 
-\item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y respectively}
+\item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y
+respectively}
 
 \item{features}{Feature vector of length 2 to be plotted}
 

@@ -30,13 +30,15 @@ plotTopPair(
 
 \item{...}{passed onto lower level functions}
 
-\item{topRank}{An integer, the feature pair with the rank-th smallest p-value is plotted}
+\item{topRank}{An integer, the feature pair with the rank-th smallest p-value
+is plotted}
 
-\item{parameter}{The linear model parameter used to find the feature with the strongest effect.
-The default is the intercept, i.e. the overall effect.}
+\item{parameter}{The linear model parameter used to find the feature with the
+strongest effect. The default is the intercept, i.e. the overall effect.}
 
-\item{scaleBySampleSums}{A boolean, should the size of the spots be scaled by their sample sum,
-e.g. library size or total ion count? Recommended to reflect differences in certainty depending on sample sums.}
+\item{scaleBySampleSums}{A boolean, should the size of the spots be scaled by
+their sample sum, e.g. library size or total ion count? Recommended to
+reflect differences in certainty depending on sample sums.}
 
 \item{normX, normY}{Character strings, indicating what normalization is required
 for X and Y matrices, respectively, before plotting, see details.}
@@ -46,12 +48,13 @@ A ggplot object
 }
 \description{
 Plot a chosen feature pair, or the highest ranking feature pair,
-for a single image or multiple images.
+  for a single image or multiple images.
 }
 \details{
-For sequence count data, such as transcriptomics, normalization
-may be indicated to achieve clear plots (normX = "rel" or "log", see  \link{normMat}).
-The normalization used for plotting is not necessarily the same as the one used for the analysis.
+For sequence count data, such as transcriptomics, normalization may
+  be indicated to achieve clear plots (normX = "rel" or "log", see
+  \link{normMat}). The normalization used for plotting is not necessarily the
+  same as the one used for the analysis.
 }
 \examples{
 ### Single image

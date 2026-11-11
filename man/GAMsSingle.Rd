@@ -22,10 +22,11 @@ GAMsSingle(
 \arguments{
 \item{X, Y}{Matrices of omics measurements}
 
-\item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y respectively}
+\item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y
+respectively}
 
-\item{families}{A vector of length 2 giving the distributional families
-for the outcome values. See details of \link{sbivarSingle}.}
+\item{families}{A vector of length 2 giving the distributional families for
+the outcome values. See details of \link{sbivarSingle}.}
 
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.}
@@ -33,12 +34,14 @@ evaluated on.}
 \item{verbose}{Should info on type of analysis be printed?}
 
 \item{featuresX, featuresY}{Features to be tested. Defaults to all features,
-but specifying them allows to test a limited feature set,
-while using the whole matrix to calculate library sizes as offset or for normalization.}
+but specifying them allows to test a limited feature set, while using the
+whole matrix to calculate library sizes as offset or for normalization.}
 
-\item{Gamm}{A boolean, should a gamm with Gaussian covariance kernel be fitted? See \link[mgcv]{gamm}}
+\item{Gamm}{A boolean, should a gamm with Gaussian covariance kernel be
+fitted? See \link[mgcv]{gamm}}
 
-\item{correlation}{Correlation structure, passed onto \link{fitGP} or \link{fitGAM}}
+\item{correlation}{Correlation structure, passed onto \link{fitGP} or
+\link{fitGAM}}
 
 \item{findVariances}{Should variances be calculated? For internal use only}
 }
@@ -46,6 +49,6 @@ while using the whole matrix to calculate library sizes as offset or for normali
 A named list of results
 }
 \description{
-Fit univariate GAMs with 2D cubic smoothing splines for both modalities,
-and test for correlation between all bivariate combinations.
+Fit univariate GAMs with 2D cubic smoothing splines for both modalities, and
+test for correlation between all bivariate combinations.
 }

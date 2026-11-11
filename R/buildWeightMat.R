@@ -1,19 +1,20 @@
 #' Build a weight matrix for bivariate Moran's I
 #'
-#' Build a weight matrix to be used in the calculation of the bivariate Moran's I
-#' statistic, normalized to sum to one.
+#' Build a weight matrix to be used in the calculation of the bivariate Moran's
+#' I statistic, normalized to sum to one.
 #'
 #' @param Cx,Ey Two coordinate matrices
 #' @param wo The weighting option, either "nn" or "Gauss"
 #' @param numNN An integer, the number of neighbours
-#' @param eta parameter that controls the decay of the weights with distance, see details
+#' @param eta parameter that controls the decay of the weights with distance,
+#'   see details
 #' @param distMat The distance matrix
 #' @importFrom Matrix sparseMatrix
 #' @importFrom spatstat.geom crossdist
 #' @return A weight matrix
-#' @details
-#' For wo = "Gauss", the weight decays as exp(-d^2/eta) with d the distance between observations.
-#' For wo = "nn" the numNN nearest neighbours are given equal weight, all others are zero.
+#' @details For wo = "Gauss", the weight decays as exp(-d^2/eta) with d the
+#' distance between observations. For wo = "nn" the numNN nearest neighbours are
+#' given equal weight, all others are zero.
 buildWeightMat <- function(
   Cx, Ey, wo, eta, numNN,
   distMat = spatstat.geom::crossdist(Cx[, 1], Cx[, 2], Ey[, 1], Ey[, 2])

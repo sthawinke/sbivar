@@ -5,7 +5,8 @@
 \alias{sbivarResults-class}
 \title{sbivarResults class}
 \description{
-An S4 class representing the result of a sbivar call, testing for bivariate spatial association in one or more images
+An S4 class representing the result of a sbivar call, testing for bivariate
+spatial association in one or more images
 }
 \section{Slots}{
 

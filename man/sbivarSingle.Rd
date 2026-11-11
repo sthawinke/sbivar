@@ -25,21 +25,26 @@ sbivarSingle(
 \arguments{
 \item{X, Y}{Matrices of omics measurements}
 
-\item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y respectively}
+\item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y
+respectively}
 
 \item{method}{A character string, indicating which method to apply}
 
-\item{normX, normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}
+\item{normX, normY, pseudoCount}{Normalization parameters, passed onto
+\link{normMat}}
 
-\item{correlation}{Correlation structure, passed onto \link{fitGP} or \link{fitGAM}}
+\item{correlation}{Correlation structure, passed onto \link{fitGP} or
+\link{fitGAM}}
 
-\item{control}{Control arguments passed onto \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, replacing defaults by \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, respectively}
+\item{control}{Control arguments passed onto \link{MoransISingle},
+\link{fitGP} or \link{fitGAM}, replacing defaults by \link{MoransISingle},
+\link{fitGP} or \link{fitGAM}, respectively}
 
 \item{gpParams}{Pre-estimated GP parameters}
 
 \item{featuresX, featuresY}{Features to be tested. Defaults to all features,
-but specifying them allows to test a limited feature set,
-while using the whole matrix to calculate library sizes as offset or for normalization.}
+but specifying them allows to test a limited feature set, while using the
+whole matrix to calculate library sizes as offset or for normalization.}
 
 \item{verbose}{Should info on type of analysis be printed?}
 }
@@ -50,20 +55,23 @@ A \link{sbivarResults-class} object with multi = FALSE
 The tests can be applied to either joint or disjoint coordinate sets.
 }
 \details{
-If only Cx is supplied and X and Y have the same number of rows, a joint analysis is performed
-If Cx and Ey are provided, and X and Y have the same number of rows, equality of Cx and Ey is checked.
-If true, a joint analysis is run, with a warning.
+If only Cx is supplied and X and Y have the same number of rows, a
+  joint analysis is performed If Cx and Ey are provided, and X and Y have the
+  same number of rows, equality of Cx and Ey is checked. If true, a joint
+  analysis is run, with a warning.
 
-X and Y need to have rownames for matching to the coordinates,
-and column names for identifying the features.
-Cx and Ey must have rownames matching those in X and Y, and have two columns.
-For GAMs, usually no normalization is needed, as the non-gaussianity is taken care of by
-the outcome distribution, offset and link functions. Currently, identity,
-inverse and log-link are implemented.
+X and Y need to have rownames for matching to the coordinates, and
+  column names for identifying the features. Cx and Ey must have rownames
+  matching those in X and Y, and have two columns. For GAMs, usually no
+  normalization is needed, as the non-gaussianity is taken care of by the
+  outcome distribution, offset and link functions. Currently, identity,
+  inverse and log-link are implemented.
 }
 \note{
-All methods use multithreading on the cluster provided using the BiocParallel package.
+All methods use multithreading on the cluster provided using the
+  BiocParallel package.
 }
 \seealso{
-\link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle}, \link{GPsSingle}
+\link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle},
+  \link{GPsSingle}
 }

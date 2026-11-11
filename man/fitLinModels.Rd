@@ -37,20 +37,24 @@ fitLinModels(
 )
 }
 \arguments{
-\item{result}{A result with the result of bivariate spatial association,
-from a call to the \link{sbivar} function with multiple images}
+\item{result}{A result with the result of bivariate spatial association, from
+a call to the \link{sbivar} function with multiple images}
 
 \item{designDf}{A design dataframe}
 
 \item{method}{Multiplicity correction method passed onto p.adjust}
 
-\item{Formula}{A formula for the linear model to be fitted, can contain random effects.}
+\item{Formula}{A formula for the linear model to be fitted, can contain
+random effects.}
 
-\item{verbose}{Should a message with number of linear models and cores be printed?}
+\item{verbose}{Should a message with number of linear models and cores be
+printed?}
 
-\item{inverseWeigh}{A boolean, should estimates be inverse weighed by variance for GAMs and Moran's I?}
+\item{inverseWeigh}{A boolean, should estimates be inverse weighed by
+variance for GAMs and Moran's I?}
 
-\item{scaleByMax}{A boolean, should Moran's I be scaled by maximum values before plugging into the linear model?}
+\item{scaleByMax}{A boolean, should Moran's I be scaled by maximum values
+before plugging into the linear model?}
 
 \item{Control}{A control list for lmerTest::lmer}
 }
@@ -60,16 +64,17 @@ The modified results object
 For fitLinModels(), a list of linear models
 }
 \description{
-extractResultsMulti() adds the results as matrix to the object, including adjusted p-values, and sorted by p-value.
+extractResultsMulti() adds the results as matrix to the object,
+  including adjusted p-values, and sorted by p-value.
 
-Given result estimated from replicated images using \link{sbivarMulti},
-fit linear models to determine significance.
-To maintain interpretability of the intercept, continuous fixed effect variables are centered,
-and sum coding is used for the categorical ones.
+Given result estimated from replicated images using
+  \link{sbivarMulti}, fit linear models to determine significance. To
+  maintain interpretability of the intercept, continuous fixed effect
+  variables are centered, and sum coding is used for the categorical ones.
 }
 \details{
-The left hand side of "Formula" can be provided or not,
-but it will be overridden by "out" for downstream analysis
+The left hand side of "Formula" can be provided or not, but it will
+  be overridden by "out" for downstream analysis
 }
 \examples{
 # Multi-image analysis on Vicari data, using GAMs
@@ -88,5 +93,6 @@ resGAMsMulti <- extractResultsMulti(multiGAMLmms, designDf = designDf)
 topPairs(resGAMsMulti)
 }
 \seealso{
-\link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti}, \link[stats]{p.adjust}
+\link[lmerTest]{lmer}, \link[stats]{lm}, \link[sbivar]{sbivarMulti},
+  \link[stats]{p.adjust}
 }

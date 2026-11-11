@@ -11,7 +11,8 @@ normMat(x, norm, pseudoCount = 1e-08, warnDrop = TRUE)
 
 \item{norm}{A character string, either "none", "log" or "rel"}
 
-\item{pseudoCount}{A pseudocount added prior to log-normalization to avoid taking the log of zero}
+\item{pseudoCount}{A pseudocount added prior to log-normalization to avoid
+taking the log of zero}
 
 \item{warnDrop}{Is a warning to be emitted when spots are dropped?}
 }
@@ -19,11 +20,12 @@ normMat(x, norm, pseudoCount = 1e-08, warnDrop = TRUE)
 A normalized matrix
 }
 \description{
-Normalize to relative expression, and potentially add pseudocount and log-normalize.
+Normalize to relative expression, and potentially add pseudocount and
+log-normalize.
 }
 \details{
 norm = "none" is pass-through, norm = "rel" divides by sample sums,
-"log" adds a pseudocount, divides by sample sums and log-normalizes.
+  "log" adds a pseudocount, divides by sample sums and log-normalizes.
 }
 \examples{
 mat <- matrix(rpois(2000, lambda = 3), 40, 50)

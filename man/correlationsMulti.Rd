@@ -10,8 +10,8 @@ correlationsMulti(Xl, Yl, featuresX, featuresY, verbose)
 \item{Xl, Yl}{Lists of matrices of omics measurements}
 
 \item{featuresX, featuresY}{Features to be tested. Defaults to all features,
-but specifying them allows to test a limited feature set,
-while using the whole matrix to calculate library sizes as offset or for normalization.}
+but specifying them allows to test a limited feature set, while using the
+whole matrix to calculate library sizes as offset or for normalization.}
 
 \item{verbose}{Should progress be printed?}
 }
@@ -19,5 +19,6 @@ while using the whole matrix to calculate library sizes as offset or for normali
 A list of named correlation vectors
 }
 \description{
-Find all raw cross-correlations between lists of observations matrices from different modalities.
+Find all raw cross-correlations between lists of observations
+matrices from different modalities.
 }

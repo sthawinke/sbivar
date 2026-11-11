@@ -3,10 +3,12 @@
 #' @param A An mxmxp array
 #' @param M An mxm matrix
 #' @return An mxmxp array
-#' @description Array resulting from all matrix products of slices of array A of size mxmxp, with matrix M of size mxm.
-#' This is a faster version of \code{vapply(seq_len(p), FUN.VALUE = mat, function(i)\{mat \%*\% arr[,,i]\})},
-#' although it may consume more memory.
-#' @details The speedup comes from a single call to \%*\%, very efficient in BLAS.
+#' @description Array resulting from all matrix products of slices of array A of
+#'   size mxmxp, with matrix M of size mxm. This is a faster version of
+#'   \code{vapply(seq_len(p), FUN.VALUE = mat, function(i)\{mat \%*\%
+#'   arr[,,i]\})}, although it may consume more memory.
+#' @details The speedup comes from a single call to \%*\%, very efficient in
+#'   BLAS.
 arrayMatProd <- function(A, M) {
   n <- dim(A)[1]
   p <- dim(A)[3]
@@ -19,18 +21,21 @@ arrayMatProd <- function(A, M) {
   C <- array(C, dim = c(n, n, p), dimnames = dn)
   return(C)
 }
-#' Find traces of all inner products of matrices composing arrays A and B, after transposing the second yielding a pxp matrix
+#' Find traces of all inner products of matrices composing arrays A and B, after
+#' transposing the second yielding a pxp matrix
 #'
 #' @param A,B mxmxp arrays
 #' @return A pxp matrix of traces
-#' @description Returns the matrix resulting from the traces of all matrix products of slices of array A mxmxp
-#' with those of array B of the same dimensions. It is a faster version of
+#' @description Returns the matrix resulting from the traces of all matrix
+#'   products of slices of array A mxmxp with those of array B of the same
+#'   dimensions. It is a faster version of
 #' \code{vapply(seq_len(p), FUN.VALUE = double(p), function(i)\{
 #'      vapply(seq_len(p), FUN.VALUE = double(1), function(j)\{
 #'          tr(crossprod(arr2[,,i], arr[,,j]))
 #'      \})
 #' \})}
-#' @details The speedup comes from a single call to crossprod, very efficient in BLAS.
+#' @details The speedup comes from a single call to crossprod, very efficient in
+#'   BLAS.
 arrayProdTr <- function(A, B) {
   n <- dim(A)[1]
   p <- dim(A)[3]

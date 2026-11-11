@@ -28,30 +28,38 @@ sbivarMulti(
 
 \item{method}{A character string, indicating which method to apply}
 
-\item{control}{Control arguments passed onto \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, replacing defaults by \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, respectively}
+\item{control}{Control arguments passed onto \link{MoransISingle},
+\link{fitGP} or \link{fitGAM}, replacing defaults by \link{MoransISingle},
+\link{fitGP} or \link{fitGAM}, respectively}
 
 \item{featuresX, featuresY}{Features to be tested. Defaults to all features,
-but specifying them allows to test a limited feature set,
-while using the whole matrix to calculate library sizes as offset or for normalization.}
+but specifying them allows to test a limited feature set, while using the
+whole matrix to calculate library sizes as offset or for normalization.}
 
-\item{normX, normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}
+\item{normX, normY, pseudoCount}{Normalization parameters, passed onto
+\link{normMat}}
 
 \item{verbose}{Should info on type of analysis be printed?}
 
-\item{findVariances}{A boolean, should variances be found for bivariate Moran's I and GAMs}
+\item{findVariances}{A boolean, should variances be found for bivariate
+Moran's I and GAMs}
 
-\item{findMaxW}{A boolean, should maximum values be found for bivariate Moran's I}
+\item{findMaxW}{A boolean, should maximum values be found for bivariate
+Moran's I}
 }
 \value{
 A \link{sbivarResults-class} object with multi = TRUE
 }
 \description{
-This function calculates measures of spatial association for every image.
-The resulting estimates can then be analysed further using the \link{fitLinModels} function.
+This function calculates measures of spatial association for every image. The
+resulting estimates can then be analysed further using the
+\link{fitLinModels} function.
 }
 \note{
-All methods use multithreading on the cluster provided using the BiocParallel package
+All methods use multithreading on the cluster provided using the
+  BiocParallel package
 }
 \seealso{
-\link{fitLinModels}, \link{MoransIMulti}, \link{correlationsMulti}, \link{GAMsMulti}
+\link{fitLinModels}, \link{MoransIMulti}, \link{correlationsMulti},
+  \link{GAMsMulti}
 }

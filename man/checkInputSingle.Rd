@@ -9,7 +9,8 @@ checkInputSingle(X, Y, Cx, Ey)
 \arguments{
 \item{X, Y}{Matrices of omics measurements}
 
-\item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y respectively}
+\item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y
+respectively}
 }
 \value{
 Throws error when a fault is found with the input, otherwise finishes silently

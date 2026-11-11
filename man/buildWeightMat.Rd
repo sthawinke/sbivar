@@ -18,7 +18,8 @@ buildWeightMat(
 
 \item{wo}{The weighting option, either "nn" or "Gauss"}
 
-\item{eta}{parameter that controls the decay of the weights with distance, see details}
+\item{eta}{parameter that controls the decay of the weights with distance,
+see details}
 
 \item{numNN}{An integer, the number of neighbours}
 
@@ -28,10 +29,11 @@ buildWeightMat(
 A weight matrix
 }
 \description{
-Build a weight matrix to be used in the calculation of the bivariate Moran's I
-statistic, normalized to sum to one.
+Build a weight matrix to be used in the calculation of the bivariate Moran's
+I statistic, normalized to sum to one.
 }
 \details{
-For wo = "Gauss", the weight decays as exp(-d^2/eta) with d the distance between observations.
-For wo = "nn" the numNN nearest neighbours are given equal weight, all others are zero.
+For wo = "Gauss", the weight decays as exp(-d^2/eta) with d the
+distance between observations. For wo = "nn" the numNN nearest neighbours are
+given equal weight, all others are zero.
 }

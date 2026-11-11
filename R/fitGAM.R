@@ -1,14 +1,17 @@
 #' Fit a GAM model to a single variable
 #'
-#' Fit a generalized additive model (GAM) captures spatial dependence through a bivariate spatial spline.
+#' Fit a generalized additive model (GAM) captures spatial dependence through a
+#' bivariate spatial spline.
 #' @param df The dataframe containing outcome and coordinates
 #' @param outcome A character vector indicating the outcome variable
-#' @param family A character string indicating the family, see \link[stats]{family}.
+#' @param family A character string indicating the family, see
+#'   \link[stats]{family}.
 #' @returns A fitted GAM or GAMM model, or try-error when the fit fails
 #' @importFrom mgcv gam gamm s
 #' @import stats
-#' @details If a GAMM fit is attempted and fails, a GAM is tried instead. If a gamma fit is attempted and fails, which frequently happens for sparse data,
-#' a negative binomial fit is attempted instead.
+#' @details If a GAMM fit is attempted and fails, a GAM is tried instead. If a
+#'   gamma fit is attempted and fails, which frequently happens for sparse data,
+#'   a negative binomial fit is attempted instead.
 #' @seealso \link[mgcv]{gam}, \link[mgcv]{s}
 #' @inheritParams GAMsSingle
 fitGAM <- function(df, outcome, family = gaussian(), Gamm, correlation) {

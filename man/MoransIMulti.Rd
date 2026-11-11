@@ -25,12 +25,15 @@ MoransIMulti(
 \item{verbose}{Should info on type of analysis be printed?}
 
 \item{featuresX, featuresY}{Features to be tested. Defaults to all features,
-but specifying them allows to test a limited feature set,
-while using the whole matrix to calculate library sizes as offset or for normalization.}
+but specifying them allows to test a limited feature set, while using the
+whole matrix to calculate library sizes as offset or for normalization.}
 
-\item{findVariances}{A boolean, should variances be found for bivariate Moran's I and GAMs}
+\item{findVariances}{A boolean, should variances be found for bivariate
+Moran's I and GAMs}
 
-\item{control}{Control arguments passed onto \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, replacing defaults by \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, respectively}
+\item{control}{Control arguments passed onto \link{MoransISingle},
+\link{fitGP} or \link{fitGAM}, replacing defaults by \link{MoransISingle},
+\link{fitGP} or \link{fitGAM}, respectively}
 
 \item{...}{passed onto \link{MoransISingle}}
 }

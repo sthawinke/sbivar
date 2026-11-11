@@ -1,17 +1,22 @@
 #' Estimate measures of bivariate spatial association for multiple images
 #'
-#' This function calculates measures of spatial association for every image.
-#' The resulting estimates can then be analysed further using the \link{fitLinModels} function.
+#' This function calculates measures of spatial association for every image. The
+#' resulting estimates can then be analysed further using the
+#' \link{fitLinModels} function.
 #'
 #' @param Xl,Yl Lists of matrices of omics measurements
 #' @param Cxl,Eyl Lists of corresponding coordinate matrices of dimension two
-#' @param findMaxW A boolean, should maximum values be found for bivariate Moran's I
-#' @param findVariances A boolean, should variances be found for bivariate Moran's I and GAMs
+#' @param findMaxW A boolean, should maximum values be found for bivariate
+#'   Moran's I
+#' @param findVariances A boolean, should variances be found for bivariate
+#'   Moran's I and GAMs
 #' @returns A \link{sbivarResults-class} object with multi = TRUE
-#' @note All methods use multithreading on the cluster provided using the BiocParallel package
+#' @note All methods use multithreading on the cluster provided using the
+#'   BiocParallel package
 #' @inheritParams sbivarSingle
 #' @importFrom BiocParallel bpparam bpworkers
-#' @seealso \link{fitLinModels}, \link{MoransIMulti}, \link{correlationsMulti}, \link{GAMsMulti}
+#' @seealso \link{fitLinModels}, \link{MoransIMulti}, \link{correlationsMulti},
+#'   \link{GAMsMulti}
 sbivarMulti <- function(Xl, Yl, Cxl, Eyl, method = c("Moran's I", "GAMs", "Correlation"),
                         control, featuresX = getFeaturesList(Xl), featuresY = getFeaturesList(Yl),
                         normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,

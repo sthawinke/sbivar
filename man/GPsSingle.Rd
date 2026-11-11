@@ -23,7 +23,8 @@ GPsSingle(
 \arguments{
 \item{X, Y}{Matrices of omics measurements}
 
-\item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y respectively}
+\item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y
+respectively}
 
 \item{gpParams}{Parameters of the Gaussian processes, see details}
 
@@ -34,15 +35,16 @@ GPsSingle(
 \item{GPmethod}{The method by which to fit the Gaussian processes,
 passed onto \link[nlme]{gls} as "method".}
 
-\item{correlation}{Correlation structure, passed onto \link{fitGP} or \link{fitGAM}}
+\item{correlation}{Correlation structure, passed onto \link{fitGP} or
+\link{fitGAM}}
 
 \item{optControl}{List of control values for \link[nlme]{gls}, see \link[nlme]{glsControl}.}
 
 \item{verbose}{Should info on type of analysis be printed?}
 
 \item{featuresX, featuresY}{Features to be tested. Defaults to all features,
-but specifying them allows to test a limited feature set,
-while using the whole matrix to calculate library sizes as offset or for normalization.}
+but specifying them allows to test a limited feature set, while using the
+whole matrix to calculate library sizes as offset or for normalization.}
 }
 \value{
 A named list of results

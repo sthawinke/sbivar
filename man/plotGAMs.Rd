@@ -31,19 +31,22 @@ plotGAMs(
 
 \item{scaleFun}{The scaling function to be applied before plotting}
 
-\item{families}{A vector of length 2 giving the distributional families
-for the outcome values. See details of \link{sbivarSingle}.}
+\item{families}{A vector of length 2 giving the distributional families for
+the outcome values. See details of \link{sbivarSingle}.}
 
 \item{addTitle}{A boolean, should a title be plotted}
 
-\item{normX, normY, pseudoCount}{Normalization parameters, passed onto \link{normMat}}
+\item{normX, normY, pseudoCount}{Normalization parameters, passed onto
+\link{normMat}}
 
 \item{n_points_grid}{The number of points in the new grid for the GAMs to be
 evaluated on.}
 
-\item{Gamm}{A boolean, should a gamm with Gaussian covariance kernel be fitted? See \link[mgcv]{gamm}}
+\item{Gamm}{A boolean, should a gamm with Gaussian covariance kernel be
+fitted? See \link[mgcv]{gamm}}
 
-\item{correlation}{Correlation structure, passed onto \link{fitGP} or \link{fitGAM}}
+\item{correlation}{Correlation structure, passed onto \link{fitGP} or
+\link{fitGAM}}
 
 \item{...}{passed onto \link{fitGAM}}
 }

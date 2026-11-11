@@ -11,21 +11,26 @@ fitGAM(df, outcome, family = gaussian(), Gamm, correlation)
 
 \item{outcome}{A character vector indicating the outcome variable}
 
-\item{family}{A character string indicating the family, see \link[stats]{family}.}
+\item{family}{A character string indicating the family, see
+\link[stats]{family}.}
 
-\item{Gamm}{A boolean, should a gamm with Gaussian covariance kernel be fitted? See \link[mgcv]{gamm}}
+\item{Gamm}{A boolean, should a gamm with Gaussian covariance kernel be
+fitted? See \link[mgcv]{gamm}}
 
-\item{correlation}{Correlation structure, passed onto \link{fitGP} or \link{fitGAM}}
+\item{correlation}{Correlation structure, passed onto \link{fitGP} or
+\link{fitGAM}}
 }
 \value{
 A fitted GAM or GAMM model, or try-error when the fit fails
 }
 \description{
-Fit a generalized additive model (GAM) captures spatial dependence through a bivariate spatial spline.
+Fit a generalized additive model (GAM) captures spatial dependence through a
+bivariate spatial spline.
 }
 \details{
-If a GAMM fit is attempted and fails, a GAM is tried instead. If a gamma fit is attempted and fails, which frequently happens for sparse data,
-a negative binomial fit is attempted instead.
+If a GAMM fit is attempted and fails, a GAM is tried instead. If a
+  gamma fit is attempted and fails, which frequently happens for sparse data,
+  a negative binomial fit is attempted instead.
 }
 \seealso{
 \link[mgcv]{gam}, \link[mgcv]{s}

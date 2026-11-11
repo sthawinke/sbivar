@@ -21,16 +21,19 @@ fitManyGAMs(
 
 \item{coord}{The coordinate matrix}
 
-\item{family}{A character string indicating the family, see \link[stats]{family}.}
+\item{family}{A character string indicating the family, see
+\link[stats]{family}.}
 
 \item{modality}{Character vector indicating which modality is being fit.
 For debugging purposes mainly}
 
 \item{features}{Features to be fit, others are only used to estimate the offset}
 
-\item{Gamm}{A boolean, should a gamm with Gaussian covariance kernel be fitted? See \link[mgcv]{gamm}}
+\item{Gamm}{A boolean, should a gamm with Gaussian covariance kernel be
+fitted? See \link[mgcv]{gamm}}
 
-\item{correlation}{Correlation structure, passed onto \link{fitGP} or \link{fitGAM}}
+\item{correlation}{Correlation structure, passed onto \link{fitGP} or
+\link{fitGAM}}
 
 \item{pseudoCount}{Pseudocount added to avoid zeroes for gamma distribution}
 

@@ -13,7 +13,8 @@ moranControl <- function(etas = c(5e-6, 2e-4, 2e-2), findMaxW = FALSE, returnSEs
                          wo = c("Gauss", "nn"), numNNs = c(4, 8, 24)) {
   list(
     etas = etas, findMaxW = findMaxW, returnSEsMoransI = returnSEsMoransI,
-    variogramModels = match.arg(variogramModels, several.ok = TRUE), width = width, cutoff = cutoff,
+    variogramModels = match.arg(variogramModels, several.ok = TRUE),
+    width = width, cutoff = cutoff,
     wo = match.arg(wo), numNNs = numNNs
   )
 }

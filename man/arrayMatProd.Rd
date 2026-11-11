@@ -15,10 +15,12 @@ arrayMatProd(A, M)
 An mxmxp array
 }
 \description{
-Array resulting from all matrix products of slices of array A of size mxmxp, with matrix M of size mxm.
-This is a faster version of \code{vapply(seq_len(p), FUN.VALUE = mat, function(i)\{mat \%*\% arr[,,i]\})},
-although it may consume more memory.
+Array resulting from all matrix products of slices of array A of
+  size mxmxp, with matrix M of size mxm. This is a faster version of
+  \code{vapply(seq_len(p), FUN.VALUE = mat, function(i)\{mat \%*\%
+  arr[,,i]\})}, although it may consume more memory.
 }
 \details{
-The speedup comes from a single call to \%*\%, very efficient in BLAS.
+The speedup comes from a single call to \%*\%, very efficient in
+  BLAS.
 }

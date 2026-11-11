@@ -11,7 +11,8 @@ checkControlVals(method, controlvals, correlation, gpParams)
 
 \item{controlvals}{The list of control values}
 
-\item{correlation}{Correlation structure, passed onto \link{fitGP} or \link{fitGAM}}
+\item{correlation}{Correlation structure, passed onto \link{fitGP} or
+\link{fitGAM}}
 
 \item{gpParams}{Pre-estimated GP parameters}
 }

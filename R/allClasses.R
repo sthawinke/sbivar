@@ -3,7 +3,8 @@ setClassUnion("listOrNULL", c("list", "NULL"))
 setClassUnion("dataframeOrList", c("data.frame", "list"))
 #' sbivarResults class
 #'
-#' An S4 class representing the result of a sbivar call, testing for bivariate spatial association in one or more images
+#' An S4 class representing the result of a sbivar call, testing for bivariate
+#' spatial association in one or more images
 #'
 #' @slot method The statistical test used
 #' @slot normX Normalization applied to the first modality

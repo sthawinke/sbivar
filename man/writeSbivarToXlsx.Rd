@@ -10,32 +10,36 @@ writeSbivarToXlsx(x, file, overwrite = FALSE, digits = 3, sigLevel = 0.05)
 \S4method{writeSbivarToXlsx}{sbivarResults}(x, file, overwrite = FALSE, digits = 3, sigLevel = 0.05)
 }
 \arguments{
-\item{x}{The analysis results, from a call to \link{sbivar} (single-image)
-or \link{extractResultsMulti} (multi-image)}
+\item{x}{The analysis results, from a call to \link{sbivar} (single-image) or
+\link{extractResultsMulti} (multi-image)}
 
 \item{file}{The file to write the results to}
 
-\item{overwrite}{A boolean, should the file be overwritten if it exists already?}
+\item{overwrite}{A boolean, should the file be overwritten if it exists
+already?}
 
-\item{digits}{An integer, the number of significant digits to retain for the effect size,
-raw and adjusted p-values}
+\item{digits}{An integer, the number of significant digits to retain for the
+effect size, raw and adjusted p-values}
 
-\item{sigLevel}{The significance level threshold to use for the adjusted p-values,
-only features exceeding the threshold are written to the file. Set this parameter to 1 to write all features}
+\item{sigLevel}{The significance level threshold to use for the adjusted
+p-values, only features exceeding the threshold are written to the file.
+Set this parameter to 1 to write all features}
 }
 \value{
 Returns invisible with a message when writing operation successful,
-otherwise throws a warning.
+  otherwise throws a warning.
 }
 \description{
-The results of single- or multi-image analysis are written to an excel spreadsheet
-with separate tabs per parameter tested, sorted by increasing p-value.
+The results of single- or multi-image analysis are written to an excel
+spreadsheet with separate tabs per parameter tested, sorted by increasing
+p-value.
 }
 \details{
-If no feature exceeds the significance threshold for a certain parameter,
-an empty tab is created. For each fixed effect, a single tab is written.
-The "baseline" tabs indicate the overall patterns, the other tabs are named after the fixed effects
-and indicate departure from this baseline for this fixed effect.
+If no feature exceeds the significance threshold for a certain
+  parameter, an empty tab is created. For each fixed effect, a single tab is
+  written. The "baseline" tabs indicate the overall patterns, the other tabs
+  are named after the fixed effects and indicate departure from this baseline
+  for this fixed effect.
 }
 \examples{
 example(sbivar, "sbivar")

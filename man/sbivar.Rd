@@ -27,13 +27,15 @@ sbivar(X, Y, ...)
 \S4method{sbivar}{MultiAssayExperiment,ANY}(X, experimentX, experimentY, assayX, assayY, ...)
 }
 \arguments{
-\item{X}{the input object, containing measurements of the first modality, see methods('sbivar')}
+\item{X}{the input object, containing measurements of the first modality, see
+methods('sbivar')}
 
 \item{Y}{Matrix or SpatialExperiment object of second modality}
 
 \item{...}{additional constructor and analysis arguments}
 
-\item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y respectively}
+\item{Cx, Ey}{Coordinate matrices of dimension two, belonging to X and Y
+respectively}
 
 \item{assayX, assayY}{Assay names to be used in the analysis,
 see \link[SummarizedExperiment]{assay}}
@@ -44,12 +46,14 @@ included in the same SpatialExperiment objects X and Y. By default, they are ass
 \item{experimentX, experimentY}{Names of the experiments in X and Y to be used in the analysis}
 }
 \value{
-A list containing the analysis result, along with parameters used in the analysis
+A list containing the analysis result, along with parameters used in
+  the analysis
 }
 \description{
-Perform a bivariate spatial association analysis, either on a single or multiple images.
-Depending on the input, the workhorse functions \link{sbivarSingle}
-(single-image) or \link{sbivarMulti} (multi-image) are called.
+Perform a bivariate spatial association analysis, either on a
+single or multiple images. Depending on the input, the workhorse functions
+\link{sbivarSingle} (single-image) or \link{sbivarMulti} (multi-image) are
+called.
 }
 \note{
 Feature names are converted using the make.names() function

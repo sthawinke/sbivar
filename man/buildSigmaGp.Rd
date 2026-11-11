@@ -9,8 +9,9 @@ buildSigmaGp(pars, distMat)
 \arguments{
 \item{pars}{A vector of parameters}
 
-\item{distMat}{The complete distance matrix of Cx and Ey stacked. Only needed when
-\code{sx}, \code{sy}, \code{derivX}, or \code{derivY} are not supplied.}
+\item{distMat}{The complete distance matrix of Cx and Ey stacked. Only needed
+when \code{sx}, \code{sy}, \code{derivX}, or \code{derivY} are not
+supplied.}
 }
 \value{
 The covariance matrix

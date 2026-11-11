@@ -1,14 +1,15 @@
 #' Fit univariate GAMs and test bivariate combinations
 #'
-#' Fit univariate GAMs with 2D cubic smoothing splines for both modalities,
-#' and test for correlation between all bivariate combinations.
+#' Fit univariate GAMs with 2D cubic smoothing splines for both modalities, and
+#' test for correlation between all bivariate combinations.
 #'
 #' @inheritParams sbivarSingle
-#' @param families A vector of length 2 giving the distributional families
-#' for the outcome values. See details of \link{sbivarSingle}.
-#' @param Gamm A boolean, should a gamm with Gaussian covariance kernel be fitted? See \link[mgcv]{gamm}
+#' @param families A vector of length 2 giving the distributional families for
+#'   the outcome values. See details of \link{sbivarSingle}.
+#' @param Gamm A boolean, should a gamm with Gaussian covariance kernel be
+#'   fitted? See \link[mgcv]{gamm}
 #' @param n_points_grid The number of points in the new grid for the GAMs to be
-#' evaluated on.
+#'   evaluated on.
 #' @returns A named list of results
 #' @inheritParams MoransISingle
 GAMsSingle <- function(X, Y, Cx, Ey, families, n_points_grid, verbose, featuresX,

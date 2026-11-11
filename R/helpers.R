@@ -75,13 +75,15 @@ scaleHelpFun <- function(X, feat) {
 }
 #' Normalize a data matrix, and ensure correct column names
 #'
-#' Normalize to relative expression, and potentially add pseudocount and log-normalize.
+#' Normalize to relative expression, and potentially add pseudocount and
+#' log-normalize.
 #' @param x The matrix
 #' @param norm A character string, either "none", "log" or "rel"
-#' @param pseudoCount A pseudocount added prior to log-normalization to avoid taking the log of zero
+#' @param pseudoCount A pseudocount added prior to log-normalization to avoid
+#'   taking the log of zero
 #' @param warnDrop Is a warning to be emitted when spots are dropped?
 #' @details norm = "none" is pass-through, norm = "rel" divides by sample sums,
-#' "log" adds a pseudocount, divides by sample sums and log-normalizes.
+#'   "log" adds a pseudocount, divides by sample sums and log-normalizes.
 #' @returns A normalized matrix
 #' @export
 #' @examples

@@ -2,36 +2,44 @@
 #'
 #' The tests can be applied to either joint or disjoint coordinate sets.
 #'
-#' @details If only Cx is supplied and X and Y have the same number of rows, a joint analysis is performed
-#' If Cx and Ey are provided, and X and Y have the same number of rows, equality of Cx and Ey is checked.
-#' If true, a joint analysis is run, with a warning.
+#' @details If only Cx is supplied and X and Y have the same number of rows, a
+#'   joint analysis is performed If Cx and Ey are provided, and X and Y have the
+#'   same number of rows, equality of Cx and Ey is checked. If true, a joint
+#'   analysis is run, with a warning.
 #'
 #' @param X,Y Matrices of omics measurements
-#' @param Cx,Ey Coordinate matrices of dimension two, belonging to X and Y respectively
+#' @param Cx,Ey Coordinate matrices of dimension two, belonging to X and Y
+#'   respectively
 #' @param method A character string, indicating which method to apply
-#' @param correlation Correlation structure, passed onto \link{fitGP} or \link{fitGAM}
+#' @param correlation Correlation structure, passed onto \link{fitGP} or
+#'   \link{fitGAM}
 #' @param gpParams Pre-estimated GP parameters
 #' @param verbose Should info on type of analysis be printed?
-#' @param control Control arguments passed onto \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, replacing defaults by \link{MoransISingle}, \link{fitGP} or \link{fitGAM}, respectively
-#' @param normX,normY,pseudoCount Normalization parameters, passed onto \link{normMat}
+#' @param control Control arguments passed onto \link{MoransISingle},
+#'   \link{fitGP} or \link{fitGAM}, replacing defaults by \link{MoransISingle},
+#'   \link{fitGP} or \link{fitGAM}, respectively
+#' @param normX,normY,pseudoCount Normalization parameters, passed onto
+#'   \link{normMat}
 #' @param featuresX,featuresY Features to be tested. Defaults to all features,
-#' but specifying them allows to test a limited feature set,
-#' while using the whole matrix to calculate library sizes as offset or for normalization.
+#'   but specifying them allows to test a limited feature set, while using the
+#'   whole matrix to calculate library sizes as offset or for normalization.
 #'
-#' @details X and Y need to have rownames for matching to the coordinates,
-#' and column names for identifying the features.
-#' Cx and Ey must have rownames matching those in X and Y, and have two columns.
-#' For GAMs, usually no normalization is needed, as the non-gaussianity is taken care of by
-#' the outcome distribution, offset and link functions. Currently, identity,
-#' inverse and log-link are implemented.
+#' @details X and Y need to have rownames for matching to the coordinates, and
+#'   column names for identifying the features. Cx and Ey must have rownames
+#'   matching those in X and Y, and have two columns. For GAMs, usually no
+#'   normalization is needed, as the non-gaussianity is taken care of by the
+#'   outcome distribution, offset and link functions. Currently, identity,
+#'   inverse and log-link are implemented.
 #'
 #' @returns A \link{sbivarResults-class} object with multi = FALSE
 #' @importFrom stats p.adjust
 #' @importFrom methods is new
 #' @importFrom nlme corRatio corGaus corSpher corExp corLin lmeControl
 #' @importFrom BiocParallel bpparam bpworkers
-#' @note All methods use multithreading on the cluster provided using the BiocParallel package.
-#' @seealso \link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle}, \link{GPsSingle}
+#' @note All methods use multithreading on the cluster provided using the
+#'   BiocParallel package.
+#' @seealso \link{MoransISingle}, \link{ModTtestSingle}, \link{GAMsSingle},
+#'   \link{GPsSingle}
 sbivarSingle <- function(X, Y, Cx, Ey, method = c("Moran's I", "GAMs", "Modified t-test", "GPs"),
                          normX = c("none", "rel", "log"), normY = c("none", "rel", "log"), pseudoCount = 1e-8,
                          correlation = corGaus(form = ~ x + y, nugget = TRUE, value = c(getLengthScale(Cx), 0.25)), control, gpParams,

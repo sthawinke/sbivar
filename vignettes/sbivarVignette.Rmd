@@ -24,7 +24,7 @@ htmltools::img(
 ```
 
 ```{r setup, include=FALSE, echo=FALSE}
-knitr::opts_chunk$set(fig.height = 4.5, fig.width = 7.5, dpi = 72, fig.retina = 1)
+knitr::opts_chunk$set(fig.height = 4.5, fig.width = 7.5)
 ```
 
 # Introduction
@@ -167,9 +167,10 @@ Have a look at the results, which are sorted by increasing p-value:
 ```{r headres}
 topPairs(moransIRes)
 ```
-Plot the most significantly spatially associated gene-metabolite pair 
-`r gpMoran <- rownames(topPairs(moransIRes))[1]`:
-```{r plottoppairmoran}
+
+Plot the most significantly spatially associated gene-metabolite pair `r gpMoran <- paste(topPairs(moransIRes)[1,1:2], collapse = "__")`:
+
+```{r plottoppairmoran, fig.height = 3}
 plotTopPair(moransIRes,
     X = singleStx, Y = singleMet, Cx = singleStxCoords,
     Ey = singleMetCoords
@@ -194,7 +195,7 @@ Plot the most significant pair. Normalized data are shown, while the original
 analysis is on raw data, but we scale the size of the spots by the sample sums
 to reflect their higher weight in the analysis:
 
-```{r plottoppairgam}
+```{r plottoppairgam, fig.height = 3}
 plotTopPair(gamRes,
     X = singleStx, Y = singleMet, Cx = singleStxCoords, scaleBySampleSums = TRUE,
     Ey = singleMetCoords, normX = "rel", normY = "rel"
@@ -341,7 +342,7 @@ resSpatExp <- sbivar(StxSE, MetSE,
 Plot the second most significant result, again providing the _SpatialExperiment_
 objects
 
-```{r plotTopSE, fig.height = 3}
+```{r plotTopSE, fig.height = 2.8}
 plotTopPair(resSpatExp, X = StxSE, Y = MetSE, topRank = 2)
 ```
 

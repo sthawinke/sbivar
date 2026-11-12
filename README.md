@@ -1,5 +1,5 @@
 SBIVAR: Spatial BIVARiate association tests across disjoint coordinate
-sets<img src='inst/Sbivar.png' align='right' height='20%' width='20%'/>
+sets<img src='inst/Sbivar.jpg' align='right' height='20%' width='20%'/>
 ================
 
 This repo provides code for performing bivariate association tests

@@ -7,7 +7,7 @@
 \usage{
 topPairs(x, ...)
 
-\S4method{topPairs}{sbivarResults}(x, parameter = "Intercept", digits = 5L, ...)
+\S4method{topPairs}{sbivarResults}(x, parameter = "Intercept", digits = 4L, ...)
 }
 \arguments{
 \item{x}{The sbivarResults object}

@@ -1,108 +1,108 @@
 #' @rdname fitLinModels
 #' @order 2
 setMethod(
-  "extractResultsMulti",
-  "sbivarResults",
-  function(result, designDf, method = "BH") {
-      if (!result@multi) {
-          stop("Extracting results only possible for multi-image analyses!")
-      }
-      if (!is.list(result@models)) {
-          stop("No linear models present in object, run fitLinModels() first!")
-      }
-    if (misDes <- missing(designDf)) {
-      warning(immediate. = TRUE, "No design matrix supplied, extracting only results for intercept!")
-    } else {
-      categoricalVars <- getDiscreteVars(designDf)
-    }
-    if (result@method == "Moran's I") {
-      wParChar <- switch(result@wo,
-        "Gauss" = "eta_",
-        "nn" = "numNN_"
-      )
-    }
-    outout <- loadBalanceBplapply(selfName(names(result@models)), function(nm) {
-      res <- result@models[[nm]]
-      if (result@method == "Moran's I") {
-        names(res) <- paste0(wParChar, names(res))
-      }
-      id <- vapply(res, FUN.VALUE = TRUE, function(x) {
-        is(x, "lmerModLmerTest") || is(x, "lm")
-      })
-      out <- if (any(id)) {
-        Summaries <- lapply(res[id], function(x) summary(x)$coef)
-        ints <- t(vapply(Summaries, FUN.VALUE = double(3), function(x) {
-          x["(Intercept)", c("Estimate", "Std. Error", "Pr(>|t|)")]
-        }))
-        colnames(ints) <- c("Estimate", "SE", "pVal")
-        AnovaTabs <- lapply(res[id], anova)
-        fixedVars <- if (misDes) {
-          character(0)
-        } else {
-          selfName(unique(unlist(lapply(res[id], function(x) {
-            all.vars(nobars(terms(x)))[-1]
-          }))))
+    "extractResultsMulti",
+    "sbivarResults",
+    function(result, designDf, method = "BH") {
+        if (!result@multi) {
+            stop("Extracting results only possible for multi-image analyses!")
         }
-        fixedOut <- lapply(fixedVars, function(Var) {
-          if (discr <- Var %in% categoricalVars) {
-            unVals <- unique(designDf[[Var]])
-            emptyCoef <- rep_len(NA, length(unVals))
-            names(emptyCoef) <- paste0(Var, unVals) # Prepare empty coefficient
-          } else {
-            emptyCoef <- double(1)
-            names(emptyCoef) <- Var
-          }
-          pVal <- vapply(AnovaTabs, FUN.VALUE = double(1), function(x) x[Var, "Pr(>F)"])
-          coefs <- lapply(Summaries, function(coefObj) {
-            # Prepare the empty coefficient vector with all levels present. If
-            # outcome is NA for all levels, the factor level gets dropped,
-            # causing problems downstream.
-            if (discr) {
-              rn <- intersect(names(emptyCoef), rownames(coefObj))
-              emptyCoef[rn] <- coefObj[rn, "Estimate"]
-              emptyCoef
-            } else {
-              coefObj[Var, "Estimate"]
-            }
-          })
-          coefMat <- matrix(unlist(coefs), byrow = TRUE, nrow = length(pVal))
-          colnames(coefMat) <- names(emptyCoef)
-          if (ncol(coefMat) == 2) {
-            # If two levels, the two coefficients are each other's opposite
-            # in sum coding, and NA can be replaced by the negative. For more than two
-            # levels, it's more complicated as NA may indicate that the parameter was not estimated
-            oneNA <- which(rowSums(naMat <- is.na(coefMat)) == 1)
-            for (i in oneNA) {
-              coefMat[i, naMat[i, ]] <- -coefMat[i, !naMat[i, ]]
-            }
-          }
-          cbind(coefMat, pVal = pVal)
-        })
+        if (!is.list(result@models)) {
+            stop("No linear models present in object, run fitLinModels() first!")
+        }
+        if (misDes <- missing(designDf)) {
+            warning(immediate. = TRUE, "No design matrix supplied, extracting only results for intercept!")
+        } else {
+            categoricalVars <- getDiscreteVars(designDf)
+        }
         if (result@method == "Moran's I") {
-          intRes <- c(ints[, "Estimate"], "pVal" = CCT(ints[, "pVal"]))
-          fixRes <- lapply(fixedOut, function(x) {
-            coefs <- c(x[, colnames(x) != "pVal"])
-            names(coefs) <- makeNames(rownames(x), colnames(x)[colnames(x) != "pVal"])
-            c(coefs, "pVal" = CCT(x[, "pVal"]))
-          })
-        } else {
-          intRes <- ints[1, ]
-          fixRes <- lapply(fixedOut, function(x) x[1, ])
+            wParChar <- switch(result@wo,
+                "Gauss" = "eta_",
+                "nn" = "numNN_"
+            )
         }
-        c(list("Intercept" = intRes), fixRes)
-      } else {
-        return(NULL)
-      }
-    })
-    outout <- outout[!vapply(outout, FUN.VALUE = TRUE, is.null)]
-    fixResOut <- lapply(selfName(names(outout[[1]])), function(ii) {
-      tmpMat <- t(vapply(outout, FUN.VALUE = outout[[1]][[ii]], function(x) {
-        if (is.null(x[[ii]])) rep(NA, length(outout[[1]][[ii]])) else x[[ii]]
-      }))
-      tmpMat <- tmpMat[order(tmpMat[, "pVal"]), ]
-      addFeatureColumn(cbind(tmpMat, "pAdj" = p.adjust(tmpMat[, "pVal"], method = method)))
-    })
-    result@result <- fixResOut
-    return(result)
-  }
+        outout <- loadBalanceBplapply(selfName(names(result@models)), function(nm) {
+            res <- result@models[[nm]]
+            if (result@method == "Moran's I") {
+                names(res) <- paste0(wParChar, names(res))
+            }
+            id <- vapply(res, FUN.VALUE = TRUE, function(x) {
+                is(x, "lmerModLmerTest") || is(x, "lm")
+            })
+            out <- if (any(id)) {
+                Summaries <- lapply(res[id], function(x) summary(x)$coef)
+                ints <- t(vapply(Summaries, FUN.VALUE = double(3), function(x) {
+                    x["(Intercept)", c("Estimate", "Std. Error", "Pr(>|t|)")]
+                }))
+                colnames(ints) <- c("Estimate", "SE", "pVal")
+                AnovaTabs <- lapply(res[id], anova)
+                fixedVars <- if (misDes) {
+                    character(0)
+                } else {
+                    selfName(unique(unlist(lapply(res[id], function(x) {
+                        all.vars(nobars(terms(x)))[-1]
+                    }))))
+                }
+                fixedOut <- lapply(fixedVars, function(Var) {
+                    if (discr <- Var %in% categoricalVars) {
+                        unVals <- unique(designDf[[Var]])
+                        emptyCoef <- rep_len(NA, length(unVals))
+                        names(emptyCoef) <- paste0(Var, unVals) # Prepare empty coefficient
+                    } else {
+                        emptyCoef <- double(1)
+                        names(emptyCoef) <- Var
+                    }
+                    pVal <- vapply(AnovaTabs, FUN.VALUE = double(1), function(x) x[Var, "Pr(>F)"])
+                    coefs <- lapply(Summaries, function(coefObj) {
+                        # Prepare the empty coefficient vector with all levels present. If
+                        # outcome is NA for all levels, the factor level gets dropped,
+                        # causing problems downstream.
+                        if (discr) {
+                            rn <- intersect(names(emptyCoef), rownames(coefObj))
+                            emptyCoef[rn] <- coefObj[rn, "Estimate"]
+                            emptyCoef
+                        } else {
+                            coefObj[Var, "Estimate"]
+                        }
+                    })
+                    coefMat <- matrix(unlist(coefs), byrow = TRUE, nrow = length(pVal))
+                    colnames(coefMat) <- names(emptyCoef)
+                    if (ncol(coefMat) == 2) {
+                        # If two levels, the two coefficients are each other's opposite
+                        # in sum coding, and NA can be replaced by the negative. For more than two
+                        # levels, it's more complicated as NA may indicate that the parameter was not estimated
+                        oneNA <- which(rowSums(naMat <- is.na(coefMat)) == 1)
+                        for (i in oneNA) {
+                            coefMat[i, naMat[i, ]] <- -coefMat[i, !naMat[i, ]]
+                        }
+                    }
+                    cbind(coefMat, pVal = pVal)
+                })
+                if (result@method == "Moran's I") {
+                    intRes <- c(ints[, "Estimate"], "pVal" = CCT(ints[, "pVal"]))
+                    fixRes <- lapply(fixedOut, function(x) {
+                        coefs <- c(x[, colnames(x) != "pVal"])
+                        names(coefs) <- makeNames(rownames(x), colnames(x)[colnames(x) != "pVal"])
+                        c(coefs, "pVal" = CCT(x[, "pVal"]))
+                    })
+                } else {
+                    intRes <- ints[1, ]
+                    fixRes <- lapply(fixedOut, function(x) x[1, ])
+                }
+                c(list("Intercept" = intRes), fixRes)
+            } else {
+                return(NULL)
+            }
+        })
+        outout <- outout[!vapply(outout, FUN.VALUE = TRUE, is.null)]
+        fixResOut <- lapply(selfName(names(outout[[1]])), function(ii) {
+            tmpMat <- t(vapply(outout, FUN.VALUE = outout[[1]][[ii]], function(x) {
+                if (is.null(x[[ii]])) rep(NA, length(outout[[1]][[ii]])) else x[[ii]]
+            }))
+            tmpMat <- tmpMat[order(tmpMat[, "pVal"]), ]
+            addFeatureColumn(cbind(tmpMat, "pAdj" = p.adjust(tmpMat[, "pVal"], method = method)))
+        })
+        result@result <- fixResOut
+        return(result)
+    }
 )

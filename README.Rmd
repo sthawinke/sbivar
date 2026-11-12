@@ -57,11 +57,11 @@ Prepare multithreading
 library(BiocParallel)
 nCores <- 2
 if (.Platform$OS.type == "unix") {
-  # On unix-based systems (linux and macOS), use MulticoreParam
-  register(MulticoreParam(nCores, stop.on.error = FALSE))
+    # On unix-based systems (linux and macOS), use MulticoreParam
+    register(MulticoreParam(nCores, stop.on.error = FALSE))
 } else {
-  # On windows, use SnowParam
-  register(SnowParam(workers = nCores, type = "SOCK", stop.on.error = FALSE))
+    # On windows, use SnowParam
+    register(SnowParam(workers = nCores, type = "SOCK", stop.on.error = FALSE))
 }
 ```
 
@@ -69,7 +69,7 @@ Now analyse this single sample using bivariate Moran's I.
 
 ```{r moranSingle}
 moranRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
-  method = "Moran's I"
+    method = "Moran's I"
 )
 ```
 
@@ -103,9 +103,9 @@ For the multi-image case, we use GAMs as measure of spatial association, with a 
 
 ```{r multivic}
 multiGAMRes <- sbivar(
-  X = Vicari$TranscriptOutcomes, Y = Vicari$MetaboliteOutcomes,
-  Cx = Vicari$TranscriptCoords, Ey = Vicari$MetaboliteCoords,
-  method = "GAMs", control = list("families" = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log")))
+    X = Vicari$TranscriptOutcomes, Y = Vicari$MetaboliteOutcomes,
+    Cx = Vicari$TranscriptCoords, Ey = Vicari$MetaboliteCoords,
+    method = "GAMs", control = list("families" = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log")))
 )
 ```
 
@@ -127,8 +127,8 @@ No features are significantly associated after multiplicity correction. For illu
 
 ```{r topPairMulti, fig.height = 9}
 plotTopPair(multiGAMLmmsRes,
-  Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes,
-  Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords
+    Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes,
+    Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords
 )
 ```
 

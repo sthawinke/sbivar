@@ -9,21 +9,21 @@
 #' @returns A vector with the correlation estimate, its standard error and the p-value
 #' @inheritParams MoransISingle
 testGAM <- function(modelx, modely, predx, predy, findVariances) {
-  # Covariance
-  cxy <- sum((cen1 <- (predx$pred - mean(predx$pred))) * (cen2 <- (predy$pred - mean(predy$pred))))
-  # Correlation
-  denom <- (length(predx$pred) - 1) * sd(predx$pred) * sd(predy$pred)
-  corxy <- cxy / denom
-  # Its standard error, exploit block diagonality
-  if (findVariances) {
-    se <- sqrt(getApproxVar(predx, cen2, predx$pred, modelx$family$link) +
-      getApproxVar(predy, cen1, predy$pred, modely$family$link))
-    if (is.na(corxy) || is.infinite(corxy) || is.na(se)) {
-      return(c("corxy" = NA, "se.corxy" = NA, "pVal" = NA))
+    # Covariance
+    cxy <- sum((cen1 <- (predx$pred - mean(predx$pred))) * (cen2 <- (predy$pred - mean(predy$pred))))
+    # Correlation
+    denom <- (length(predx$pred) - 1) * sd(predx$pred) * sd(predy$pred)
+    corxy <- cxy / denom
+    # Its standard error, exploit block diagonality
+    if (findVariances) {
+        se <- sqrt(getApproxVar(predx, cen2, predx$pred, modelx$family$link) +
+            getApproxVar(predy, cen1, predy$pred, modely$family$link))
+        if (is.na(corxy) || is.infinite(corxy) || is.na(se)) {
+            return(c("corxy" = NA, "se.corxy" = NA, "pVal" = NA))
+        } else {
+            return(c("corxy" = corxy, "se.corxy" = se / denom, "pVal" = makePval(cxy / se)))
+        }
     } else {
-      return(c("corxy" = corxy, "se.corxy" = se / denom, "pVal" = makePval(cxy / se)))
+        return(c("corxy" = corxy))
     }
-  } else {
-    return(c("corxy" = corxy))
-  }
 }

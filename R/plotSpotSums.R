@@ -14,34 +14,38 @@
 #' @examples
 #' data(Vicari)
 #' plotSpotSums(
-#'   Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
-#'   Vicari$TranscriptCoords, Vicari$MetaboliteCoords
+#'     Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
+#'     Vicari$TranscriptCoords, Vicari$MetaboliteCoords
 #' )
 plotSpotSums <- function(
-  Xl, Yl, Cxl, Eyl, viewNames = c("Transcriptomics", "Metabolomics"),
-  pointSize = 0.01, stripTextSize = 8.5
+      Xl, Yl, Cxl, Eyl, viewNames = c("Transcriptomics", "Metabolomics"),
+      pointSize = 0.01, stripTextSize = 8.5
 ) {
-  invisible(checkInputMulti(Xl, Yl, Cxl, Eyl))
-  foo <- base::do.call(rbind, lapply(names(Xl), function(x) {
-    dfStx <- data.frame(Cxl[[x]], "log10_Library_size" = log10(rowSums(Xl[[x]])),
-                        what = viewNames[1])
-    dfMsi <- data.frame(Eyl[[x]], "log10_Library_size" = log10(rowSums(Yl[[x]])),
-                        what = viewNames[2])
-    df <- rbind(dfStx, dfMsi)
-    df$sample <- x
-    df
-  }))
-  foo$what <- factor(foo$what, levels = viewNames)
-  p <- ggplot(data = foo, aes(x = x, y = y, col = log10_Library_size)) +
-    geom_point(size = pointSize) +
-    facet_grid(sample ~ what, space = "free", scales = "free") +
-    theme(strip.text = element_text(size = stripTextSize)) +
-    xlab("Coordinate 1") +
-    ylab("Coordinate 2") +
-    scale_colour_gradient(
-      low = "yellow", high = "blue",
-      name = "Log10(spot sum)"
-    ) +
-    coord_fixed()
-  return(p)
+    invisible(checkInputMulti(Xl, Yl, Cxl, Eyl))
+    foo <- base::do.call(rbind, lapply(names(Xl), function(x) {
+        dfStx <- data.frame(Cxl[[x]],
+            "log10_Library_size" = log10(rowSums(Xl[[x]])),
+            what = viewNames[1]
+        )
+        dfMsi <- data.frame(Eyl[[x]],
+            "log10_Library_size" = log10(rowSums(Yl[[x]])),
+            what = viewNames[2]
+        )
+        df <- rbind(dfStx, dfMsi)
+        df$sample <- x
+        df
+    }))
+    foo$what <- factor(foo$what, levels = viewNames)
+    p <- ggplot(data = foo, aes(x = x, y = y, col = log10_Library_size)) +
+        geom_point(size = pointSize) +
+        facet_grid(sample ~ what, space = "free", scales = "free") +
+        theme(strip.text = element_text(size = stripTextSize)) +
+        xlab("Coordinate 1") +
+        ylab("Coordinate 2") +
+        scale_colour_gradient(
+            low = "yellow", high = "blue",
+            name = "Log10(spot sum)"
+        ) +
+        coord_fixed()
+    return(p)
 }

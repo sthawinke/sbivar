@@ -20,24 +20,24 @@
 #' @inheritParams MoransISingle
 #' @inheritParams GAMsSingle
 vcovPredGam <- function(model, newdata, findVariances = TRUE) {
-  # Basis matrix B (N_grid x q) — shared by prediction and variance computation
-  basis_matrix <- predict.gam(model,
-    newdata = newdata, type = "lpmatrix",
-    newdata.guaranteed = TRUE
-  )
-  predOut <- c(basis_matrix %*% coef(model))
-  predOut <- switch(model$family$link,
-    "identity" = predOut,
-    "inverse"  = 1 / predOut,
-    "log"      = exp(predOut)
-  )
+    # Basis matrix B (N_grid x q) — shared by prediction and variance computation
+    basis_matrix <- predict.gam(model,
+        newdata = newdata, type = "lpmatrix",
+        newdata.guaranteed = TRUE
+    )
+    predOut <- c(basis_matrix %*% coef(model))
+    predOut <- switch(model$family$link,
+        "identity" = predOut,
+        "inverse"  = 1 / predOut,
+        "log"      = exp(predOut)
+    )
 
-  if (findVariances) {
-    # q x q covariance of smooth coefficients — much smaller than N_grid x N_grid
-    coef_cov <- vcov.gam(model, unconditional = TRUE)
-    return(list("pred" = predOut, "basis" = basis_matrix, "coef_cov" = coef_cov))
-  }
-  return(list("pred" = predOut))
+    if (findVariances) {
+        # q x q covariance of smooth coefficients — much smaller than N_grid x N_grid
+        coef_cov <- vcov.gam(model, unconditional = TRUE)
+        return(list("pred" = predOut, "basis" = basis_matrix, "coef_cov" = coef_cov))
+    }
+    return(list("pred" = predOut))
 }
 
 #' Approximate variance of the spatial covariance numerator
@@ -55,13 +55,13 @@ vcovPredGam <- function(model, newdata, findVariances = TRUE) {
 #'
 #' @returns Scalar approximate variance
 getApproxVar <- function(predInfo, cen, x, link) {
-  vec <- switch(link,
-    "identity" = cen,
-    "log"      = cen * x,
-    "inverse"  = cen / x^2
-  )
-  # u = B^T vec  (q x 1, q << N_grid)
-  u <- crossprod(predInfo$basis, vec)
-  # u^T C u  (scalar quadratic form in q dimensions)
-  c(crossprod(u, predInfo$coef_cov %*% u))
+    vec <- switch(link,
+        "identity" = cen,
+        "log"      = cen * x,
+        "inverse"  = cen / x^2
+    )
+    # u = B^T vec  (q x 1, q << N_grid)
+    u <- crossprod(predInfo$basis, vec)
+    # u^T C u  (scalar quadratic form in q dimensions)
+    c(crossprod(u, predInfo$coef_cov %*% u))
 }

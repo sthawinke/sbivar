@@ -7,6 +7,7 @@ output:
     number_sections: true
     keep_md: true
     citation_package: biblatex
+    self_contained: true
 vignette: >
   %\VignetteIndexEntry{Vignette of the sbivar package}
   %\VignetteEngine{knitr::rmarkdown}
@@ -18,12 +19,12 @@ bibliography: ../inst/REFERENCES.bib
 htmltools::img(
     src = knitr::image_uri(system.file("Sbivar.png", package = "sbivar")),
     style = "position:absolute; top:0; right:0; padding:8px;",
-    alt = "logo", width = "240px", heigth = "190px"
+    alt = "logo", width = "230px", heigth = "180px"
 )
 ```
 
 ```{r setup, include=FALSE, echo=FALSE}
-knitr::opts_chunk$set(fig.height = 2.5, fig.width = 7.25, dpi = 50)
+knitr::opts_chunk$set(fig.height = 3.25, fig.width = 7, dpi = 72)
 ```
 
 # Introduction
@@ -463,14 +464,13 @@ Note that in this example, the samples of the two modalities have been
 pre-matched (the "spatialCoords" slot is the same), which is in general not
 recommended. The above code chunks should not be applied thoughtlessly, as the
 _AnnData_ structure is not very strict on the data types it includes. The
-analysis is then run and plotted as:
+analysis is then runas:
 ```{r speanalyse}
 if (reqann) {
     GodfreyRes <- sbivar(speStx, speMet,
         assayX = "Stx", assayY = "msi",
         normX = "rel", normY = "rel", verbose = FALSE
     )
-    plotTopPair(GodfreyRes, X = speStx, Y = speMet)
 }
 ```
 

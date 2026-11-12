@@ -170,7 +170,7 @@ topPairs(moransIRes)
 
 Plot the most significantly spatially associated gene-metabolite pair `r gpMoran <- paste(topPairs(moransIRes)[1,1:2], collapse = "__")`:
 
-```{r plottoppairmoran, fig.height = 3}
+```{r plottoppairmoran, fig.height = 2.5}
 plotTopPair(moransIRes,
     X = singleStx, Y = singleMet, Cx = singleStxCoords,
     Ey = singleMetCoords
@@ -195,7 +195,7 @@ Plot the most significant pair. Normalized data are shown, while the original
 analysis is on raw data, but we scale the size of the spots by the sample sums
 to reflect their higher weight in the analysis:
 
-```{r plottoppairgam, fig.height = 3}
+```{r plottoppairgam, fig.height = 2.5}
 plotTopPair(gamRes,
     X = singleStx, Y = singleMet, Cx = singleStxCoords, scaleBySampleSums = TRUE,
     Ey = singleMetCoords, normX = "rel", normY = "rel"
@@ -205,7 +205,7 @@ plotTopPair(gamRes,
 An other feature is found most significant by GAMs, now with a positive
 relationship. For GAMs, we can also plot the corresponding spline fit, with the
 contributions to the correlation `r round(topPairs(gamRes)[1, "corxy"], 3)`:
-```{r plotGAM, fig.height = 3}
+```{r plotGAM, fig.height = 2.5}
 plotGAMsTopPair(gamRes,
     X = singleStx, Y = singleMet, Cx = singleStxCoords,
     Ey = singleMetCoords
@@ -342,7 +342,7 @@ resSpatExp <- sbivar(StxSE, MetSE,
 Plot the second most significant result, again providing the _SpatialExperiment_
 objects
 
-```{r plotTopSE, fig.height = 2.8}
+```{r plotTopSE, fig.height = 2.6}
 plotTopPair(resSpatExp, X = StxSE, Y = MetSE, topRank = 2)
 ```
 

@@ -45,6 +45,7 @@ test_that("SbivarSingle works for correct input", {
 })
 test_that("SbivarSingle throws errors for incorrect input", {
     expect_error(sbivar(X, Y, cbind(Cx, Cx), Ey, method = "GAMs"))
+    expect_error(sbivar(X, Y, X, Ey, method = "GAMs"))
     expect_error(sbivar(X, Y, Cx, Ey, method = "GPs", correlation = corExp(~ x + y, nugget = TRUE)))
     expect_error(sbivar(X, Y, Cx, Ey, method = "Modified t-test"))
     expect_error(sbivar(X, Y, Cx + 10, Ey, method = "GAMs"))
@@ -90,6 +91,7 @@ test_that("sbivarMulti works for correct input", {
 })
 test_that("sbivarMulti throws errors for incorrect input", {
     expect_error(sbivar(Xl, Yl, Cxl, Eyl, method = "GPs"))
+    expect_error(sbivar(Xl, Yl, Cxl, Eyl, method = "Correlation"))
     expect_error(sbivar(Xl, Yl, Cxl, Eyl, method = "Modified t-test"))
     expect_error(sbivar(Xl, Yl, Cxl, method = "GAMs"))
     expect_error(sbivar(Xl, Yl, Cxl,

@@ -1,10 +1,11 @@
+multiFitGams <- fitLinModels(estGAMs,
+                             designDf = toyDesign, inverseWeigh = TRUE,
+                             Formula = out ~ covariate + cofactor + (1 | group)
+)
 test_that("fitLinModels works for GAM input", {
     expect_s4_class(
         class = "sbivarResults",
-        multiFitGams <- fitLinModels(estGAMs,
-            designDf = toyDesign, inverseWeigh = TRUE,
-            Formula = out ~ covariate + cofactor + (1 | group)
-        )
+        multiFitGams
     )
     expect_s4_class(
         class = "sbivarResults",
@@ -67,6 +68,9 @@ test_that("fitLinModels works for Moran's I input", {
             Formula = out ~ covariate + cofactor + (1 | group)
         )
     )
+    expect_s4_class(
+        class = "sbivarResults",
+        extractResultsMulti(multiFitMoran3))
 })
 test_that("fitLinModels works for correlation input", {
     expect_s4_class(
@@ -76,7 +80,13 @@ test_that("fitLinModels works for correlation input", {
             Formula = out ~ covariate + cofactor + (1 | group)
         )
     )
+    expect_warning(fitLinModels(estMultiCor, inverseWeigh = TRUE,
+                                designDf = toyDesign,
+                                Formula = out ~ covariate + cofactor + (1 | group)
+    ))
 })
 test_that("Model fitting and extraction throws errors where appropriate", {
     expect_error(fitLinModels(estMoran, Formula = out ~ covariate + cofactor + (1 | group)))
+    expect_error(extractResultsMulti(estGAMs))
+    expect_error(fitLinModels(multiFitGams))
 })

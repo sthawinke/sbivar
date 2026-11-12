@@ -17,7 +17,7 @@ bibliography: ../inst/REFERENCES.bib
 
 ```{r image, echo=FALSE}
 htmltools::img(
-    src = knitr::image_uri(system.file("Sbivar.png", package = "sbivar")),
+    src = knitr::image_uri(system.file("Sbivar.jpg", package = "sbivar")),
     style = "position:absolute; top:0; right:0; padding:8px;",
     alt = "logo", width = "207px", heigth = "162px"
 )

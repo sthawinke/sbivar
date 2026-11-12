@@ -1,6 +1,6 @@
 ---
 output: github_document
-title: "SBIVAR: Spatial BIVARiate association tests across disjoint coordinate sets<img src='inst/Sbivar.png' align='right' height='20%' width='20%'/>"
+title: "SBIVAR: Spatial BIVARiate association tests across disjoint coordinate sets<img src='inst/Sbivar.jpg' align='right' height='20%' width='20%'/>"
 ---
 
 ```{r setup, include=FALSE, echo=FALSE}

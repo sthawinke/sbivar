@@ -5,7 +5,6 @@ output:
   rmarkdown::html_vignette:
     toc: true
     number_sections: true
-    keep_md: true
     citation_package: biblatex
     self_contained: true
 vignette: >
@@ -24,7 +23,7 @@ htmltools::img(
 ```
 
 ```{r setup, include=FALSE, echo=FALSE}
-knitr::opts_chunk$set(fig.height = 4.5, fig.width = 7.5)
+knitr::opts_chunk$set(fig.height = 4, fig.width = 7, dpi = 96)
 ```
 
 # Introduction

@@ -7,7 +7,7 @@
 \usage{
 topPairs(x, ...)
 
-\S4method{topPairs}{sbivarResults}(x, parameter = "Intercept", ...)
+\S4method{topPairs}{sbivarResults}(x, parameter = "Intercept", digits = 5L, ...)
 }
 \arguments{
 \item{x}{The sbivarResults object}
@@ -16,6 +16,8 @@ topPairs(x, ...)
 
 \item{parameter}{For multi-image analysis, the parameter for which top
 results should be shown}
+
+\item{digits}{The number of significant digits to be rounded to}
 }
 \value{
 A dataframe of top results

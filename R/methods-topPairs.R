@@ -10,7 +10,7 @@
 setMethod(
     "topPairs",
     "sbivarResults",
-    function(x, parameter = "Intercept", digits = 5L, ...) {
+    function(x, parameter = "Intercept", digits = 4L, ...) {
         out <- if (x@multi) {
             head(x@result[[parameter]], ...)
         } else {

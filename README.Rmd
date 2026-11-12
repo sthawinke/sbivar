@@ -76,7 +76,7 @@ moranRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
 Have a look at the results:
 
 ```{r headsingle}
-topPairs(moranRes)
+topPairs(moranRes) 
 ```
 
 Plot the most significantly spatially associated gene-metabolite pair `r paste(c(topPairs(moranRes)[1, 1:2]), collapse = "--")`:

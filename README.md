@@ -68,11 +68,11 @@ Prepare multithreading
 library(BiocParallel)
 nCores <- 2
 if (.Platform$OS.type == "unix") {
-  # On unix-based systems (linux and macOS), use MulticoreParam
-  register(MulticoreParam(nCores, stop.on.error = FALSE))
+    # On unix-based systems (linux and macOS), use MulticoreParam
+    register(MulticoreParam(nCores, stop.on.error = FALSE))
 } else {
-  # On windows, use SnowParam
-  register(SnowParam(workers = nCores, type = "SOCK", stop.on.error = FALSE))
+    # On windows, use SnowParam
+    register(SnowParam(workers = nCores, type = "SOCK", stop.on.error = FALSE))
 }
 ```
 
@@ -80,7 +80,7 @@ Now analyse this single sample using bivariate Moran’s I.
 
 ``` r
 moranRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
-  method = "Moran's I"
+    method = "Moran's I"
 )
 ```
 
@@ -99,23 +99,23 @@ moranRes <- sbivar(singleStx, singleMet, singleStxCoords, singleMetCoords,
 Have a look at the results:
 
 ``` r
-topPairs(moranRes)
+topPairs(moranRes) 
 ```
 
-    ##   Modality_X Modality_Y     Ixy_5e.06     Ixy_2e.04      Ixy_0.02 SE.Ixy._5e.06
-    ## 1       Pcp4   Dopamine  1.691068e-04  1.313399e-04  6.215548e-05  4.471070e-05
-    ## 2    mt.Atp6  Histidine  5.174945e-05  2.628488e-05  6.816206e-06  1.825502e-05
-    ## 3       Fth1  Histidine -1.456025e-05 -2.624468e-05 -1.000125e-05  1.823251e-05
-    ## 4       Pcp4  Histidine  2.981628e-05  1.236840e-05  3.038781e-06  1.823146e-05
-    ## 5       Fth1 Tocopherol -1.413589e-05 -1.422649e-05 -3.450981e-06  1.812031e-05
-    ## 6    mt.Atp6    Taurine  1.486419e-06  1.480923e-05  4.817983e-06  1.812031e-05
-    ##   SE.Ixy._2e.04 SE.Ixy._0.02         pVal       pAdj
-    ## 1  4.147731e-05 2.876564e-05 0.0004216507 0.01054127
-    ## 2  7.455806e-06 3.728807e-06 0.0011548134 0.01443517
-    ## 3  7.830945e-06 3.390757e-06 0.0019246076 0.01603840
-    ## 4  6.869515e-06 3.390383e-06 0.1167989515 0.43101376
-    ## 5  7.565471e-06 2.874446e-06 0.1361841917 0.43101376
-    ## 6  7.116155e-06 3.146162e-06 0.1462119192 0.43101376
+    ##  Modality_X Modality_Y   Ixy_5e.06   Ixy_2e.04    Ixy_0.02 SE.Ixy._5e.06
+    ##        Pcp4   Dopamine  1.6911e-04  1.3134e-04  6.2155e-05    4.4711e-05
+    ##     mt.Atp6  Histidine  5.1749e-05  2.6285e-05  6.8162e-06    1.8255e-05
+    ##        Fth1  Histidine -1.4560e-05 -2.6245e-05 -1.0001e-05    1.8233e-05
+    ##        Pcp4  Histidine  2.9816e-05  1.2368e-05  3.0388e-06    1.8231e-05
+    ##        Fth1 Tocopherol -1.4136e-05 -1.4226e-05 -3.4510e-06    1.8120e-05
+    ##     mt.Atp6    Taurine  1.4864e-06  1.4809e-05  4.8180e-06    1.8120e-05
+    ##  SE.Ixy._2e.04 SE.Ixy._0.02       pVal     pAdj
+    ##     4.1477e-05   2.8766e-05 0.00042165 0.010541
+    ##     7.4558e-06   3.7288e-06 0.00115480 0.014435
+    ##     7.8309e-06   3.3908e-06 0.00192460 0.016038
+    ##     6.8695e-06   3.3904e-06 0.11680000 0.431010
+    ##     7.5655e-06   2.8744e-06 0.13618000 0.431010
+    ##     7.1162e-06   3.1462e-06 0.14621000 0.431010
 
 Plot the most significantly spatially associated gene-metabolite pair
 Pcp4–Dopamine:
@@ -149,9 +149,9 @@ log-link is used in both cases.
 
 ``` r
 multiGAMRes <- sbivar(
-  X = Vicari$TranscriptOutcomes, Y = Vicari$MetaboliteOutcomes,
-  Cx = Vicari$TranscriptCoords, Ey = Vicari$MetaboliteCoords,
-  method = "GAMs", control = list("families" = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log")))
+    X = Vicari$TranscriptOutcomes, Y = Vicari$MetaboliteOutcomes,
+    Cx = Vicari$TranscriptCoords, Ey = Vicari$MetaboliteCoords,
+    method = "GAMs", control = list("families" = list("X" = mgcv::nb(), "Y" = Gamma(lin = "log")))
 )
 ```
 
@@ -186,13 +186,13 @@ multiGAMLmmsRes <- extractResultsMulti(multiGAMLmms, design)
 topPairs(multiGAMLmmsRes, parameter = "Intercept")
 ```
 
-    ##   Modality_X Modality_Y   Estimate         SE        pVal      pAdj
-    ## 1       Fth1       GABA  0.4125944 0.10215786 0.009934558 0.1616965
-    ## 2      Sparc Tocopherol -0.1969455 0.05512814 0.016001220 0.1616965
-    ## 3    mt.Atp6       GABA -0.4230801 0.12470185 0.019403575 0.1616965
-    ## 4      Sparc    Taurine -0.3736672 0.12022088 0.026605784 0.1662862
-    ## 5       Gnas   Dopamine -0.2579455 0.10237119 0.053193609 0.2207701
-    ## 6       Gnas Tocopherol  0.2058657 0.08376740 0.057398540 0.2207701
+    ##  Modality_X Modality_Y Estimate       SE      pVal    pAdj
+    ##        Fth1       GABA  0.41259 0.102160 0.0099346 0.16170
+    ##       Sparc Tocopherol -0.19695 0.055128 0.0160010 0.16170
+    ##     mt.Atp6       GABA -0.42308 0.124700 0.0194040 0.16170
+    ##       Sparc    Taurine -0.37367 0.120220 0.0266060 0.16629
+    ##        Gnas   Dopamine -0.25795 0.102370 0.0531940 0.22077
+    ##        Gnas Tocopherol  0.20587 0.083767 0.0573990 0.22077
 
 No features are significantly associated after multiplicity correction.
 For illustration, we plot the feature pair with the smallest p-values
@@ -200,8 +200,8 @@ nevertheless:
 
 ``` r
 plotTopPair(multiGAMLmmsRes,
-  Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes,
-  Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords
+    Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes,
+    Cxl = Vicari$TranscriptCoords, Eyl = Vicari$MetaboliteCoords
 )
 ```
 

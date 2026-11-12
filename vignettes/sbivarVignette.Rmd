@@ -6,7 +6,6 @@ output:
     toc: true
     number_sections: true
     citation_package: biblatex
-    self_contained: true
 vignette: >
   %\VignetteIndexEntry{Vignette of the sbivar package}
   %\VignetteEngine{knitr::rmarkdown}
@@ -23,7 +22,7 @@ htmltools::img(
 ```
 
 ```{r setup, include=FALSE, echo=FALSE}
-knitr::opts_chunk$set(fig.height = 4, fig.width = 7, dpi = 96)
+knitr::opts_chunk$set(fig.height = 4, fig.width = 7, dpi = 96, dev = "jpeg")
 ```
 
 # Introduction
@@ -123,7 +122,7 @@ features per modality are included in the package, for real datasets we also
 recommend to filter on the most abundant features, or apply the method to the
 entire dataset. The _sbivar_ package assumes that the data have been
 pre-aligned, hence it is always a good idea to check the alignment visually:
-```{r plotcoordsVicari, fig.height = 5}
+```{r plotcoordsVicari, fig.height = 4.5}
 par(mfrow = c(2, 3))
 plotCoordsMulti(Vicari$TranscriptCoords, Vicari$MetaboliteCoords, cex = 0.1)
 par(mfrow = c(1, 1))
@@ -132,7 +131,7 @@ The alignment seems successful, notice that some tissue areas are only covered
 by one modality though. Next we explore the spatial distributions of the
 spot-wise sums, in our case these are the library sizes for the transcriptomics
 data and the total ion counts for the metabolomics data.
-```{r plotSpotSums, fig.height = 7}
+```{r plotSpotSums, fig.height = 6.7}
 plotSpotSums(
     Vicari$TranscriptOutcomes, Vicari$MetaboliteOutcomes,
     Vicari$TranscriptCoords, Vicari$MetaboliteCoords
@@ -169,7 +168,7 @@ topPairs(moransIRes)
 
 Plot the most significantly spatially associated gene-metabolite pair `r gpMoran <- paste(topPairs(moransIRes)[1,1:2], collapse = "__")`:
 
-```{r plottoppairmoran, fig.height = 2.5}
+```{r plottoppairmoran, fig.height = 2.4}
 plotTopPair(moransIRes,
     X = singleStx, Y = singleMet, Cx = singleStxCoords,
     Ey = singleMetCoords
@@ -194,7 +193,7 @@ Plot the most significant pair. Normalized data are shown, while the original
 analysis is on raw data, but we scale the size of the spots by the sample sums
 to reflect their higher weight in the analysis:
 
-```{r plottoppairgam, fig.height = 2.5}
+```{r plottoppairgam, fig.height = 2.4}
 plotTopPair(gamRes,
     X = singleStx, Y = singleMet, Cx = singleStxCoords, scaleBySampleSums = TRUE,
     Ey = singleMetCoords, normX = "rel", normY = "rel"
@@ -204,7 +203,7 @@ plotTopPair(gamRes,
 An other feature is found most significant by GAMs, now with a positive
 relationship. For GAMs, we can also plot the corresponding spline fit, with the
 contributions to the correlation `r round(topPairs(gamRes)[1, "corxy"], 3)`:
-```{r plotGAM, fig.height = 2.5}
+```{r plotGAM, fig.height = 2.4}
 plotGAMsTopPair(gamRes,
     X = singleStx, Y = singleMet, Cx = singleStxCoords,
     Ey = singleMetCoords
@@ -275,7 +274,7 @@ sections, i.e. these are not real replicates yet, as technology is still being
 developed. For illustration, we plot the feature pair with the smallest p-values
 nevertheless:
 
-```{r plottopMulti, fig.height = 9}
+```{r plottopMulti, fig.height = 8.5}
 plotTopPair(multiMoranLmmsRes,
     parameter = "Intercept",
     Xl = Vicari$TranscriptOutcomes, Yl = Vicari$MetaboliteOutcomes,
@@ -341,7 +340,7 @@ resSpatExp <- sbivar(StxSE, MetSE,
 Plot the second most significant result, again providing the _SpatialExperiment_
 objects
 
-```{r plotTopSE, fig.height = 2.6}
+```{r plotTopSE, fig.height = 2.5}
 plotTopPair(resSpatExp, X = StxSE, Y = MetSE, topRank = 2)
 ```
 

@@ -25,6 +25,9 @@ spatial association in one or more images
 
 \item{\code{models}}{Optional, the linear model fits if multi=TRUE}
 
-\item{\code{result}}{The result of the statistical test}
+\item{\code{result}}{The result of the statistical test: a dataframe}
+
+\item{\code{estimates}}{Raw estimates of association measures,
+for input to linear model fitting}
 }}
 

@@ -18,12 +18,12 @@ bibliography: ../inst/REFERENCES.bib
 htmltools::img(
   src = knitr::image_uri(system.file("Sbivar.png", package = "sbivar")),
   style = "position:absolute; top:0; right:0; padding:8px;",
-  alt = "logo", width = "250px", heigth = "200px"
+  alt = "logo", width = "240px", heigth = "190px"
 )
 ```
 
 ```{r setup, include=FALSE, echo=FALSE}
-knitr::opts_chunk$set(fig.height = 2.5, fig.width = 7.5, dpi = 72)
+knitr::opts_chunk$set(fig.height = 2.5, fig.width = 7.25, dpi = 50)
 ```
 
 # Introduction

@@ -69,7 +69,7 @@ test_that("sbivarMulti works for correct input", {
   gamList <- sbivar(Xl, Yl, Cxl, Eyl, method = "GAMs")
   expect_s4_class(gamList, "sbivarResults")
   expect_true(gamList@multi)
-  expect_setequal(slotNames(gamList), c("result", "normX", "normY", "method", "multi", "families", "Gamm", "correlation", "assayX", "assayY", "models"))
+  expect_setequal(slotNames(gamList), c("result", "normX", "normY", "method", "multi", "families", "Gamm", "correlation", "assayX", "assayY", "models", "estimates"))
   expect_s4_class(sbivar(Xl, Yl, Cxl, Eyl, method = "Moran's I"), "sbivarResults")
 })
 test_that("sbivarMulti throws errors for incorrect input", {

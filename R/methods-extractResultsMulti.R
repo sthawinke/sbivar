@@ -4,6 +4,12 @@ setMethod(
   "extractResultsMulti",
   "sbivarResults",
   function(result, designDf, method = "BH") {
+      if (!result@multi) {
+          stop("Extracting results only possible for multi-image analyses!")
+      }
+      if (!is.list(result@models)) {
+          stop("No linear models present in object, run fitLinModels() first!")
+      }
     if (misDes <- missing(designDf)) {
       warning(immediate. = TRUE, "No design matrix supplied, extracting only results for intercept!")
     } else {
@@ -97,7 +103,6 @@ setMethod(
       addFeatureColumn(cbind(tmpMat, "pAdj" = p.adjust(tmpMat[, "pVal"], method = method)))
     })
     result@result <- fixResOut
-    result@models <- NULL
     return(result)
   }
 )

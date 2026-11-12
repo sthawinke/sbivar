@@ -23,6 +23,7 @@ test_that("fitLinModels works for GAM input", {
   )
   # Extract the results
   expect_s4_class(resGams <- extractResultsMulti(multiFitGams, designDf = toyDesign), "sbivarResults")
+  expect_identical(names(topPairs(resGams)), c("Modality_X", "Modality_Y", "Estimate", "SE", "pVal", "pAdj"))
   expect_named(
     resGams@result,
     c("Intercept", "covariate", "cofactor")

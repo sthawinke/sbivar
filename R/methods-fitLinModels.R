@@ -16,10 +16,10 @@ setMethod(
       stop("Linear models already present in object, proceed with extractResultsMulti()!")
     }
     if (missing(designDf) && length(ncol(attr(terms(Formula), "factors"))) == 0) {
-      designDf <- data.frame("foo" = seq_along(result@result))
+      designDf <- data.frame("foo" = seq_along(result@estimates))
     } # Allow for intercept only models
     stopifnot(
-      is.logical(inverseWeigh), is.logical(scaleByMax), length(result@result) == nrow(designDf),
+      is.logical(inverseWeigh), is.logical(scaleByMax), length(result@estimates) == nrow(designDf),
       is.data.frame(designDf), is.character(Formula) || is(Formula, "formula")
     )
     if (inverseWeigh && (result@method == "Moran's I") && !result@returnSEsMoransI) {
@@ -35,7 +35,7 @@ setMethod(
       "Correlation" = names,
       rownames
     )
-    Features <- selfName(unique(unlist(lapply(result@result, namesFun)))) # All feature pairs present
+    Features <- selfName(unique(unlist(lapply(result@estimates, namesFun)))) # All feature pairs present
     iter <- selfName(if (moran <- result@method == "Moran's I") {
       result@wParams
     } else {
@@ -44,22 +44,22 @@ setMethod(
     # Prepare arrays of outcomes and weights
     outArr <- array(NA,
       dim = c(nrow(designDf), length(Features), length(iter)),
-      dimnames = list(names(result@result), Features, names(iter))
+      dimnames = list(names(result@estimates), Features, names(iter))
     )
     if (inverseWeigh) {
       weightsArr <- outArr
     }
-    for (i in names(result@result)) {
-      outArr[i, namesFun(result@result[[i]]), ] <- if (result@method == "Correlation") result@result[[i]] else result@result[[i]][, seq_along(iter)]
+    for (i in names(result@estimates)) {
+      outArr[i, namesFun(result@estimates[[i]]), ] <- if (result@method == "Correlation") result@estimates[[i]] else result@estimates[[i]][, seq_along(iter)]
       if (scaleByMax && (result@method == "Moran's I")) {
         # Scale estimates
-        outArr[i, namesFun(result@result[[i]]), ] <- t(t(outArr[i, namesFun(result@result[[i]]), ]) / result@maxIxy[, i])
+        outArr[i, namesFun(result@estimates[[i]]), ] <- t(t(outArr[i, namesFun(result@estimates[[i]]), ]) / result@maxIxy[, i])
       }
       if (inverseWeigh && (result@method %in% c("Moran's I", "GAMs"))) {
-        weightsArr[i, namesFun(result@result[[i]]), ] <- 1 / result@result[[i]][, seq_along(iter) + length(iter)]^2
+        weightsArr[i, namesFun(result@estimates[[i]]), ] <- 1 / result@estimates[[i]][, seq_along(iter) + length(iter)]^2
         if (scaleByMax && (result@method == "Moran's I")) {
           # Scale variances too
-          weightsArr[i, namesFun(result@result[[i]]), ] <- t(t(weightsArr[i, namesFun(result@result[[i]]), ]) * result@maxIxy[, i]^2)
+          weightsArr[i, namesFun(result@estimates[[i]]), ] <- t(t(weightsArr[i, namesFun(result@estimates[[i]]), ]) * result@maxIxy[, i]^2)
         }
       }
     }

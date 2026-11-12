@@ -96,19 +96,19 @@ sbivarMulti <- function(Xl, Yl, Cxl, Eyl, method = c("Moran's I", "GAMs", "Corre
       "nn" = controlvals$numNNs
     )
     new("sbivarResultsMoransI",
-      "result" = lapply(res, function(x) x$res), "method" = method, "normX" = normX, "multi" = TRUE,
+      "estimates" = lapply(res, function(x) x$res), "method" = method, "normX" = normX, "multi" = TRUE,
       "normY" = normY, "maxIxy" = if (controlvals$findMaxW) vapply(res, FUN.VALUE = wParams, function(x) x$maxIxy),
       "wo" = controlvals$wo, "returnSEsMoransI" = findVariances,
       "wParams" = wParams
     )
   } else if (method == "GAMs") {
     new("sbivarResultsGAMs",
-      "result" = res, "method" = method, "multi" = TRUE,
+      "estimates" = res, "method" = method, "multi" = TRUE,
       "normX" = normX, "normY" = normY, "families" = controlvals$families
     )
   } else if (method == "Correlation") {
     new("sbivarResults",
-      "result" = res, "method" = method, "multi" = TRUE,
+      "estimates" = res, "method" = method, "multi" = TRUE,
       "normX" = normX, "normY" = normY
     )
   }

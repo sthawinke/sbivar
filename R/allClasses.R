@@ -1,6 +1,6 @@
 setClassUnion("characterOrNULL", c("character", "NULL"))
 setClassUnion("listOrNULL", c("list", "NULL"))
-setClassUnion("dataframeOrList", c("data.frame", "list"))
+setClassUnion("listOrDataFrameOrNull", c("data.frame", "list", "NULL"))
 #' sbivarResults class
 #'
 #' An S4 class representing the result of a sbivar call, testing for bivariate
@@ -13,28 +13,31 @@ setClassUnion("dataframeOrList", c("data.frame", "list"))
 #' @slot assayX Name of the assay of the first modality
 #' @slot assayY Name of the assay of the second modality
 #' @slot models Optional, the linear model fits if multi=TRUE
-#' @slot result The result of the statistical test
+#' @slot result The result of the statistical test: a dataframe
+#' @slot estimates Raw estimates of association measures,
+#' for input to linear model fitting
 #'
 #' @export
 setClass(
   "sbivarResults",
   slots = c(
-    result = "dataframeOrList",
+    result = "listOrDataFrameOrNull",
     method = "character",
     normX = "character",
     normY = "character",
     multi = "logical",
     assayX = "characterOrNULL",
     assayY = "characterOrNULL",
-    models = "listOrNULL"
+    models = "listOrNULL",
+    estimates = "listOrNULL"
   )
 )
-setClassUnion("numericOrmatrixOrNULL", c("numeric", "matrix", "NULL"))
+setClassUnion("numericOrMatrixOrNULL", c("numeric", "matrix", "NULL"))
 setClass(
   "sbivarResultsMoransI",
   contains = "sbivarResults",
   slots = c(
-    maxIxy = "numericOrmatrixOrNULL",
+    maxIxy = "numericOrMatrixOrNULL",
     returnSEsMoransI = "logical",
     wo = "character",
     wParams = "numeric"
@@ -76,8 +79,18 @@ setValidity("sbivarResults", function(object) {
   if (!is.logical(object@multi)) {
     return("multi must be a boolean")
   }
-  if (!object@multi && is.list(object@models)) {
-    return("Models can only be attached for multi-image analysis")
+if (!(is.data.frame(object@result) ||is.list(object@result) ||
+    is.null(object@result))) {
+    return("result must be a dataframe, list or null")
+}
+    if (!is.data.frame(object@result) && !object@multi) {
+        return("result must be a dataframe for single image analysis")
+    }
+    if (!(is.list(object@estimates) || is.null(object@estimates))) {
+        return("estimates must be a list or null")
+    }
+  if (!object@multi && (is.list(object@models) || is.list(object@estimates))) {
+    return("Estimates or models can only be attached for multi-image analysis")
   }
   TRUE
 })
